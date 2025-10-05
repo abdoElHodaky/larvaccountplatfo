@@ -204,5 +204,177 @@ class TenantResolver
             })
             ->get();
     }
-}
 
+    /**
+     * Configure database connection for a tenant.
+     */
+    public function configureDatabaseForTenant(Tenant $tenant): void
+    {
+        $strategy = $this->determineDatabaseStrategy($tenant);
+
+        switch ($strategy) {
+            case 'dedicated':
+                $this->configureDedicatedDatabase($tenant);
+                break;
+            case 'clustered':
+                $this->configureClusteredDatabase($tenant);
+                break;
+            case 'shared':
+            default:
+                $this->configureSharedDatabase($tenant);
+                break;
+        }
+    }
+
+    /**
+     * Configure dedicated database for enterprise tenant.
+     */
+    protected function configureDedicatedDatabase(Tenant $tenant): void
+    {
+        $connectionName = "tenant_{$tenant->id}";
+        
+        // Check if connection already exists
+        if (array_key_exists($connectionName, config('database.connections', []))) {
+            DB::setDefaultConnection($connectionName);
+            return;
+        }
+
+        // Create dedicated database configuration
+        $config = [
+            'driver' => env('DB_CONNECTION', 'mysql'),
+            'host' => env('DB_HOST', '127.0.0.1'),
+            'port' => env('DB_PORT', '3306'),
+            'database' => "tenant_{$tenant->id}",
+            'username' => env('DB_USERNAME', 'forge'),
+            'password' => env('DB_PASSWORD', ''),
+            'unix_socket' => env('DB_SOCKET', ''),
+            'charset' => 'utf8mb4',
+            'collation' => 'utf8mb4_unicode_ci',
+            'prefix' => '',
+            'prefix_indexes' => true,
+            'strict' => true,
+            'engine' => null,
+        ];
+
+        // Add the connection configuration
+        config(["database.connections.{$connectionName}" => $config]);
+
+        // Set as default connection
+        DB::setDefaultConnection($connectionName);
+
+        // Purge any existing connection
+        DB::purge($connectionName);
+    }
+
+    /**
+     * Configure clustered database for regional tenant.
+     */
+    protected function configureClusteredDatabase(Tenant $tenant): void
+    {
+        $region = $tenant->region ?? 'us-east-1';
+        $connectionName = "cluster_{$region}";
+        
+        // Check if connection already exists
+        if (array_key_exists($connectionName, config('database.connections', []))) {
+            DB::setDefaultConnection($connectionName);
+            return;
+        }
+
+        // Get regional database configuration
+        $config = $this->getRegionalDatabaseConfig($region);
+        
+        // Add the connection configuration
+        config(["database.connections.{$connectionName}" => $config]);
+
+        // Set as default connection
+        DB::setDefaultConnection($connectionName);
+
+        // Purge any existing connection
+        DB::purge($connectionName);
+    }
+
+    /**
+     * Configure shared database for small/medium tenants.
+     */
+    protected function configureSharedDatabase(Tenant $tenant): void
+    {
+        // Determine shard based on tenant ID
+        $shardNumber = ($tenant->id % 4) + 1; // 4 shards: 1, 2, 3, 4
+        $connectionName = "shared_shard_{$shardNumber}";
+        
+        // Check if connection already exists
+        if (array_key_exists($connectionName, config('database.connections', []))) {
+            DB::setDefaultConnection($connectionName);
+            return;
+        }
+
+        // Create shared database configuration
+        $config = [
+            'driver' => env('DB_CONNECTION', 'mysql'),
+            'host' => env('DB_HOST', '127.0.0.1'),
+            'port' => env('DB_PORT', '3306'),
+            'database' => env('DB_DATABASE', 'laravel') . "_shard_{$shardNumber}",
+            'username' => env('DB_USERNAME', 'forge'),
+            'password' => env('DB_PASSWORD', ''),
+            'unix_socket' => env('DB_SOCKET', ''),
+            'charset' => 'utf8mb4',
+            'collation' => 'utf8mb4_unicode_ci',
+            'prefix' => '',
+            'prefix_indexes' => true,
+            'strict' => true,
+            'engine' => null,
+        ];
+
+        // Add the connection configuration
+        config(["database.connections.{$connectionName}" => $config]);
+
+        // Set as default connection
+        DB::setDefaultConnection($connectionName);
+
+        // Purge any existing connection
+        DB::purge($connectionName);
+    }
+
+    /**
+     * Get regional database configuration.
+     */
+    protected function getRegionalDatabaseConfig(string $region): array
+    {
+        $regionConfigs = [
+            'us-east-1' => [
+                'host' => env('DB_HOST_US_EAST', env('DB_HOST', '127.0.0.1')),
+                'database' => env('DB_DATABASE_US_EAST', env('DB_DATABASE', 'laravel') . '_us_east'),
+            ],
+            'us-west-2' => [
+                'host' => env('DB_HOST_US_WEST', env('DB_HOST', '127.0.0.1')),
+                'database' => env('DB_DATABASE_US_WEST', env('DB_DATABASE', 'laravel') . '_us_west'),
+            ],
+            'eu-west-1' => [
+                'host' => env('DB_HOST_EU_WEST', env('DB_HOST', '127.0.0.1')),
+                'database' => env('DB_DATABASE_EU_WEST', env('DB_DATABASE', 'laravel') . '_eu_west'),
+            ],
+            'ap-southeast-1' => [
+                'host' => env('DB_HOST_ASIA_PACIFIC', env('DB_HOST', '127.0.0.1')),
+                'database' => env('DB_DATABASE_ASIA_PACIFIC', env('DB_DATABASE', 'laravel') . '_asia_pacific'),
+            ],
+        ];
+
+        $regionConfig = $regionConfigs[$region] ?? $regionConfigs['us-east-1'];
+
+        return [
+            'driver' => env('DB_CONNECTION', 'mysql'),
+            'host' => $regionConfig['host'],
+            'port' => env('DB_PORT', '3306'),
+            'database' => $regionConfig['database'],
+            'username' => env('DB_USERNAME', 'forge'),
+            'password' => env('DB_PASSWORD', ''),
+            'unix_socket' => env('DB_SOCKET', ''),
+            'charset' => 'utf8mb4',
+            'collation' => 'utf8mb4_unicode_ci',
+            'prefix' => '',
+            'prefix_indexes' => true,
+            'strict' => true,
+            'engine' => null,
+        ];
+    }
+}
