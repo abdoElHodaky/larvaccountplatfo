@@ -1,0 +1,178 @@
+{
+    "name": "abdoelhodaky/laravel-modular-accounting-platform",
+    "type": "project",
+    "description": "Enterprise-grade multi-tenant accounting platform built with Laravel 12, featuring intelligent hybrid database architecture and modular design.",
+    "keywords": [
+        "laravel",
+        "accounting",
+        "multi-tenant",
+        "erp",
+        "bookkeeping",
+        "inventory",
+        "financial-reporting",
+        "progressive-web-app",
+        "real-time",
+        "enterprise"
+    ],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "AbdElrhman ElHodaky",
+            "email": "abdo.arh38@yahoo.com",
+            "role": "Lead Developer"
+        }
+    ],
+    "homepage": "https://github.com/abdoElHodaky/larvaccountplatfo",
+    "support": {
+        "issues": "https://github.com/abdoElHodaky/larvaccountplatfo/issues",
+        "source": "https://github.com/abdoElHodaky/larvaccountplatfo",
+        "docs": "https://github.com/abdoElHodaky/larvaccountplatfo/wiki"
+    },
+    "require": {
+        "php": "^8.2",
+        "laravel/framework": "^11.0",
+        "laravel/sanctum": "^4.0",
+        "laravel/reverb": "^1.0",
+        "laravel/scout": "^10.0",
+        "laravel/horizon": "^5.0",
+        "laravel/telescope": "^5.0",
+        "guzzlehttp/guzzle": "^7.8",
+        "predis/predis": "^2.2",
+        "doctrine/dbal": "^4.0",
+        "spatie/laravel-permission": "^6.0",
+        "spatie/laravel-activitylog": "^4.8",
+        "spatie/laravel-backup": "^8.0",
+        "spatie/laravel-medialibrary": "^11.0",
+        "spatie/laravel-query-builder": "^5.8",
+        "barryvdh/laravel-dompdf": "^2.2",
+        "maatwebsite/excel": "^3.1",
+        "league/csv": "^9.15",
+        "league/flysystem-aws-s3-v3": "^3.0",
+        "pusher/pusher-php-server": "^7.2",
+        "intervention/image": "^3.0",
+        "ramsey/uuid": "^4.7",
+        "nesbot/carbon": "^3.0",
+        "brick/math": "^0.12",
+        "brick/money": "^0.9",
+        "moneyphp/money": "^4.5",
+        "league/fractal": "^0.20",
+        "jenssegers/agent": "^2.6",
+        "laravel/tinker": "^2.9"
+    },
+    "require-dev": {
+        "fakerphp/faker": "^1.23",
+        "laravel/pint": "^1.13",
+        "laravel/sail": "^1.26",
+        "mockery/mockery": "^1.6",
+        "nunomaduro/collision": "^8.0",
+        "phpunit/phpunit": "^11.0",
+        "spatie/laravel-ignition": "^2.4",
+        "barryvdh/laravel-debugbar": "^3.9",
+        "barryvdh/laravel-ide-helper": "^3.0",
+        "beyondcode/laravel-dump-server": "^2.0",
+        "filp/whoops": "^2.15",
+        "friendsofphp/php-cs-fixer": "^3.48",
+        "larastan/larastan": "^2.8",
+        "pestphp/pest": "^2.28",
+        "pestphp/pest-plugin-laravel": "^2.2"
+    },
+    "autoload": {
+        "psr-4": {
+            "App\\": "app/",
+            "Database\\Factories\\": "database/factories/",
+            "Database\\Seeders\\": "database/seeders/",
+            "Modules\\": "Modules/"
+        },
+        "files": [
+            "app/helpers.php"
+        ]
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Tests\\": "tests/"
+        }
+    },
+    "scripts": {
+        "post-autoload-dump": [
+            "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",
+            "@php artisan package:discover --ansi"
+        ],
+        "post-update-cmd": [
+            "@php artisan vendor:publish --tag=laravel-assets --ansi --force"
+        ],
+        "post-root-package-install": [
+            "@php -r \"file_exists('.env') || copy('.env.example', '.env');\""
+        ],
+        "post-create-project-cmd": [
+            "@php artisan key:generate --ansi",
+            "@php -r \"file_exists('database/database.sqlite') || touch('database/database.sqlite');\"",
+            "@php artisan migrate --graceful --ansi"
+        ],
+        "setup": [
+            "@composer install",
+            "@php artisan key:generate",
+            "@php artisan storage:link",
+            "@php artisan migrate:fresh --seed",
+            "@php artisan optimize:clear"
+        ],
+        "fresh": [
+            "@php artisan migrate:fresh --seed",
+            "@php artisan optimize:clear"
+        ],
+        "test": [
+            "@php artisan test"
+        ],
+        "test-coverage": [
+            "@php artisan test --coverage"
+        ],
+        "pint": [
+            "./vendor/bin/pint"
+        ],
+        "pint-test": [
+            "./vendor/bin/pint --test"
+        ],
+        "stan": [
+            "./vendor/bin/phpstan analyse"
+        ],
+        "ide-helper": [
+            "@php artisan ide-helper:generate",
+            "@php artisan ide-helper:models --nowrite",
+            "@php artisan ide-helper:meta"
+        ],
+        "optimize": [
+            "@php artisan config:cache",
+            "@php artisan route:cache",
+            "@php artisan view:cache",
+            "@php artisan event:cache"
+        ],
+        "optimize-clear": [
+            "@php artisan optimize:clear"
+        ],
+        "production-setup": [
+            "@composer install --no-dev --optimize-autoloader",
+            "@php artisan key:generate",
+            "@php artisan config:cache",
+            "@php artisan route:cache",
+            "@php artisan view:cache",
+            "@php artisan event:cache",
+            "@php artisan storage:link"
+        ]
+    },
+    "extra": {
+        "laravel": {
+            "dont-discover": []
+        }
+    },
+    "config": {
+        "optimize-autoloader": true,
+        "preferred-install": "dist",
+        "sort-packages": true,
+        "allow-plugins": {
+            "pestphp/pest-plugin": true,
+            "php-http/discovery": true
+        }
+    },
+    "minimum-stability": "stable",
+    "prefer-stable": true
+}
+
