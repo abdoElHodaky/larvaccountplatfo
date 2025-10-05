@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Tenant extends Model
 {
@@ -18,6 +19,7 @@ class Tenant extends Model
         'database_name',
         'database_strategy',
         'plan',
+        'status',
         'region',
         'database_host',
         'user_count',
@@ -26,6 +28,7 @@ class Tenant extends Model
         'requires_data_isolation',
         'is_active',
         'settings',
+        'enabled_modules',
         'migrated_at',
         'stats_updated_at',
     ];
@@ -34,6 +37,7 @@ class Tenant extends Model
         'requires_data_isolation' => 'boolean',
         'is_active' => 'boolean',
         'settings' => 'array',
+        'enabled_modules' => 'array',
         'storage_usage_mb' => 'decimal:2',
         'migrated_at' => 'datetime',
         'stats_updated_at' => 'datetime',
@@ -45,6 +49,16 @@ class Tenant extends Model
     public function globalUsers(): HasMany
     {
         return $this->hasMany(GlobalUser::class);
+    }
+
+    /**
+     * Get the users that belong to this tenant.
+     */
+    public function users(): BelongsToMany
+    {
+        return $this->belongsToMany(User::class, 'tenant_users')
+            ->withPivot(['role', 'permissions', 'is_active', 'invited_at', 'joined_at'])
+            ->withTimestamps();
     }
 
     /**
@@ -204,4 +218,3 @@ class Tenant extends Model
         $this->update(['settings' => $settings]);
     }
 }
-
