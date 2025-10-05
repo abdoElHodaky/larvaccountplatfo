@@ -19,7 +19,7 @@
 
 ## 🎯 Overview
 
-A **cloud-native, horizontally scalable accounting platform** built with **Laravel 11+ Modular Architecture** and **Laravel Boost/Octane**, designed to handle thousands of concurrent users across multiple organizations with enterprise-grade performance, security, and reliability.
+A **cloud-native, horizontally scalable accounting platform** built with **Laravel 12 Modular Architecture** and **Laravel Boost/Octane**, designed to handle thousands of concurrent users across multiple organizations with enterprise-grade performance, security, and reliability.
 
 ### Key Highlights
 - **Modular Monolith**: Best of both worlds - simplicity of monolith with organization of microservices
@@ -93,7 +93,7 @@ A **cloud-native, horizontally scalable accounting platform** built with **Larav
    - Features: Health checks, SSL termination, sticky sessions
 
 2. **Application Layer**
-   - Technology: Laravel 11+ with Octane/Boost
+   - Technology: Laravel 12 with Octane/Boost
    - Purpose: Stateless application servers
    - Features: 10x performance boost, connection pooling
 
@@ -470,7 +470,7 @@ dispatch(new GenerateReport($report))->onQueue('reporting-low');
 
 ### Phase 1: Foundation (2-3 months)
 - ✅ Install nwidart/laravel-modules package
-- ✅ Set up Laravel 11 with Octane/Boost
+- ✅ Set up Laravel 12 with Octane/Boost
 - ✅ Create base module structure (Organization, Shared)
 - ✅ Implement organization-scoped models with Global Scopes
 - ✅ Set up module-based routing and middleware
@@ -519,7 +519,7 @@ dispatch(new GenerateReport($report))->onQueue('reporting-low');
 ## 🛠️ Tech Stack
 
 ### Backend
-- **Framework**: Laravel 11+ with Octane/Boost
+- **Framework**: Laravel 12 with Octane/Boost
 - **Module System**: nwidart/laravel-modules
 - **Queue**: Laravel Horizon + Redis
 - **Monitoring**: Telescope (dev), Prometheus (prod)
