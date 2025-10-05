@@ -2,10 +2,11 @@
 
 namespace Modules\Reporting\Services;
 
-use Modules\Reporting\Models\FinancialReport;
 use Modules\Accounting\Models\Account;
+use Modules\Accounting\Models\JournalEntry;
 use Modules\Accounting\Models\Transaction;
 use Modules\Shared\Models\Organization;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Cache;
 use Carbon\Carbon;
@@ -13,619 +14,512 @@ use Carbon\Carbon;
 class FinancialReportingService
 {
     /**
+     * Generate Profit & Loss Statement
+     */
+    public function generateProfitLoss(Organization $organization, Carbon $startDate, Carbon $endDate, array $options = []): array
+    {
+        $cacheKey = "profit_loss_{$organization->id}_{$startDate->format('Y-m-d')}_{$endDate->format('Y-m-d')}";
+        
+        return Cache::remember($cacheKey, 3600, function () use ($organization, $startDate, $endDate, $options) {
+            // Get revenue accounts
+            $revenueAccounts = $this->getAccountBalances(
+                $organization,
+                Account::TYPE_REVENUE,
+                $startDate,
+                $endDate
+            );
+
+            // Get expense accounts
+            $expenseAccounts = $this->getAccountBalances(
+                $organization,
+                Account::TYPE_EXPENSE,
+                $startDate,
+                $endDate
+            );
+
+            // Calculate totals
+            $totalRevenue = $revenueAccounts->sum('balance');
+            $totalExpenses = $expenseAccounts->sum('balance');
+            $netIncome = $totalRevenue - $totalExpenses;
+
+            // Group by subtypes
+            $revenueBySubtype = $revenueAccounts->groupBy('subtype')->map(function ($accounts) {
+                return [
+                    'accounts' => $accounts,
+                    'total' => $accounts->sum('balance'),
+                ];
+            });
+
+            $expensesBySubtype = $expenseAccounts->groupBy('subtype')->map(function ($accounts) {
+                return [
+                    'accounts' => $accounts,
+                    'total' => $accounts->sum('balance'),
+                ];
+            });
+
+            return [
+                'organization' => $organization,
+                'period' => [
+                    'start_date' => $startDate,
+                    'end_date' => $endDate,
+                ],
+                'revenue' => [
+                    'by_subtype' => $revenueBySubtype,
+                    'total' => $totalRevenue,
+                ],
+                'expenses' => [
+                    'by_subtype' => $expensesBySubtype,
+                    'total' => $totalExpenses,
+                ],
+                'net_income' => $netIncome,
+                'margins' => [
+                    'gross_margin' => $totalRevenue > 0 ? (($totalRevenue - $this->getCostOfGoodsSold($organization, $startDate, $endDate)) / $totalRevenue) * 100 : 0,
+                    'net_margin' => $totalRevenue > 0 ? ($netIncome / $totalRevenue) * 100 : 0,
+                ],
+                'generated_at' => now(),
+            ];
+        });
+    }
+
+    /**
      * Generate Balance Sheet
      */
-    public function generateBalanceSheet(
-        Organization $organization,
-        Carbon $asOfDate,
-        string $currency = null,
-        bool $includeComparison = false,
-        Carbon $comparisonDate = null
-    ): array {
-        $currency = $currency ?: $organization->currency;
-        $cacheKey = "balance_sheet_{$organization->id}_{$asOfDate->format('Y-m-d')}_{$currency}";
+    public function generateBalanceSheet(Organization $organization, Carbon $asOfDate, array $options = []): array
+    {
+        $cacheKey = "balance_sheet_{$organization->id}_{$asOfDate->format('Y-m-d')}";
         
-        return Cache::remember($cacheKey, 3600, function () use ($organization, $asOfDate, $currency, $includeComparison, $comparisonDate) {
-            $balanceSheet = [
+        return Cache::remember($cacheKey, 3600, function () use ($organization, $asOfDate, $options) {
+            // Get asset accounts
+            $assetAccounts = $this->getAccountBalances(
+                $organization,
+                Account::TYPE_ASSET,
+                null,
+                $asOfDate
+            );
+
+            // Get liability accounts
+            $liabilityAccounts = $this->getAccountBalances(
+                $organization,
+                Account::TYPE_LIABILITY,
+                null,
+                $asOfDate
+            );
+
+            // Get equity accounts
+            $equityAccounts = $this->getAccountBalances(
+                $organization,
+                Account::TYPE_EQUITY,
+                null,
+                $asOfDate
+            );
+
+            // Calculate retained earnings
+            $retainedEarnings = $this->calculateRetainedEarnings($organization, $asOfDate);
+
+            // Calculate totals
+            $totalAssets = $assetAccounts->sum('balance');
+            $totalLiabilities = $liabilityAccounts->sum('balance');
+            $totalEquity = $equityAccounts->sum('balance') + $retainedEarnings;
+
+            // Group by subtypes
+            $assetsBySubtype = $assetAccounts->groupBy('subtype')->map(function ($accounts) {
+                return [
+                    'accounts' => $accounts,
+                    'total' => $accounts->sum('balance'),
+                ];
+            });
+
+            $liabilitiesBySubtype = $liabilityAccounts->groupBy('subtype')->map(function ($accounts) {
+                return [
+                    'accounts' => $accounts,
+                    'total' => $accounts->sum('balance'),
+                ];
+            });
+
+            $equityBySubtype = $equityAccounts->groupBy('subtype')->map(function ($accounts) {
+                return [
+                    'accounts' => $accounts,
+                    'total' => $accounts->sum('balance'),
+                ];
+            });
+
+            return [
                 'organization' => $organization,
                 'as_of_date' => $asOfDate,
-                'currency' => $currency,
-                'assets' => $this->getAssetBalances($organization, $asOfDate, $currency),
-                'liabilities' => $this->getLiabilityBalances($organization, $asOfDate, $currency),
-                'equity' => $this->getEquityBalances($organization, $asOfDate, $currency),
+                'assets' => [
+                    'by_subtype' => $assetsBySubtype,
+                    'total' => $totalAssets,
+                ],
+                'liabilities' => [
+                    'by_subtype' => $liabilitiesBySubtype,
+                    'total' => $totalLiabilities,
+                ],
+                'equity' => [
+                    'by_subtype' => $equityBySubtype,
+                    'retained_earnings' => $retainedEarnings,
+                    'total' => $totalEquity,
+                ],
+                'totals' => [
+                    'assets' => $totalAssets,
+                    'liabilities_and_equity' => $totalLiabilities + $totalEquity,
+                    'difference' => $totalAssets - ($totalLiabilities + $totalEquity),
+                ],
+                'ratios' => [
+                    'debt_to_equity' => $totalEquity > 0 ? $totalLiabilities / $totalEquity : 0,
+                    'current_ratio' => $this->calculateCurrentRatio($assetsBySubtype, $liabilitiesBySubtype),
+                    'quick_ratio' => $this->calculateQuickRatio($assetsBySubtype, $liabilitiesBySubtype),
+                ],
+                'generated_at' => now(),
             ];
-
-            // Calculate totals
-            $balanceSheet['total_assets'] = $this->calculateSectionTotal($balanceSheet['assets']);
-            $balanceSheet['total_liabilities'] = $this->calculateSectionTotal($balanceSheet['liabilities']);
-            $balanceSheet['total_equity'] = $this->calculateSectionTotal($balanceSheet['equity']);
-            $balanceSheet['total_liabilities_equity'] = $balanceSheet['total_liabilities'] + $balanceSheet['total_equity'];
-
-            // Verify balance sheet equation
-            $balanceSheet['is_balanced'] = abs($balanceSheet['total_assets'] - $balanceSheet['total_liabilities_equity']) < 0.01;
-
-            // Add comparison data if requested
-            if ($includeComparison && $comparisonDate) {
-                $balanceSheet['comparison'] = $this->generateBalanceSheet($organization, $comparisonDate, $currency, false);
-                $balanceSheet['variance'] = $this->calculateBalanceSheetVariance($balanceSheet, $balanceSheet['comparison']);
-            }
-
-            return $balanceSheet;
         });
     }
 
     /**
-     * Generate Income Statement (Profit & Loss)
+     * Generate Cash Flow Statement
      */
-    public function generateIncomeStatement(
-        Organization $organization,
-        Carbon $startDate,
-        Carbon $endDate,
-        string $currency = null,
-        bool $includeComparison = false,
-        Carbon $comparisonStartDate = null,
-        Carbon $comparisonEndDate = null
-    ): array {
-        $currency = $currency ?: $organization->currency;
-        $cacheKey = "income_statement_{$organization->id}_{$startDate->format('Y-m-d')}_{$endDate->format('Y-m-d')}_{$currency}";
+    public function generateCashFlow(Organization $organization, Carbon $startDate, Carbon $endDate, array $options = []): array
+    {
+        $cacheKey = "cash_flow_{$organization->id}_{$startDate->format('Y-m-d')}_{$endDate->format('Y-m-d')}";
         
-        return Cache::remember($cacheKey, 1800, function () use ($organization, $startDate, $endDate, $currency, $includeComparison, $comparisonStartDate, $comparisonEndDate) {
-            $incomeStatement = [
-                'organization' => $organization,
-                'start_date' => $startDate,
-                'end_date' => $endDate,
-                'currency' => $currency,
-                'revenue' => $this->getRevenueBalances($organization, $startDate, $endDate, $currency),
-                'expenses' => $this->getExpenseBalances($organization, $startDate, $endDate, $currency),
-            ];
+        return Cache::remember($cacheKey, 3600, function () use ($organization, $startDate, $endDate, $options) {
+            // Get cash accounts
+            $cashAccounts = Account::where('organization_id', $organization->id)
+                ->where('type', Account::TYPE_ASSET)
+                ->where('subtype', 'cash')
+                ->pluck('id');
 
-            // Calculate totals and net income
-            $incomeStatement['total_revenue'] = $this->calculateSectionTotal($incomeStatement['revenue']);
-            $incomeStatement['total_expenses'] = $this->calculateSectionTotal($incomeStatement['expenses']);
-            $incomeStatement['net_income'] = $incomeStatement['total_revenue'] - $incomeStatement['total_expenses'];
-
-            // Calculate gross profit if COGS is present
-            $cogs = $this->getCOGSBalance($organization, $startDate, $endDate, $currency);
-            if ($cogs > 0) {
-                $incomeStatement['cost_of_goods_sold'] = $cogs;
-                $incomeStatement['gross_profit'] = $incomeStatement['total_revenue'] - $cogs;
-                $incomeStatement['gross_profit_margin'] = $incomeStatement['total_revenue'] > 0 
-                    ? ($incomeStatement['gross_profit'] / $incomeStatement['total_revenue']) * 100 
-                    : 0;
-            }
-
-            // Add comparison data if requested
-            if ($includeComparison && $comparisonStartDate && $comparisonEndDate) {
-                $incomeStatement['comparison'] = $this->generateIncomeStatement(
-                    $organization, 
-                    $comparisonStartDate, 
-                    $comparisonEndDate, 
-                    $currency, 
-                    false
-                );
-                $incomeStatement['variance'] = $this->calculateIncomeStatementVariance($incomeStatement, $incomeStatement['comparison']);
-            }
-
-            return $incomeStatement;
-        });
-    }
-
-    /**
-     * Generate Cash Flow Statement (Indirect Method)
-     */
-    public function generateCashFlowStatement(
-        Organization $organization,
-        Carbon $startDate,
-        Carbon $endDate,
-        string $currency = null
-    ): array {
-        $currency = $currency ?: $organization->currency;
-        $cacheKey = "cash_flow_{$organization->id}_{$startDate->format('Y-m-d')}_{$endDate->format('Y-m-d')}_{$currency}";
-        
-        return Cache::remember($cacheKey, 1800, function () use ($organization, $startDate, $endDate, $currency) {
-            // Get net income from income statement
-            $incomeStatement = $this->generateIncomeStatement($organization, $startDate, $endDate, $currency);
-            $netIncome = $incomeStatement['net_income'];
-
-            $cashFlow = [
-                'organization' => $organization,
-                'start_date' => $startDate,
-                'end_date' => $endDate,
-                'currency' => $currency,
-                'operating_activities' => $this->getOperatingCashFlow($organization, $startDate, $endDate, $currency, $netIncome),
-                'investing_activities' => $this->getInvestingCashFlow($organization, $startDate, $endDate, $currency),
-                'financing_activities' => $this->getFinancingCashFlow($organization, $startDate, $endDate, $currency),
-            ];
-
-            // Calculate totals
-            $cashFlow['net_operating_cash_flow'] = $this->calculateSectionTotal($cashFlow['operating_activities']);
-            $cashFlow['net_investing_cash_flow'] = $this->calculateSectionTotal($cashFlow['investing_activities']);
-            $cashFlow['net_financing_cash_flow'] = $this->calculateSectionTotal($cashFlow['financing_activities']);
+            // Operating activities
+            $operatingCashFlow = $this->calculateOperatingCashFlow($organization, $startDate, $endDate);
             
-            $cashFlow['net_change_in_cash'] = $cashFlow['net_operating_cash_flow'] + 
-                                            $cashFlow['net_investing_cash_flow'] + 
-                                            $cashFlow['net_financing_cash_flow'];
-
-            // Get beginning and ending cash balances
-            $cashFlow['beginning_cash'] = $this->getCashBalance($organization, $startDate->copy()->subDay(), $currency);
-            $cashFlow['ending_cash'] = $this->getCashBalance($organization, $endDate, $currency);
+            // Investing activities
+            $investingCashFlow = $this->calculateInvestingCashFlow($organization, $startDate, $endDate);
             
-            // Verify cash flow reconciliation
-            $calculatedEndingCash = $cashFlow['beginning_cash'] + $cashFlow['net_change_in_cash'];
-            $cashFlow['is_reconciled'] = abs($calculatedEndingCash - $cashFlow['ending_cash']) < 0.01;
+            // Financing activities
+            $financingCashFlow = $this->calculateFinancingCashFlow($organization, $startDate, $endDate);
 
-            return $cashFlow;
+            // Net change in cash
+            $netCashChange = $operatingCashFlow['total'] + $investingCashFlow['total'] + $financingCashFlow['total'];
+
+            // Beginning and ending cash balances
+            $beginningCash = $this->getCashBalance($organization, $startDate->copy()->subDay());
+            $endingCash = $this->getCashBalance($organization, $endDate);
+
+            return [
+                'organization' => $organization,
+                'period' => [
+                    'start_date' => $startDate,
+                    'end_date' => $endDate,
+                ],
+                'operating_activities' => $operatingCashFlow,
+                'investing_activities' => $investingCashFlow,
+                'financing_activities' => $financingCashFlow,
+                'net_change_in_cash' => $netCashChange,
+                'beginning_cash' => $beginningCash,
+                'ending_cash' => $endingCash,
+                'reconciliation' => [
+                    'calculated_ending_cash' => $beginningCash + $netCashChange,
+                    'actual_ending_cash' => $endingCash,
+                    'difference' => $endingCash - ($beginningCash + $netCashChange),
+                ],
+                'generated_at' => now(),
+            ];
         });
     }
 
     /**
      * Generate Trial Balance
      */
-    public function generateTrialBalance(
-        Organization $organization,
-        Carbon $asOfDate,
-        string $currency = null,
-        bool $includeZeroBalances = false
-    ): array {
-        $currency = $currency ?: $organization->currency;
+    public function generateTrialBalance(Organization $organization, Carbon $asOfDate, array $options = []): array
+    {
+        $cacheKey = "trial_balance_{$organization->id}_{$asOfDate->format('Y-m-d')}";
         
-        $accounts = Account::where('organization_id', $organization->id)
-            ->where('is_active', true)
-            ->orderBy('code')
-            ->get();
+        return Cache::remember($cacheKey, 1800, function () use ($organization, $asOfDate, $options) {
+            $accounts = Account::where('organization_id', $organization->id)
+                ->where('is_active', true)
+                ->orderBy('code')
+                ->orderBy('name')
+                ->get();
 
-        $trialBalance = [
-            'organization' => $organization,
-            'as_of_date' => $asOfDate,
-            'currency' => $currency,
-            'accounts' => [],
-            'total_debits' => 0,
-            'total_credits' => 0,
-        ];
+            $trialBalance = [];
+            $totalDebits = 0;
+            $totalCredits = 0;
 
-        foreach ($accounts as $account) {
-            $balance = $this->getAccountBalance($account, $asOfDate, $currency);
-            
-            if (!$includeZeroBalances && abs($balance) < 0.01) {
-                continue;
+            foreach ($accounts as $account) {
+                $balance = $this->getAccountBalance($account, null, $asOfDate);
+                
+                if ($balance != 0) {
+                    $debitBalance = 0;
+                    $creditBalance = 0;
+
+                    // Determine if balance is debit or credit based on account type
+                    if (in_array($account->type, [Account::TYPE_ASSET, Account::TYPE_EXPENSE])) {
+                        $debitBalance = $balance > 0 ? $balance : 0;
+                        $creditBalance = $balance < 0 ? abs($balance) : 0;
+                    } else {
+                        $creditBalance = $balance > 0 ? $balance : 0;
+                        $debitBalance = $balance < 0 ? abs($balance) : 0;
+                    }
+
+                    $trialBalance[] = [
+                        'account' => $account,
+                        'debit_balance' => $debitBalance,
+                        'credit_balance' => $creditBalance,
+                    ];
+
+                    $totalDebits += $debitBalance;
+                    $totalCredits += $creditBalance;
+                }
             }
 
-            $debitBalance = 0;
-            $creditBalance = 0;
-
-            // Determine if balance should be shown as debit or credit
-            if ($account->normal_balance === Account::BALANCE_DEBIT) {
-                $debitBalance = $balance >= 0 ? $balance : 0;
-                $creditBalance = $balance < 0 ? abs($balance) : 0;
-            } else {
-                $debitBalance = $balance < 0 ? abs($balance) : 0;
-                $creditBalance = $balance >= 0 ? $balance : 0;
-            }
-
-            $trialBalance['accounts'][] = [
-                'account' => $account,
-                'balance' => $balance,
-                'debit_balance' => $debitBalance,
-                'credit_balance' => $creditBalance,
+            return [
+                'organization' => $organization,
+                'as_of_date' => $asOfDate,
+                'accounts' => $trialBalance,
+                'totals' => [
+                    'debits' => $totalDebits,
+                    'credits' => $totalCredits,
+                    'difference' => $totalDebits - $totalCredits,
+                    'is_balanced' => abs($totalDebits - $totalCredits) < 0.01,
+                ],
+                'generated_at' => now(),
             ];
-
-            $trialBalance['total_debits'] += $debitBalance;
-            $trialBalance['total_credits'] += $creditBalance;
-        }
-
-        $trialBalance['is_balanced'] = abs($trialBalance['total_debits'] - $trialBalance['total_credits']) < 0.01;
-
-        return $trialBalance;
+        });
     }
 
     /**
-     * Get asset balances grouped by subtype
+     * Generate KPI Dashboard
      */
-    protected function getAssetBalances(Organization $organization, Carbon $asOfDate, string $currency): array
+    public function generateKpiDashboard(Organization $organization, Carbon $startDate, Carbon $endDate): array
     {
-        return $this->getAccountBalancesByType($organization, Account::TYPE_ASSET, $asOfDate, $currency);
-    }
-
-    /**
-     * Get liability balances grouped by subtype
-     */
-    protected function getLiabilityBalances(Organization $organization, Carbon $asOfDate, string $currency): array
-    {
-        return $this->getAccountBalancesByType($organization, Account::TYPE_LIABILITY, $asOfDate, $currency);
-    }
-
-    /**
-     * Get equity balances grouped by subtype
-     */
-    protected function getEquityBalances(Organization $organization, Carbon $asOfDate, string $currency): array
-    {
-        return $this->getAccountBalancesByType($organization, Account::TYPE_EQUITY, $asOfDate, $currency);
-    }
-
-    /**
-     * Get revenue balances for period
-     */
-    protected function getRevenueBalances(Organization $organization, Carbon $startDate, Carbon $endDate, string $currency): array
-    {
-        return $this->getAccountBalancesByTypeForPeriod($organization, Account::TYPE_REVENUE, $startDate, $endDate, $currency);
-    }
-
-    /**
-     * Get expense balances for period
-     */
-    protected function getExpenseBalances(Organization $organization, Carbon $startDate, Carbon $endDate, string $currency): array
-    {
-        return $this->getAccountBalancesByTypeForPeriod($organization, Account::TYPE_EXPENSE, $startDate, $endDate, $currency);
-    }
-
-    /**
-     * Get account balances by type grouped by subtype
-     */
-    protected function getAccountBalancesByType(Organization $organization, string $type, Carbon $asOfDate, string $currency): array
-    {
-        $accounts = Account::where('organization_id', $organization->id)
-            ->where('type', $type)
-            ->where('is_active', true)
-            ->orderBy('code')
-            ->get();
-
-        $balances = [];
+        $cacheKey = "kpi_dashboard_{$organization->id}_{$startDate->format('Y-m-d')}_{$endDate->format('Y-m-d')}";
         
-        foreach ($accounts as $account) {
-            $balance = $this->getAccountBalance($account, $asOfDate, $currency);
+        return Cache::remember($cacheKey, 1800, function () use ($organization, $startDate, $endDate) {
+            $profitLoss = $this->generateProfitLoss($organization, $startDate, $endDate);
+            $balanceSheet = $this->generateBalanceSheet($organization, $endDate);
             
-            if (abs($balance) < 0.01) {
-                continue; // Skip zero balances
-            }
+            // Previous period for comparison
+            $previousStartDate = $startDate->copy()->subDays($startDate->diffInDays($endDate) + 1);
+            $previousEndDate = $startDate->copy()->subDay();
+            $previousProfitLoss = $this->generateProfitLoss($organization, $previousStartDate, $previousEndDate);
 
-            if (!isset($balances[$account->subtype])) {
-                $balances[$account->subtype] = [
-                    'subtype' => $account->subtype,
-                    'accounts' => [],
-                    'total' => 0,
-                ];
-            }
+            // Calculate KPIs
+            $revenue = $profitLoss['revenue']['total'];
+            $expenses = $profitLoss['expenses']['total'];
+            $netIncome = $profitLoss['net_income'];
+            $totalAssets = $balanceSheet['assets']['total'];
+            $totalLiabilities = $balanceSheet['liabilities']['total'];
+            $totalEquity = $balanceSheet['equity']['total'];
 
-            $balances[$account->subtype]['accounts'][] = [
-                'account' => $account,
-                'balance' => $balance,
+            $previousRevenue = $previousProfitLoss['revenue']['total'];
+            $previousNetIncome = $previousProfitLoss['net_income'];
+
+            return [
+                'organization' => $organization,
+                'period' => [
+                    'start_date' => $startDate,
+                    'end_date' => $endDate,
+                ],
+                'financial_performance' => [
+                    'revenue' => [
+                        'current' => $revenue,
+                        'previous' => $previousRevenue,
+                        'growth' => $previousRevenue > 0 ? (($revenue - $previousRevenue) / $previousRevenue) * 100 : 0,
+                    ],
+                    'net_income' => [
+                        'current' => $netIncome,
+                        'previous' => $previousNetIncome,
+                        'growth' => $previousNetIncome != 0 ? (($netIncome - $previousNetIncome) / abs($previousNetIncome)) * 100 : 0,
+                    ],
+                    'profit_margin' => $revenue > 0 ? ($netIncome / $revenue) * 100 : 0,
+                    'expense_ratio' => $revenue > 0 ? ($expenses / $revenue) * 100 : 0,
+                ],
+                'financial_position' => [
+                    'total_assets' => $totalAssets,
+                    'total_liabilities' => $totalLiabilities,
+                    'total_equity' => $totalEquity,
+                    'debt_to_equity' => $totalEquity > 0 ? $totalLiabilities / $totalEquity : 0,
+                    'equity_ratio' => $totalAssets > 0 ? ($totalEquity / $totalAssets) * 100 : 0,
+                ],
+                'liquidity' => [
+                    'current_ratio' => $balanceSheet['ratios']['current_ratio'],
+                    'quick_ratio' => $balanceSheet['ratios']['quick_ratio'],
+                    'cash_balance' => $this->getCashBalance($organization, $endDate),
+                ],
+                'efficiency' => [
+                    'asset_turnover' => $totalAssets > 0 ? $revenue / $totalAssets : 0,
+                    'return_on_assets' => $totalAssets > 0 ? ($netIncome / $totalAssets) * 100 : 0,
+                    'return_on_equity' => $totalEquity > 0 ? ($netIncome / $totalEquity) * 100 : 0,
+                ],
+                'generated_at' => now(),
             ];
-            
-            $balances[$account->subtype]['total'] += $balance;
-        }
-
-        return array_values($balances);
+        });
     }
 
     /**
-     * Get account balances by type for a period
+     * Get account balances for a specific type and period
      */
-    protected function getAccountBalancesByTypeForPeriod(Organization $organization, string $type, Carbon $startDate, Carbon $endDate, string $currency): array
+    protected function getAccountBalances(Organization $organization, string $accountType, ?Carbon $startDate = null, ?Carbon $endDate = null): Collection
     {
         $accounts = Account::where('organization_id', $organization->id)
-            ->where('type', $type)
+            ->where('type', $accountType)
             ->where('is_active', true)
-            ->orderBy('code')
             ->get();
 
-        $balances = [];
-        
-        foreach ($accounts as $account) {
-            $balance = $this->getAccountBalanceForPeriod($account, $startDate, $endDate, $currency);
+        return $accounts->map(function ($account) use ($startDate, $endDate) {
+            $balance = $this->getAccountBalance($account, $startDate, $endDate);
             
-            if (abs($balance) < 0.01) {
-                continue; // Skip zero balances
-            }
-
-            if (!isset($balances[$account->subtype])) {
-                $balances[$account->subtype] = [
-                    'subtype' => $account->subtype,
-                    'accounts' => [],
-                    'total' => 0,
-                ];
-            }
-
-            $balances[$account->subtype]['accounts'][] = [
+            return [
                 'account' => $account,
                 'balance' => $balance,
+                'subtype' => $account->subtype,
             ];
-            
-            $balances[$account->subtype]['total'] += $balance;
-        }
-
-        return array_values($balances);
-    }
-
-    /**
-     * Get account balance as of a specific date
-     */
-    protected function getAccountBalance(Account $account, Carbon $asOfDate, string $currency): float
-    {
-        $balance = Transaction::where('account_id', $account->id)
-            ->where('transaction_date', '<=', $asOfDate)
-            ->sum(DB::raw('debit_amount - credit_amount'));
-
-        // Convert to requested currency if needed
-        if ($currency !== $account->currency) {
-            $balance = $this->convertCurrency($balance, $account->currency, $currency, $asOfDate);
-        }
-
-        return (float) $balance;
+        })->filter(function ($item) {
+            return $item['balance'] != 0;
+        });
     }
 
     /**
      * Get account balance for a specific period
      */
-    protected function getAccountBalanceForPeriod(Account $account, Carbon $startDate, Carbon $endDate, string $currency): float
+    protected function getAccountBalance(Account $account, ?Carbon $startDate = null, ?Carbon $endDate = null): float
     {
-        $balance = Transaction::where('account_id', $account->id)
-            ->whereBetween('transaction_date', [$startDate, $endDate])
-            ->sum(DB::raw('debit_amount - credit_amount'));
+        $query = Transaction::where('account_id', $account->id)
+            ->whereHas('journalEntry', function ($q) {
+                $q->where('status', JournalEntry::STATUS_POSTED);
+            });
 
-        // Convert to requested currency if needed
-        if ($currency !== $account->currency) {
-            $balance = $this->convertCurrency($balance, $account->currency, $currency, $endDate);
+        if ($startDate && $endDate) {
+            // For P&L accounts, get balance for the period
+            $query->whereHas('journalEntry', function ($q) use ($startDate, $endDate) {
+                $q->whereBetween('entry_date', [$startDate, $endDate]);
+            });
+        } elseif ($endDate) {
+            // For balance sheet accounts, get balance as of date
+            $query->whereHas('journalEntry', function ($q) use ($endDate) {
+                $q->where('entry_date', '<=', $endDate);
+            });
         }
 
-        return (float) $balance;
+        $debits = $query->sum('debit_amount');
+        $credits = $query->sum('credit_amount');
+
+        // Return balance based on account type normal balance
+        if (in_array($account->type, [Account::TYPE_ASSET, Account::TYPE_EXPENSE])) {
+            return $debits - $credits;
+        } else {
+            return $credits - $debits;
+        }
     }
 
     /**
-     * Get Cost of Goods Sold balance
+     * Calculate retained earnings
      */
-    protected function getCOGSBalance(Organization $organization, Carbon $startDate, Carbon $endDate, string $currency): float
+    protected function calculateRetainedEarnings(Organization $organization, Carbon $asOfDate): float
     {
-        $cogsAccounts = Account::where('organization_id', $organization->id)
-            ->where('type', Account::TYPE_EXPENSE)
-            ->where('name', 'LIKE', '%cost of goods sold%')
-            ->orWhere('name', 'LIKE', '%cogs%')
-            ->get();
-
-        $totalCOGS = 0;
-        foreach ($cogsAccounts as $account) {
-            $totalCOGS += $this->getAccountBalanceForPeriod($account, $startDate, $endDate, $currency);
-        }
-
-        return $totalCOGS;
+        // Get all revenue and expense transactions up to the date
+        $revenueBalance = $this->getAccountBalances($organization, Account::TYPE_REVENUE, null, $asOfDate)->sum('balance');
+        $expenseBalance = $this->getAccountBalances($organization, Account::TYPE_EXPENSE, null, $asOfDate)->sum('balance');
+        
+        return $revenueBalance - $expenseBalance;
     }
 
     /**
-     * Get cash balance
+     * Calculate current ratio
      */
-    protected function getCashBalance(Organization $organization, Carbon $asOfDate, string $currency): float
+    protected function calculateCurrentRatio(Collection $assets, Collection $liabilities): float
     {
-        $cashAccounts = Account::where('organization_id', $organization->id)
-            ->where('type', Account::TYPE_ASSET)
-            ->where(function ($query) {
-                $query->where('name', 'LIKE', '%cash%')
-                      ->orWhere('name', 'LIKE', '%bank%');
+        $currentAssets = $assets->filter(function ($item) {
+            return in_array($item['accounts']->first()->subtype ?? '', ['cash', 'accounts_receivable', 'inventory', 'prepaid']);
+        })->sum('total');
+
+        $currentLiabilities = $liabilities->filter(function ($item) {
+            return in_array($item['accounts']->first()->subtype ?? '', ['accounts_payable', 'accrued_liabilities', 'short_term_debt']);
+        })->sum('total');
+
+        return $currentLiabilities > 0 ? $currentAssets / $currentLiabilities : 0;
+    }
+
+    /**
+     * Calculate quick ratio
+     */
+    protected function calculateQuickRatio(Collection $assets, Collection $liabilities): float
+    {
+        $quickAssets = $assets->filter(function ($item) {
+            return in_array($item['accounts']->first()->subtype ?? '', ['cash', 'accounts_receivable']);
+        })->sum('total');
+
+        $currentLiabilities = $liabilities->filter(function ($item) {
+            return in_array($item['accounts']->first()->subtype ?? '', ['accounts_payable', 'accrued_liabilities', 'short_term_debt']);
+        })->sum('total');
+
+        return $currentLiabilities > 0 ? $quickAssets / $currentLiabilities : 0;
+    }
+
+    /**
+     * Get cash balance as of date
+     */
+    protected function getCashBalance(Organization $organization, Carbon $asOfDate): float
+    {
+        return $this->getAccountBalances($organization, Account::TYPE_ASSET, null, $asOfDate)
+            ->filter(function ($item) {
+                return $item['account']->subtype === 'cash';
             })
-            ->get();
-
-        $totalCash = 0;
-        foreach ($cashAccounts as $account) {
-            $totalCash += $this->getAccountBalance($account, $asOfDate, $currency);
-        }
-
-        return $totalCash;
+            ->sum('balance');
     }
 
     /**
-     * Get operating cash flow (indirect method)
+     * Calculate operating cash flow
      */
-    protected function getOperatingCashFlow(Organization $organization, Carbon $startDate, Carbon $endDate, string $currency, float $netIncome): array
+    protected function calculateOperatingCashFlow(Organization $organization, Carbon $startDate, Carbon $endDate): array
     {
-        $operatingCashFlow = [
-            [
-                'description' => 'Net Income',
-                'amount' => $netIncome,
-            ]
+        // This is a simplified version - in practice, you'd need more detailed cash flow analysis
+        $netIncome = $this->generateProfitLoss($organization, $startDate, $endDate)['net_income'];
+        
+        return [
+            'net_income' => $netIncome,
+            'adjustments' => [],
+            'working_capital_changes' => [],
+            'total' => $netIncome, // Simplified
         ];
-
-        // Add back non-cash expenses (depreciation, amortization)
-        $depreciationAccounts = Account::where('organization_id', $organization->id)
-            ->where('type', Account::TYPE_EXPENSE)
-            ->where(function ($query) {
-                $query->where('name', 'LIKE', '%depreciation%')
-                      ->orWhere('name', 'LIKE', '%amortization%');
-            })
-            ->get();
-
-        foreach ($depreciationAccounts as $account) {
-            $amount = $this->getAccountBalanceForPeriod($account, $startDate, $endDate, $currency);
-            if ($amount > 0) {
-                $operatingCashFlow[] = [
-                    'description' => $account->name,
-                    'amount' => $amount,
-                ];
-            }
-        }
-
-        // Changes in working capital (simplified)
-        $workingCapitalChanges = $this->getWorkingCapitalChanges($organization, $startDate, $endDate, $currency);
-        $operatingCashFlow = array_merge($operatingCashFlow, $workingCapitalChanges);
-
-        return $operatingCashFlow;
     }
 
     /**
-     * Get investing cash flow
+     * Calculate investing cash flow
      */
-    protected function getInvestingCashFlow(Organization $organization, Carbon $startDate, Carbon $endDate, string $currency): array
-    {
-        // This is a simplified version - in practice, you'd track specific investing activities
-        $investingCashFlow = [];
-
-        // Changes in fixed assets (simplified)
-        $fixedAssetAccounts = Account::where('organization_id', $organization->id)
-            ->where('type', Account::TYPE_ASSET)
-            ->where('subtype', Account::SUBTYPE_NON_CURRENT_ASSET)
-            ->get();
-
-        foreach ($fixedAssetAccounts as $account) {
-            $change = $this->getAccountBalanceForPeriod($account, $startDate, $endDate, $currency);
-            if (abs($change) > 0.01) {
-                $investingCashFlow[] = [
-                    'description' => 'Change in ' . $account->name,
-                    'amount' => -$change, // Negative because increase in assets uses cash
-                ];
-            }
-        }
-
-        return $investingCashFlow;
-    }
-
-    /**
-     * Get financing cash flow
-     */
-    protected function getFinancingCashFlow(Organization $organization, Carbon $startDate, Carbon $endDate, string $currency): array
-    {
-        // This is a simplified version - in practice, you'd track specific financing activities
-        $financingCashFlow = [];
-
-        // Changes in long-term debt
-        $debtAccounts = Account::where('organization_id', $organization->id)
-            ->where('type', Account::TYPE_LIABILITY)
-            ->where('subtype', Account::SUBTYPE_NON_CURRENT_LIABILITY)
-            ->get();
-
-        foreach ($debtAccounts as $account) {
-            $change = $this->getAccountBalanceForPeriod($account, $startDate, $endDate, $currency);
-            if (abs($change) > 0.01) {
-                $financingCashFlow[] = [
-                    'description' => 'Change in ' . $account->name,
-                    'amount' => $change, // Positive because increase in liabilities provides cash
-                ];
-            }
-        }
-
-        // Changes in equity
-        $equityAccounts = Account::where('organization_id', $organization->id)
-            ->where('type', Account::TYPE_EQUITY)
-            ->get();
-
-        foreach ($equityAccounts as $account) {
-            $change = $this->getAccountBalanceForPeriod($account, $startDate, $endDate, $currency);
-            if (abs($change) > 0.01) {
-                $financingCashFlow[] = [
-                    'description' => 'Change in ' . $account->name,
-                    'amount' => $change, // Positive because increase in equity provides cash
-                ];
-            }
-        }
-
-        return $financingCashFlow;
-    }
-
-    /**
-     * Get working capital changes
-     */
-    protected function getWorkingCapitalChanges(Organization $organization, Carbon $startDate, Carbon $endDate, string $currency): array
-    {
-        $changes = [];
-
-        // Accounts Receivable
-        $arAccounts = Account::where('organization_id', $organization->id)
-            ->where('type', Account::TYPE_ASSET)
-            ->where('name', 'LIKE', '%receivable%')
-            ->get();
-
-        foreach ($arAccounts as $account) {
-            $change = $this->getAccountBalanceForPeriod($account, $startDate, $endDate, $currency);
-            if (abs($change) > 0.01) {
-                $changes[] = [
-                    'description' => 'Change in ' . $account->name,
-                    'amount' => -$change, // Negative because increase in AR uses cash
-                ];
-            }
-        }
-
-        // Accounts Payable
-        $apAccounts = Account::where('organization_id', $organization->id)
-            ->where('type', Account::TYPE_LIABILITY)
-            ->where('name', 'LIKE', '%payable%')
-            ->get();
-
-        foreach ($apAccounts as $account) {
-            $change = $this->getAccountBalanceForPeriod($account, $startDate, $endDate, $currency);
-            if (abs($change) > 0.01) {
-                $changes[] = [
-                    'description' => 'Change in ' . $account->name,
-                    'amount' => $change, // Positive because increase in AP provides cash
-                ];
-            }
-        }
-
-        return $changes;
-    }
-
-    /**
-     * Calculate section total
-     */
-    protected function calculateSectionTotal(array $section): float
-    {
-        $total = 0;
-        foreach ($section as $subsection) {
-            if (isset($subsection['total'])) {
-                $total += $subsection['total'];
-            } elseif (isset($subsection['amount'])) {
-                $total += $subsection['amount'];
-            }
-        }
-        return $total;
-    }
-
-    /**
-     * Calculate balance sheet variance
-     */
-    protected function calculateBalanceSheetVariance(array $current, array $comparison): array
+    protected function calculateInvestingCashFlow(Organization $organization, Carbon $startDate, Carbon $endDate): array
     {
         return [
-            'total_assets_variance' => $current['total_assets'] - $comparison['total_assets'],
-            'total_liabilities_variance' => $current['total_liabilities'] - $comparison['total_liabilities'],
-            'total_equity_variance' => $current['total_equity'] - $comparison['total_equity'],
+            'capital_expenditures' => 0,
+            'asset_sales' => 0,
+            'investments' => 0,
+            'total' => 0,
         ];
     }
 
     /**
-     * Calculate income statement variance
+     * Calculate financing cash flow
      */
-    protected function calculateIncomeStatementVariance(array $current, array $comparison): array
+    protected function calculateFinancingCashFlow(Organization $organization, Carbon $startDate, Carbon $endDate): array
     {
         return [
-            'revenue_variance' => $current['total_revenue'] - $comparison['total_revenue'],
-            'expense_variance' => $current['total_expenses'] - $comparison['total_expenses'],
-            'net_income_variance' => $current['net_income'] - $comparison['net_income'],
+            'debt_proceeds' => 0,
+            'debt_payments' => 0,
+            'equity_proceeds' => 0,
+            'dividends_paid' => 0,
+            'total' => 0,
         ];
     }
 
     /**
-     * Convert currency (simplified - in practice, use a proper exchange rate service)
+     * Get cost of goods sold
      */
-    protected function convertCurrency(float $amount, string $fromCurrency, string $toCurrency, Carbon $date): float
+    protected function getCostOfGoodsSold(Organization $organization, Carbon $startDate, Carbon $endDate): float
     {
-        if ($fromCurrency === $toCurrency) {
-            return $amount;
-        }
-
-        // This is a placeholder - implement proper currency conversion
-        // You would typically use an exchange rate service or stored rates
-        return $amount; // For now, return as-is
-    }
-
-    /**
-     * Clear report cache
-     */
-    public function clearReportCache(Organization $organization, string $reportType = null): void
-    {
-        $pattern = $reportType 
-            ? "{$reportType}_{$organization->id}_*"
-            : "*_{$organization->id}_*";
-            
-        $keys = Cache::getRedis()->keys($pattern);
-        if (!empty($keys)) {
-            Cache::getRedis()->del($keys);
-        }
+        return $this->getAccountBalances($organization, Account::TYPE_EXPENSE, $startDate, $endDate)
+            ->filter(function ($item) {
+                return $item['account']->subtype === 'cost_of_goods_sold';
+            })
+            ->sum('balance');
     }
 }
 
