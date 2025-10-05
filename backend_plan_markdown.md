@@ -107,10 +107,13 @@ A **cloud-native, horizontally scalable accounting platform** built with **Larav
    - Purpose: Distributed caching, session storage
    - Features: Organization-prefixed keys, cache tags
 
-5. **Database Cluster**
-   - Technology: MySQL 8+ / PostgreSQL 15+
-   - Purpose: Sharded databases by organization_id
-   - Features: Read replicas, ProxySQL/Vitess sharding
+5. **Hybrid Multi-Tenant Database Architecture**
+   - **Strategy**: Dynamic tenant routing based on business rules
+   - **Small Tenants**: Shared databases with organization_id isolation (4 shards)
+   - **Enterprise Tenants**: Dedicated databases for maximum performance
+   - **Auto-Migration**: Automatic promotion from shared to dedicated based on growth
+   - **Technology**: MySQL 8+ / PostgreSQL 15+ with intelligent connection switching
+   - **Features**: Read replicas, ProxySQL/Vitess sharding, regional clustering
 
 6. **Search Layer**
    - Technology: Meilisearch / Elasticsearch
@@ -126,6 +129,149 @@ A **cloud-native, horizontally scalable accounting platform** built with **Larav
    - Technology: Laravel Horizon + Redis
    - Purpose: Background job processing
    - Features: Module-specific queues, priority handling
+
+---
+
+## 🏢 Hybrid Multi-Tenant Architecture
+
+### Dynamic Tenant Resolution Strategy
+
+The platform uses an intelligent hybrid approach that automatically routes tenants to the optimal database architecture based on their business requirements and growth patterns.
+
+#### **Tenant Classification Rules**
+
+```php
+// Automatic tenant routing based on business rules
+class TenantResolver {
+    private const ENTERPRISE_USER_THRESHOLD = 1000;
+    private const ENTERPRISE_TRANSACTION_THRESHOLD = 100000;
+    private const HIGH_VOLUME_PLANS = ['enterprise', 'premium'];
+    
+    public function determineDatabaseStrategy(Tenant $tenant): string {
+        // Rule 1: Enterprise plans → Dedicated database
+        if (in_array($tenant->plan, self::HIGH_VOLUME_PLANS)) {
+            return 'dedicated';
+        }
+        
+        // Rule 2: High user count → Dedicated database  
+        if ($tenant->user_count >= self::ENTERPRISE_USER_THRESHOLD) {
+            return 'dedicated';
+        }
+        
+        // Rule 3: High transaction volume → Dedicated database
+        if ($tenant->monthly_transaction_count >= self::ENTERPRISE_TRANSACTION_THRESHOLD) {
+            return 'dedicated';
+        }
+        
+        // Rule 4: Compliance requirements → Dedicated database
+        if ($tenant->requires_data_isolation) {
+            return 'dedicated';
+        }
+        
+        // Rule 5: Geographic clustering → Regional shared database
+        if ($tenant->region && $this->hasRegionalCluster($tenant->region)) {
+            return 'clustered';
+        }
+        
+        // Default: Shared database with tenant isolation
+        return 'shared';
+    }
+}
+```
+
+#### **Database Architecture Types**
+
+**1. Shared Database Strategy (Small-Medium Tenants)**
+- **Target**: Startups, small businesses (< 1000 users)
+- **Architecture**: 4 shared database shards with `organization_id` isolation
+- **Benefits**: Cost-effective, easy maintenance, quick deployment
+- **Schema**: All tables include `organization_id` for data isolation
+- **Scaling**: Automatic promotion when growth thresholds are met
+
+**2. Dedicated Database Strategy (Enterprise Tenants)**
+- **Target**: Large enterprises, high-volume businesses (> 1000 users)
+- **Architecture**: Individual database per tenant
+- **Benefits**: Maximum performance, complete isolation, custom schema
+- **Schema**: Clean tables without `organization_id` (database-level isolation)
+- **Scaling**: Horizontal scaling across multiple database servers
+
+**3. Regional Clustering Strategy (Geographic Distribution)**
+- **Target**: Multi-regional organizations
+- **Architecture**: Regional database clusters (US-East, US-West, EU-West, Asia-Pacific)
+- **Benefits**: Reduced latency, data sovereignty compliance
+- **Schema**: Shared databases within regions with `organization_id` isolation
+- **Scaling**: Regional load balancing and failover
+
+#### **Automatic Tenant Migration**
+
+```php
+// Automated promotion system
+class TenantMigrationService {
+    public function checkForAutoPromotion(): void {
+        $candidates = Tenant::where('database_strategy', 'shared')
+            ->where(function($query) {
+                $query->where('user_count', '>=', 1000)
+                      ->orWhere('monthly_transaction_count', '>=', 100000)
+                      ->orWhere('plan', 'enterprise');
+            })
+            ->get();
+            
+        foreach ($candidates as $tenant) {
+            $this->promoteToDeadicated($tenant);
+        }
+    }
+}
+```
+
+#### **Smart Model Architecture**
+
+```php
+// Hybrid models that adapt to database strategy
+abstract class HybridModel extends Model {
+    protected static function booted() {
+        // Only apply organization scope for shared databases
+        if (app('tenant_strategy') === 'shared') {
+            static::addGlobalScope(new OrganizationScope);
+        }
+    }
+    
+    public function getFillable() {
+        $fillable = $this->fillable;
+        
+        // Add organization_id for shared databases
+        if ($this->isSharedDatabase()) {
+            $fillable[] = 'organization_id';
+        }
+        
+        return $fillable;
+    }
+}
+```
+
+#### **Database Configuration Matrix**
+
+| Tenant Type | Database Strategy | Connection | Schema | Performance | Cost |
+|-------------|------------------|------------|---------|-------------|------|
+| **Startup** | Shared Shard | `shared_shard_1-4` | With `organization_id` | Good | Low |
+| **Growing** | Auto-Migration | Dynamic | Transitional | Optimized | Medium |
+| **Enterprise** | Dedicated | `tenant_specific` | Clean schema | Maximum | High |
+| **Global** | Regional Cluster | `region_specific` | With `organization_id` | Optimized | Medium |
+
+#### **Monitoring & Analytics**
+
+- **Growth Tracking**: Automatic monitoring of user count, transaction volume, storage usage
+- **Performance Metrics**: Query performance, connection pooling, cache hit rates
+- **Migration Alerts**: Proactive notifications when tenants approach promotion thresholds
+- **Cost Optimization**: Resource utilization tracking and optimization recommendations
+
+#### **Benefits of Hybrid Architecture**
+
+✅ **Cost Efficiency**: Small tenants share resources, large tenants get dedicated performance  
+✅ **Seamless Scaling**: Automatic promotion path from shared to dedicated  
+✅ **Maximum Performance**: Enterprise tenants get dedicated resources  
+✅ **Global Reach**: Regional clustering for worldwide performance  
+✅ **Compliance Ready**: Dedicated databases for strict data isolation requirements  
+✅ **Operational Excellence**: Automated management and monitoring  
 
 ---
 
@@ -468,11 +614,16 @@ dispatch(new GenerateReport($report))->onQueue('reporting-low');
 
 ## 🗓️ Implementation Roadmap
 
-### Phase 1: Foundation (2-3 months)
+### Phase 1: Foundation & Hybrid Architecture (2-3 months)
 - ✅ Install nwidart/laravel-modules package
 - ✅ Set up Laravel 12 with Octane/Boost
+- ✅ **Implement Hybrid Multi-Tenant Architecture**
+  - ✅ Create landlord database for tenant management
+  - ✅ Set up 4 shared database shards for small tenants
+  - ✅ Build dynamic tenant resolution middleware
+  - ✅ Implement smart HybridModel base class
 - ✅ Create base module structure (Organization, Shared)
-- ✅ Implement organization-scoped models with Global Scopes
+- ✅ Implement adaptive organization-scoped models
 - ✅ Set up module-based routing and middleware
 - ✅ Configure Redis Cluster for caching
 - ✅ Implement authentication and authorization
@@ -496,8 +647,17 @@ dispatch(new GenerateReport($report))->onQueue('reporting-low');
 - ✅ Integrate payment gateways
 - ✅ Implement document management
 
-### Phase 4: Scaling Infrastructure (2 months)
-- ✅ Configure database sharding with ProxySQL
+### Phase 4: Advanced Multi-Tenant & Scaling (2 months)
+- ✅ **Implement Tenant Auto-Migration System**
+  - ✅ Build automatic tenant promotion service
+  - ✅ Create data migration between shared and dedicated databases
+  - ✅ Implement tenant growth monitoring and analytics
+  - ✅ Set up automated promotion thresholds and alerts
+- ✅ **Regional Clustering & Geographic Distribution**
+  - ✅ Set up regional database clusters (US-East, US-West, EU-West)
+  - ✅ Implement geographic tenant routing
+  - ✅ Configure regional load balancing and failover
+- ✅ Configure advanced database sharding with ProxySQL
 - ✅ Set up Redis Cluster for distributed caching
 - ✅ Implement module-level caching strategies
 - ✅ Configure auto-scaling for application layer
@@ -525,9 +685,14 @@ dispatch(new GenerateReport($report))->onQueue('reporting-low');
 - **Monitoring**: Telescope (dev), Prometheus (prod)
 - **API**: RESTful with API Resources
 
-### Database
-- **Primary**: MySQL 8+ / PostgreSQL 15+
-- **Sharding**: Vitess / ProxySQL
+### Database (Hybrid Multi-Tenant Architecture)
+- **Landlord Database**: MySQL 8+ / PostgreSQL 15+ (tenant management)
+- **Shared Databases**: 4 sharded databases for small-medium tenants
+- **Dedicated Databases**: Individual databases for enterprise tenants
+- **Regional Clusters**: Geographic distribution (US-East, US-West, EU-West, Asia-Pacific)
+- **Sharding Technology**: Vitess / ProxySQL for advanced sharding
+- **Auto-Migration**: Intelligent promotion from shared to dedicated
+- **Connection Management**: Dynamic database connection switching
 - **Replication**: Master-Slave with read replicas
 - **Migrations**: Per-module migrations
 

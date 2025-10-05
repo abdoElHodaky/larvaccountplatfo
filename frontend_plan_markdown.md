@@ -113,6 +113,74 @@ A modern, responsive, and performant **Single Page Application (SPA)** built wit
 5. **Vue Component** → Renders with new props
 6. **Browser History** → Updated without page reload
 
+### Multi-Tenant Frontend Architecture
+
+The frontend seamlessly adapts to the backend's hybrid multi-tenant architecture without requiring different codebases for different tenant types.
+
+#### **Tenant-Aware Components**
+
+```javascript
+// Automatic tenant context detection
+export default defineComponent({
+  setup() {
+    const { tenant, tenantStrategy } = useTenant()
+    
+    // Component automatically adapts based on tenant type
+    const features = computed(() => {
+      return tenant.value.plan === 'enterprise' 
+        ? ['advanced-reporting', 'custom-fields', 'api-access']
+        : ['basic-reporting', 'standard-fields']
+    })
+    
+    return { tenant, features }
+  }
+})
+```
+
+#### **Dynamic Feature Loading**
+
+```javascript
+// Features load based on tenant capabilities
+const useFeatures = () => {
+  const { tenant } = useTenant()
+  
+  const availableModules = computed(() => {
+    const baseModules = ['accounting', 'invoicing', 'banking']
+    
+    if (tenant.value.plan === 'enterprise') {
+      return [...baseModules, 'advanced-reporting', 'inventory', 'budgeting']
+    }
+    
+    return baseModules
+  })
+  
+  return { availableModules }
+}
+```
+
+#### **Performance Optimization by Tenant Type**
+
+- **Shared Database Tenants**: Standard caching, optimized for cost-efficiency
+- **Dedicated Database Tenants**: Enhanced caching, real-time features, advanced analytics
+- **Regional Tenants**: CDN optimization, localized content, reduced latency
+
+#### **Tenant-Specific UI Customization**
+
+```vue
+<template>
+  <div class="dashboard">
+    <!-- Enterprise tenants get advanced dashboard -->
+    <AdvancedDashboard v-if="isEnterprise" />
+    
+    <!-- Standard tenants get simplified dashboard -->
+    <StandardDashboard v-else />
+    
+    <!-- Regional customization -->
+    <RegionalCompliance v-if="tenant.region" :region="tenant.region" />
+  </div>
+</template>
+```
+
 ---
 
 ## 📁 Project Structure
