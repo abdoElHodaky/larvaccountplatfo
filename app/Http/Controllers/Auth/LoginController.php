@@ -9,6 +9,7 @@ use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;
+use Inertia\Inertia;
 
 class LoginController extends Controller
 {
@@ -41,13 +42,40 @@ class LoginController extends Controller
     {
         $tenant = app('tenant', null);
         
-        if ($tenant) {
-            // Tenant-specific login form
-            return view('auth.tenant-login', compact('tenant'));
-        } else {
-            // Landlord login form
-            return view('auth.landlord-login');
-        }
+        return Inertia::render('Auth/Login', [
+            'tenant' => $tenant ? [
+                'id' => $tenant->id,
+                'name' => $tenant->name,
+                'subdomain' => $tenant->subdomain,
+                'logo' => $tenant->logo,
+            ] : null,
+            'canResetPassword' => true,
+            'status' => session('status'),
+        ]);
+    }
+
+    /**
+     * Display the login view (alias for Inertia routing)
+     */
+    public function create()
+    {
+        return $this->showLoginForm();
+    }
+
+    /**
+     * Handle login form submission (alias for Inertia routing)
+     */
+    public function store(Request $request)
+    {
+        return $this->login($request);
+    }
+
+    /**
+     * Handle logout (alias for Inertia routing)
+     */
+    public function destroy(Request $request)
+    {
+        return $this->logout($request);
     }
 
     /**
@@ -207,10 +235,23 @@ class LoginController extends Controller
         
         if ($tenant) {
             // Tenant-specific dashboard
-            return route('tenant.dashboard');
+            return route('dashboard');
         } else {
-            // Landlord dashboard
-            return route('landlord.dashboard');
+            // Check if user has multiple tenants
+            $user = Auth::user();
+            $tenants = $user->tenants ?? collect();
+
+            if ($tenants->count() > 1) {
+                // Redirect to tenant selection
+                return route('tenant.select');
+            } elseif ($tenants->count() === 1) {
+                // Set the single tenant and redirect to dashboard
+                session(['tenant_id' => $tenants->first()->id]);
+                return route('dashboard');
+            } else {
+                // No tenants - redirect to tenant selection with warning
+                return route('tenant.select');
+            }
         }
     }
 
@@ -258,7 +299,21 @@ class LoginController extends Controller
      */
     public function showTenantSelection()
     {
-        return view('auth.tenant-selection');
+        $user = Auth::user();
+        $tenants = $user ? $user->tenants : collect();
+
+        return Inertia::render('Auth/TenantSelect', [
+            'tenants' => $tenants->map(function ($tenant) {
+                return [
+                    'id' => $tenant->id,
+                    'name' => $tenant->name,
+                    'slug' => $tenant->slug,
+                    'subdomain' => $tenant->subdomain,
+                    'logo' => $tenant->logo,
+                    'description' => $tenant->description,
+                ];
+            }),
+        ]);
     }
 
     /**
@@ -316,4 +371,3 @@ class LoginController extends Controller
         ]);
     }
 }
-
