@@ -5,19 +5,26 @@ namespace Modules\Accounting\Events;
 use Modules\Shared\Events\BroadcastableDomainEvent;
 use Modules\Accounting\Domain\Entities\Account;
 
-class AccountCreated extends BroadcastableDomainEvent
+class AccountUpdated extends BroadcastableDomainEvent
 {
     private Account $account;
+    private array $changes;
 
-    public function __construct(Account $account)
+    public function __construct(Account $account, array $changes = [])
     {
         parent::__construct();
         $this->account = $account;
+        $this->changes = $changes;
     }
 
     public function getAccount(): Account
     {
         return $this->account;
+    }
+
+    public function getChanges(): array
+    {
+        return $this->changes;
     }
 
     public function getAggregateId(): string
@@ -42,6 +49,7 @@ class AccountCreated extends BroadcastableDomainEvent
             'description' => $this->account->getDescription(),
             'is_active' => $this->account->isActive(),
             'balance' => $this->account->getBalance()->toArray(),
+            'changes' => $this->changes,
         ];
     }
 
@@ -77,17 +85,16 @@ class AccountCreated extends BroadcastableDomainEvent
                     'formatted' => $this->account->getBalance()->format(),
                 ],
                 'is_active' => $this->account->isActive(),
-                'created_at' => $this->account->getCreatedAt()->toISOString(),
+                'updated_at' => $this->account->getUpdatedAt()->toISOString(),
             ],
-            'action' => 'created',
-            'message' => "Account '{$this->account->getName()}' has been created",
+            'changes' => $this->changes,
+            'action' => 'updated',
+            'message' => "Account '{$this->account->getName()}' has been updated",
         ];
     }
 
     public static function fromArray(array $data): static
     {
-        // This would require reconstructing the Account entity from the payload
-        // For now, we'll throw an exception as this requires more complex deserialization
-        throw new \RuntimeException('AccountCreated event deserialization not implemented');
+        throw new \RuntimeException('AccountUpdated event deserialization not implemented');
     }
 }
