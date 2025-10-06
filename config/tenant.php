@@ -338,4 +338,91 @@ return [
         ],
     ],
 
+    /*
+    |--------------------------------------------------------------------------
+    | Integration with Laravel Jetstream
+    |--------------------------------------------------------------------------
+    |
+    | Configuration for integrating multi-tenant features with Jetstream.
+    |
+    */
+
+    'jetstream' => [
+        'team_tenant_mapping' => [
+            'enabled' => true,
+            'auto_create_tenant_for_team' => env('JETSTREAM_AUTO_CREATE_TENANT', false),
+            'team_tenant_relationship' => 'one_to_one', // or 'many_to_one'
+        ],
+
+        'user_tenant_access' => [
+            'cross_tenant_access' => env('JETSTREAM_CROSS_TENANT_ACCESS', false),
+            'tenant_switching' => env('JETSTREAM_TENANT_SWITCHING', true),
+            'require_invitation' => env('JETSTREAM_REQUIRE_INVITATION', true),
+        ],
+
+        'api_tokens' => [
+            'tenant_scoped' => true,
+            'cross_tenant_tokens' => false,
+            'token_abilities_per_tenant' => true,
+        ],
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Integration with Laravel Horizon
+    |--------------------------------------------------------------------------
+    |
+    | Configuration for tenant-aware queue processing.
+    |
+    */
+
+    'horizon' => [
+        'tenant_queues' => [
+            'enabled' => true,
+            'queue_naming_pattern' => 'tenant_{tenant_id}_{queue_name}',
+            'default_queues' => ['default', 'emails', 'reports', 'broadcasts'],
+        ],
+
+        'supervisor_isolation' => [
+            'enabled' => env('HORIZON_TENANT_ISOLATION', true),
+            'supervisor_per_tenant' => env('HORIZON_SUPERVISOR_PER_TENANT', false),
+            'shared_supervisors' => env('HORIZON_SHARED_SUPERVISORS', true),
+        ],
+
+        'job_processing' => [
+            'tenant_context_injection' => true,
+            'tenant_validation' => true,
+            'cross_tenant_job_prevention' => true,
+        ],
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Integration with Laravel Reverb
+    |--------------------------------------------------------------------------
+    |
+    | Configuration for tenant-aware real-time broadcasting.
+    |
+    */
+
+    'reverb' => [
+        'channel_isolation' => [
+            'enabled' => true,
+            'channel_naming_pattern' => 'tenant.{tenant_id}.{channel_name}',
+            'tenant_channel_authorization' => true,
+        ],
+
+        'presence_channels' => [
+            'tenant_scoped' => true,
+            'cross_tenant_presence' => false,
+            'tenant_user_isolation' => true,
+        ],
+
+        'broadcasting' => [
+            'tenant_context_required' => true,
+            'auto_tenant_channel_prefix' => true,
+            'tenant_specific_events' => true,
+        ],
+    ],
+
 ];
