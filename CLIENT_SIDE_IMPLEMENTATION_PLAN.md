@@ -40,6 +40,10 @@ The Laravel Multi-Tenant Accounting Platform has achieved **world-class server-s
 ✅ Automatic retry and error handling
 ✅ Support for multiple request adapters (fetch, axios, etc.)
 ✅ Better performance with intelligent request deduplication
+✅ Built-in throttling and debouncing for API requests
+✅ Advanced lazy loading with useWatcher hook
+✅ Automatic request cancellation and cleanup
+✅ Smart batching for bulk operations
 ```
 
 ##### **Rematch Advantages**
@@ -67,6 +71,9 @@ The Laravel Multi-Tenant Accounting Platform has achieved **world-class server-s
 | **Real-time** | Built-in | Plugin | N/A | Manual |
 | **Learning Curve** | Easy | Medium | Easy | Medium |
 | **Performance** | Excellent | Good | Excellent | Good |
+| **Code Splitting** | Built-in | Manual | N/A | Manual |
+| **Lazy Loading** | Advanced | Basic | N/A | Manual |
+| **Throttling/Debouncing** | Built-in | Manual | N/A | Manual |
 
 #### **Core Technologies**
 ```typescript
@@ -523,17 +530,24 @@ export const accountsApi = apiSlice.injectEndpoints({
 
 #### **Week 13-14: Performance & Optimization**
 
-##### **4.1: Performance Optimization**
+##### **4.1: Advanced Performance Optimization**
 ```typescript
-// Performance Features
-✅ Code splitting and lazy loading
-✅ Virtual scrolling for large lists
-✅ Image optimization and lazy loading
-✅ Bundle size optimization
-✅ Caching strategies
-✅ Service worker implementation
+// Advanced Performance Features with AlovaJS
+✅ Route-based code splitting with preloading strategies
+✅ Component-level lazy loading with Intersection Observer
+✅ Virtual scrolling for large datasets (1000+ items)
+✅ Progressive image loading with blur placeholders
+✅ Advanced bundle optimization and tree shaking
+✅ Intelligent caching strategies with AlovaJS
+✅ Service worker with background sync
 ✅ Progressive Web App (PWA) features
-✅ Performance monitoring integration
+✅ Real-time performance monitoring and adaptive loading
+✅ Request debouncing and throttling implementation
+✅ Optimistic updates for immediate UI feedback
+✅ Smart cache invalidation and warming strategies
+✅ Request deduplication and batching
+✅ Network-aware adaptive loading
+✅ Background data prefetching
 ```
 
 ##### **4.2: Testing & Quality Assurance**
@@ -732,12 +746,17 @@ npm install chart.js react-chartjs-2 date-fns
 # Real-time Communication
 npm install socket.io-client
 
+# Performance & Optimization Dependencies
+npm install react-intersection-observer react-window react-window-infinite-loader
+npm install workbox-webpack-plugin workbox-runtime-caching
+
 # Development Dependencies
 npm install -D @types/react @types/react-dom @types/node
 npm install -D typescript vite @vitejs/plugin-react
 npm install -D eslint prettier @typescript-eslint/parser
 npm install -D jest @testing-library/react @testing-library/jest-dom
 npm install -D playwright @playwright/test
+npm install -D webpack-bundle-analyzer vite-bundle-analyzer
 ```
 
 ### **🏗️ Rematch Store Architecture**
@@ -1254,6 +1273,528 @@ const AccountsList: React.FC = () => {
 export default AccountsList;
 ```
 
+### **⚡ Advanced Performance Features with AlovaJS**
+
+#### **🔄 Code Splitting & Lazy Loading Implementation**
+
+##### **Route-Based Code Splitting**
+```typescript
+// router/index.tsx
+import React, { Suspense } from 'react';
+import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import { useRequest } from 'alova';
+import LoadingSpinner from '../components/LoadingSpinner';
+
+// Lazy load route components
+const Dashboard = React.lazy(() => import('../pages/Dashboard'));
+const Accounts = React.lazy(() => import('../pages/Accounts'));
+const Transactions = React.lazy(() => import('../pages/Transactions'));
+const Reports = React.lazy(() => import('../pages/Reports'));
+
+// Preload critical routes
+const preloadRoutes = () => {
+  import('../pages/Dashboard');
+  import('../pages/Accounts');
+};
+
+// Route configuration with lazy loading
+const router = createBrowserRouter([
+  {
+    path: '/',
+    element: <AppLayout />,
+    children: [
+      {
+        path: 'dashboard',
+        element: (
+          <Suspense fallback={<LoadingSpinner />}>
+            <Dashboard />
+          </Suspense>
+        ),
+      },
+      {
+        path: 'accounts',
+        element: (
+          <Suspense fallback={<LoadingSpinner />}>
+            <Accounts />
+          </Suspense>
+        ),
+      },
+      {
+        path: 'transactions',
+        element: (
+          <Suspense fallback={<LoadingSpinner />}>
+            <Transactions />
+          </Suspense>
+        ),
+      },
+      {
+        path: 'reports',
+        element: (
+          <Suspense fallback={<LoadingSpinner />}>
+            <Reports />
+          </Suspense>
+        ),
+      },
+    ],
+  },
+]);
+
+// Preload routes on app initialization
+React.useEffect(() => {
+  preloadRoutes();
+}, []);
+
+export default function AppRouter() {
+  return <RouterProvider router={router} />;
+}
+```
+
+##### **Component-Level Lazy Loading**
+```typescript
+// components/LazyComponents.tsx
+import React, { Suspense } from 'react';
+import { useInView } from 'react-intersection-observer';
+
+// Lazy load heavy components
+const AccountChart = React.lazy(() => import('./AccountChart'));
+const TransactionTable = React.lazy(() => import('./TransactionTable'));
+const ReportGenerator = React.lazy(() => import('./ReportGenerator'));
+
+// Intersection Observer based lazy loading
+export const LazyAccountChart: React.FC<{ accountId: string }> = ({ accountId }) => {
+  const { ref, inView } = useInView({
+    threshold: 0.1,
+    triggerOnce: true, // Load only once when in view
+  });
+
+  return (
+    <div ref={ref} className="min-h-[400px]">
+      {inView && (
+        <Suspense fallback={<ChartSkeleton />}>
+          <AccountChart accountId={accountId} />
+        </Suspense>
+      )}
+    </div>
+  );
+};
+
+// Progressive loading with priority
+export const LazyTransactionTable: React.FC<{ filters: any }> = ({ filters }) => {
+  const [shouldLoad, setShouldLoad] = React.useState(false);
+  
+  React.useEffect(() => {
+    // Load after critical content is rendered
+    const timer = setTimeout(() => setShouldLoad(true), 100);
+    return () => clearTimeout(timer);
+  }, []);
+
+  if (!shouldLoad) {
+    return <TableSkeleton />;
+  }
+
+  return (
+    <Suspense fallback={<TableSkeleton />}>
+      <TransactionTable filters={filters} />
+    </Suspense>
+  );
+};
+```
+
+#### **🎯 Throttling & Debouncing with AlovaJS**
+
+##### **Search with Debouncing**
+```typescript
+// hooks/useSearchAccounts.ts
+import { useWatcher } from 'alova';
+import { accountsApi } from '../api/accounts';
+import { useState, useMemo } from 'react';
+
+export const useSearchAccounts = () => {
+  const [searchTerm, setSearchTerm] = useState('');
+  const [filters, setFilters] = useState({});
+
+  // Debounced search with AlovaJS useWatcher
+  const {
+    data: accounts,
+    loading: searching,
+    error,
+  } = useWatcher(
+    () => accountsApi.getAccounts({ 
+      search: searchTerm, 
+      ...filters 
+    }),
+    [searchTerm, filters], // Dependencies
+    {
+      immediate: false, // Don't fetch immediately
+      debounce: 500,    // 500ms debounce
+      abortLast: true,  // Cancel previous requests
+    }
+  );
+
+  // Throttled filter updates
+  const throttledSetFilters = useMemo(
+    () => throttle((newFilters: any) => {
+      setFilters(newFilters);
+    }, 1000), // 1 second throttle
+    []
+  );
+
+  return {
+    accounts,
+    searching,
+    error,
+    searchTerm,
+    setSearchTerm,
+    filters,
+    setFilters: throttledSetFilters,
+  };
+};
+
+// Utility throttle function
+function throttle<T extends (...args: any[]) => any>(
+  func: T,
+  delay: number
+): (...args: Parameters<T>) => void {
+  let timeoutId: NodeJS.Timeout | null = null;
+  let lastExecTime = 0;
+  
+  return (...args: Parameters<T>) => {
+    const currentTime = Date.now();
+    
+    if (currentTime - lastExecTime > delay) {
+      func(...args);
+      lastExecTime = currentTime;
+    } else {
+      if (timeoutId) clearTimeout(timeoutId);
+      timeoutId = setTimeout(() => {
+        func(...args);
+        lastExecTime = Date.now();
+      }, delay - (currentTime - lastExecTime));
+    }
+  };
+}
+```
+
+##### **Real-time Updates with Throttling**
+```typescript
+// hooks/useRealtimeData.ts
+import { useWatcher, useRequest } from 'alova';
+import { accountsApi } from '../api/accounts';
+import { useEffect, useRef } from 'react';
+
+export const useRealtimeAccountBalances = (accountIds: string[]) => {
+  const updateCountRef = useRef(0);
+  const lastUpdateRef = useRef(Date.now());
+
+  // Throttled real-time updates
+  const {
+    data: balances,
+    loading,
+    send: refreshBalances,
+  } = useWatcher(
+    () => accountsApi.getAccountBalances(accountIds),
+    [accountIds],
+    {
+      immediate: true,
+      throttle: 2000, // Throttle updates to every 2 seconds
+      abortLast: true,
+    }
+  );
+
+  // WebSocket integration with throttling
+  useEffect(() => {
+    const ws = new WebSocket(process.env.REACT_APP_WS_URL!);
+    
+    const throttledUpdate = throttle(() => {
+      refreshBalances();
+      updateCountRef.current++;
+    }, 1000); // 1 second throttle for WebSocket updates
+
+    ws.onmessage = (event) => {
+      const data = JSON.parse(event.data);
+      if (data.type === 'balance_update' && accountIds.includes(data.accountId)) {
+        throttledUpdate();
+      }
+    };
+
+    return () => {
+      ws.close();
+    };
+  }, [accountIds, refreshBalances]);
+
+  return {
+    balances,
+    loading,
+    updateCount: updateCountRef.current,
+    lastUpdate: lastUpdateRef.current,
+  };
+};
+```
+
+#### **📊 Advanced Caching with Smart Invalidation**
+
+##### **Intelligent Cache Management**
+```typescript
+// api/cacheStrategies.ts
+import { alovaInstance } from './alova';
+import { invalidateCache, updateCache } from 'alova';
+
+// Cache tags for different data types
+export const CACHE_TAGS = {
+  ACCOUNTS: 'accounts',
+  TRANSACTIONS: 'transactions',
+  REPORTS: 'reports',
+  DASHBOARD: 'dashboard',
+  USER_PREFERENCES: 'user-preferences',
+} as const;
+
+// Smart cache invalidation strategies
+export const cacheStrategies = {
+  // Invalidate related caches when account is updated
+  onAccountUpdate: (accountId: string) => {
+    invalidateCache([
+      CACHE_TAGS.ACCOUNTS,
+      CACHE_TAGS.DASHBOARD,
+      `account-${accountId}`,
+      `transactions-${accountId}`,
+    ]);
+  },
+
+  // Selective cache updates for transactions
+  onTransactionCreate: (transaction: any) => {
+    // Update account balances immediately
+    updateCache(`account-${transaction.debit_account_id}`, (oldData: any) => ({
+      ...oldData,
+      balance: oldData.balance - transaction.amount,
+    }));
+    
+    updateCache(`account-${transaction.credit_account_id}`, (oldData: any) => ({
+      ...oldData,
+      balance: oldData.balance + transaction.amount,
+    }));
+
+    // Invalidate transaction lists and dashboard
+    invalidateCache([
+      CACHE_TAGS.TRANSACTIONS,
+      CACHE_TAGS.DASHBOARD,
+    ]);
+  },
+
+  // Batch cache operations for bulk updates
+  onBulkAccountUpdate: (accountIds: string[]) => {
+    const cachesToInvalidate = [
+      CACHE_TAGS.ACCOUNTS,
+      CACHE_TAGS.DASHBOARD,
+      ...accountIds.map(id => `account-${id}`),
+    ];
+    
+    invalidateCache(cachesToInvalidate);
+  },
+};
+
+// Cache warming strategies
+export const cacheWarming = {
+  // Preload critical data
+  preloadDashboardData: async () => {
+    const promises = [
+      alovaInstance.Get('/api/dashboard/summary'),
+      alovaInstance.Get('/api/accounts?type=asset&limit=10'),
+      alovaInstance.Get('/api/transactions/recent?limit=5'),
+    ];
+    
+    await Promise.allSettled(promises);
+  },
+
+  // Background cache refresh
+  backgroundRefresh: () => {
+    setInterval(() => {
+      // Refresh stale cache entries
+      alovaInstance.Get('/api/dashboard/summary', {
+        cacheFor: 0, // Force refresh
+        tag: CACHE_TAGS.DASHBOARD,
+      });
+    }, 5 * 60 * 1000); // Every 5 minutes
+  },
+};
+```
+
+#### **🚀 Performance Monitoring & Optimization**
+
+##### **Request Performance Tracking**
+```typescript
+// utils/performanceMonitor.ts
+import { alovaInstance } from '../api/alova';
+
+interface PerformanceMetrics {
+  requestCount: number;
+  averageResponseTime: number;
+  cacheHitRate: number;
+  errorRate: number;
+}
+
+class PerformanceMonitor {
+  private metrics: PerformanceMetrics = {
+    requestCount: 0,
+    averageResponseTime: 0,
+    cacheHitRate: 0,
+    errorRate: 0,
+  };
+
+  private responseTimes: number[] = [];
+  private cacheHits = 0;
+  private errors = 0;
+
+  constructor() {
+    this.setupInterceptors();
+  }
+
+  private setupInterceptors() {
+    // Track request performance
+    alovaInstance.beforeRequest((method) => {
+      method.meta = {
+        ...method.meta,
+        startTime: performance.now(),
+      };
+    });
+
+    alovaInstance.responded.onSuccess = (response, method) => {
+      const endTime = performance.now();
+      const duration = endTime - (method.meta?.startTime || endTime);
+      
+      this.recordRequest(duration, response.headers.get('x-cache') === 'hit');
+      
+      return response;
+    };
+
+    alovaInstance.responded.onError = (error, method) => {
+      const endTime = performance.now();
+      const duration = endTime - (method.meta?.startTime || endTime);
+      
+      this.recordRequest(duration, false, true);
+      
+      throw error;
+    };
+  }
+
+  private recordRequest(duration: number, cacheHit: boolean, isError = false) {
+    this.metrics.requestCount++;
+    this.responseTimes.push(duration);
+    
+    if (cacheHit) this.cacheHits++;
+    if (isError) this.errors++;
+
+    // Calculate averages
+    this.metrics.averageResponseTime = 
+      this.responseTimes.reduce((a, b) => a + b, 0) / this.responseTimes.length;
+    
+    this.metrics.cacheHitRate = this.cacheHits / this.metrics.requestCount;
+    this.metrics.errorRate = this.errors / this.metrics.requestCount;
+
+    // Keep only last 100 response times
+    if (this.responseTimes.length > 100) {
+      this.responseTimes = this.responseTimes.slice(-100);
+    }
+  }
+
+  getMetrics(): PerformanceMetrics {
+    return { ...this.metrics };
+  }
+
+  // Performance optimization suggestions
+  getOptimizationSuggestions(): string[] {
+    const suggestions: string[] = [];
+    
+    if (this.metrics.averageResponseTime > 1000) {
+      suggestions.push('Consider implementing request batching for better performance');
+    }
+    
+    if (this.metrics.cacheHitRate < 0.7) {
+      suggestions.push('Increase cache duration for frequently accessed data');
+    }
+    
+    if (this.metrics.errorRate > 0.05) {
+      suggestions.push('Implement better error handling and retry mechanisms');
+    }
+    
+    return suggestions;
+  }
+}
+
+export const performanceMonitor = new PerformanceMonitor();
+```
+
+##### **Adaptive Loading Strategies**
+```typescript
+// hooks/useAdaptiveLoading.ts
+import { useState, useEffect } from 'react';
+import { useRequest } from 'alova';
+import { performanceMonitor } from '../utils/performanceMonitor';
+
+interface AdaptiveLoadingConfig {
+  enableLazyLoading: boolean;
+  batchSize: number;
+  cacheStrategy: 'aggressive' | 'conservative' | 'adaptive';
+  prefetchThreshold: number;
+}
+
+export const useAdaptiveLoading = () => {
+  const [config, setConfig] = useState<AdaptiveLoadingConfig>({
+    enableLazyLoading: true,
+    batchSize: 20,
+    cacheStrategy: 'adaptive',
+    prefetchThreshold: 0.8,
+  });
+
+  // Adapt loading strategy based on performance metrics
+  useEffect(() => {
+    const metrics = performanceMonitor.getMetrics();
+    
+    // Adjust based on network performance
+    if (metrics.averageResponseTime > 2000) {
+      setConfig(prev => ({
+        ...prev,
+        enableLazyLoading: true,
+        batchSize: 10, // Smaller batches for slow connections
+        cacheStrategy: 'aggressive',
+      }));
+    } else if (metrics.averageResponseTime < 500) {
+      setConfig(prev => ({
+        ...prev,
+        batchSize: 50, // Larger batches for fast connections
+        cacheStrategy: 'conservative',
+      }));
+    }
+
+    // Adjust based on cache performance
+    if (metrics.cacheHitRate < 0.5) {
+      setConfig(prev => ({
+        ...prev,
+        cacheStrategy: 'aggressive',
+        prefetchThreshold: 0.6, // More aggressive prefetching
+      }));
+    }
+  }, []);
+
+  return config;
+};
+
+// Adaptive data fetching hook
+export const useAdaptiveDataFetching = <T>(
+  fetchFn: () => Promise<T>,
+  dependencies: any[] = []
+) => {
+  const config = useAdaptiveLoading();
+  
+  const { data, loading, error } = useRequest(fetchFn, {
+    immediate: !config.enableLazyLoading,
+    debounce: config.cacheStrategy === 'aggressive' ? 100 : 300,
+    throttle: config.cacheStrategy === 'conservative' ? 1000 : 500,
+  });
+
+  return { data, loading, error, config };
+};
+```
+
 ---
 
 ## 🔧 **TECHNICAL SPECIFICATIONS**
@@ -1333,28 +1874,41 @@ export default AccountsList;
 
 #### **Performance Targets**
 ```typescript
-// Performance Metrics
-✅ First Contentful Paint (FCP): < 1.5s
-✅ Largest Contentful Paint (LCP): < 2.5s
-✅ First Input Delay (FID): < 100ms
-✅ Cumulative Layout Shift (CLS): < 0.1
-✅ Time to Interactive (TTI): < 3.5s
-✅ Bundle size: < 500KB (gzipped)
-✅ API response handling: < 200ms perceived
-✅ Chart rendering: < 1s for 1000+ data points
+// Core Web Vitals & Performance Metrics
+✅ First Contentful Paint (FCP): < 1.2s (improved with code splitting)
+✅ Largest Contentful Paint (LCP): < 2.0s (improved with lazy loading)
+✅ First Input Delay (FID): < 50ms (improved with throttling)
+✅ Cumulative Layout Shift (CLS): < 0.05 (improved with skeleton loading)
+✅ Time to Interactive (TTI): < 2.5s (improved with progressive loading)
+✅ Bundle size: < 300KB (gzipped) - reduced with code splitting
+✅ API response handling: < 100ms perceived (with optimistic updates)
+✅ Chart rendering: < 500ms for 1000+ data points (with lazy loading)
+✅ Search debounce: 300-500ms for optimal UX
+✅ Real-time updates: Throttled to 1-2s intervals
+✅ Cache hit rate: > 80% for frequently accessed data
+✅ Request deduplication: 100% for identical concurrent requests
 ```
 
 #### **Optimization Strategies**
 ```typescript
-// Performance Optimizations
-✅ Code splitting by routes and features
-✅ Lazy loading of non-critical components
-✅ Virtual scrolling for large datasets
-✅ Image optimization and lazy loading
-✅ Service worker for caching
-✅ Bundle analysis and optimization
-✅ Tree shaking for unused code
-✅ Preloading of critical resources
+// Advanced Performance Optimizations with AlovaJS
+✅ Route-based code splitting with React.lazy()
+✅ Component-level lazy loading with Intersection Observer
+✅ Progressive loading with priority-based rendering
+✅ Virtual scrolling for large datasets (1000+ items)
+✅ Image optimization and lazy loading with blur placeholders
+✅ Service worker for advanced caching strategies
+✅ Bundle analysis and optimization with webpack-bundle-analyzer
+✅ Tree shaking for unused code elimination
+✅ Preloading of critical resources with <link rel="preload">
+✅ Request debouncing (300-500ms) for search and filters
+✅ Request throttling (1-2s) for real-time updates
+✅ Intelligent cache invalidation with AlovaJS tags
+✅ Optimistic updates for immediate UI feedback
+✅ Request deduplication for concurrent identical requests
+✅ Adaptive loading based on network performance
+✅ Background cache warming for critical data
+✅ Smart batching for bulk operations
 ```
 
 ---
