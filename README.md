@@ -609,6 +609,88 @@ $result = app(TenantProvisioningService::class)->provisionTenant(
 - **Encryption**: Data encryption at rest and in transit
 - **Compliance**: SOC 2, GDPR ready architecture
 
+### Complete Accounting System Architecture
+```mermaid
+graph TB
+    subgraph "Frontend Layer - React Components"
+        CHART[Chart of Accounts Interface]
+        ACCOUNT_FORM[Account Creation Form]
+        ACCOUNT_DETAIL[Account Detail View]
+        TRANSACTION[Transaction Management]
+        JOURNAL[Journal Entry Interface]
+        SELECTOR[Account Selector Component]
+    end
+
+    subgraph "API Layer - Laravel Controllers"
+        ACCOUNT_CTRL[AccountController]
+        TRANSACTION_CTRL[TransactionController]
+        JOURNAL_CTRL[JournalEntryController]
+        VALIDATION[Request Validation Classes]
+    end
+
+    subgraph "Business Logic Layer - Models"
+        ACCOUNT_MODEL[Account Model]
+        TRANSACTION_MODEL[Transaction Model]
+        JOURNAL_MODEL[JournalEntry Model]
+        BALANCE_MODEL[AccountBalance Model]
+    end
+
+    subgraph "Data Layer - Database"
+        ACCOUNTS_TABLE[(Accounts Table)]
+        TRANSACTIONS_TABLE[(Transactions Table)]
+        JOURNAL_TABLE[(Journal Entries Table)]
+        BALANCES_TABLE[(Account Balances Table)]
+    end
+
+    subgraph "Testing Infrastructure"
+        UNIT_TESTS[Unit Tests]
+        FEATURE_TESTS[Feature Tests]
+        VALIDATION_TESTS[Validation Tests]
+    end
+
+    CHART --> ACCOUNT_CTRL
+    ACCOUNT_FORM --> ACCOUNT_CTRL
+    ACCOUNT_DETAIL --> ACCOUNT_CTRL
+    TRANSACTION --> TRANSACTION_CTRL
+    JOURNAL --> JOURNAL_CTRL
+    SELECTOR --> ACCOUNT_CTRL
+
+    ACCOUNT_CTRL --> VALIDATION
+    TRANSACTION_CTRL --> VALIDATION
+    JOURNAL_CTRL --> VALIDATION
+
+    ACCOUNT_CTRL --> ACCOUNT_MODEL
+    TRANSACTION_CTRL --> TRANSACTION_MODEL
+    JOURNAL_CTRL --> JOURNAL_MODEL
+
+    ACCOUNT_MODEL --> ACCOUNTS_TABLE
+    TRANSACTION_MODEL --> TRANSACTIONS_TABLE
+    JOURNAL_MODEL --> JOURNAL_TABLE
+    BALANCE_MODEL --> BALANCES_TABLE
+
+    UNIT_TESTS --> ACCOUNT_MODEL
+    UNIT_TESTS --> TRANSACTION_MODEL
+    UNIT_TESTS --> JOURNAL_MODEL
+    FEATURE_TESTS --> ACCOUNT_CTRL
+    FEATURE_TESTS --> TRANSACTION_CTRL
+    FEATURE_TESTS --> JOURNAL_CTRL
+
+    style CHART fill:#e3f2fd
+    style ACCOUNT_FORM fill:#e3f2fd
+    style ACCOUNT_DETAIL fill:#e3f2fd
+    style TRANSACTION fill:#e3f2fd
+    style JOURNAL fill:#e3f2fd
+    style SELECTOR fill:#e3f2fd
+    style ACCOUNT_CTRL fill:#e8f5e8
+    style TRANSACTION_CTRL fill:#e8f5e8
+    style JOURNAL_CTRL fill:#e8f5e8
+    style VALIDATION fill:#fff3e0
+    style ACCOUNT_MODEL fill:#f3e5f5
+    style TRANSACTION_MODEL fill:#f3e5f5
+    style JOURNAL_MODEL fill:#f3e5f5
+    style BALANCE_MODEL fill:#f3e5f5
+```
+
 ### Module Architecture Diagram
 ```mermaid
 graph TB
@@ -626,9 +708,16 @@ graph TB
         ORG_SCOPE[Organization Scope]
     end
 
-    subgraph "Business Modules"
+    subgraph "Complete Accounting Module"
+        ACCOUNTING_MODELS[4 Backend Models]
+        ACCOUNTING_CONTROLLERS[3 Controllers + 6 Validation Classes]
+        ACCOUNTING_UI[6 React Components]
+        ACCOUNTING_TESTS[Unit & Feature Tests]
+        ACCOUNTING_API[25+ API Endpoints]
+    end
+
+    subgraph "Other Business Modules"
         ORG[Organization Module]
-        ACCOUNTING[Accounting Module]
         INVENTORY[Inventory Module]
         REPORTING[Reporting Module]
         INTEGRATION[Integration Module]
@@ -645,8 +734,13 @@ graph TB
     SHARED_MODELS --> HYBRID_MODEL
     SHARED_MODELS --> ORG_SCOPE
 
+    BUS --> ACCOUNTING_MODELS
+    BUS --> ACCOUNTING_CONTROLLERS
+    BUS --> ACCOUNTING_UI
+    BUS --> ACCOUNTING_TESTS
+    BUS --> ACCOUNTING_API
+
     BUS --> ORG
-    BUS --> ACCOUNTING
     BUS --> INVENTORY
     BUS --> REPORTING
     BUS --> INTEGRATION
@@ -657,9 +751,14 @@ graph TB
     style DISCOVERY fill:#e8eaf6
     style REGISTRY fill:#e0f2f1
     style BUS fill:#fff3e0
+    style ACCOUNTING_MODELS fill:#e3f2fd
+    style ACCOUNTING_CONTROLLERS fill:#e8f5e8
+    style ACCOUNTING_UI fill:#f3e5f5
+    style ACCOUNTING_TESTS fill:#fff3e0
+    style ACCOUNTING_API fill:#e0f2f1
 ```
 
-### Database Schema Overview
+### Complete Accounting System Database Schema
 ```mermaid
 erDiagram
     ORGANIZATIONS {
@@ -670,6 +769,8 @@ erDiagram
         string timezone
         json settings
         boolean is_active
+        timestamp created_at
+        timestamp updated_at
     }
 
     USERS {
@@ -680,37 +781,83 @@ erDiagram
         enum role
         json permissions
         boolean is_active
+        timestamp created_at
+        timestamp updated_at
     }
 
     ACCOUNTS {
         bigint id PK
-        bigint organization_id FK
+        bigint tenant_id FK
         bigint parent_id FK
-        string code UK
+        string code UK "Unique per tenant"
         string name
-        enum type
-        string subtype
-        decimal current_balance
-        boolean is_active
-    }
-
-    JOURNAL_ENTRIES {
-        bigint id PK
-        bigint organization_id FK
-        string entry_number UK
-        date entry_date
         text description
-        enum status
-        bigint created_by FK
+        enum type "asset|liability|equity|revenue|expense"
+        string subtype
+        enum normal_balance "debit|credit"
+        decimal opening_balance
+        decimal current_balance
+        string currency
+        boolean is_active
+        boolean allow_manual_entries
+        boolean is_system
+        string tax_code
+        json reporting_categories
+        json metadata
+        timestamp created_at
+        timestamp updated_at
+        timestamp deleted_at
     }
 
     TRANSACTIONS {
         bigint id PK
-        bigint organization_id FK
-        bigint journal_entry_id FK
+        bigint tenant_id FK
+        string transaction_number UK "Unique per tenant"
+        date transaction_date
+        text description
+        string reference
+        text notes
+        enum type "journal_entry|invoice|payment|receipt|transfer|adjustment"
+        enum status "draft|pending|approved|posted|cancelled|reversed"
+        decimal total_amount
+        string currency
+        decimal exchange_rate
+        bigint reversal_transaction_id FK
+        bigint original_transaction_id FK
+        timestamp posted_at
+        timestamp reversed_at
+        string reversal_reason
+        bigint created_by FK
+        json metadata
+        timestamp created_at
+        timestamp updated_at
+        timestamp deleted_at
+    }
+
+    JOURNAL_ENTRIES {
+        bigint id PK
+        bigint tenant_id FK
+        bigint transaction_id FK
         bigint account_id FK
+        text description
         decimal debit_amount
         decimal credit_amount
+        string currency
+        decimal exchange_rate
+        timestamp created_at
+        timestamp updated_at
+    }
+
+    ACCOUNT_BALANCES {
+        bigint id PK
+        bigint tenant_id FK
+        bigint account_id FK
+        decimal balance
+        string currency
+        date balance_date
+        enum period_type "daily|weekly|monthly|quarterly|yearly"
+        timestamp created_at
+        timestamp updated_at
     }
 
     PRODUCTS {
@@ -734,15 +881,134 @@ erDiagram
         decimal available_quantity
     }
 
+    %% Core Relationships
     ORGANIZATIONS ||--o{ USERS : "has many"
-    ORGANIZATIONS ||--o{ ACCOUNTS : "has many"
-    ORGANIZATIONS ||--o{ JOURNAL_ENTRIES : "has many"
-    ORGANIZATIONS ||--o{ TRANSACTIONS : "has many"
+    ORGANIZATIONS ||--o{ ACCOUNTS : "has many (via tenant_id)"
+    ORGANIZATIONS ||--o{ TRANSACTIONS : "has many (via tenant_id)"
+    ORGANIZATIONS ||--o{ JOURNAL_ENTRIES : "has many (via tenant_id)"
+    ORGANIZATIONS ||--o{ ACCOUNT_BALANCES : "has many (via tenant_id)"
+    
+    %% Account Relationships
+    ACCOUNTS ||--o{ ACCOUNTS : "parent-child hierarchy"
+    ACCOUNTS ||--o{ JOURNAL_ENTRIES : "has many entries"
+    ACCOUNTS ||--o{ ACCOUNT_BALANCES : "has balance history"
+    
+    %% Transaction Relationships
+    TRANSACTIONS ||--o{ JOURNAL_ENTRIES : "has many entries"
+    TRANSACTIONS ||--o{ TRANSACTIONS : "reversal relationships"
+    USERS ||--o{ TRANSACTIONS : "created by"
+    
+    %% Inventory Relationships (existing)
     ORGANIZATIONS ||--o{ PRODUCTS : "has many"
     ORGANIZATIONS ||--o{ STOCK_LEVELS : "has many"
-    ACCOUNTS ||--o{ TRANSACTIONS : "has many"
-    JOURNAL_ENTRIES ||--o{ TRANSACTIONS : "has many"
     PRODUCTS ||--o{ STOCK_LEVELS : "has many"
+```
+
+### Accounting System Workflow
+```mermaid
+flowchart TD
+    subgraph "Account Management"
+        A1[Create Chart of Accounts]
+        A2[Set Account Hierarchy]
+        A3[Configure Opening Balances]
+        A4[Set Account Properties]
+    end
+
+    subgraph "Transaction Processing"
+        T1[Create Transaction]
+        T2[Add Journal Entries]
+        T3[Validate Double-Entry]
+        T4[Save as Draft]
+        T5[Review & Approve]
+        T6[Post Transaction]
+        T7[Update Account Balances]
+    end
+
+    subgraph "Journal Entry Management"
+        J1[Select Template or Manual Entry]
+        J2[Choose Accounts]
+        J3[Enter Debit/Credit Amounts]
+        J4[Real-time Balance Validation]
+        J5[Save Draft Entry]
+        J6[Post Entry]
+        J7[Generate Audit Trail]
+    end
+
+    subgraph "Balance Management"
+        B1[Calculate Real-time Balances]
+        B2[Track Balance History]
+        B3[Reconcile Accounts]
+        B4[Generate Balance Reports]
+    end
+
+    subgraph "Reporting & Analytics"
+        R1[Trial Balance]
+        R2[Balance Sheet]
+        R3[Income Statement]
+        R4[Cash Flow Statement]
+        R5[Custom Reports]
+    end
+
+    A1 --> A2 --> A3 --> A4
+    A4 --> T1
+    T1 --> T2 --> T3
+    T3 --> T4 --> T5 --> T6 --> T7
+    T7 --> B1
+
+    J1 --> J2 --> J3 --> J4
+    J4 --> J5 --> J6 --> J7
+    J6 --> T6
+
+    B1 --> B2 --> B3 --> B4
+    B4 --> R1
+    B4 --> R2
+    B4 --> R3
+    B4 --> R4
+    B4 --> R5
+
+    style A1 fill:#e3f2fd
+    style T1 fill:#e8f5e8
+    style J1 fill:#f3e5f5
+    style B1 fill:#fff3e0
+    style R1 fill:#e0f2f1
+```
+
+### API Integration Flow
+```mermaid
+sequenceDiagram
+    participant UI as React UI
+    participant API as Laravel API
+    participant VAL as Validation Layer
+    participant BL as Business Logic
+    participant DB as Database
+
+    UI->>API: POST /accounting/accounts
+    API->>VAL: StoreAccountRequest
+    VAL->>VAL: Validate Input & Business Rules
+    VAL->>BL: Account Model
+    BL->>BL: Apply Business Logic
+    BL->>DB: Save Account
+    DB-->>BL: Account Created
+    BL-->>API: Account Response
+    API-->>UI: JSON Response
+
+    UI->>API: POST /accounting/transactions
+    API->>VAL: StoreTransactionRequest
+    VAL->>VAL: Validate Double-Entry Balance
+    VAL->>BL: Transaction Model
+    BL->>BL: Create Transaction & Journal Entries
+    BL->>DB: Save Transaction
+    BL->>DB: Update Account Balances
+    DB-->>BL: Transaction Posted
+    BL-->>API: Transaction Response
+    API-->>UI: JSON Response with Balance Updates
+
+    UI->>API: GET /accounting/accounts/tree
+    API->>BL: Account Model
+    BL->>DB: Query Account Hierarchy
+    DB-->>BL: Account Tree Data
+    BL-->>API: Formatted Tree Response
+    API-->>UI: Hierarchical Account Data
 ```
 
 ## 📈 **Performance & Scalability**
