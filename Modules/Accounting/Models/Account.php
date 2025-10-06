@@ -112,6 +112,14 @@ class Account extends HybridModel
     }
 
     /**
+     * Get account balances for this account
+     */
+    public function balances(): HasMany
+    {
+        return $this->hasMany(AccountBalance::class);
+    }
+
+    /**
      * Get the organization this account belongs to
      */
     public function organization(): BelongsTo
@@ -430,4 +438,3 @@ class Account extends HybridModel
         });
     }
 }
-
