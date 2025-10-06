@@ -14,6 +14,35 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Performance Monitoring Configuration
+    |--------------------------------------------------------------------------
+    |
+    | Configuration for the performance monitoring system that tracks
+    | domain service operations, event processing, and database operations.
+    |
+    */
+
+    'monitoring' => [
+        'metrics' => [
+            'enabled' => env('PERFORMANCE_MONITORING_ENABLED', true),
+            'buffer_size' => env('PERFORMANCE_METRICS_BUFFER_SIZE', 100),
+            'slow_operation_threshold_ms' => env('SLOW_OPERATION_THRESHOLD_MS', 1000),
+            'flush_interval_seconds' => env('METRICS_FLUSH_INTERVAL', 60),
+        ],
+        'storage' => [
+            'driver' => env('METRICS_STORAGE_DRIVER', 'log'), // log, database, redis, influxdb
+            'connection' => env('METRICS_DB_CONNECTION', 'default'),
+            'table' => env('METRICS_TABLE', 'performance_metrics'),
+        ],
+        'alerts' => [
+            'enabled' => env('PERFORMANCE_ALERTS_ENABLED', false),
+            'slow_operation_threshold_ms' => env('ALERT_SLOW_OPERATION_THRESHOLD_MS', 5000),
+            'error_rate_threshold' => env('ALERT_ERROR_RATE_THRESHOLD', 0.05), // 5%
+        ],
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
     | Database Strategies
     |--------------------------------------------------------------------------
     |
