@@ -17,6 +17,13 @@ export {
   SectionGroup 
 } from './Section';
 
+// Re-export all component categories
+export * from '../Forms';
+export * from '../Navigation';
+export * from '../Tables';
+export * from '../Widgets';
+export * from '../Examples';
+
 // Type exports
 export type { default as AppLayoutProps } from './AppLayout';
 export type { default as ContainerProps } from './Container';
