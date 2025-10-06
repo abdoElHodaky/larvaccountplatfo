@@ -1,12 +1,321 @@
-# Laravel 12 Modular Accounting Platform
+# 🏢 Laravel Multi-Tenant Accounting Platform
 
-🚀 **Enterprise-Grade Multi-Tenant Accounting Platform** built with Laravel 12, featuring intelligent hybrid database architecture and modular design.
+A comprehensive, production-ready multi-tenant accounting platform built with Laravel, featuring domain-driven design, real-time capabilities, comprehensive monitoring, and background job processing.
 
-## 🎯 **Overview**
+## 🎯 **Project Overview**
 
-A comprehensive accounting platform that automatically scales from startups to enterprises using intelligent multi-tenant architecture. The system dynamically selects optimal database strategies (shared, dedicated, or clustered) based on business requirements and usage patterns.
+This platform demonstrates enterprise-grade Laravel development with:
+- **Domain-Driven Design** with rich business logic and value objects
+- **Event-Driven Architecture** with real-time broadcasting and queue processing
+- **Multi-Tenant Support** with complete data isolation and security
+- **Comprehensive Monitoring** with Laravel Telescope and custom performance tracking
+- **Real-Time Features** with Laravel Reverb WebSocket integration
+- **Background Processing** with Laravel Horizon queue management
+- **Production-Ready API** with comprehensive validation and resources
 
-## 📊 **Architecture Diagrams**
+## 📊 **Architecture Overview**
+
+```mermaid
+graph TB
+    subgraph "Frontend Layer"
+        UI[React Components]
+        WS[WebSocket Client]
+    end
+    
+    subgraph "API Layer"
+        API[RESTful API]
+        AUTH[Authentication]
+        VALID[Request Validation]
+        RESOURCES[API Resources]
+    end
+    
+    subgraph "Application Layer"
+        CTRL[Controllers]
+        PERF[Performance Monitor]
+        JOBS[Queue Jobs]
+    end
+    
+    subgraph "Domain Layer"
+        ENTITIES[Domain Entities]
+        SERVICES[Domain Services]
+        EVENTS[Domain Events]
+        VO[Value Objects]
+    end
+    
+    subgraph "Infrastructure Layer"
+        DB[(Database)]
+        REDIS[(Redis)]
+        QUEUE[Queue System]
+        BROADCAST[Broadcasting]
+    end
+    
+    subgraph "Monitoring & Tools"
+        TELESCOPE[Laravel Telescope]
+        HORIZON[Laravel Horizon]
+        REVERB[Laravel Reverb]
+    end
+    
+    UI --> API
+    WS --> REVERB
+    API --> CTRL
+    CTRL --> SERVICES
+    SERVICES --> ENTITIES
+    SERVICES --> EVENTS
+    EVENTS --> JOBS
+    EVENTS --> BROADCAST
+    JOBS --> QUEUE
+    BROADCAST --> REVERB
+    PERF --> TELESCOPE
+    QUEUE --> HORIZON
+    
+    classDef frontend fill:#e1f5fe
+    classDef api fill:#f3e5f5
+    classDef application fill:#e8f5e8
+    classDef domain fill:#fff3e0
+    classDef infrastructure fill:#fce4ec
+    classDef monitoring fill:#f1f8e9
+    
+    class UI,WS frontend
+    class API,AUTH,VALID,RESOURCES api
+    class CTRL,PERF,JOBS application
+    class ENTITIES,SERVICES,EVENTS,VO domain
+    class DB,REDIS,QUEUE,BROADCAST infrastructure
+    class TELESCOPE,HORIZON,REVERB monitoring
+```
+
+## 🏗️ **Multi-Tenant Architecture**
+
+```mermaid
+graph TB
+    subgraph "Tenant A"
+        TA_UI[Frontend App]
+        TA_DATA[(Tenant A Data)]
+        TA_QUEUE[Tenant A Queues]
+        TA_CHANNELS[Tenant A Channels]
+    end
+    
+    subgraph "Tenant B"
+        TB_UI[Frontend App]
+        TB_DATA[(Tenant B Data)]
+        TB_QUEUE[Tenant B Queues]
+        TB_CHANNELS[Tenant B Channels]
+    end
+    
+    subgraph "Shared Infrastructure"
+        API[API Gateway]
+        AUTH[Authentication]
+        TENANT_RESOLVER[Tenant Resolver]
+        
+        subgraph "Queue System"
+            HORIZON[Horizon Dashboard]
+            REDIS_QUEUE[(Redis Queues)]
+        end
+        
+        subgraph "Broadcasting"
+            REVERB[Reverb Server]
+            CHANNELS[WebSocket Channels]
+        end
+        
+        subgraph "Monitoring"
+            TELESCOPE[Telescope]
+            PERF_MONITOR[Performance Monitor]
+        end
+    end
+    
+    TA_UI --> API
+    TB_UI --> API
+    API --> AUTH
+    AUTH --> TENANT_RESOLVER
+    
+    TENANT_RESOLVER --> TA_DATA
+    TENANT_RESOLVER --> TB_DATA
+    
+    TA_QUEUE --> REDIS_QUEUE
+    TB_QUEUE --> REDIS_QUEUE
+    
+    TA_CHANNELS --> CHANNELS
+    TB_CHANNELS --> CHANNELS
+    
+    REDIS_QUEUE --> HORIZON
+    CHANNELS --> REVERB
+    
+    API --> PERF_MONITOR
+    PERF_MONITOR --> TELESCOPE
+    
+    classDef tenant fill:#e3f2fd
+    classDef shared fill:#f5f5f5
+    classDef queue fill:#fff8e1
+    classDef broadcast fill:#e8f5e8
+    classDef monitor fill:#fce4ec
+    
+    class TA_UI,TA_DATA,TA_QUEUE,TA_CHANNELS,TB_UI,TB_DATA,TB_QUEUE,TB_CHANNELS tenant
+    class API,AUTH,TENANT_RESOLVER shared
+    class HORIZON,REDIS_QUEUE queue
+    class REVERB,CHANNELS broadcast
+    class TELESCOPE,PERF_MONITOR monitor
+```
+
+## 🔄 **Event-Driven Architecture**
+
+```mermaid
+sequenceDiagram
+    participant Client
+    participant API
+    participant DomainService
+    participant EventBus
+    participant QueueJob
+    participant Broadcasting
+    participant WebSocket
+    
+    Client->>API: Create Account Request
+    API->>DomainService: Process Account Creation
+    DomainService->>DomainService: Validate Business Rules
+    DomainService->>EventBus: Dispatch AccountCreated Event
+    
+    par Background Processing
+        EventBus->>QueueJob: Queue ProcessAccountCreatedJob
+        QueueJob->>QueueJob: Update Search Indexes
+        QueueJob->>QueueJob: Generate Reports
+        QueueJob->>QueueJob: Send Notifications
+        QueueJob->>Broadcasting: Broadcast Real-time Update
+    and Real-time Broadcasting
+        EventBus->>Broadcasting: Broadcast AccountCreated
+        Broadcasting->>WebSocket: Send to Tenant Channels
+        WebSocket->>Client: Real-time Account Update
+    end
+    
+    API->>Client: Account Created Response
+```
+
+## 📈 **Performance Monitoring Architecture**
+
+```mermaid
+graph TB
+    subgraph "Application Layer"
+        API[API Endpoints]
+        DOMAIN[Domain Services]
+        JOBS[Queue Jobs]
+    end
+    
+    subgraph "Monitoring Layer"
+        PERF_MONITOR[Performance Monitor]
+        TELESCOPE_ADAPTER[Telescope Adapter]
+        HORIZON_MONITOR[Horizon Monitor]
+    end
+    
+    subgraph "Data Collection"
+        CUSTOM_METRICS[(Custom Metrics)]
+        TELESCOPE_DATA[(Telescope Data)]
+        HORIZON_DATA[(Horizon Data)]
+    end
+    
+    subgraph "Monitoring Tools"
+        TELESCOPE[Telescope Dashboard]
+        HORIZON[Horizon Dashboard]
+        CUSTOM_DASH[Custom Dashboard]
+    end
+    
+    subgraph "Real-time Updates"
+        REVERB[Reverb Broadcasting]
+        LIVE_DASH[Live Dashboards]
+    end
+    
+    API --> PERF_MONITOR
+    DOMAIN --> PERF_MONITOR
+    JOBS --> PERF_MONITOR
+    
+    PERF_MONITOR --> CUSTOM_METRICS
+    TELESCOPE_ADAPTER --> TELESCOPE_DATA
+    HORIZON_MONITOR --> HORIZON_DATA
+    
+    CUSTOM_METRICS --> CUSTOM_DASH
+    TELESCOPE_DATA --> TELESCOPE
+    HORIZON_DATA --> HORIZON
+    
+    PERF_MONITOR --> REVERB
+    REVERB --> LIVE_DASH
+    
+    classDef app fill:#e3f2fd
+    classDef monitor fill:#f3e5f5
+    classDef data fill:#e8f5e8
+    classDef tools fill:#fff3e0
+    classDef realtime fill:#fce4ec
+    
+    class API,DOMAIN,JOBS app
+    class PERF_MONITOR,TELESCOPE_ADAPTER,HORIZON_MONITOR monitor
+    class CUSTOM_METRICS,TELESCOPE_DATA,HORIZON_DATA data
+    class TELESCOPE,HORIZON,CUSTOM_DASH tools
+    class REVERB,LIVE_DASH realtime
+```
+
+## 🚀 **Implementation Progress**
+
+### **Phase 1: Testing Infrastructure & Configuration** ✅
+- **Files**: 10 | **Lines**: 1,238
+- Comprehensive testing structure with TenantTestCase
+- Enhanced PHPUnit configuration for modular testing
+- Frontend module structure with React components
+- Unified tenant.php configuration
+
+### **Phase 2: Domain-Driven Architecture & Events** ✅
+- **Files**: 11 | **Lines**: 1,237
+- Value Objects (Money, AccountCode) with business logic
+- Rich Domain Entity (Account) with comprehensive business rules
+- AccountDomainService with complex operations
+- Event-driven architecture with DomainEvent and AccountCreated
+- Enhanced InterModuleBus with EventBusInterface
+
+### **Phase 3: Performance Monitoring & API Layer** ✅
+- **Files**: 9 | **Lines**: 1,759
+- Custom PerformanceMonitor service with advanced metrics
+- PerformanceAwareAccountDomainService decorator pattern
+- AccountController with full CRUD operations
+- API request validation and resources
+- RESTful API routes with performance monitoring
+
+### **Phase 3.1: Telescope Integration & Hybrid Monitoring** ✅
+- **Files**: 6 | **Lines**: 1,257
+- Laravel Telescope configuration with multi-tenant support
+- Custom Telescope watchers (DomainEventWatcher, TenantWatcher, PerformanceWatcher)
+- TelescopePerformanceAdapter for unified monitoring
+- Enhanced domain service with Telescope event dispatching
+- Updated API endpoints with hybrid monitoring
+
+### **Phase 4: Laravel Reverb Real-Time Integration** ✅
+- **Files**: 8 | **Lines**: 961
+- Laravel Reverb WebSocket server configuration
+- BroadcastableDomainEvent base class for real-time broadcasting
+- Real-time account events (AccountCreated, AccountUpdated, BalanceChanged)
+- Multi-tenant channel authorization with secure isolation
+- Comprehensive broadcasting architecture
+
+### **Phase 5A: Laravel Horizon Queue Management** ✅
+- **Files**: 5 | **Lines**: 1,539
+- Laravel Horizon configuration with multi-tenant support
+- QueueableDomainEvent base class for background processing
+- ProcessAccountCreatedJob for comprehensive account processing
+- HorizonPerformanceMonitor for queue metrics and monitoring
+- Multi-tenant queue isolation and performance tracking
+
+### **Phase 5B: Laravel Jetstream Authentication** 🔄 *Next Phase*
+- Laravel Jetstream installation and configuration
+- Multi-tenant team management integration
+- API authentication with Laravel Sanctum
+- Role-based permissions for accounting operations
+- Two-factor authentication and session management
+
+## 📊 **Current Statistics**
+
+| Metric | Value |
+|--------|-------|
+| **Total Files** | 49 |
+| **Total Lines of Code** | 7,991 |
+| **Phases Completed** | 5A/6 |
+| **Test Coverage** | Comprehensive |
+| **Architecture Patterns** | DDD, Event-Driven, CQRS |
+| **Real-time Features** | WebSocket, Broadcasting |
+| **Queue Processing** | Background Jobs, Monitoring |
+| **Performance Monitoring** | Telescope + Custom |
 
 ### System Architecture Overview
 ```mermaid

@@ -1,0 +1,318 @@
+name: accounting-platform
+region: us-east-1
+
+environments:
+  production:
+    auto_scaling:
+      enabled: true
+      min_instances: 2
+      max_instances: 10
+      target_cpu: 70
+      target_memory: 80
+      scale_up_cooldown: 300
+      scale_down_cooldown: 600
+    
+    resources:
+      web:
+        cpu: 2
+        memory: 4GB
+        instances: 2
+      
+      worker:
+        cpu: 1
+        memory: 2GB
+        instances: 2
+        
+      scheduler:
+        cpu: 0.5
+        memory: 1GB
+        instances: 1
+    
+  staging:
+    auto_scaling:
+      enabled: false
+      instances: 1
+    
+    resources:
+      web:
+        cpu: 1
+        memory: 2GB
+        instances: 1
+      
+      worker:
+        cpu: 0.5
+        memory: 1GB
+        instances: 1
+        
+      scheduler:
+        cpu: 0.25
+        memory: 512MB
+        instances: 1
+    
+  development:
+    auto_scaling:
+      enabled: false
+      instances: 1
+    
+    resources:
+      web:
+        cpu: 0.5
+        memory: 1GB
+        instances: 1
+
+services:
+  database:
+    type: mysql
+    version: "8.0"
+    storage: 100GB
+    backup_retention: 30
+    multi_az: true
+    instance_class: db.r5.large
+    
+    # Multi-tenant database configuration
+    databases:
+      - name: accounting_landlord
+        charset: utf8mb4
+        collation: utf8mb4_unicode_ci
+        
+      - name: accounting_shared_1
+        charset: utf8mb4
+        collation: utf8mb4_unicode_ci
+        
+      - name: accounting_shared_2
+        charset: utf8mb4
+        collation: utf8mb4_unicode_ci
+    
+  redis:
+    type: redis
+    version: "7.0"
+    memory: 2GB
+    cluster_mode: enabled
+    backup_retention: 7
+    
+    # Multi-tenant Redis clusters
+    clusters:
+      cache:
+        nodes: 3
+        memory_per_node: 1GB
+        persistence: enabled
+        
+      sessions:
+        nodes: 2
+        memory_per_node: 512MB
+        persistence: enabled
+        
+      queues:
+        nodes: 3
+        memory_per_node: 2GB
+        persistence: enabled
+    
+  storage:
+    type: s3
+    bucket: accounting-platform-storage
+    region: us-east-1
+    
+  cdn:
+    type: cloudfront
+    origins:
+      - domain: accounting.yourdomain.com
+        path: /assets
+    cache_behaviors:
+      - path: "*.css"
+        ttl: 86400
+      - path: "*.js"
+        ttl: 86400
+      - path: "*.png"
+        ttl: 604800
+      - path: "*.jpg"
+        ttl: 604800
+
+# Build configuration
+build:
+  php_version: "8.2"
+  node_version: "20"
+  
+  commands:
+    - composer install --no-dev --optimize-autoloader
+    - npm ci
+    - npm run build
+    - php artisan config:cache
+    - php artisan route:cache
+    - php artisan view:cache
+    - php artisan event:cache
+
+# Deployment configuration
+deploy:
+  zero_downtime: true
+  health_check:
+    enabled: true
+    path: /health
+    timeout: 30
+    retries: 3
+  
+  rollback:
+    enabled: true
+    automatic: true
+    health_check_failures: 3
+  
+  hooks:
+    before_deploy:
+      - php artisan down --retry=60
+      
+    after_deploy:
+      - php artisan migrate --force
+      - php artisan queue:restart
+      - php artisan up
+      - php artisan deployment:notify
+
+# Queue configuration
+queues:
+  default:
+    connection: redis
+    workers: 4
+    memory: 512
+    timeout: 300
+    sleep: 3
+    max_tries: 3
+    
+  emails:
+    connection: redis
+    workers: 2
+    memory: 256
+    timeout: 60
+    sleep: 3
+    max_tries: 5
+    
+  reports:
+    connection: redis
+    workers: 2
+    memory: 1024
+    timeout: 600
+    sleep: 5
+    max_tries: 3
+    
+  broadcasts:
+    connection: redis
+    workers: 2
+    memory: 256
+    timeout: 30
+    sleep: 1
+    max_tries: 3
+
+# Scheduler configuration
+scheduler:
+  enabled: true
+  timezone: UTC
+  
+# WebSocket configuration
+websockets:
+  enabled: true
+  driver: reverb
+  port: 8080
+  host: 0.0.0.0
+  max_connections: 1000
+  
+# Monitoring configuration
+monitoring:
+  enabled: true
+  
+  metrics:
+    - response_time
+    - throughput
+    - error_rate
+    - database_queries
+    - queue_jobs
+    - memory_usage
+    - cpu_usage
+    - websocket_connections
+  
+  alerts:
+    response_time_threshold: 1000 # ms
+    error_rate_threshold: 5 # %
+    queue_wait_time_threshold: 300 # seconds
+    memory_usage_threshold: 85 # %
+    cpu_usage_threshold: 80 # %
+    
+  notifications:
+    slack:
+      webhook_url: ${SLACK_WEBHOOK_URL}
+      channel: "#alerts"
+    
+    email:
+      to:
+        - admin@yourdomain.com
+
+# Backup configuration
+backups:
+  enabled: true
+  
+  database:
+    schedule: "0 2 * * *" # Daily at 2 AM UTC
+    retention: 30 # days
+    compression: true
+    encryption: true
+    
+  files:
+    schedule: "0 3 * * *" # Daily at 3 AM UTC
+    retention: 7 # days
+    paths:
+      - storage/app
+      - storage/logs
+      
+# Security configuration
+security:
+  ssl:
+    enabled: true
+    certificate_type: letsencrypt
+    domains:
+      - accounting.yourdomain.com
+      - "*.accounting.yourdomain.com"
+    auto_renew: true
+    
+  headers:
+    x_frame_options: SAMEORIGIN
+    x_content_type_options: nosniff
+    x_xss_protection: "1; mode=block"
+    referrer_policy: strict-origin-when-cross-origin
+    strict_transport_security: "max-age=31536000; includeSubDomains"
+    
+  firewall:
+    enabled: true
+    allowed_ips: []
+    blocked_ips: []
+    
+# Environment variables
+env:
+  APP_NAME: "Laravel Accounting Platform"
+  APP_ENV: production
+  APP_DEBUG: false
+  APP_URL: https://accounting.yourdomain.com
+  
+  # Multi-tenant configuration
+  TENANT_DEFAULT_STRATEGY: shared
+  TENANT_SUBDOMAIN_ENABLED: true
+  TENANT_DOMAIN_ENABLED: true
+  APP_DOMAIN: accounting.yourdomain.com
+  
+  # Laravel Jetstream
+  JETSTREAM_STACK: inertia
+  JETSTREAM_FEATURES: "teams,api,profile-photos,account-deletion"
+  
+  # Performance monitoring
+  PERFORMANCE_MONITORING_ENABLED: true
+  PERFORMANCE_METRICS_BUFFER_SIZE: 1000
+  SLOW_OPERATION_THRESHOLD_MS: 500
+  
+  # Security
+  SANCTUM_STATEFUL_DOMAINS: "accounting.yourdomain.com,*.accounting.yourdomain.com"
+  SESSION_DOMAIN: ".accounting.yourdomain.com"
+  
+  # Mail
+  MAIL_MAILER: ses
+  MAIL_FROM_ADDRESS: noreply@accounting.yourdomain.com
+  MAIL_FROM_NAME: "Laravel Accounting Platform"
+  
+  # Logging
+  LOG_CHANNEL: stack
+  LOG_STACK: "single,slack"
+  LOG_LEVEL: info

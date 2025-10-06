@@ -5,8 +5,10 @@ namespace Modules\Shared\Services;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Collection;
+use Modules\Shared\Events\DomainEvent;
+use Modules\Shared\Contracts\EventBusInterface;
 
-class InterModuleBus
+class InterModuleBus implements EventBusInterface
 {
     /**
      * Registered module services.
@@ -17,6 +19,11 @@ class InterModuleBus
      * Event listeners for inter-module communication.
      */
     protected $listeners = [];
+
+    /**
+     * Domain event subscribers.
+     */
+    protected $domainEventSubscribers = [];
 
     /**
      * Module communication history for debugging.
@@ -331,6 +338,119 @@ class InterModuleBus
         
         Log::debug("Inter-module communication: {$type} - {$action}", $data);
     }
+
+    // Domain Event Bus Implementation
+
+    /**
+     * Publish a domain event
+     */
+    public function publish(DomainEvent $event): void
+    {
+        $eventType = $event->getEventType();
+        
+        // Store event for potential replay/debugging
+        $this->logCommunication('domain_event', $eventType, $event->toArray());
+        
+        // Notify subscribers
+        if (isset($this->domainEventSubscribers[$eventType])) {
+            foreach ($this->domainEventSubscribers[$eventType] as $handler) {
+                try {
+                    call_user_func($handler, $event);
+                } catch (\Exception $e) {
+                    Log::error("Error in domain event handler for {$eventType}: " . $e->getMessage(), [
+                        'event' => $event->toArray(),
+                        'exception' => $e,
+                    ]);
+                }
+            }
+        }
+        
+        // Also broadcast via Laravel's event system for broader integration
+        Event::dispatch('domain-event.' . $eventType, $event);
+    }
+
+    /**
+     * Publish multiple domain events
+     */
+    public function publishBatch(array $events): void
+    {
+        foreach ($events as $event) {
+            if ($event instanceof DomainEvent) {
+                $this->publish($event);
+            }
+        }
+    }
+
+    /**
+     * Subscribe to a domain event
+     */
+    public function subscribe(string $eventType, callable $handler): void
+    {
+        if (!isset($this->domainEventSubscribers[$eventType])) {
+            $this->domainEventSubscribers[$eventType] = [];
+        }
+        
+        $this->domainEventSubscribers[$eventType][] = $handler;
+        
+        Log::debug("Domain event subscriber registered: {$eventType}");
+    }
+
+    /**
+     * Unsubscribe from a domain event
+     */
+    public function unsubscribe(string $eventType, callable $handler): void
+    {
+        if (!isset($this->domainEventSubscribers[$eventType])) {
+            return;
+        }
+        
+        $this->domainEventSubscribers[$eventType] = array_filter(
+            $this->domainEventSubscribers[$eventType],
+            function ($subscriber) use ($handler) {
+                return $subscriber !== $handler;
+            }
+        );
+        
+        if (empty($this->domainEventSubscribers[$eventType])) {
+            unset($this->domainEventSubscribers[$eventType]);
+        }
+    }
+
+    /**
+     * Get all subscribers for an event type
+     */
+    public function getSubscribers(string $eventType): array
+    {
+        return $this->domainEventSubscribers[$eventType] ?? [];
+    }
+
+    /**
+     * Clear all subscribers
+     */
+    public function clearSubscribers(): void
+    {
+        $this->domainEventSubscribers = [];
+    }
+
+    /**
+     * Get domain event statistics
+     */
+    public function getDomainEventStats(): array
+    {
+        $stats = [
+            'total_event_types' => count($this->domainEventSubscribers),
+            'total_subscribers' => 0,
+            'event_types' => [],
+        ];
+        
+        foreach ($this->domainEventSubscribers as $eventType => $subscribers) {
+            $subscriberCount = count($subscribers);
+            $stats['total_subscribers'] += $subscriberCount;
+            $stats['event_types'][$eventType] = $subscriberCount;
+        }
+        
+        return $stats;
+    }
 }
 
 /**
@@ -359,4 +479,3 @@ class ServiceProxy
         return $this->bus->getService($this->moduleName, $this->serviceName);
     }
 }
-
