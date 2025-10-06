@@ -37,32 +37,34 @@ Route::prefix('v1')->middleware(['api', 'tenant'])->group(function () {
     
 });
 
-// Performance monitoring routes (could be moved to a separate monitoring module)
+// Performance monitoring routes with Telescope integration
 Route::prefix('v1/monitoring')->middleware(['api', 'tenant', 'auth:api'])->group(function () {
     
     Route::get('/performance/summary', function () {
-        $performanceMonitor = app(\Modules\Shared\Services\PerformanceMonitor::class);
+        $telescopeAdapter = app(\Modules\Shared\Services\TelescopePerformanceAdapter::class);
         $minutes = request()->query('minutes', 60);
         
         return response()->json([
-            'data' => $performanceMonitor->getPerformanceSummary($minutes),
+            'data' => $telescopeAdapter->getUnifiedPerformanceSummary($minutes),
             'meta' => [
                 'period_minutes' => $minutes,
+                'monitoring_type' => 'unified_telescope_custom',
                 'generated_at' => now(),
             ],
         ]);
     })->name('api.monitoring.performance.summary');
     
     Route::get('/performance/slow-operations', function () {
-        $performanceMonitor = app(\Modules\Shared\Services\PerformanceMonitor::class);
+        $telescopeAdapter = app(\Modules\Shared\Services\TelescopePerformanceAdapter::class);
         $threshold = (int) request()->query('threshold', 1000);
         $limit = (int) request()->query('limit', 50);
         
         return response()->json([
-            'data' => $performanceMonitor->getSlowOperations($threshold, $limit),
+            'data' => $telescopeAdapter->getUnifiedSlowOperations($threshold, $limit),
             'meta' => [
                 'threshold_ms' => $threshold,
                 'limit' => $limit,
+                'monitoring_type' => 'unified_telescope_custom',
                 'generated_at' => now(),
             ],
         ]);
@@ -74,10 +76,69 @@ Route::prefix('v1/monitoring')->middleware(['api', 'tenant', 'auth:api'])->group
         return response()->json([
             'data' => $performanceMonitor->getCurrentStatus(),
             'meta' => [
+                'monitoring_type' => 'custom_only',
                 'generated_at' => now(),
             ],
         ]);
     })->name('api.monitoring.performance.status');
+
+    // New Telescope-specific endpoints
+    Route::get('/telescope/database-performance', function () {
+        $telescopeAdapter = app(\Modules\Shared\Services\TelescopePerformanceAdapter::class);
+        $minutes = request()->query('minutes', 60);
+        $since = now()->subMinutes($minutes);
+        
+        return response()->json([
+            'data' => $telescopeAdapter->getDatabasePerformanceFromTelescope($since),
+            'meta' => [
+                'period_minutes' => $minutes,
+                'monitoring_type' => 'telescope_only',
+                'generated_at' => now(),
+            ],
+        ]);
+    })->name('api.monitoring.telescope.database_performance');
+
+    Route::get('/telescope/request-performance', function () {
+        $telescopeAdapter = app(\Modules\Shared\Services\TelescopePerformanceAdapter::class);
+        $minutes = request()->query('minutes', 60);
+        $since = now()->subMinutes($minutes);
+        
+        return response()->json([
+            'data' => $telescopeAdapter->getRequestPerformanceFromTelescope($since),
+            'meta' => [
+                'period_minutes' => $minutes,
+                'monitoring_type' => 'telescope_only',
+                'generated_at' => now(),
+            ],
+        ]);
+    })->name('api.monitoring.telescope.request_performance');
+
+    Route::get('/telescope/domain-events', function () {
+        $telescopeAdapter = app(\Modules\Shared\Services\TelescopePerformanceAdapter::class);
+        $minutes = request()->query('minutes', 60);
+        $since = now()->subMinutes($minutes);
+        
+        return response()->json([
+            'data' => $telescopeAdapter->getDomainEventMetricsFromTelescope($since),
+            'meta' => [
+                'period_minutes' => $minutes,
+                'monitoring_type' => 'telescope_only',
+                'generated_at' => now(),
+            ],
+        ]);
+    })->name('api.monitoring.telescope.domain_events');
+
+    Route::get('/alerts', function () {
+        $telescopeAdapter = app(\Modules\Shared\Services\TelescopePerformanceAdapter::class);
+        
+        return response()->json([
+            'data' => $telescopeAdapter->getPerformanceAlerts(),
+            'meta' => [
+                'monitoring_type' => 'unified_alerts',
+                'generated_at' => now(),
+            ],
+        ]);
+    })->name('api.monitoring.performance.alerts');
     
 });
 

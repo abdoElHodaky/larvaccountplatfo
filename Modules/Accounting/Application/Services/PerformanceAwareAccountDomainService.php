@@ -7,13 +7,16 @@ use Modules\Accounting\Domain\Entities\Account;
 use Modules\Accounting\Domain\ValueObjects\AccountCode;
 use Modules\Accounting\Domain\ValueObjects\Money;
 use Modules\Shared\Services\PerformanceMonitor;
+use Modules\Shared\Services\TelescopePerformanceAdapter;
+use Illuminate\Support\Facades\Event;
 use Exception;
 
 class PerformanceAwareAccountDomainService
 {
     public function __construct(
         private AccountDomainService $domainService,
-        private PerformanceMonitor $performanceMonitor
+        private PerformanceMonitor $performanceMonitor,
+        private TelescopePerformanceAdapter $telescopeAdapter
     ) {}
 
     /**
@@ -27,11 +30,22 @@ class PerformanceAwareAccountDomainService
         ?int $parentId = null,
         string $description = ''
     ): Account {
-        $timerId = $this->performanceMonitor->startTimer('account.create', [
+        $operationId = uniqid('account_create_', true);
+        $context = [
             'code' => $code->getValue(),
             'type' => $type,
             'subtype' => $subtype,
             'has_parent' => $parentId !== null,
+        ];
+        
+        // Start timing with both custom monitor and Telescope integration
+        $timerId = $this->performanceMonitor->startTimer('account.create', $context);
+        
+        // Fire Telescope performance event
+        Event::dispatch('performance.operation.started', [
+            'operation_id' => $operationId,
+            'operation' => 'AccountDomainService::createAccount',
+            'context' => $context,
         ]);
 
         try {
@@ -58,6 +72,12 @@ class PerformanceAwareAccountDomainService
                 'subtype' => $subtype,
             ]);
 
+            // Fire Telescope completion event
+            Event::dispatch('performance.operation.completed', [
+                'operation_id' => $operationId,
+                'status' => 'success',
+            ]);
+
             return $account;
 
         } catch (Exception $e) {
@@ -76,6 +96,13 @@ class PerformanceAwareAccountDomainService
 
             $this->performanceMonitor->incrementCounter('account.creation_errors', 1, [
                 'error_type' => get_class($e),
+            ]);
+
+            // Fire Telescope error event
+            Event::dispatch('performance.operation.completed', [
+                'operation_id' => $operationId,
+                'status' => 'error',
+                'error' => $e->getMessage(),
             ]);
 
             throw $e;
@@ -374,21 +401,29 @@ class PerformanceAwareAccountDomainService
     }
 
     /**
-     * Get performance metrics for account operations
+     * Get performance metrics for account operations (now with Telescope integration)
      */
     public function getAccountOperationMetrics(int $minutes = 60): array
     {
-        $summary = $this->performanceMonitor->getPerformanceSummary($minutes);
+        // Get unified metrics from both custom monitor and Telescope
+        $unifiedSummary = $this->telescopeAdapter->getUnifiedPerformanceSummary($minutes);
+        $customSummary = $this->performanceMonitor->getPerformanceSummary($minutes);
         
         return [
-            'period' => $summary['period'],
-            'tenant_id' => $summary['tenant_id'],
+            'period' => $customSummary['period'],
+            'tenant_id' => $customSummary['tenant_id'],
             'account_operations' => [
-                'domain_services' => $summary['domain_services'],
-                'slow_operations' => $this->performanceMonitor->getSlowOperations(500, 10),
+                'domain_services' => $customSummary['domain_services'],
+                'slow_operations' => $this->telescopeAdapter->getUnifiedSlowOperations(500, 10),
                 'current_status' => $this->performanceMonitor->getCurrentStatus(),
             ],
-            'generated_at' => $summary['generated_at'],
+            'telescope_insights' => [
+                'database_performance' => $unifiedSummary['telescope_metrics']['database'] ?? [],
+                'request_performance' => $unifiedSummary['telescope_metrics']['requests'] ?? [],
+                'domain_events' => $unifiedSummary['telescope_metrics']['domain_events'] ?? [],
+            ],
+            'performance_alerts' => $this->telescopeAdapter->getPerformanceAlerts(),
+            'generated_at' => $customSummary['generated_at'],
         ];
     }
 
