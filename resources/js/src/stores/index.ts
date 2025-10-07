@@ -6,7 +6,20 @@
 import { init, RematchDispatch, RematchRootState } from '@rematch/core';
 import loadingPlugin from '@rematch/loading';
 import persistPlugin from '@rematch/persist';
-import { models, RootModel } from './models';
+import { auth } from './models/auth';
+import { app } from './models/app';
+import { financial } from './models/financial';
+import { tenant } from './models/tenant';
+
+// Define models
+export const models = {
+  auth,
+  app,
+  financial,
+  tenant,
+};
+
+export type RootModel = typeof models;
 
 // Configure plugins
 const persistConfig = {
@@ -38,4 +51,3 @@ export type RootState = RematchRootState<RootModel>;
 
 // Export store instance
 export default store;
-
