@@ -1,9 +1,9 @@
 /**
- * Performance Utilities
- * Helper functions for React performance optimization
+ * Performance Monitoring and Optimization Utilities
+ * Advanced performance tracking, monitoring, and optimization tools
  */
 
-import { useCallback, useMemo, useRef } from 'react';
+import React from 'react';
 
 /**
  * Debounce function for performance optimization
@@ -122,11 +122,66 @@ export function shallowEqual(a: any, b: any): boolean {
 }
 
 /**
- * Performance monitoring utilities
+ * Advanced Performance monitoring utilities
  */
+export interface PerformanceMetric {
+  name: string;
+  value: number;
+  timestamp: number;
+  type: 'timing' | 'counter' | 'gauge' | 'histogram';
+  tags?: Record<string, string>;
+}
+
+export interface PerformanceReport {
+  metrics: PerformanceMetric[];
+  summary: {
+    totalRequests: number;
+    averageResponseTime: number;
+    errorRate: number;
+    cacheHitRate: number;
+    memoryUsage: number;
+    renderTime: number;
+  };
+  recommendations: string[];
+  timestamp: number;
+}
+
+export interface PerformanceThresholds {
+  responseTime: number;
+  errorRate: number;
+  memoryUsage: number;
+  renderTime: number;
+  cacheHitRate: number;
+}
+
 export class PerformanceMonitor {
+  private static instance: PerformanceMonitor;
   private static measurements = new Map<string, number>();
-  
+  private metrics: PerformanceMetric[] = [];
+  private observers: PerformanceObserver[] = [];
+  private thresholds: PerformanceThresholds;
+  private isEnabled: boolean = true;
+
+  private constructor() {
+    this.thresholds = {
+      responseTime: 1000, // 1 second
+      errorRate: 0.05, // 5%
+      memoryUsage: 100 * 1024 * 1024, // 100MB
+      renderTime: 16, // 16ms for 60fps
+      cacheHitRate: 0.8, // 80%
+    };
+
+    this.initializeObservers();
+  }
+
+  public static getInstance(): PerformanceMonitor {
+    if (!PerformanceMonitor.instance) {
+      PerformanceMonitor.instance = new PerformanceMonitor();
+    }
+    return PerformanceMonitor.instance;
+  }
+
+  // Legacy static methods for backward compatibility
   static start(label: string): void {
     this.measurements.set(label, performance.now());
   }
@@ -145,6 +200,10 @@ export class PerformanceMonitor {
       console.log(`⏱️ ${label}: ${duration.toFixed(2)}ms`);
     }
     
+    // Record in new system
+    const instance = this.getInstance();
+    instance.recordTiming(label, duration);
+    
     return duration;
   }
   
@@ -161,6 +220,302 @@ export class PerformanceMonitor {
     this.end(label);
     return result;
   }
+
+  /**
+   * Initialize performance observers
+   */
+  private initializeObservers(): void {
+    if (typeof window === 'undefined') return;
+
+    // Navigation timing observer
+    if ('PerformanceObserver' in window) {
+      try {
+        const navigationObserver = new PerformanceObserver((list) => {
+          list.getEntries().forEach((entry) => {
+            this.recordMetric({
+              name: 'navigation',
+              value: entry.duration,
+              timestamp: Date.now(),
+              type: 'timing',
+              tags: { type: entry.entryType },
+            });
+          });
+        });
+        navigationObserver.observe({ entryTypes: ['navigation'] });
+        this.observers.push(navigationObserver);
+      } catch (error) {
+        console.warn('Navigation observer not supported:', error);
+      }
+
+      // Long task observer
+      try {
+        const longTaskObserver = new PerformanceObserver((list) => {
+          list.getEntries().forEach((entry) => {
+            this.recordMetric({
+              name: 'long_task',
+              value: entry.duration,
+              timestamp: Date.now(),
+              type: 'timing',
+              tags: { type: 'long_task' },
+            });
+          });
+        });
+        longTaskObserver.observe({ entryTypes: ['longtask'] });
+        this.observers.push(longTaskObserver);
+      } catch (error) {
+        console.warn('Long task observer not supported:', error);
+      }
+    }
+
+    // Memory usage monitoring
+    this.startMemoryMonitoring();
+  }
+
+  /**
+   * Start memory usage monitoring
+   */
+  private startMemoryMonitoring(): void {
+    if (typeof window === 'undefined' || !('performance' in window)) return;
+
+    const checkMemory = () => {
+      if ('memory' in performance) {
+        const memory = (performance as any).memory;
+        this.recordMetric({
+          name: 'memory_used',
+          value: memory.usedJSHeapSize,
+          timestamp: Date.now(),
+          type: 'gauge',
+          tags: { type: 'heap' },
+        });
+      }
+    };
+
+    // Check memory every 30 seconds
+    setInterval(checkMemory, 30000);
+    checkMemory(); // Initial check
+  }
+
+  /**
+   * Record a performance metric
+   */
+  public recordMetric(metric: PerformanceMetric): void {
+    if (!this.isEnabled) return;
+
+    this.metrics.push(metric);
+
+    // Keep only last 1000 metrics to prevent memory leaks
+    if (this.metrics.length > 1000) {
+      this.metrics = this.metrics.slice(-1000);
+    }
+
+    // Check thresholds and emit warnings
+    this.checkThresholds(metric);
+  }
+
+  /**
+   * Record timing metric
+   */
+  public recordTiming(name: string, duration: number, tags?: Record<string, string>): void {
+    this.recordMetric({
+      name,
+      value: duration,
+      timestamp: Date.now(),
+      type: 'timing',
+      tags,
+    });
+  }
+
+  /**
+   * Record counter metric
+   */
+  public recordCounter(name: string, value: number = 1, tags?: Record<string, string>): void {
+    this.recordMetric({
+      name,
+      value,
+      timestamp: Date.now(),
+      type: 'counter',
+      tags,
+    });
+  }
+
+  /**
+   * Get performance report
+   */
+  public getReport(): PerformanceReport {
+    const now = Date.now();
+    const recentMetrics = this.metrics.filter(m => now - m.timestamp < 300000); // Last 5 minutes
+
+    const timingMetrics = recentMetrics.filter(m => m.type === 'timing');
+    const errorMetrics = recentMetrics.filter(m => m.tags?.error === 'true');
+    const memoryMetrics = recentMetrics.filter(m => m.name === 'memory_used');
+
+    const averageResponseTime = timingMetrics.length > 0
+      ? timingMetrics.reduce((sum, m) => sum + m.value, 0) / timingMetrics.length
+      : 0;
+
+    const errorRate = timingMetrics.length > 0
+      ? errorMetrics.length / timingMetrics.length
+      : 0;
+
+    const currentMemory = memoryMetrics.length > 0
+      ? memoryMetrics[memoryMetrics.length - 1].value
+      : 0;
+
+    const recommendations = this.generateRecommendations({
+      averageResponseTime,
+      errorRate,
+      memoryUsage: currentMemory,
+      renderTime: 0,
+    });
+
+    return {
+      metrics: recentMetrics,
+      summary: {
+        totalRequests: timingMetrics.length,
+        averageResponseTime,
+        errorRate,
+        cacheHitRate: 0,
+        memoryUsage: currentMemory,
+        renderTime: 0,
+      },
+      recommendations,
+      timestamp: now,
+    };
+  }
+
+  /**
+   * Generate performance recommendations
+   */
+  private generateRecommendations(summary: {
+    averageResponseTime: number;
+    errorRate: number;
+    memoryUsage: number;
+    renderTime: number;
+  }): string[] {
+    const recommendations: string[] = [];
+
+    if (summary.averageResponseTime > this.thresholds.responseTime) {
+      recommendations.push(
+        `Response time (${summary.averageResponseTime.toFixed(0)}ms) exceeds threshold. Consider optimizing API calls or implementing caching.`
+      );
+    }
+
+    if (summary.errorRate > this.thresholds.errorRate) {
+      recommendations.push(
+        `Error rate (${(summary.errorRate * 100).toFixed(1)}%) is high. Review error handling and API reliability.`
+      );
+    }
+
+    if (summary.memoryUsage > this.thresholds.memoryUsage) {
+      recommendations.push(
+        `Memory usage (${(summary.memoryUsage / 1024 / 1024).toFixed(0)}MB) is high. Check for memory leaks and optimize data structures.`
+      );
+    }
+
+    if (recommendations.length === 0) {
+      recommendations.push('Performance is within acceptable thresholds. Great job!');
+    }
+
+    return recommendations;
+  }
+
+  /**
+   * Check metric against thresholds
+   */
+  private checkThresholds(metric: PerformanceMetric): void {
+    if (metric.name === 'api_request' && metric.value > this.thresholds.responseTime) {
+      console.warn(`Slow API request detected: ${metric.value}ms`);
+    }
+
+    if (metric.name === 'memory_used' && metric.value > this.thresholds.memoryUsage) {
+      console.warn(`High memory usage detected: ${(metric.value / 1024 / 1024).toFixed(0)}MB`);
+    }
+
+    if (metric.name === 'long_task' && metric.value > 50) {
+      console.warn(`Long task detected: ${metric.value}ms`);
+    }
+  }
+
+  /**
+   * Clear all metrics
+   */
+  public clearMetrics(): void {
+    this.metrics = [];
+  }
+
+  /**
+   * Enable/disable monitoring
+   */
+  public setEnabled(enabled: boolean): void {
+    this.isEnabled = enabled;
+  }
+}
+
+/**
+ * React Hooks for performance monitoring
+ */
+export function usePerformanceMonitor() {
+  const monitor = React.useMemo(() => PerformanceMonitor.getInstance(), []);
+  const [report, setReport] = React.useState<PerformanceReport | null>(null);
+
+  // Update report periodically
+  React.useEffect(() => {
+    const updateReport = () => {
+      setReport(monitor.getReport());
+    };
+
+    updateReport(); // Initial report
+    const interval = setInterval(updateReport, 30000); // Every 30 seconds
+
+    return () => clearInterval(interval);
+  }, [monitor]);
+
+  const recordTiming = React.useCallback((name: string, duration: number, tags?: Record<string, string>) => {
+    monitor.recordTiming(name, duration, tags);
+  }, [monitor]);
+
+  const recordCounter = React.useCallback((name: string, value?: number, tags?: Record<string, string>) => {
+    monitor.recordCounter(name, value, tags);
+  }, [monitor]);
+
+  return {
+    report,
+    recordTiming,
+    recordCounter,
+    monitor,
+  };
+}
+
+/**
+ * React Hook for component performance tracking
+ */
+export function useComponentPerformance(componentName: string) {
+  const { recordTiming, recordCounter } = usePerformanceMonitor();
+  const renderCount = React.useRef(0);
+  const mountTime = React.useRef(Date.now());
+
+  // Track renders
+  React.useEffect(() => {
+    renderCount.current++;
+    recordCounter('component_render', 1, { component: componentName });
+  });
+
+  // Track mount time
+  React.useEffect(() => {
+    const mountDuration = Date.now() - mountTime.current;
+    recordTiming('component_mount', mountDuration, { component: componentName });
+
+    return () => {
+      // Track unmount
+      recordCounter('component_unmount', 1, { component: componentName });
+    };
+  }, [componentName, recordTiming, recordCounter]);
+
+  return {
+    renderCount: renderCount.current,
+    recordTiming: (name: string, duration: number) => 
+      recordTiming(name, duration, { component: componentName }),
+  };
 }
 
 /**
@@ -186,7 +541,7 @@ export const ReactPerformanceUtils = {
     callback: T,
     deps: React.DependencyList
   ): T => {
-    return useCallback(callback, deps);
+    return React.useCallback(callback, deps);
   },
 
   /**
@@ -197,10 +552,10 @@ export const ReactPerformanceUtils = {
     deps: React.DependencyList,
     compare?: (prev: T, next: T) => boolean
   ): T => {
-    const prevRef = useRef<T>();
-    const depsRef = useRef<React.DependencyList>();
+    const prevRef = React.useRef<T>();
+    const depsRef = React.useRef<React.DependencyList>();
     
-    return useMemo(() => {
+    return React.useMemo(() => {
       const newValue = factory();
       
       if (compare && prevRef.current !== undefined) {
