@@ -15,6 +15,7 @@ import { ErrorBoundary } from 'react-error-boundary';
 import { apolloClient } from '../services/graphql/apollo-client';
 import { store } from '../stores';
 import { useAuth, useApp, useAppActions } from '../hooks/useRematchStore';
+import { SocketProvider } from './SocketProvider';
 
 // Theme
 import { theme } from '../theme';
@@ -204,18 +205,20 @@ export const AppProviders: React.FC<AppProvidersProps> = ({ children }) => {
         <ApolloProvider client={apolloClient}>
           <ThemeProvider>
             <DndProvider backend={HTML5Backend}>
-              <PerformanceMonitor>
-                <ConnectionMonitor>
-                  <AppInitializer>
-                    <AuthInitializer>
-                      <Suspense fallback={<LoadingFallback />}>
-                        {children}
-                        <NotificationContainer />
-                      </Suspense>
-                    </AuthInitializer>
-                  </AppInitializer>
-                </ConnectionMonitor>
-              </PerformanceMonitor>
+              <SocketProvider>
+                <PerformanceMonitor>
+                  <ConnectionMonitor>
+                    <AppInitializer>
+                      <AuthInitializer>
+                        <Suspense fallback={<LoadingFallback />}>
+                          {children}
+                          <NotificationContainer />
+                        </Suspense>
+                      </AuthInitializer>
+                    </AppInitializer>
+                  </ConnectionMonitor>
+                </PerformanceMonitor>
+              </SocketProvider>
             </DndProvider>
           </ThemeProvider>
         </ApolloProvider>
@@ -242,4 +245,3 @@ export const withProviders = <P extends object>(
 };
 
 export default AppProviders;
-

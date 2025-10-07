@@ -64,7 +64,9 @@
         "react-grid-layout": "^1.5.2",
         "react-redux": "^9.0.4",
         "react-router-dom": "^6.20.1",
-        "recharts": "^3.2.1"
+        "recharts": "^3.2.1",
+        "socket.io-client": "^4.7.4",
+        "laravel-echo": "^1.15.3"
     },
     "browserslist": [
         "> 1%",
