@@ -5,7 +5,7 @@ import React from 'react';
 import { createRoot } from 'react-dom/client';
 import { createInertiaApp } from '@inertiajs/react';
 import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
-import ChakraProvider from '@/Providers/ChakraProvider';
+import { AppProviders } from './src/providers/AppProviders';
 
 const appName = import.meta.env.VITE_APP_NAME || 'Laravel Accounting Platform';
 
@@ -20,13 +20,13 @@ createInertiaApp({
         const root = createRoot(el);
 
         root.render(
-            <ChakraProvider>
+            <AppProviders>
                 <App {...props} />
-            </ChakraProvider>
+            </AppProviders>
         );
     },
     progress: {
-        color: '#3b82f6',
+        color: '#0066cc',
         showSpinner: true,
     },
 });
