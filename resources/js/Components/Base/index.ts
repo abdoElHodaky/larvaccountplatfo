@@ -22,6 +22,7 @@ export * from '../Forms';
 export * from '../Navigation';
 export * from '../Tables';
 export * from '../Widgets';
+export * from '../Charts';
 export * from '../Examples';
 
 // Type exports
