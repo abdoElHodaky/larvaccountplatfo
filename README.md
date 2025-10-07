@@ -66,20 +66,42 @@ A comprehensive, production-ready accounting platform built with Laravel 11, Rea
 ### 💰 **Professional Accounting**
 ```mermaid
 graph TB
-    A[Trial Balance] --> D[Financial Reports]
-    B[Income Statement] --> D
-    C[Balance Sheet] --> D
-    D --> E[Financial Analysis]
-    D --> F[Ratio Analysis]
-    D --> G[Export Options]
+    subgraph "📊 Core Financial Reports"
+        A[Trial Balance]
+        B[Income Statement]
+        C[Balance Sheet]
+    end
     
-    style A fill:#e1f5fe
-    style B fill:#e8f5e8
-    style C fill:#fff3e0
-    style D fill:#f3e5f5
-    style E fill:#fce4ec
-    style F fill:#e0f2f1
-    style G fill:#fff8e1
+    subgraph "📈 Analysis & Insights"
+        E[Financial Analysis]
+        F[Ratio Analysis]
+        G[Trend Analysis]
+    end
+    
+    subgraph "📤 Export & Sharing"
+        H[PDF Reports]
+        I[Excel Export]
+        J[API Integration]
+    end
+    
+    A --> E
+    B --> E
+    C --> E
+    E --> F
+    F --> G
+    E --> H
+    F --> I
+    G --> J
+    
+    style A fill:#f8fafc,stroke:#2563eb,stroke-width:2px
+    style B fill:#f8fafc,stroke:#2563eb,stroke-width:2px
+    style C fill:#f8fafc,stroke:#2563eb,stroke-width:2px
+    style E fill:#eff6ff,stroke:#1d4ed8,stroke-width:2px
+    style F fill:#eff6ff,stroke:#1d4ed8,stroke-width:2px
+    style G fill:#eff6ff,stroke:#1d4ed8,stroke-width:2px
+    style H fill:#f0f9ff,stroke:#0369a1,stroke-width:1px
+    style I fill:#f0f9ff,stroke:#0369a1,stroke-width:1px
+    style J fill:#f0f9ff,stroke:#0369a1,stroke-width:1px
 ```
 
 - **📊 Trial Balance**: Complete debit/credit verification with variance detection
@@ -92,20 +114,30 @@ graph TB
 ### 🔄 **Real-Time Collaboration**
 ```mermaid
 sequenceDiagram
-    participant U1 as User 1
-    participant WS as WebSocket Server
-    participant U2 as User 2
-    participant DB as Database
+    participant U1 as 👤 User A
+    participant C1 as 💻 Client A
+    participant WS as 🔌 WebSocket Hub
+    participant API as 🚀 Laravel API
+    participant C2 as 💻 Client B
+    participant U2 as 👤 User B
+    participant DB as 💾 Database
     
-    U1->>WS: Edit Financial Data
-    WS->>DB: Save Changes
-    WS->>U2: Real-time Update
-    U2->>WS: Collaborative Edit
-    WS->>U1: Sync Changes
-    WS->>DB: Conflict Resolution
+    Note over U1,U2: 🤝 Multi-User Financial Editing
     
-    Note over U1,U2: Live Collaboration
-    Note over WS,DB: Data Consistency
+    U1->>C1: ✏️ Edit Transaction
+    C1->>API: 📤 GraphQL Mutation
+    API->>DB: 💾 Persist Changes
+    API->>WS: 📡 Broadcast Update
+    
+    par Real-time Sync
+        WS->>C1: ✅ Confirm Update
+        WS->>C2: 🔄 Live Update
+    end
+    
+    C2->>U2: 🔔 Show Changes
+    
+    Note over API,DB: 🔒 Tenant Isolation
+    Note over WS: ⚡ Sub-second Latency
 ```
 
 - **🌐 WebSocket Integration**: Real-time data synchronization
@@ -117,24 +149,44 @@ sequenceDiagram
 
 ### 📱 **Mobile-First Design**
 ```mermaid
-graph LR
-    A[Mobile Layout] --> B[Touch Gestures]
-    A --> C[PWA Features]
-    A --> D[Offline Mode]
+graph TB
+    subgraph "📱 Mobile Experience"
+        A[Responsive Layout]
+        B[Touch Optimization]
+        C[Gesture Controls]
+    end
     
-    B --> E[Swipe Actions]
-    B --> F[Touch Tables]
+    subgraph "🔄 PWA Capabilities"
+        D[Offline Support]
+        E[App Installation]
+        F[Push Notifications]
+        G[Background Sync]
+    end
     
-    C --> G[App Install]
-    C --> H[Push Notifications]
+    subgraph "⚡ Performance"
+        H[Service Worker]
+        I[Smart Caching]
+        J[Lazy Loading]
+    end
     
-    D --> I[Service Worker]
-    D --> J[Cache Strategy]
+    A --> D
+    B --> E
+    C --> F
+    D --> H
+    E --> I
+    F --> G
+    G --> J
     
-    style A fill:#e3f2fd
-    style B fill:#e8f5e8
-    style C fill:#fff3e0
-    style D fill:#fce4ec
+    style A fill:#f8fafc,stroke:#059669,stroke-width:2px
+    style B fill:#f8fafc,stroke:#059669,stroke-width:2px
+    style C fill:#f8fafc,stroke:#059669,stroke-width:2px
+    style D fill:#ecfdf5,stroke:#047857,stroke-width:2px
+    style E fill:#ecfdf5,stroke:#047857,stroke-width:2px
+    style F fill:#ecfdf5,stroke:#047857,stroke-width:2px
+    style G fill:#ecfdf5,stroke:#047857,stroke-width:2px
+    style H fill:#f0fdf4,stroke:#16a34a,stroke-width:1px
+    style I fill:#f0fdf4,stroke:#16a34a,stroke-width:1px
+    style J fill:#f0fdf4,stroke:#16a34a,stroke-width:1px
 ```
 
 - **📱 Responsive Design**: Mobile-first approach with touch optimization
@@ -167,151 +219,176 @@ graph LR
 ### **🎯 System Overview**
 ```mermaid
 graph TB
-    subgraph "🌐 Client Layer"
-        A[⚛️ React 18 + TypeScript]
-        B[🎨 Chakra UI + Custom Theme]
-        C[🔄 Rematch State Management]
-        D[📡 Apollo GraphQL Client]
-        E[⚡ AlovaJS API Client]
-        F[🔌 WebSocket Client]
-        G[📱 PWA Service Worker]
+    subgraph "🌐 Frontend Layer"
+        A[React 18 + TypeScript]
+        B[Chakra UI Components]
+        C[State Management]
+        D[GraphQL Client]
+        E[PWA Service Worker]
     end
     
-    subgraph "🚀 API Gateway"
-        H[🛡️ Laravel 11 API]
-        I[📊 GraphQL Lighthouse]
-        J[🔗 REST Endpoints]
-        K[🌐 WebSocket Server]
-        L[🔐 Authentication Layer]
+    subgraph "🚀 Application Layer"
+        F[Laravel 11 API]
+        G[GraphQL Gateway]
+        H[WebSocket Server]
+        I[Authentication]
+        J[Multi-Tenant Router]
     end
     
     subgraph "💾 Data Layer"
-        M[🐘 PostgreSQL Primary]
-        N[⚡ Redis Cache & Sessions]
-        O[🔍 Elasticsearch Search]
-        P[📁 S3 File Storage]
-        Q[📊 Analytics Database]
+        K[PostgreSQL Database]
+        L[Redis Cache]
+        M[File Storage]
+        N[Search Engine]
     end
     
-    subgraph "🏢 Multi-Tenant Infrastructure"
-        R[🏠 Tenant Isolation]
-        S[👥 User Management]
-        T[🔑 Role-Based Access]
-        U[📈 Usage Analytics]
+    subgraph "🏢 Infrastructure"
+        O[Load Balancer]
+        P[Queue Workers]
+        Q[Monitoring]
+        R[Security Layer]
     end
     
-    A --> H
+    A --> F
     B --> A
     C --> A
-    D --> I
-    E --> J
-    F --> K
-    G --> A
-    H --> M
-    H --> N
-    H --> O
-    H --> P
-    K --> H
-    L --> H
-    R --> H
-    S --> R
-    T --> S
-    U --> R
+    D --> G
+    E --> A
     
-    style A fill:#61dafb,stroke:#333,stroke-width:2px
-    style H fill:#ff2d20,stroke:#333,stroke-width:2px
-    style M fill:#336791,stroke:#333,stroke-width:2px
-    style N fill:#dc382d,stroke:#333,stroke-width:2px
+    F --> K
+    G --> F
+    H --> F
+    I --> F
+    J --> F
+    
+    F --> L
+    F --> M
+    F --> N
+    
+    O --> F
+    P --> F
+    Q --> F
+    R --> F
+    
+    style A fill:#f8fafc,stroke:#3b82f6,stroke-width:2px
+    style B fill:#f8fafc,stroke:#3b82f6,stroke-width:2px
+    style C fill:#f8fafc,stroke:#3b82f6,stroke-width:2px
+    style D fill:#f8fafc,stroke:#3b82f6,stroke-width:2px
+    style E fill:#f8fafc,stroke:#3b82f6,stroke-width:2px
+    
+    style F fill:#eff6ff,stroke:#2563eb,stroke-width:2px
+    style G fill:#eff6ff,stroke:#2563eb,stroke-width:2px
+    style H fill:#eff6ff,stroke:#2563eb,stroke-width:2px
+    style I fill:#eff6ff,stroke:#2563eb,stroke-width:2px
+    style J fill:#eff6ff,stroke:#2563eb,stroke-width:2px
+    
+    style K fill:#f0f9ff,stroke:#0369a1,stroke-width:2px
+    style L fill:#f0f9ff,stroke:#0369a1,stroke-width:2px
+    style M fill:#f0f9ff,stroke:#0369a1,stroke-width:2px
+    style N fill:#f0f9ff,stroke:#0369a1,stroke-width:2px
+    
+    style O fill:#f9fafb,stroke:#6b7280,stroke-width:1px
+    style P fill:#f9fafb,stroke:#6b7280,stroke-width:1px
+    style Q fill:#f9fafb,stroke:#6b7280,stroke-width:1px
+    style R fill:#f9fafb,stroke:#6b7280,stroke-width:1px
 ```
 
 ### **🔄 Real-Time Data Flow**
 ```mermaid
 sequenceDiagram
     participant U as 👤 User
-    participant C as ⚛️ React Client
-    participant W as 🔌 WebSocket
-    participant A as 🚀 Laravel API
-    participant D as 💾 Database
-    participant R as ⚡ Redis
+    participant C as 💻 React Client
+    participant API as 🚀 Laravel API
+    participant DB as 💾 PostgreSQL
+    participant Cache as ⚡ Redis
+    participant WS as 🔌 WebSocket
+    participant U2 as 👥 Other Users
     
-    U->>C: 💰 Create Transaction
-    C->>A: 📤 GraphQL Mutation
-    A->>D: 💾 Store Transaction
-    A->>R: ⚡ Cache Update
-    A->>W: 📡 Broadcast Update
-    W->>C: 🔔 Real-time Notification
-    C->>U: ✅ UI Update + Toast
+    Note over U,U2: 💰 Financial Transaction Workflow
     
-    Note over C,A: 🔄 Optimistic Updates
-    Note over W,R: 📊 Live Dashboard Sync
-    Note over A,D: 🏢 Tenant Isolation
+    U->>C: Create Transaction
+    C->>API: GraphQL Mutation
+    
+    rect rgb(240, 249, 255)
+        Note over API,Cache: Data Processing
+        API->>DB: Persist Transaction
+        API->>Cache: Update Cache
+        API->>API: Validate Business Rules
+    end
+    
+    rect rgb(236, 253, 245)
+        Note over API,U2: Real-time Broadcasting
+        API->>WS: Broadcast Update
+        WS->>C: Confirm to User
+        WS->>U2: Notify Other Users
+    end
+    
+    C->>U: ✅ Success Notification
+    
+    Note over API,DB: 🔒 Multi-tenant Isolation
+    Note over WS: ⚡ Sub-100ms Latency
 ```
 
 ### **🏢 Multi-Tenant Architecture**
 ```mermaid
-graph LR
-    subgraph "🌐 Frontend Applications"
-        A1[🏢 Tenant A Dashboard]
-        A2[🏢 Tenant B Dashboard]
-        A3[🏢 Tenant C Dashboard]
+graph TB
+    subgraph "🌐 Client Applications"
+        T1[Tenant A App]
+        T2[Tenant B App]
+        T3[Tenant C App]
     end
     
-    subgraph "🛡️ API Gateway & Auth"
-        B[🔐 Authentication Service]
-        C[🏠 Tenant Resolution]
-        D[🔑 Authorization Layer]
+    subgraph "🛡️ Security & Routing"
+        AUTH[Authentication]
+        TENANT[Tenant Resolution]
+        AUTHZ[Authorization]
     end
     
-    subgraph "💼 Business Logic"
-        E[📊 Financial Module]
-        F[🏦 Accounting Module]
-        G[📈 Reporting Module]
-        H[👥 User Management]
+    subgraph "🚀 Application Services"
+        API[Laravel API Core]
+        BUSINESS[Business Logic]
+        EVENTS[Event System]
     end
     
-    subgraph "💾 Data Storage"
-        I[🏢 Tenant A Schema]
-        J[🏢 Tenant B Schema]
-        K[🏢 Tenant C Schema]
-        L[🔍 Shared Search Index]
+    subgraph "💾 Data Isolation"
+        DB1[(Tenant A Schema)]
+        DB2[(Tenant B Schema)]
+        DB3[(Tenant C Schema)]
+        SHARED[(Shared Resources)]
     end
     
-    A1 --> B
-    A2 --> B
-    A3 --> B
-    B --> C
-    C --> D
-    D --> E
-    D --> F
-    D --> G
-    D --> H
-    E --> I
-    E --> J
-    E --> K
-    F --> I
-    F --> J
-    F --> K
-    G --> L
+    T1 --> AUTH
+    T2 --> AUTH
+    T3 --> AUTH
     
-    style A1 fill:#e1f5fe,stroke:#01579b,stroke-width:2px
-    style A2 fill:#f3e5f5,stroke:#4a148c,stroke-width:2px
-    style A3 fill:#e8f5e8,stroke:#1b5e20,stroke-width:2px
-    style B fill:#fff3e0,stroke:#e65100,stroke-width:2px
+    AUTH --> TENANT
+    TENANT --> AUTHZ
+    AUTHZ --> API
     
-    E --> I
-    F --> J
-    G --> K
-    H --> L
+    API --> BUSINESS
+    BUSINESS --> EVENTS
     
-    I --> M
-    J --> N
-    K --> O
-    L --> P
+    API --> DB1
+    API --> DB2
+    API --> DB3
+    API --> SHARED
     
-    style A fill:#61dafb
-    style E fill:#ff2d20
-    style I fill:#4caf50
-    style M fill:#336791
+    style T1 fill:#f8fafc,stroke:#3b82f6,stroke-width:2px
+    style T2 fill:#f8fafc,stroke:#3b82f6,stroke-width:2px
+    style T3 fill:#f8fafc,stroke:#3b82f6,stroke-width:2px
+    
+    style AUTH fill:#fef3c7,stroke:#d97706,stroke-width:2px
+    style TENANT fill:#fef3c7,stroke:#d97706,stroke-width:2px
+    style AUTHZ fill:#fef3c7,stroke:#d97706,stroke-width:2px
+    
+    style API fill:#eff6ff,stroke:#2563eb,stroke-width:2px
+    style BUSINESS fill:#eff6ff,stroke:#2563eb,stroke-width:2px
+    style EVENTS fill:#eff6ff,stroke:#2563eb,stroke-width:2px
+    
+    style DB1 fill:#ecfdf5,stroke:#059669,stroke-width:2px
+    style DB2 fill:#ecfdf5,stroke:#059669,stroke-width:2px
+    style DB3 fill:#ecfdf5,stroke:#059669,stroke-width:2px
+    style SHARED fill:#f0f9ff,stroke:#0369a1,stroke-width:2px
 ```
 
 ### 🔧 **Technology Stack**
