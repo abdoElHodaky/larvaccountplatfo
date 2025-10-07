@@ -23,6 +23,7 @@ export * from '../Navigation';
 export * from '../Tables';
 export * from '../Widgets';
 export * from '../Charts';
+export * from '../ReportBuilder';
 export * from '../Examples';
 
 // Type exports
