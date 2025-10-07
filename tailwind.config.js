@@ -11,6 +11,22 @@ export default {
         './resources/js/**/*.tsx',
         './resources/js/**/*.ts',
     ],
+    
+    // Prevent conflicts with Chakra UI
+    corePlugins: {
+        preflight: false, // Disable Tailwind's base styles to avoid conflicts with Chakra UI
+    },
+    
+    // Safelist Chakra UI classes to prevent purging
+    safelist: [
+        // Chakra UI class patterns
+        { pattern: /^chakra-.*/ },
+        { pattern: /^css-.*/ },
+        // Emotion class patterns (used by Chakra UI)
+        { pattern: /^emotion-.*/ },
+        // Common Chakra UI utility patterns
+        { pattern: /^(bg|text|border|shadow|rounded|p|m|w|h|flex|grid)-.*/ },
+    ],
 
     theme: {
         extend: {
