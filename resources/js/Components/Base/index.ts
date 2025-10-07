@@ -25,6 +25,7 @@ export * from '../Widgets';
 export * from '../Charts';
 export * from '../ReportBuilder';
 export * from '../Mobile';
+export * from '../RealTime';
 export * from '../Examples';
 
 // Type exports
