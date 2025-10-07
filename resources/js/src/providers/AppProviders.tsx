@@ -16,6 +16,8 @@ import { apolloClient } from '../services/graphql/apollo-client';
 import { store } from '../stores';
 import { useAuth, useApp, useAppActions } from '../hooks/useRematchStore';
 import { SocketProvider } from './SocketProvider';
+import { pwaManager } from '../services/pwa/pwa-manager';
+import { PWAInstallPrompt } from '../components/pwa/PWAInstallPrompt';
 
 // Theme
 import { theme } from '../theme';
@@ -153,6 +155,11 @@ const AppInitializer: React.FC<{ children: React.ReactNode }> = ({ children }) =
   useEffect(() => {
     // Load feature flags on app start
     loadFeatureFlags();
+    
+    // Initialize PWA features
+    pwaManager.initialize().catch(error => {
+      console.error('PWA initialization failed:', error);
+    });
   }, [loadFeatureFlags]);
 
   return <>{children}</>;
@@ -213,6 +220,7 @@ export const AppProviders: React.FC<AppProvidersProps> = ({ children }) => {
                         <Suspense fallback={<LoadingFallback />}>
                           {children}
                           <NotificationContainer />
+                          <PWAInstallPrompt />
                         </Suspense>
                       </AuthInitializer>
                     </AppInitializer>

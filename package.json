@@ -5,8 +5,10 @@
     "private": true,
     "type": "module",
     "scripts": {
-        "build": "vite build",
+        "build": "vite build && npm run build:sw",
+        "build:sw": "workbox generateSW workbox-config.js",
         "dev": "vite",
+        "dev:sw": "workbox generateSW workbox-config.js --watch",
         "preview": "vite preview",
         "lint": "eslint resources/js --ext .js,.jsx,.ts,.tsx",
         "lint:fix": "eslint resources/js --ext .js,.jsx,.ts,.tsx --fix",
@@ -66,7 +68,12 @@
         "react-router-dom": "^6.20.1",
         "recharts": "^3.2.1",
         "socket.io-client": "^4.7.4",
-        "laravel-echo": "^1.15.3"
+        "laravel-echo": "^1.15.3",
+        "workbox-window": "^7.0.0"
+    },
+    "devDependencies": {
+        "workbox-cli": "^7.0.0",
+        "workbox-webpack-plugin": "^7.0.0"
     },
     "browserslist": [
         "> 1%",
