@@ -33,7 +33,7 @@ export interface ChartContainerProps {
   variant?: 'default' | 'financial' | 'compact';
   showExportMenu?: boolean;
   showFullscreenButton?: boolean;
-  onExport?: (format: 'png' | 'pdf' | 'csv' | 'excel') => void;
+  onExport?: (_format: 'png' | 'pdf' | 'csv' | 'excel') => void;
   onFullscreen?: () => void;
   className?: string;
   headerActions?: React.ReactNode;
