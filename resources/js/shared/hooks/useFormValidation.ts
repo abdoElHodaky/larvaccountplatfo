@@ -1,4 +1,4 @@
-import { useState, useCallback, useMemo, useRef } from 'react';
+import { useState, useMemo, useRef } from 'react';
 import { useMemoizedCallback, useDebounce } from '@/shared/hooks';
 
 /**
@@ -60,7 +60,6 @@ export function useFormValidation(
 ): UseFormValidationReturn {
   const {
     validateOnChange = true,
-    validateOnBlur = true,
     debounceMs = 300,
     stopOnFirstError = false,
   } = options;

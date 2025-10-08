@@ -1,7 +1,20 @@
-import React, { useState } from 'react';
+import React, { useState, ChangeEvent } from 'react';
 import { useForm } from '@inertiajs/react';
-import { Box, VStack, Button, Input, Select, Card, CardBody, CardHeader, Heading } from '@chakra-ui/react';
-import { useFormValidation } from '@/shared/hooks';
+import { 
+  Box, 
+  VStack, 
+  Button, 
+  Input, 
+  Select, 
+  Card, 
+  CardBody, 
+  CardHeader, 
+  Heading,
+  FormControl,
+  FormLabel,
+  FormErrorMessage,
+  Textarea
+} from '@chakra-ui/react';
 
 interface Account {
     id?: number;
@@ -89,119 +102,121 @@ export default function AccountForm({ account, accounts, onSubmit, onCancel }: A
         }));
 
     return (
-        <Card className="w-full max-w-2xl mx-auto">
+        <Card maxW="2xl" mx="auto">
             <CardHeader>
-                <CardTitle>
+                <Heading size="lg">
                     {account ? 'Edit Account' : 'Create New Account'}
-                </CardTitle>
+                </Heading>
             </CardHeader>
-            <CardContent>
-                <form onSubmit={handleSubmit} className="space-y-6">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div>
-                            <Input
-                                label="Account Code"
-                                value={data.code}
-                                onChange={(e) => setData('code', e.target.value)}
-                                error={errors.code}
-                                required
-                                placeholder="e.g., 1000"
-                            />
-                        </div>
-                        <div>
-                            <Input
-                                label="Account Name"
-                                value={data.name}
-                                onChange={(e) => setData('name', e.target.value)}
-                                error={errors.name}
-                                required
-                                placeholder="e.g., Cash"
-                            />
-                        </div>
-                    </div>
+            <CardBody>
+                <Box as="form" onSubmit={handleSubmit}>
+                    <VStack spacing={6}>
+                        <Box display="grid" gridTemplateColumns={{ base: "1fr", md: "1fr 1fr" }} gap={4} w="full">
+                            <FormControl isRequired isInvalid={!!errors.code}>
+                                <FormLabel>Account Code</FormLabel>
+                                <Input
+                                    value={data.code}
+                                    onChange={(e: ChangeEvent<HTMLInputElement>) => setData('code', e.target.value)}
+                                    placeholder="e.g., 1000"
+                                />
+                                <FormErrorMessage>{errors.code}</FormErrorMessage>
+                            </FormControl>
+                            
+                            <FormControl isRequired isInvalid={!!errors.name}>
+                                <FormLabel>Account Name</FormLabel>
+                                <Input
+                                    value={data.name}
+                                    onChange={(e: ChangeEvent<HTMLInputElement>) => setData('name', e.target.value)}
+                                    placeholder="e.g., Cash"
+                                />
+                                <FormErrorMessage>{errors.name}</FormErrorMessage>
+                            </FormControl>
+                        </Box>
 
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div>
-                            <Select
-                                label="Account Type"
-                                value={data.type}
-                                onChange={(value) => handleTypeChange(value)}
-                                options={accountTypes}
-                                error={errors.type}
-                                required
+                        <Box display="grid" gridTemplateColumns={{ base: "1fr", md: "1fr 1fr" }} gap={4} w="full">
+                            <FormControl isRequired isInvalid={!!errors.type}>
+                                <FormLabel>Account Type</FormLabel>
+                                <Select
+                                    value={data.type}
+                                    onChange={(e: ChangeEvent<HTMLSelectElement>) => handleTypeChange(e.target.value)}
+                                    placeholder="Select Type"
+                                >
+                                    {accountTypes.map((type) => (
+                                        <option key={type.value} value={type.value}>
+                                            {type.label}
+                                        </option>
+                                    ))}
+                                </Select>
+                                <FormErrorMessage>{errors.type}</FormErrorMessage>
+                            </FormControl>
+                            
+                            <FormControl isRequired isInvalid={!!errors.subtype}>
+                                <FormLabel>Account Subtype</FormLabel>
+                                <Select
+                                    value={data.subtype}
+                                    onChange={(e: ChangeEvent<HTMLSelectElement>) => setData('subtype', e.target.value)}
+                                    placeholder="Select Subtype"
+                                    isDisabled={!data.type}
+                                >
+                                    {data.type && accountSubtypes[data.type as keyof typeof accountSubtypes]?.map((subtype) => (
+                                        <option key={subtype.value} value={subtype.value}>
+                                            {subtype.label}
+                                        </option>
+                                    ))}
+                                </Select>
+                                <FormErrorMessage>{errors.subtype}</FormErrorMessage>
+                            </FormControl>
+                        </Box>
+
+                        {parentAccountOptions.length > 0 && (
+                            <FormControl isInvalid={!!errors.parent_id}>
+                                <FormLabel>Parent Account (Optional)</FormLabel>
+                                <Select
+                                    value={data.parent_id?.toString() || ''}
+                                    onChange={(e: ChangeEvent<HTMLSelectElement>) => 
+                                        setData('parent_id', e.target.value ? parseInt(e.target.value) : undefined)
+                                    }
+                                    placeholder="No Parent Account"
+                                >
+                                    {parentAccountOptions.map((option) => (
+                                        <option key={option.value} value={option.value}>
+                                            {option.label}
+                                        </option>
+                                    ))}
+                                </Select>
+                                <FormErrorMessage>{errors.parent_id}</FormErrorMessage>
+                            </FormControl>
+                        )}
+
+                        <FormControl>
+                            <FormLabel>Description (Optional)</FormLabel>
+                            <Textarea
+                                value={data.description || ''}
+                                onChange={(e: ChangeEvent<HTMLTextAreaElement>) => setData('description', e.target.value)}
+                                placeholder="Account description"
+                                rows={3}
                             />
-                        </div>
-                        <div>
-                            <Select
-                                label="Account Subtype"
-                                value={data.subtype}
-                                onChange={(value) => setData('subtype', value)}
-                                options={accountSubtypes[selectedType as keyof typeof accountSubtypes] || []}
-                                error={errors.subtype}
-                                required
-                            />
-                        </div>
-                    </div>
+                        </FormControl>
 
-                    {parentAccountOptions.length > 0 && (
-                        <div>
-                            <Select
-                                label="Parent Account (Optional)"
-                                value={data.parent_id?.toString() || ''}
-                                onChange={(value) => setData('parent_id', value ? parseInt(value) : undefined)}
-                                options={[
-                                    { value: '', label: 'No Parent Account' },
-                                    ...parentAccountOptions,
-                                ]}
-                                error={errors.parent_id}
-                            />
-                        </div>
-                    )}
-
-                    <div>
-                        <Input
-                            label="Description (Optional)"
-                            value={data.description}
-                            onChange={(e) => setData('description', e.target.value)}
-                            error={errors.description}
-                            placeholder="Brief description of the account"
-                            multiline
-                            rows={3}
-                        />
-                    </div>
-
-                    <div className="flex items-center space-x-2">
-                        <input
-                            type="checkbox"
-                            id="is_active"
-                            checked={data.is_active}
-                            onChange={(e) => setData('is_active', e.target.checked)}
-                            className="rounded border-gray-300 text-blue-600 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
-                        />
-                        <label htmlFor="is_active" className="text-sm font-medium text-gray-700">
-                            Active Account
-                        </label>
-                    </div>
-
-                    <div className="flex justify-end space-x-3 pt-4">
-                        <Button
-                            type="button"
-                            variant="secondary"
-                            onClick={onCancel}
-                            disabled={processing}
-                        >
-                            Cancel
-                        </Button>
-                        <Button
-                            type="submit"
-                            disabled={processing}
-                            loading={processing}
-                        >
-                            {account ? 'Update Account' : 'Create Account'}
-                        </Button>
-                    </div>
-                </form>
-            </CardContent>
+                        <Box display="flex" justifyContent="end" gap={3} w="full">
+                            <Button
+                                variant="outline"
+                                onClick={() => window.history.back()}
+                            >
+                                Cancel
+                            </Button>
+                            <Button
+                                type="submit"
+                                colorScheme="blue"
+                                isLoading={processing}
+                                loadingText="Saving..."
+                            >
+                                {account ? 'Update Account' : 'Create Account'}
+                            </Button>
+                        </Box>
+                    </VStack>
+                </Box>
+            </CardBody>
         </Card>
     );
 }

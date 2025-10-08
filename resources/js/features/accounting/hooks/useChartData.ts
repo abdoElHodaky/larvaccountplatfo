@@ -1,5 +1,5 @@
-import { useState, useEffect, useMemo, useRef } from 'react';
-import { useMemoizedCallback, useDebounce } from '@/shared/hooks';
+import { useState, useEffect, useRef } from 'react';
+import { useMemoizedCallback } from '@/shared/hooks';
 
 /**
  * Chart Data Management Hook
@@ -31,7 +31,6 @@ export function useChartData<T = any>(
 ): UseChartDataReturn<T> {
   const {
     refreshInterval = 0,
-    enableRealTime = false,
     cacheKey,
     transformData,
     filterData,
