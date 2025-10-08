@@ -17,7 +17,7 @@ import { useMemoizedCallback } from '@/Hooks';
  * Provides contextual navigation with automatic path detection
  */
 
-export interface BreadcrumbItem {
+export interface BreadcrumbItemData {
   label: string;
   href?: string;
   icon?: React.ComponentType;
@@ -26,7 +26,7 @@ export interface BreadcrumbItem {
 }
 
 export interface BreadcrumbsProps {
-  items?: BreadcrumbItem[];
+  items?: BreadcrumbItemData[];
   separator?: React.ReactElement | string;
   maxItems?: number;
   showHomeIcon?: boolean;
@@ -56,7 +56,7 @@ export const Breadcrumbs: React.FC<BreadcrumbsProps> = memo(({
     if (!autoGenerate || items) return [];
 
     const pathSegments = url.split('/').filter(Boolean);
-    const breadcrumbItems: BreadcrumbItem[] = [];
+    const breadcrumbItems: BreadcrumbItemData[] = [];
 
     // Add home/dashboard
     if (showHomeIcon) {
@@ -103,7 +103,7 @@ export const Breadcrumbs: React.FC<BreadcrumbsProps> = memo(({
 
     const firstItem = breadcrumbItems[0];
     const lastItems = breadcrumbItems.slice(-2);
-    const ellipsisItem: BreadcrumbItem = {
+    const ellipsisItem: BreadcrumbItemData = {
       label: '...',
       isCurrentPage: false,
     };
@@ -112,7 +112,7 @@ export const Breadcrumbs: React.FC<BreadcrumbsProps> = memo(({
   }, [breadcrumbItems, maxItems]);
 
   // Memoized click handler
-  const handleItemClick = useMemoizedCallback((item: BreadcrumbItem) => {
+  const handleItemClick = useMemoizedCallback((item: BreadcrumbItemData) => {
     if (item.onClick) {
       item.onClick();
     }

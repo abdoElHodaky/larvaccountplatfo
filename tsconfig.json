@@ -3,6 +3,7 @@
     "target": "ES2020",
     "useDefineForClassFields": true,
     "lib": ["ES2020", "DOM", "DOM.Iterable"],
+    "types": ["node"],
     "module": "ESNext",
     "skipLibCheck": true,
 
@@ -42,7 +43,8 @@
   "include": [
     "resources/js/**/*.ts",
     "resources/js/**/*.tsx",
-    "resources/js/**/*.d.ts"
+    "resources/js/**/*.d.ts",
+    "resources/js/types/global.d.ts"
   ],
   "exclude": [
     "node_modules",

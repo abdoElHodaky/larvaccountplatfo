@@ -215,7 +215,7 @@ export const LiveDataSync: React.FC<LiveDataSyncProps> = memo(({
         // Local change will be synced on next sync cycle
         break;
 
-      case 'merge':
+      case 'merge': {
         // Create merged change
         const mergedChange: DataChange = {
           ...localChange,
@@ -227,6 +227,7 @@ export const LiveDataSync: React.FC<LiveDataSyncProps> = memo(({
           prev.map(c => c.id === localChange.id ? mergedChange : c)
         );
         break;
+      }
     }
 
     // Remove from conflicts

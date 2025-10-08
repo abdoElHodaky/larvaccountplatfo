@@ -17,7 +17,7 @@ import { useMemoizedCallback } from '@/Hooks';
  * Bottom navigation bar optimized for mobile touch interactions
  */
 
-export interface NavigationItem {
+export interface MobileNavigationItem {
   id: string;
   label: string;
   icon: React.ReactNode;
@@ -28,8 +28,8 @@ export interface NavigationItem {
 }
 
 export interface MobileNavigationProps {
-  items: NavigationItem[];
-  onItemClick: (item: NavigationItem) => void;
+  items: MobileNavigationItem[];
+  onItemClick: (item: MobileNavigationItem) => void;
   activeItemId?: string;
   className?: string;
   variant?: 'default' | 'financial';
@@ -52,7 +52,7 @@ export const MobileNavigation: React.FC<MobileNavigationProps> = memo(({
   const activeBg = useColorModeValue('blue.50', 'blue.900');
 
   // Memoized item click handler
-  const handleItemClick = useMemoizedCallback((item: NavigationItem) => {
+  const handleItemClick = useMemoizedCallback((item: MobileNavigationItem) => {
     onItemClick(item);
   }, [onItemClick]);
 
@@ -103,12 +103,12 @@ MobileNavigation.displayName = 'MobileNavigation';
  * Individual Navigation Item Component
  */
 interface NavigationItemProps {
-  item: NavigationItem;
+  item: MobileNavigationItem;
   isActive: boolean;
   activeColor: string;
   inactiveColor: string;
   activeBg: string;
-  onClick: (item: NavigationItem) => void;
+  onClick: (item: MobileNavigationItem) => void;
 }
 
 const NavigationItem: React.FC<NavigationItemProps> = memo(({
@@ -190,7 +190,7 @@ NavigationItem.displayName = 'NavigationItem';
  * Financial Navigation with predefined items
  */
 export const FinancialMobileNavigation: React.FC<Omit<MobileNavigationProps, 'items' | 'variant'>> = memo((props) => {
-  const financialItems: NavigationItem[] = useMemo(() => [
+  const financialItems: MobileNavigationItem[] = useMemo(() => [
     {
       id: 'dashboard',
       label: 'Dashboard',

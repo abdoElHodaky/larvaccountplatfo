@@ -339,14 +339,9 @@ export function useOptimisticUpdate<T = any>(
     // Immediately return optimistic data
     const optimisticResult = { data: optimisticData, loading: false, error: null };
     
-    try {
-      // Send actual request
-      const result = await send(...args);
-      return result;
-    } catch (err) {
-      // Revert on error
-      throw err;
-    }
+    // Send actual request
+    const result = await send(...args);
+    return result;
   }, [send, optimisticData]);
 
   return {
@@ -466,4 +461,3 @@ export function useRealTimeData<T = any>(
     enabled,
   };
 }
-
