@@ -16,11 +16,11 @@ import { apolloClient } from '../services/graphql/apollo-client';
 import { store } from '../stores';
 import { useAuth, useApp, useAppActions } from '../hooks/useRematchStore';
 import { SocketProvider } from './SocketProvider';
-import { pwaManager } from '../services/pwa/pwa-manager';
+import { pwaManager } from '../utils/pwa';
 import { PWAInstallPrompt } from '../components/pwa/PWAInstallPrompt';
 
 // Theme
-import { theme } from '../theme';
+import theme from '../theme';
 
 // Components
 import { LoadingSpinner } from '../components/ui/LoadingSpinner';

@@ -16,7 +16,7 @@ import { getMainDefinition } from '@apollo/client/utilities';
 import { GraphQLWsLink } from '@apollo/client/link/subscriptions';
 import { createClient } from 'graphql-ws';
 import { createAlova } from 'alova';
-import GlobalFetch from 'alova/GlobalFetch';
+import adapterFetch from 'alova/fetch';
 import ReactHook from 'alova/react';
 
 // Types
@@ -223,7 +223,7 @@ export const createAlovaInstance = () => {
   return createAlova({
     baseURL: '/api',
     statesHook: ReactHook,
-    requestAdapter: GlobalFetch(),
+    requestAdapter: adapterFetch(),
     
     // Request timeout configuration
     timeout: 30000,
