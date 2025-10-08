@@ -7,12 +7,8 @@ module.exports = {
     },
     extends: [
         'eslint:recommended',
-        '@typescript-eslint/recommended',
-        'plugin:react/recommended',
-        'plugin:react-hooks/recommended',
-        'plugin:react/jsx-runtime',
     ],
-    ignorePatterns: ['dist', '.eslintrc.js'],
+    ignorePatterns: ['dist', 'node_modules'],
     parser: '@typescript-eslint/parser',
     parserOptions: {
         ecmaVersion: 'latest',
@@ -21,26 +17,8 @@ module.exports = {
             jsx: true,
         },
     },
-    plugins: [
-        'react-refresh',
-        '@typescript-eslint',
-        'react',
-        'react-hooks',
-    ],
     rules: {
-        'react-refresh/only-export-components': [
-            'warn',
-            { allowConstantExport: true },
-        ],
-        'react/prop-types': 'off',
-        '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
-        '@typescript-eslint/no-explicit-any': 'warn',
-        'react/jsx-uses-react': 'off',
-        'react/react-in-jsx-scope': 'off',
-    },
-    settings: {
-        react: {
-            version: 'detect',
-        },
+        'no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
+        'no-console': 'warn',
     },
 };

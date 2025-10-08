@@ -1,4 +1,4 @@
-import React, { Fragment, memo, useMemo, useRef } from 'react';
+import React, { memo, useMemo, useRef } from 'react';
 import {
   BarChart as RechartsBarChart,
   Bar,
@@ -39,9 +39,9 @@ export interface BarChartProps extends Omit<ChartContainerProps, 'children'> {
   series: BarChartSeries[];
   xAxisKey?: string;
   layout?: 'horizontal' | 'vertical';
-  formatXAxis?: (value: any) => string;
-  formatYAxis?: (value: any) => string;
-  formatTooltip?: (value: any, name: string) => [string, string];
+  formatXAxis?: (_value: any) => string;
+  formatYAxis?: (_value: any) => string;
+  formatTooltip?: (_value: any, _name: string) => [string, string];
   showGrid?: boolean;
   showLegend?: boolean;
   showTooltip?: boolean;
@@ -204,7 +204,7 @@ export const BarChart: React.FC<BarChartProps> = memo(({
       URL.revokeObjectURL(url);
     } else {
       // Export chart as image (PNG/PDF)
-      console.log(`Export as ${format} not implemented yet`);
+      // TODO: Implement image export functionality
     }
   }, [processedData, processedSeries, xAxisKey]);
 
