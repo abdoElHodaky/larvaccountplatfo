@@ -10,7 +10,7 @@ import {
   useColorModeValue,
 } from '@chakra-ui/react';
 import { Link, usePage } from '@inertiajs/react';
-import { useMemoizedCallback } from '@/Hooks';
+import { useMemoizedCallback } from '@/shared/hooks';
 
 /**
  * Performance-Optimized Breadcrumbs Component

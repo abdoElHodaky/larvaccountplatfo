@@ -1,7 +1,7 @@
 import React from 'react';
 import { Head, Link, useForm } from '@inertiajs/react';
 import AppLayout from '@/Layouts/AppLayout';
-import { Account, PageProps, SelectOption } from '@/Types';
+import { Account, PageProps, SelectOption } from '@/shared/types';
 import { ArrowLeftIcon } from '@heroicons/react/24/outline';
 
 interface Props extends PageProps {

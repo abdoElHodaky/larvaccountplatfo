@@ -19,8 +19,8 @@ import {
   useColorModeValue,
   Skeleton,
 } from '@chakra-ui/react';
-import { useMemoizedCallback, useDebounce } from '@/Hooks';
-import { FinancialPerformanceUtils } from '@/Utils/performance';
+import { useMemoizedCallback, useDebounce } from '@/shared/hooks';
+import { FinancialPerformanceUtils } from '@/shared/utils/performance';
 
 /**
  * Performance-Optimized Data Table Component

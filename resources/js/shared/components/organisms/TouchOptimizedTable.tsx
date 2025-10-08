@@ -16,7 +16,7 @@ import {
   Spacer,
 } from '@chakra-ui/react';
 import { DataTable, DataTableProps } from '@/Components/Tables';
-import { useMemoizedCallback } from '@/Hooks';
+import { useMemoizedCallback } from '@/shared/hooks';
 
 /**
  * Performance-Optimized Touch-Optimized Table Component

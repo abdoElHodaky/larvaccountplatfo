@@ -14,7 +14,7 @@ import {
   useColorModeValue,
 } from '@chakra-ui/react';
 import { CardContainer } from '@/Components/Base';
-import { FinancialPerformanceUtils } from '@/Utils/performance';
+import { FinancialPerformanceUtils } from '@/shared/utils/performance';
 
 /**
  * Performance-Optimized Account Card Component

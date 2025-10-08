@@ -10,7 +10,7 @@ import {
 } from '@chakra-ui/react';
 import { useDrag } from 'react-dnd';
 import { CardContainer } from '@/Components/Base';
-import { useMemoizedCallback } from '@/Hooks';
+import { useMemoizedCallback } from '@/shared/hooks';
 
 /**
  * Performance-Optimized Widget Palette Component

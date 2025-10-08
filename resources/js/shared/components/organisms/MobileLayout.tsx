@@ -18,7 +18,7 @@ import {
   Badge,
 } from '@chakra-ui/react';
 import { AppLayout } from '@/Components/Base';
-import { useMemoizedCallback } from '@/Hooks';
+import { useMemoizedCallback } from '@/shared/hooks';
 
 /**
  * Performance-Optimized Mobile Layout Component

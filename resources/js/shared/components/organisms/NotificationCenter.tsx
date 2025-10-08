@@ -20,8 +20,8 @@ import {
   Spacer,
   useToast,
 } from '@chakra-ui/react';
-import { useFinancialWebSocket } from '@/Utils/websocket';
-import { useMemoizedCallback } from '@/Hooks';
+import { useFinancialWebSocket } from '@/shared/utils/websocket';
+import { useMemoizedCallback } from '@/shared/hooks';
 
 /**
  * Performance-Optimized Real-time Notification Center

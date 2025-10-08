@@ -1,5 +1,5 @@
 import React from 'react';
-import { Account } from '@/Types';
+import { Account } from '@/shared/types';
 
 interface Props {
     accounts: Account[];
