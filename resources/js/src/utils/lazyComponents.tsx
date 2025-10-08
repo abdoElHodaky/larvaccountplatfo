@@ -3,7 +3,7 @@
  * Code splitting and dynamic imports for better performance
  */
 
-import { lazy, ComponentType } from 'react';
+import React, { lazy, ComponentType } from 'react';
 import { LoadingSpinner } from '../components/ui/LoadingSpinner';
 
 // Retry mechanism for failed dynamic imports
@@ -262,4 +262,3 @@ export default {
   trackComponentLoad,
   withLoadTracking,
 };
-
