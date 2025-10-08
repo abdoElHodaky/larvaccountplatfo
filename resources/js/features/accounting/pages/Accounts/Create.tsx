@@ -1,6 +1,6 @@
 import React from 'react';
 import { Head, Link, useForm } from '@inertiajs/react';
-import AppLayout from '@/Layouts/AppLayout';
+import AppLayout from '@/shared/components/layouts/AppLayout';
 import { Account, PageProps, SelectOption } from '@/shared/types';
 import { ArrowLeftIcon } from '@heroicons/react/24/outline';
 

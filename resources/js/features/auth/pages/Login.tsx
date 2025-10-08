@@ -1,6 +1,6 @@
 import React, { FormEvent, useState } from 'react';
 import { Head, Link, useForm } from '@inertiajs/react';
-import AuthLayout from '@/Layouts/AuthLayout';
+import AuthLayout from '@/shared/components/layouts/AuthLayout';
 import InputError from '@/Components/InputError';
 import InputLabel from '@/Components/InputLabel';
 import PrimaryButton from '@/Components/PrimaryButton';

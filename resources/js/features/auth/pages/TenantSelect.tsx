@@ -1,6 +1,6 @@
 import React, { FormEvent } from 'react';
 import { Head, Link, useForm } from '@inertiajs/react';
-import AuthLayout from '@/Layouts/AuthLayout';
+import AuthLayout from '@/shared/components/layouts/AuthLayout';
 import PrimaryButton from '@/Components/PrimaryButton';
 
 interface Tenant {
