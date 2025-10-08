@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Head, Link } from '@inertiajs/react';
-import AppLayout from '@/Layouts/AppLayout';
+import AppLayout from '@/shared/components/layouts/AppLayout';
 import { Account, AccountBalance, Transaction, PageProps, PaginatedData } from '@/shared/types';
 import { 
     ArrowLeftIcon, 

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Head, Link, router } from '@inertiajs/react';
-import AppLayout from '@/Layouts/AppLayout';
+import AppLayout from '@/shared/components/layouts/AppLayout';
 import { JournalEntry, PageProps, PaginatedData } from '@/shared/types';
 import { 
     PlusIcon, 
