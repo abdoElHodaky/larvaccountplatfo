@@ -64,7 +64,7 @@ export const PieChart: React.FC<PieChartProps> = memo(({
   legendPosition = 'bottom',
   ...containerProps
 }) => {
-  const chartRef = useRef<HTMLDivElement>(null);
+  const chartRef = useRef<SVGSVGElement>(null);
 
   // Memoized color values
   const textColor = useColorModeValue('#4a5568', '#a0aec0');
