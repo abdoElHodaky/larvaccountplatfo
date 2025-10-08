@@ -253,6 +253,195 @@ graph TB
     C --> A
     D --> G
     E --> A
+
+### **🏗️ Frontend Architecture (Feature-Based)**
+
+```mermaid
+graph TB
+    subgraph "📁 resources/js/"
+        subgraph "🔄 shared/"
+            A1[components/ui/]
+            A2[hooks/]
+            A3[providers/]
+            A4[services/graphql/]
+            A5[stores/]
+            A6[utils/]
+        end
+        
+        subgraph "🎯 features/"
+            B1[accounting/hooks/]
+            B2[accounting/components/]
+            B3[accounting/services/]
+            B4[user-management/]
+            B5[reporting/]
+        end
+        
+        subgraph "📄 Pages/"
+            C1[Auth/]
+            C2[Accounting/]
+            C3[Dashboard/]
+        end
+        
+        subgraph "🎨 Core/"
+            D1[app.tsx]
+            D2[bootstrap.ts]
+            D3[theme/]
+            D4[types/]
+        end
+    end
+    
+    A1 --> B2
+    A2 --> B1
+    A3 --> D1
+    A4 --> A2
+    A5 --> A3
+    B1 --> B2
+    C1 --> A1
+    C2 --> B2
+    C3 --> A1
+    D1 --> A3
+    D3 --> A1
+    
+    style A1 fill:#e0f2fe,stroke:#0369a1,stroke-width:2px
+    style A2 fill:#e0f2fe,stroke:#0369a1,stroke-width:2px
+    style A3 fill:#e0f2fe,stroke:#0369a1,stroke-width:2px
+    style A4 fill:#e0f2fe,stroke:#0369a1,stroke-width:2px
+    style A5 fill:#e0f2fe,stroke:#0369a1,stroke-width:2px
+    style A6 fill:#e0f2fe,stroke:#0369a1,stroke-width:2px
+    style B1 fill:#dcfce7,stroke:#16a34a,stroke-width:2px
+    style B2 fill:#dcfce7,stroke:#16a34a,stroke-width:2px
+    style B3 fill:#dcfce7,stroke:#16a34a,stroke-width:2px
+    style B4 fill:#dcfce7,stroke:#16a34a,stroke-width:2px
+    style B5 fill:#dcfce7,stroke:#16a34a,stroke-width:2px
+```
+
+### **📊 Component Hierarchy & Data Flow**
+
+```mermaid
+graph TD
+    subgraph "🎯 Application Entry"
+        APP[app.tsx]
+        PROVIDERS[AppProviders]
+        THEME[Theme Provider]
+    end
+    
+    subgraph "📄 Page Layer"
+        PAGES[Inertia Pages]
+        LAYOUTS[Layout Components]
+    end
+    
+    subgraph "🧩 Feature Components"
+        ACCOUNTING[Accounting Components]
+        DASHBOARD[Dashboard Widgets]
+        REPORTS[Report Components]
+    end
+    
+    subgraph "🔄 Shared Components"
+        UI[UI Components]
+        FORMS[Form Components]
+        TABLES[Data Tables]
+        CHARTS[Chart Components]
+    end
+    
+    subgraph "🎣 Business Logic"
+        HOOKS[Custom Hooks]
+        SERVICES[GraphQL Services]
+        STORES[State Stores]
+    end
+    
+    subgraph "🌐 External Services"
+        API[Laravel API]
+        WS[WebSocket]
+        CACHE[Redis Cache]
+    end
+    
+    APP --> PROVIDERS
+    PROVIDERS --> THEME
+    THEME --> PAGES
+    PAGES --> LAYOUTS
+    LAYOUTS --> ACCOUNTING
+    LAYOUTS --> DASHBOARD
+    LAYOUTS --> REPORTS
+    
+    ACCOUNTING --> UI
+    DASHBOARD --> UI
+    REPORTS --> UI
+    
+    UI --> FORMS
+    UI --> TABLES
+    UI --> CHARTS
+    
+    ACCOUNTING --> HOOKS
+    DASHBOARD --> HOOKS
+    REPORTS --> HOOKS
+    
+    HOOKS --> SERVICES
+    HOOKS --> STORES
+    
+    SERVICES --> API
+    SERVICES --> WS
+    STORES --> CACHE
+    
+    style APP fill:#fef3c7,stroke:#d97706,stroke-width:3px
+    style PROVIDERS fill:#fef3c7,stroke:#d97706,stroke-width:2px
+    style HOOKS fill:#ddd6fe,stroke:#7c3aed,stroke-width:2px
+    style SERVICES fill:#ddd6fe,stroke:#7c3aed,stroke-width:2px
+    style STORES fill:#ddd6fe,stroke:#7c3aed,stroke-width:2px
+```
+
+### **🔄 Import Pattern & Dependencies**
+
+```mermaid
+graph LR
+    subgraph "📁 Import Hierarchy"
+        subgraph "🎯 Features"
+            F1[features/accounting/]
+            F2[features/reporting/]
+        end
+        
+        subgraph "🔄 Shared"
+            S1[shared/components/]
+            S2[shared/hooks/]
+            S3[shared/services/]
+            S4[shared/stores/]
+            S5[shared/utils/]
+        end
+        
+        subgraph "📄 Pages"
+            P1[Pages/Accounting/]
+            P2[Pages/Dashboard/]
+        end
+        
+        subgraph "🎨 Core"
+            C1[app.tsx]
+            C2[theme/]
+            C3[types/]
+        end
+    end
+    
+    F1 --> S1
+    F1 --> S2
+    F1 --> S3
+    F2 --> S1
+    F2 --> S2
+    P1 --> F1
+    P1 --> S1
+    P2 --> S1
+    P2 --> S2
+    C1 --> S4
+    C1 --> C2
+    S1 --> S5
+    S2 --> S3
+    S2 --> S4
+    
+    style F1 fill:#dcfce7,stroke:#16a34a,stroke-width:2px
+    style F2 fill:#dcfce7,stroke:#16a34a,stroke-width:2px
+    style S1 fill:#e0f2fe,stroke:#0369a1,stroke-width:2px
+    style S2 fill:#e0f2fe,stroke:#0369a1,stroke-width:2px
+    style S3 fill:#e0f2fe,stroke:#0369a1,stroke-width:2px
+    style S4 fill:#e0f2fe,stroke:#0369a1,stroke-width:2px
+    style S5 fill:#e0f2fe,stroke:#0369a1,stroke-width:2px
+```
     
     F --> K
     G --> F
@@ -811,6 +1000,240 @@ const formatCurrency = useMemo(() =>
 - **ESLint** + **Prettier** for code quality
 - **TypeScript** for type safety
 - **Performance monitoring** utilities
+
+## 🏗️ Frontend Reorganization Guide
+
+### **📁 New Directory Structure**
+
+The frontend has been reorganized into a **feature-based architecture** for better maintainability and scalability:
+
+```
+resources/js/
+├── 🔄 shared/                    # Shared across all features
+│   ├── components/
+│   │   ├── ui/                   # Reusable UI components
+│   │   │   ├── ConnectionStatus.tsx
+│   │   │   ├── ErrorFallback.tsx
+│   │   │   ├── LoadingSpinner.tsx
+│   │   │   └── NotificationContainer.tsx
+│   │   └── index.ts
+│   ├── hooks/                    # Shared business logic hooks
+│   │   ├── useAlovaAdvanced.ts
+│   │   ├── useGraphQL.ts
+│   │   ├── useRealTime.ts
+│   │   ├── useRealTimeNotifications.ts
+│   │   ├── useRematchStore.ts
+│   │   └── index.ts
+│   ├── providers/                # React context providers
+│   │   ├── AppProviders.tsx
+│   │   ├── SocketProvider.tsx
+│   │   └── index.ts
+│   ├── services/                 # External service integrations
+│   │   └── graphql/
+│   │       ├── apollo-client.ts
+│   │       ├── queries.ts
+│   │       ├── mutations.ts
+│   │       └── index.ts
+│   ├── stores/                   # Global state management
+│   │   ├── appStore.ts
+│   │   ├── authStore.ts
+│   │   └── index.ts
+│   └── utils/                    # Utility functions
+│       ├── performance.ts
+│       ├── websocket.ts
+│       └── index.ts
+├── 🎯 features/                  # Feature-specific code
+│   ├── accounting/
+│   │   ├── hooks/
+│   │   │   └── useFinancialData.ts
+│   │   ├── components/
+│   │   │   └── AccountForm.tsx
+│   │   └── services/
+│   ├── user-management/
+│   └── reporting/
+├── 📄 Pages/                     # Inertia.js pages
+│   ├── Auth/
+│   ├── Accounting/
+│   └── Dashboard/
+├── 🎨 Core/                      # Application core
+│   ├── app.tsx                   # Application entry point
+│   ├── bootstrap.ts              # Bootstrap configuration
+│   ├── theme/                    # Theme configuration
+│   └── types/                    # TypeScript definitions
+└── 📦 Legacy/                    # Backward compatibility (temporary)
+    └── src/                      # Re-export stubs for migration
+```
+
+### **🎯 Architecture Principles**
+
+#### **1. Feature-Based Organization**
+```typescript
+// ✅ Feature-specific code stays together
+features/accounting/
+├── hooks/useFinancialData.ts
+├── components/AccountForm.tsx
+├── services/accountingAPI.ts
+└── types/accounting.d.ts
+
+// ✅ Shared code is easily accessible
+shared/components/ui/Button.tsx
+shared/hooks/useDebounce.ts
+shared/services/graphql/
+```
+
+#### **2. Clear Import Hierarchy**
+```typescript
+// ✅ Features can import from shared
+import { Button } from '@/shared/components/ui';
+import { useGraphQL } from '@/shared/hooks';
+
+// ✅ Pages can import from features and shared
+import { useFinancialData } from '@/features/accounting/hooks';
+import { LoadingSpinner } from '@/shared/components/ui';
+
+// ❌ Shared cannot import from features (prevents circular deps)
+// import { useFinancialData } from '@/features/accounting/hooks'; // Not allowed in shared/
+```
+
+#### **3. Barrel Exports for Clean Imports**
+```typescript
+// shared/components/ui/index.ts
+export { ConnectionStatus } from './ConnectionStatus';
+export { ErrorFallback } from './ErrorFallback';
+export { LoadingSpinner } from './LoadingSpinner';
+
+// Usage
+import { LoadingSpinner, ErrorFallback } from '@/shared/components/ui';
+```
+
+### **🔄 Migration Status**
+
+#### **✅ Completed Migrations**
+- ✅ **Core Hooks**: 6 critical hooks moved to `shared/hooks/`
+- ✅ **UI Components**: 4 components moved to `shared/components/ui/`
+- ✅ **Providers**: AppProviders and SocketProvider moved to `shared/providers/`
+- ✅ **Stores**: Global state stores moved to `shared/stores/`
+- ✅ **GraphQL Services**: Complete GraphQL setup in `shared/services/`
+- ✅ **Critical Import Fix**: `app.tsx` updated to use new paths
+- ✅ **Backward Compatibility**: Re-export stubs in `src/` for smooth transition
+
+#### **🔄 Remaining Tasks**
+- 🔄 **Utils Migration**: Move remaining utilities to `shared/utils/`
+- 🔄 **Hooks Migration**: Move remaining hooks to appropriate locations
+- 🔄 **Component Migration**: Move Pages and Modules components
+- 🔄 **Import Updates**: Update all remaining import statements
+- 🔄 **Index Files**: Add comprehensive barrel exports
+- 🔄 **Legacy Cleanup**: Remove old directories after full migration
+
+### **📋 Development Guidelines**
+
+#### **Where to Place New Files**
+
+| File Type | Location | Example |
+|-----------|----------|---------|
+| **Reusable UI Component** | `shared/components/ui/` | `Button.tsx`, `Modal.tsx` |
+| **Business Logic Hook** | `shared/hooks/` | `useDebounce.ts`, `useAPI.ts` |
+| **Feature-Specific Hook** | `features/{feature}/hooks/` | `useFinancialData.ts` |
+| **Feature Component** | `features/{feature}/components/` | `AccountForm.tsx` |
+| **Global State Store** | `shared/stores/` | `authStore.ts` |
+| **Utility Function** | `shared/utils/` | `formatCurrency.ts` |
+| **GraphQL Operations** | `shared/services/graphql/` | `queries.ts` |
+| **Page Component** | `Pages/{section}/` | `Dashboard.tsx` |
+
+#### **Import Best Practices**
+
+```typescript
+// ✅ Use absolute imports with path aliases
+import { useFinancialData } from '@/features/accounting/hooks';
+import { Button, Modal } from '@/shared/components/ui';
+import { useAuth } from '@/shared/stores';
+
+// ✅ Group imports logically
+// 1. External libraries
+import React, { useState, useCallback } from 'react';
+import { Box, VStack } from '@chakra-ui/react';
+
+// 2. Shared utilities and hooks
+import { useDebounce } from '@/shared/hooks';
+import { formatCurrency } from '@/shared/utils';
+
+// 3. Feature-specific imports
+import { useFinancialData } from '@/features/accounting/hooks';
+
+// 4. Local imports
+import { AccountFormProps } from './types';
+```
+
+#### **Component Development Pattern**
+
+```typescript
+// features/accounting/components/AccountForm.tsx
+import React, { memo, useCallback, useMemo } from 'react';
+import { Box, VStack, Button } from '@chakra-ui/react';
+
+// Shared imports
+import { useFormValidation } from '@/shared/hooks';
+import { FormField, CurrencyInput } from '@/shared/components/ui';
+
+// Feature imports
+import { useFinancialData } from '../hooks/useFinancialData';
+
+interface AccountFormProps {
+  accountId?: string;
+  onSave: (data: AccountData) => void;
+}
+
+export const AccountForm = memo<AccountFormProps>(({ accountId, onSave }) => {
+  // Component logic here
+  
+  return (
+    <Box>
+      {/* Component JSX */}
+    </Box>
+  );
+});
+
+AccountForm.displayName = 'AccountForm';
+```
+
+### **🔧 Migration Tools & Commands**
+
+#### **Find Files to Migrate**
+```bash
+# Find remaining files in old structure
+find resources/js -name "*.ts" -o -name "*.tsx" | grep -v shared/ | grep -v features/
+
+# Check for old import patterns
+grep -r "from.*src/" resources/js/ --include="*.ts" --include="*.tsx"
+```
+
+#### **Update Import Statements**
+```bash
+# Replace old import patterns (example)
+find resources/js -name "*.ts" -o -name "*.tsx" -exec sed -i 's|from.*src/hooks|from @/shared/hooks|g' {} \;
+```
+
+### **🎯 Benefits of New Architecture**
+
+#### **🧩 Modularity**
+- **Clear Boundaries**: Features are self-contained
+- **Easy Testing**: Components and hooks are isolated
+- **Scalable**: New features can be added without affecting existing code
+
+#### **🔍 Discoverability**
+- **Logical Organization**: Files are where you expect them
+- **Consistent Patterns**: Same structure across all features
+- **Self-Documenting**: Directory structure tells the story
+
+#### **🚀 Performance**
+- **Better Tree Shaking**: Unused code is eliminated more effectively
+- **Code Splitting**: Features can be loaded on demand
+- **Optimized Imports**: Barrel exports reduce bundle size
+
+#### **👥 Developer Experience**
+- **Faster Navigation**: IDE can find files more easily
+- **Reduced Conflicts**: Team members work in different feature directories
+- **Clear Ownership**: Features have clear boundaries and responsibilities
 
 ## 🚀 Development Guide
 

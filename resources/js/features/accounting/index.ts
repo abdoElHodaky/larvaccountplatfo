@@ -1,4 +1,13 @@
-// Accounting feature - Re-export all accounting modules
-export * from './components';
-export * from './types';
+/**
+ * Accounting Feature Index
+ * Main entry point for accounting feature
+ */
 
+// Hooks
+export * from './hooks';
+
+// Components
+export * from './components';
+
+// Types
+export * from './types';
