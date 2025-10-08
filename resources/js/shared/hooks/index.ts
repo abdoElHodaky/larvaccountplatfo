@@ -30,6 +30,13 @@ export {
   type UseFormValidationReturn,
 } from './useFormValidation';
 
+// Advanced Hooks (migrated from src/)
+export * from './useAlovaAdvanced';
+export * from './useGraphQL';
+export * from './useRealTime';
+export * from './useRealTimeNotifications';
+export * from './useRematchStore';
+
 // Default exports
 export { default as useDebounce } from './useDebounce';
 export { default as useMemoizedCallback } from './useMemoizedCallback';

@@ -86,6 +86,10 @@ export const classNames = (...classes: (string | undefined | null | false)[]): s
   return classes.filter(Boolean).join(' ');
 };
 
+// Lazy Components & Service Worker
+export * from './lazyComponents';
+export * from './serviceWorker';
+
 // Default exports
 export { default as PWAManager } from './pwa';
 export { default as WebSocketManager } from './websocket';
