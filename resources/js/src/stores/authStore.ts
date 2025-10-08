@@ -7,7 +7,8 @@ import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
 import { immer } from 'zustand/middleware/immer';
 import { apolloClient } from '../services/graphql/apollo-client';
-import { LOGIN, LOGOUT, GET_CURRENT_USER } from '../services/graphql/mutations';
+import { LOGIN, LOGOUT, REGISTER, SWITCH_TENANT } from '../services/graphql/mutations';
+import { GET_CURRENT_USER } from '../services/graphql/queries';
 
 // Types
 export interface User {
@@ -383,4 +384,3 @@ export const useAuthActions = () => useAuthStore((state) => ({
   updateUserPreferences: state.updateUserPreferences,
   clearError: state.clearError,
 }));
-

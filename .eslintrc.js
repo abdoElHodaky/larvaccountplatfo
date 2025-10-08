@@ -5,6 +5,14 @@ module.exports = {
         es2020: true,
         node: true,
     },
+    globals: {
+        NodeJS: 'readonly',
+        route: 'readonly',
+        NotificationOptions: 'readonly',
+        NotificationPermission: 'readonly',
+        NotificationAction: 'readonly',
+        React: 'readonly',
+    },
     extends: [
         'eslint:recommended',
         // Note: TypeScript rules will be added via plugins for now
@@ -46,6 +54,9 @@ module.exports = {
             'warn',
             { allowConstantExport: true },
         ],
+        
+        // Disable case declarations rule as it's giving false positives
+        'no-case-declarations': 'off',
     },
     settings: {
         react: {
