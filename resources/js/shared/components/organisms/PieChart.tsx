@@ -9,8 +9,8 @@ import {
 } from 'recharts';
 import { useColorModeValue } from '@chakra-ui/react';
 import { ChartContainer, ChartContainerProps } from './ChartContainer';
-import { useMemoizedCallback } from '@/Hooks';
-import { FinancialPerformanceUtils } from '@/Utils/performance';
+import { useMemoizedCallback } from '@/shared/hooks';
+import { FinancialPerformanceUtils } from '@/shared/utils/performance';
 
 /**
  * Performance-Optimized Pie Chart Component

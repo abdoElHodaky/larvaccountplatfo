@@ -1,4 +1,18 @@
-// Shared types
+/**
+ * Shared Types Index
+ * Centralized exports for all shared types
+ */
+
+// Common types
+export * from './common';
+
+// Authentication types
+export * from './auth';
+
+// Re-export accounting types for backward compatibility
+export * from '@/features/accounting/types';
+
+// Legacy compatibility - keep existing types
 export interface BaseEntity {
   id: string | number;
   created_at: string;
@@ -29,4 +43,3 @@ export interface FormFieldProps extends ComponentProps {
   error?: string;
   required?: boolean;
 }
-

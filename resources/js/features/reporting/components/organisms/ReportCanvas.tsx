@@ -13,7 +13,7 @@ import {
 import { Responsive, WidthProvider } from 'react-grid-layout';
 import { useDrop } from 'react-dnd';
 import { CardContainer } from '@/Components/Base';
-import { useMemoizedCallback } from '@/Hooks';
+import { useMemoizedCallback } from '@/shared/hooks';
 import 'react-grid-layout/css/styles.css';
 import 'react-resizable/css/styles.css';
 

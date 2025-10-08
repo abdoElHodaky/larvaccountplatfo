@@ -10,7 +10,7 @@ import {
   Flex,
   Center,
 } from '@chakra-ui/react';
-import { useMemoizedCallback } from '@/Hooks';
+import { useMemoizedCallback } from '@/shared/hooks';
 
 /**
  * Performance-Optimized Mobile Navigation Component

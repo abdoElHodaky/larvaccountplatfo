@@ -15,7 +15,7 @@ import {
   AlertIcon,
 } from '@chakra-ui/react';
 import { CardContainer } from '@/Components/Base';
-import { useMemoizedCallback } from '@/Hooks';
+import { useMemoizedCallback } from '@/shared/hooks';
 
 /**
  * Performance-Optimized Chart Container Component

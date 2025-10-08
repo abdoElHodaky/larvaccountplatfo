@@ -48,7 +48,7 @@ import {
   FiRefreshCw
 } from 'react-icons/fi';
 import { CardContainer } from '@/Components/Base';
-import { useMemoizedCallback } from '@/Hooks';
+import { useMemoizedCallback } from '@/shared/hooks';
 
 /**
  * Integration Settings Component

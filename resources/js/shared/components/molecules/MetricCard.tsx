@@ -14,7 +14,7 @@ import {
   Skeleton,
 } from '@chakra-ui/react';
 import { CardContainer } from '@/Components/Base';
-import { FinancialPerformanceUtils } from '@/Utils/performance';
+import { FinancialPerformanceUtils } from '@/shared/utils/performance';
 
 /**
  * Performance-Optimized Metric Card Component

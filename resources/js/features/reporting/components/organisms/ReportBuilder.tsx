@@ -18,8 +18,8 @@ import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import { ReportCanvas } from './ReportCanvas';
 import { WidgetPalette } from './WidgetPalette';
-import { useReportBuilder } from '@/Hooks/useReportBuilder';
-import { useMemoizedCallback } from '@/Hooks';
+import { useReportBuilder } from '@/features/reporting/hooks';
+import { useMemoizedCallback } from '@/shared/hooks';
 
 /**
  * Performance-Optimized Report Builder Component
