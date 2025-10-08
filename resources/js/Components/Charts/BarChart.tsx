@@ -75,7 +75,7 @@ export const BarChart: React.FC<BarChartProps> = memo(({
   colorScheme = 'default',
   ...containerProps
 }) => {
-  const chartRef = useRef<HTMLDivElement>(null);
+  const chartRef = useRef<SVGSVGElement>(null);
 
   // Memoized color values
   const gridColor = useColorModeValue('#f0f0f0', '#2d3748');
@@ -152,7 +152,7 @@ export const BarChart: React.FC<BarChartProps> = memo(({
     
     // Default financial formatting
     if (typeof value === 'number') {
-      return FinancialPerformanceUtils.formatCurrency(value, 'USD', 0);
+      return FinancialPerformanceUtils.formatCurrency(Number(value) || 0, 'USD', 0);
     }
     
     return String(value);
@@ -167,7 +167,7 @@ export const BarChart: React.FC<BarChartProps> = memo(({
     // Default financial formatting
     if (typeof value === 'number') {
       return [
-        FinancialPerformanceUtils.formatCurrency(value, 'USD'),
+        FinancialPerformanceUtils.formatCurrency(Number(value) || 0, 'USD'),
         name
       ];
     }
@@ -352,9 +352,9 @@ export const FinancialBarChart: React.FC<BarChartProps> = memo((props) => (
     {...props}
     variant="financial"
     colorScheme="financial"
-    formatYAxis={(value) => FinancialPerformanceUtils.formatCurrency(value, 'USD', 0)}
+    formatYAxis={(value) => FinancialPerformanceUtils.formatCurrency(Number(value) || 0, 'USD', 0)}
     formatTooltip={(value, name) => [
-      FinancialPerformanceUtils.formatCurrency(value, 'USD'),
+      FinancialPerformanceUtils.formatCurrency(Number(value) || 0, 'USD'),
       name
     ]}
   />
@@ -370,9 +370,9 @@ export const ProfitLossBarChart: React.FC<BarChartProps> = memo((props) => (
     {...props}
     variant="financial"
     colorScheme="profit-loss"
-    formatYAxis={(value) => FinancialPerformanceUtils.formatCurrency(value, 'USD', 0)}
+    formatYAxis={(value) => FinancialPerformanceUtils.formatCurrency(Number(value) || 0, 'USD', 0)}
     formatTooltip={(value, name) => [
-      FinancialPerformanceUtils.formatCurrency(value, 'USD'),
+      FinancialPerformanceUtils.formatCurrency(Number(value) || 0, 'USD'),
       name
     ]}
   />
