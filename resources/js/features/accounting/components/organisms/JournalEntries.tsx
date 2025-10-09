@@ -148,7 +148,10 @@ export const JournalEntries: React.FC<JournalEntriesProps> = ({
                   >
                     {expandedEntries.has(entry.id) ? '▼' : '▶'}
                   </button>
-                  <div>
+                  <div 
+                    onClick={() => onEntryClick?.(entry)}
+                    className={onEntryClick ? "cursor-pointer" : ""}
+                  >
                     <div className="flex items-center space-x-3">
                       <span className="font-medium text-gray-900">{entry.reference}</span>
                       <span className="text-sm text-gray-500">{formatDate(entry.date)}</span>
