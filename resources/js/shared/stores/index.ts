@@ -11,12 +11,18 @@ import loadingPlugin, { ExtraModelsFromLoading } from '@rematch/loading';
 import { appModel, type AppModel } from './models/appModel';
 import { authModel, type AuthModel } from './models/authModel';
 import { accountingModel, type AccountingModel } from '../../features/accounting/stores/accountingModel';
+import { inventoryModel, type InventoryModel } from '../../features/inventory/stores/inventoryModel';
+
+// Import persistence configuration and dev tools
+import persistConfig from './persistence';
+import { setDevToolsStore } from '../utils/devTools';
 
 // Define the models interface
 export interface RootModel {
   app: AppModel;
   auth: AuthModel;
   accounting: AccountingModel;
+  inventory: InventoryModel;
 }
 
 // Create the models object
@@ -24,6 +30,7 @@ const models: RootModel = {
   app: appModel,
   auth: authModel,
   accounting: accountingModel,
+  inventory: inventoryModel,
 };
 
 // Configure the store
@@ -31,19 +38,22 @@ export const store = init<RootModel, ExtraModelsFromLoading<RootModel>>({
   models,
   plugins: [
     loadingPlugin(),
-    persistPlugin({
-      key: 'laravel-accounting-platform',
-      storage: 'localStorage',
-      whitelist: ['app', 'auth'],
-      version: 1,
-    }),
+    persistPlugin(persistConfig),
   ],
   redux: {
     devtoolOptions: {
+      name: 'Laravel Account Platform',
       disabled: process.env.NODE_ENV === 'production',
+      trace: process.env.NODE_ENV === 'development',
+      traceLimit: 25,
     },
   },
 });
+
+// Initialize dev tools in development
+if (process.env.NODE_ENV === 'development') {
+  setDevToolsStore(store);
+}
 
 // Export types
 export type Store = typeof store;
@@ -51,10 +61,11 @@ export type Dispatch = RematchDispatch<RootModel>;
 export type RootState = RematchRootState<RootModel, ExtraModelsFromLoading<RootModel>>;
 
 // Export models for type inference
-export { appModel, authModel, accountingModel };
-export type { AppModel, AuthModel, AccountingModel };
+export { appModel, authModel, accountingModel, inventoryModel };
+export type { AppModel, AuthModel, AccountingModel, InventoryModel };
 
 // Export model types
 export type { AppState, AppSettings, UIState, Notification } from './models/appModel';
 export type { AuthState, User, Tenant, UserTenant, RegisterData } from './models/authModel';
 export type { AccountingState, Account, Transaction, JournalEntry, AccountingFilters } from '../../features/accounting/stores/accountingModel';
+export type { InventoryState, InventoryItem, StockMovement, InventoryFilters } from '../../features/inventory/stores/inventoryModel';
