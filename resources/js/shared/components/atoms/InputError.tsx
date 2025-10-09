@@ -5,7 +5,7 @@ interface InputErrorProps {
     className?: string;
 }
 
-export default function InputError({ message, className = '' }: InputErrorProps) {
+function InputError({ message, className = '' }: InputErrorProps) {
     return message ? (
         <div className={`text-sm text-red-600 ${className}`}>
             <div className="flex items-center space-x-1">
@@ -17,3 +17,6 @@ export default function InputError({ message, className = '' }: InputErrorProps)
         </div>
     ) : null;
 }
+
+export { InputError };
+export default InputError;

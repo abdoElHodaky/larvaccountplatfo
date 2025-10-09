@@ -1,7 +1,7 @@
 import React, { FormEvent } from 'react';
 import { Head, Link, useForm } from '@inertiajs/react';
 import AuthLayout from '@/shared/components/layouts/AuthLayout';
-import PrimaryButton from '@/Components/PrimaryButton';
+import PrimaryButton from '@/shared/components/atoms/PrimaryButton';
 
 interface Tenant {
     id: number;

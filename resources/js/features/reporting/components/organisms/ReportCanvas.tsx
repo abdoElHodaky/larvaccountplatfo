@@ -12,7 +12,7 @@ import {
 } from '@chakra-ui/react';
 import { Responsive, WidthProvider } from 'react-grid-layout';
 import { useDrop } from 'react-dnd';
-import { CardContainer } from '@/Components/Base';
+import { CardContainer } from '@/shared/components/molecules/Container';
 import { useMemoizedCallback } from '@/shared/hooks';
 import 'react-grid-layout/css/styles.css';
 import 'react-resizable/css/styles.css';

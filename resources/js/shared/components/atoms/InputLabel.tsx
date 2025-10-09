@@ -8,7 +8,7 @@ interface InputLabelProps {
     required?: boolean;
 }
 
-export default function InputLabel({ 
+function InputLabel({ 
     value, 
     className = '', 
     children, 
@@ -33,3 +33,6 @@ export default function InputLabel({
         </label>
     );
 }
+
+export { InputLabel };
+export default InputLabel;

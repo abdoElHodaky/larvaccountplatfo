@@ -1,7 +1,7 @@
 import { describe, it, expect, vi } from 'vitest';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { ChakraProvider } from '@chakra-ui/react';
-import UserManagement, { User } from '@/Components/Settings/UserManagement';
+import UserManagement, { User } from '@/features/organization/components/organisms/UserManagement';
 
 // Mock data
 const mockUsers: User[] = [
@@ -171,4 +171,3 @@ describe('UserManagement', () => {
     expect(addButton).toBeDisabled();
   });
 });
-

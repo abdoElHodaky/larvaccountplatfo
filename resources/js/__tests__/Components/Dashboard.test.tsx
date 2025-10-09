@@ -2,8 +2,11 @@ import React from 'react';
 import { render, screen } from '@testing-library/react';
 import { describe, it, expect, vi } from 'vitest';
 import { ChakraProvider } from '@chakra-ui/react';
-import Dashboard from '../../Pages/Dashboard';
-import theme from '../../theme';
+import Dashboard from '../../features/dashboard/pages/Dashboard';
+import { extendTheme } from '@chakra-ui/react';
+
+// Create a basic theme for testing
+const theme = extendTheme({});
 
 // Mock the Inertia hooks
 vi.mock('@inertiajs/react', () => ({

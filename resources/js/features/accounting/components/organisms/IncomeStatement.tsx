@@ -19,7 +19,7 @@ import {
   Divider,
   Progress,
 } from '@chakra-ui/react';
-import { CardContainer } from '@/Components/Base';
+import { CardContainer } from '@/shared/components/molecules/Container';
 import { useMemoizedCallback } from '@/shared/hooks';
 
 /**

@@ -1,8 +1,6 @@
 import React, { Fragment, memo, useMemo } from 'react';
 import {
-  Box,
   Stat,
-  StatLabel,
   StatNumber,
   StatHelpText,
   StatArrow,
@@ -13,7 +11,7 @@ import {
   useColorModeValue,
   Skeleton,
 } from '@chakra-ui/react';
-import { CardContainer } from '@/Components/Base';
+import { CardContainer } from '@/shared/components/molecules/Container';
 import { FinancialPerformanceUtils } from '@/shared/utils/performance';
 
 /**

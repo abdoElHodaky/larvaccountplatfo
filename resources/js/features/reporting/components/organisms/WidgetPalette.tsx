@@ -9,7 +9,7 @@ import {
   Tooltip,
 } from '@chakra-ui/react';
 import { useDrag } from 'react-dnd';
-import { CardContainer } from '@/Components/Base';
+import { CardContainer } from '@/shared/components/molecules/Container';
 import { useMemoizedCallback } from '@/shared/hooks';
 
 /**

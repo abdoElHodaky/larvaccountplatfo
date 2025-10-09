@@ -1,10 +1,10 @@
 import React, { FormEvent, useState } from 'react';
 import { Head, Link, useForm } from '@inertiajs/react';
 import AuthLayout from '@/shared/components/layouts/AuthLayout';
-import InputError from '@/Components/InputError';
-import InputLabel from '@/Components/InputLabel';
-import PrimaryButton from '@/Components/PrimaryButton';
-import TextInput from '@/Components/TextInput';
+import InputError from '@/shared/components/atoms/InputError';
+import InputLabel from '@/shared/components/atoms/InputLabel';
+import PrimaryButton from '@/shared/components/atoms/PrimaryButton';
+import TextInput from '@/shared/components/atoms/TextInput';
 
 interface RegisterData {
     name: string;

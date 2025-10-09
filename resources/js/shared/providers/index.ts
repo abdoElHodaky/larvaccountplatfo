@@ -6,3 +6,5 @@
  */
 
 export { ChakraProvider, default as ChakraProviderDefault } from './ChakraProvider';
+export { AppProviders, default as AppProvidersDefault } from './AppProviders';
+export { SocketProvider } from './SocketProvider';

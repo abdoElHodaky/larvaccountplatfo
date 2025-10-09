@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link, usePage } from '@inertiajs/react';
-import TenantSwitcher from '@/Components/TenantSwitcher';
+import TenantSwitcher from '@/features/organization/components/molecules/TenantSwitcher';
 
 interface TopBarProps {
     onMenuClick: () => void;

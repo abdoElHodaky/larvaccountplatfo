@@ -31,8 +31,8 @@
       "@/Components/*": ["resources/js/Components/*"],
       "@/Layouts/*": ["resources/js/Layouts/*"],
       "@/Pages/*": ["resources/js/Pages/*"],
-      "@/Types/*": ["resources/js/Types/*"],
-      "@/Utils/*": ["resources/js/Utils/*"]
+      "@/Providers/*": ["resources/js/Providers/*"],
+      "@/theme/*": ["resources/js/theme/*"]
     },
 
     /* Additional options */
@@ -47,7 +47,7 @@
     "resources/js/**/*.ts",
     "resources/js/**/*.tsx",
     "resources/js/**/*.d.ts",
-    "resources/js/types/global.d.ts"
+    "resources/js/shared/types/global.d.ts"
   ],
   "exclude": [
     "node_modules",

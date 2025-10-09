@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link, usePage } from '@inertiajs/react';
-import Sidebar from '@/Components/Navigation/Sidebar';
-import TopBar from '@/Components/Navigation/TopBar';
+import Sidebar from '@/shared/components/organisms/Sidebar';
+import TopBar from '@/shared/components/organisms/TopBar';
 
 interface AppLayoutProps {
     children: React.ReactNode;
