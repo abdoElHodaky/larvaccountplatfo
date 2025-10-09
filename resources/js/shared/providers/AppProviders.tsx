@@ -6,14 +6,13 @@
 import React, { Suspense, useEffect } from 'react';
 import { ApolloProvider } from '@apollo/client';
 import { ChakraProvider, ColorModeScript } from '@chakra-ui/react';
-import { Provider as ReduxProvider } from 'react-redux';
+
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import { ErrorBoundary } from 'react-error-boundary';
 
 // Services and stores
 import { apolloClient } from '../services/graphql/apollo-client';
-import { store } from '../stores';
 import { useAuth, useApp, useAppActions } from '../hooks/useRematchStore';
 import { SocketProvider } from './SocketProvider';
 import { pwaManager } from '../utils/pwa';
@@ -208,8 +207,7 @@ export const AppProviders: React.FC<AppProvidersProps> = ({ children }) => {
       onError={handleError}
       onReset={() => window.location.reload()}
     >
-      <ReduxProvider store={store}>
-        <ApolloProvider client={apolloClient}>
+      <ApolloProvider client={apolloClient}>
           <ThemeProvider>
             <DndProvider backend={HTML5Backend}>
               <SocketProvider>
@@ -229,8 +227,7 @@ export const AppProviders: React.FC<AppProvidersProps> = ({ children }) => {
               </SocketProvider>
             </DndProvider>
           </ThemeProvider>
-        </ApolloProvider>
-      </ReduxProvider>
+      </ApolloProvider>
     </ErrorBoundary>
   );
 };
