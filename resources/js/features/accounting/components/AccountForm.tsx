@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { useForm } from '@inertiajs/react';
-import { Button } from '@/Components/UI/Button';
-import { Input } from '@/Components/UI/Input';
-import { Select } from '@/Components/UI/Select';
-import { Card, CardContent, CardHeader, CardTitle } from '@/Components/UI/Card';
+import { Button } from '@/shared/components/atoms/Button';
+import { Input } from '@/shared/components/molecules/FormInput';
+import { Select } from '@/shared/components/molecules/FormInput';
+import { Card, CardContent, CardHeader, CardTitle } from '@/shared/components/molecules/Container';
 
 interface Account {
     id?: number;

@@ -15,7 +15,7 @@ import {
   Flex,
   Spacer,
 } from '@chakra-ui/react';
-import { DataTable, DataTableProps } from '@/Components/Tables';
+import { DataTable, DataTableProps } from '@/shared/components/molecules/DataTable';
 import { useMemoizedCallback } from '@/shared/hooks';
 
 /**
