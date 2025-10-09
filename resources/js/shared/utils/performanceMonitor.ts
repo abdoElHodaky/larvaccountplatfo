@@ -3,6 +3,8 @@
  * Monitors lazy loading performance and provides insights
  */
 
+import React from 'react';
+
 interface PerformanceMetric {
   name: string;
   startTime: number;
