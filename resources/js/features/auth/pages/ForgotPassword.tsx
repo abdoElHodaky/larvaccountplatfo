@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Head, useForm } from '@inertiajs/react';
 import { Button } from '@/shared/components/atoms/Button';
 import { FormInput } from '@/shared/components/molecules/FormInput';
