@@ -204,6 +204,123 @@ src/
 └── 🔧 utils/              # Helper functions and constants
 ```
 
+### **🔄 Unified Import/Export System**
+
+The application features a modern, unified import/export system that provides consistent access to all components, types, and utilities across the codebase.
+
+#### **📁 Feature-Based Organization**
+
+```
+resources/js/features/
+├── 🔐 auth/pages/          # Authentication pages
+│   ├── Login.tsx           # User login page
+│   ├── Register.tsx        # User registration
+│   ├── TenantSelect.tsx    # Multi-tenant selection
+│   ├── ForgotPassword.tsx  # Password reset request
+│   ├── ResetPassword.tsx   # Password reset form
+│   └── index.ts           # Exports all auth pages
+├── 📊 dashboard/pages/     # Dashboard components
+│   ├── Dashboard.tsx       # Main dashboard (exported as Index)
+│   └── index.ts           # Dashboard page exports
+├── 💰 accounting/pages/    # Accounting feature pages
+│   ├── Dashboard.tsx       # Accounting overview
+│   ├── Accounts/          # Chart of accounts management
+│   ├── Transactions/      # Transaction management
+│   ├── JournalEntries/    # Journal entry management
+│   └── index.ts          # All accounting page exports
+├── 📦 inventory/pages/     # Inventory management
+│   ├── Dashboard.tsx       # Inventory overview
+│   ├── ProductDetail.tsx   # Product details page
+│   └── index.ts           # Inventory page exports
+├── 🏢 organization/pages/  # Organization management
+│   ├── Index.tsx          # Organization dashboard
+│   └── index.ts          # Organization page exports
+├── 💼 sales/pages/         # Sales management
+│   ├── Dashboard.tsx       # Sales overview
+│   └── index.ts          # Sales page exports
+└── index.ts               # Main features export hub
+```
+
+#### **🎯 Centralized Page Registry**
+
+```typescript
+// resources/js/pages.ts - Single source of truth for all pages
+import { AccountingPages, InventoryPages, AuthPages, ... } from './features';
+
+export const pageRegistry = {
+    // Authentication pages
+    'auth/Login': AuthPages.Login,
+    'auth/Register': AuthPages.Register,
+    'auth/ForgotPassword': AuthPages.ForgotPassword,
+    
+    // Dashboard pages
+    'dashboard/Index': DashboardPages.Index,
+    
+    // Accounting pages
+    'accounting/Dashboard': AccountingPages.Dashboard,
+    'accounting/Accounts/Index': AccountingPages.AccountsIndex,
+    
+    // ... all other pages
+};
+
+// Type-safe page resolution
+export function resolvePage(name: string): React.ComponentType<any> {
+    const component = pageRegistry[name];
+    if (!component) {
+        throw new Error(`Page "${name}" not found in registry`);
+    }
+    return component;
+}
+```
+
+#### **🛠️ Shared Utilities**
+
+```typescript
+// resources/js/shared/utils/formatters.ts
+export const formatCurrency = (amount: number, currency = 'USD', locale = 'en-US') => {
+    return new Intl.NumberFormat(locale, {
+        style: 'currency',
+        currency: currency
+    }).format(amount);
+};
+
+export const formatDate = (date: Date | string, options?: Intl.DateTimeFormatOptions, locale = 'en-US') => {
+    return new Intl.DateTimeFormat(locale, options).format(new Date(date));
+};
+
+// ... 10+ more formatting utilities
+```
+
+#### **📋 Import Patterns**
+
+```typescript
+// Import specific feature pages
+import { Login, Register, ForgotPassword } from '@/features/auth/pages';
+import { Dashboard } from '@/features/accounting/pages';
+
+// Import feature namespaces
+import { AccountingPages, InventoryPages } from '@/features';
+
+// Import shared utilities
+import { formatCurrency, formatDate, formatNumber } from '@/shared/utils';
+
+// Import types
+import { AccountingTypes, OrganizationTypes } from '@/features';
+
+// Use page registry for dynamic imports
+import { resolvePage } from '@/pages';
+const LoginPage = resolvePage('auth/Login');
+```
+
+#### **✅ Benefits**
+
+- **🎯 Consistent Imports**: Standardized import patterns across the entire application
+- **📦 Code Splitting**: Automatic code splitting with lazy loading support
+- **🔍 Type Safety**: Full TypeScript support with proper type exports
+- **🚀 Performance**: Optimized bundle sizes with tree shaking
+- **🛠️ Maintainability**: Easy to add new features and components
+- **📚 Discoverability**: Clear structure makes finding components simple
+
 ---
 
 ## ⚡ **Performance Features**
