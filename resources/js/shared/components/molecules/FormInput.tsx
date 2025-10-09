@@ -1,4 +1,4 @@
-import React, { Fragment, memo, useMemo, useCallback } from 'react';
+import React, { Fragment, memo, useMemo } from 'react';
 import {
   Input,
   InputGroup,

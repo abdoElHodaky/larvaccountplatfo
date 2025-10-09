@@ -1,8 +1,6 @@
 import React, { Fragment, memo, useMemo } from 'react';
 import {
-  Box,
   Stat,
-  StatLabel,
   StatNumber,
   StatHelpText,
   StatArrow,

@@ -17,7 +17,7 @@ import {
   Spacer,
   Badge,
 } from '@chakra-ui/react';
-import { AppLayout } from '@/shared/components/molecules/Container';
+import { Container } from '@/shared/components/molecules/Container';
 import { useMemoizedCallback } from '@/shared/hooks';
 
 /**
