@@ -53,7 +53,6 @@
         "@headlessui/react": "^1.7.17",
         "@heroicons/react": "^2.0.18",
         "@inertiajs/react": "^1.0.14",
-        "@inertiajs/server": "^0.1.0",
         "@rematch/core": "^2.2.0",
         "@rematch/loading": "^2.1.2",
         "@rematch/persist": "^2.1.2",
