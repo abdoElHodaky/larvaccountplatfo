@@ -143,8 +143,8 @@ export const preloadByRole = (userRole: string, permissions: string[]) => {
   }
   
   if (permissions.includes('manage_transactions')) {
-    import('../components/accounting/TransactionList');
-    import('../components/accounting/TransactionForm');
+    import('../../features/accounting/components/organisms/TransactionList');
+    import('../../features/accounting/components/organisms/TransactionForm');
   }
   
   if (permissions.includes('view_reports')) {
@@ -165,11 +165,11 @@ export const preloadByRoute = (currentRoute: string) => {
       import('../components/dashboard/CashFlowWidget');
       break;
     case '/transactions':
-      import('../components/accounting/TransactionForm');
-      import('../components/accounting/JournalEntries');
+      import('../../features/accounting/components/organisms/TransactionForm');
+      import('../../features/accounting/components/organisms/JournalEntries');
       break;
     case '/accounts':
-      import('../components/accounting/TransactionList');
+      import('../../features/accounting/components/organisms/TransactionList');
       break;
     case '/reports':
       import('../components/reports/BalanceSheet');
