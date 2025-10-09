@@ -8,6 +8,8 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Validator;
+use Inertia\Inertia;
+use Inertia\Response;
 
 class InventoryController extends Controller
 {
@@ -21,9 +23,52 @@ class InventoryController extends Controller
     }
 
     /**
-     * Display inventory dashboard
+     * Display inventory dashboard page
      */
-    public function index(): JsonResponse
+    public function index(): Response
+    {
+        try {
+            $organizationId = $this->getCurrentOrganizationId();
+            $overview = $this->inventoryService->getInventoryOverview($organizationId);
+            
+            // Get recent products and low stock alerts
+            $recentProducts = $this->inventoryService->getRecentProducts($organizationId, 10);
+            $lowStockProducts = $this->inventoryService->getLowStockProducts($organizationId);
+            $categories = $this->inventoryService->getProductCategories($organizationId);
+
+            return Inertia::render('Inventory/Dashboard', [
+                'overview' => $overview,
+                'recentProducts' => $recentProducts,
+                'lowStockProducts' => $lowStockProducts,
+                'categories' => $categories,
+                'organization' => [
+                    'id' => $organizationId,
+                    'name' => auth()->user()->current_organization->name ?? 'Default Organization',
+                ],
+            ]);
+
+        } catch (\Exception $e) {
+            \Log::error('Inventory dashboard error: ' . $e->getMessage());
+            
+            // Return error page with Inertia
+            return Inertia::render('Inventory/Dashboard', [
+                'overview' => null,
+                'recentProducts' => [],
+                'lowStockProducts' => [],
+                'categories' => [],
+                'error' => 'Failed to load inventory data. Please try again.',
+                'organization' => [
+                    'id' => $this->getCurrentOrganizationId(),
+                    'name' => auth()->user()->current_organization->name ?? 'Default Organization',
+                ],
+            ]);
+        }
+    }
+
+    /**
+     * Get inventory dashboard data (API endpoint)
+     */
+    public function dashboardData(): JsonResponse
     {
         try {
             $organizationId = $this->getCurrentOrganizationId();

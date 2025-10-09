@@ -9,6 +9,8 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Validator;
+use Inertia\Inertia;
+use Inertia\Response;
 use Carbon\Carbon;
 
 class AccountingController extends Controller
@@ -23,9 +25,51 @@ class AccountingController extends Controller
     }
 
     /**
-     * Display accounting dashboard
+     * Display accounting dashboard page
      */
-    public function index(): JsonResponse
+    public function index(): Response
+    {
+        try {
+            $organizationId = $this->getCurrentOrganizationId();
+            $overview = $this->accountingService->getDashboardOverview($organizationId);
+            
+            // Get chart of accounts for the sidebar/navigation
+            $accounts = $this->accountingService->getChartOfAccounts($organizationId, ['active_only' => true]);
+            
+            // Get recent transactions
+            $recentTransactions = $this->accountingService->getRecentTransactions($organizationId, 10);
+
+            return Inertia::render('Accounting/Dashboard', [
+                'overview' => $overview,
+                'accounts' => $accounts,
+                'recentTransactions' => $recentTransactions,
+                'organization' => [
+                    'id' => $organizationId,
+                    'name' => auth()->user()->current_organization->name ?? 'Default Organization',
+                ],
+            ]);
+
+        } catch (\Exception $e) {
+            \Log::error('Accounting dashboard error: ' . $e->getMessage());
+            
+            // Return error page with Inertia
+            return Inertia::render('Accounting/Dashboard', [
+                'overview' => null,
+                'accounts' => [],
+                'recentTransactions' => [],
+                'error' => 'Failed to load accounting data. Please try again.',
+                'organization' => [
+                    'id' => $this->getCurrentOrganizationId(),
+                    'name' => auth()->user()->current_organization->name ?? 'Default Organization',
+                ],
+            ]);
+        }
+    }
+
+    /**
+     * Get accounting dashboard data (API endpoint)
+     */
+    public function dashboardData(): JsonResponse
     {
         try {
             $organizationId = $this->getCurrentOrganizationId();
