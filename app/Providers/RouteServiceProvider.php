@@ -72,29 +72,47 @@ class RouteServiceProvider extends ServiceProvider
     }
 
     /**
-     * Load routes for enabled modules
+     * Load routes for enabled features
      */
     protected function loadModuleRoutes(): void
     {
-        $enabledModules = config('modules.enabled', []);
+        $featuresPath = app_path('Features');
         
-        foreach ($enabledModules as $module) {
-            $moduleRoutePath = base_path("Modules/{$module}/routes");
+        if (!is_dir($featuresPath)) {
+            return;
+        }
+        
+        // Get all feature directories
+        $features = array_filter(scandir($featuresPath), function ($item) use ($featuresPath) {
+            return is_dir($featuresPath . '/' . $item) && !in_array($item, ['.', '..']);
+        });
+        
+        foreach ($features as $feature) {
+            $featureRoutePath = app_path("Features/{$feature}/Routes");
             
-            // Load web routes
-            if (file_exists("{$moduleRoutePath}/web.php")) {
-                Route::middleware(['web', 'tenant'])
-                    ->prefix(strtolower($module))
-                    ->name("{$module}.")
-                    ->group("{$moduleRoutePath}/web.php");
-            }
-            
-            // Load API routes
-            if (file_exists("{$moduleRoutePath}/api.php")) {
-                Route::middleware(['api', 'tenant'])
-                    ->prefix("api/" . strtolower($module))
-                    ->name("api.{$module}.")
-                    ->group("{$moduleRoutePath}/api.php");
+            // Load feature-specific route files
+            if (is_dir($featureRoutePath)) {
+                $routeFiles = glob("{$featureRoutePath}/*.php");
+                
+                foreach ($routeFiles as $routeFile) {
+                    $routeName = basename($routeFile, '.php');
+                    
+                    // Determine if it's an API route based on filename or directory structure
+                    $isApiRoute = strpos($routeName, 'api') !== false || 
+                                 strpos($routeFile, '/api/') !== false;
+                    
+                    if ($isApiRoute) {
+                        Route::middleware(['api', 'tenant'])
+                            ->prefix("api/" . strtolower($feature))
+                            ->name("api.{$feature}.")
+                            ->group($routeFile);
+                    } else {
+                        Route::middleware(['web', 'tenant'])
+                            ->prefix(strtolower($feature))
+                            ->name("{$feature}.")
+                            ->group($routeFile);
+                    }
+                }
             }
         }
     }
