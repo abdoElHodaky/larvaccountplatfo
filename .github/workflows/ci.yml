@@ -73,8 +73,8 @@ jobs:
     - name: Run Laravel Pint (Code Style)
       run: ./vendor/bin/pint --test
     
-    - name: Run PHPUnit Tests
-      run: ./vendor/bin/phpunit
+    - name: Run Tests
+      run: php artisan test
       env:
         DB_CONNECTION: sqlite
         DB_DATABASE: ":memory:"
