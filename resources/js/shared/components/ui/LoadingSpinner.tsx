@@ -1,24 +1,34 @@
 /**
  * Loading Spinner Component
  * Reusable loading indicator with multiple sizes and variants
+ * Updated to use Tailwind CSS instead of Chakra UI
  */
 
 import React from 'react';
-import { Spinner, SpinnerProps, Box, Text, VStack } from '@chakra-ui/react';
 
-export interface LoadingSpinnerProps extends Omit<SpinnerProps, 'size'> {
+export interface LoadingSpinnerProps {
   size?: 'xs' | 'sm' | 'md' | 'lg' | 'xl';
   label?: string;
   overlay?: boolean;
   fullScreen?: boolean;
+  color?: 'blue' | 'gray' | 'white' | 'green' | 'red';
+  className?: string;
 }
 
-const sizeMap = {
-  xs: '16px',
-  sm: '20px',
-  md: '32px',
-  lg: '48px',
-  xl: '64px',
+const sizeClasses = {
+  xs: 'h-4 w-4',
+  sm: 'h-5 w-5',
+  md: 'h-8 w-8',
+  lg: 'h-12 w-12',
+  xl: 'h-16 w-16',
+};
+
+const colorClasses = {
+  blue: 'border-blue-600',
+  gray: 'border-gray-600',
+  white: 'border-white',
+  green: 'border-green-600',
+  red: 'border-red-600',
 };
 
 export const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({
@@ -26,66 +36,42 @@ export const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({
   label,
   overlay = false,
   fullScreen = false,
-  color = 'blue.500',
-  ...props
+  color = 'blue',
+  className = '',
 }) => {
+  const spinnerClasses = `
+    animate-spin rounded-full border-2 border-t-transparent
+    ${sizeClasses[size]}
+    ${colorClasses[color]}
+    ${className}
+  `.trim();
+
   const spinner = (
-    <VStack spacing={3}>
-      <Spinner
-        size={sizeMap[size]}
-        color={color}
-        thickness="3px"
-        speed="0.8s"
-        {...props}
-      />
+    <div className="flex flex-col items-center space-y-3">
+      <div className={spinnerClasses} />
       {label && (
-        <Text fontSize="sm" color="gray.600" textAlign="center">
+        <p className="text-sm text-gray-600 text-center">
           {label}
-        </Text>
+        </p>
       )}
-    </VStack>
+    </div>
   );
 
   if (fullScreen) {
     return (
-      <Box
-        position="fixed"
-        top={0}
-        left={0}
-        right={0}
-        bottom={0}
-        display="flex"
-        alignItems="center"
-        justifyContent="center"
-        bg="rgba(255, 255, 255, 0.9)"
-        zIndex={9999}
-        backdropFilter="blur(2px)"
-      >
+      <div className="fixed inset-0 flex items-center justify-center bg-white bg-opacity-90 z-50 backdrop-blur-sm">
         {spinner}
-      </Box>
+      </div>
     );
   }
 
   if (overlay) {
     return (
-      <Box
-        position="absolute"
-        top={0}
-        left={0}
-        right={0}
-        bottom={0}
-        display="flex"
-        alignItems="center"
-        justifyContent="center"
-        bg="rgba(255, 255, 255, 0.8)"
-        zIndex={10}
-        borderRadius="md"
-      >
+      <div className="absolute inset-0 flex items-center justify-center bg-white bg-opacity-80 z-10 rounded-md">
         {spinner}
-      </Box>
+      </div>
     );
   }
 
   return spinner;
 };
-
