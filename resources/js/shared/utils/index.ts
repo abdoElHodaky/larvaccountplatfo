@@ -93,8 +93,4 @@ export const classNames = (...classes: (string | undefined | null | false)[]): s
 export * from './lazyComponents';
 export * from './serviceWorker';
 
-// Default exports
-export { default as PWAManager } from './pwa';
-export { default as WebSocketManager } from './websocket';
-export { default as GraphQLClient } from './graphql';
-export { default as PerformanceMonitor } from './performance';
+// Note: Default exports are already handled above in the named exports
