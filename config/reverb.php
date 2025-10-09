@@ -36,7 +36,7 @@ return [
             ],
             'max_request_size' => env('REVERB_MAX_MESSAGE_SIZE', 10_000),
             'scaling' => [
-                'enabled' => env('REVERB_SCALING_ENABLED', false),
+                'enabled' => env('REVERB_SCALING_ENABLED', true),
                 'channel' => env('REVERB_SCALING_CHANNEL', 'reverb'),
                 'server' => [
                     'url' => env('REDIS_URL'),

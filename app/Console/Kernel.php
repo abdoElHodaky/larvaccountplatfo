@@ -77,6 +77,21 @@ class Kernel extends ConsoleKernel
                  ->runInBackground();
 
         // Cache Management
+        $schedule->command('cache:warm --type=config')
+                 ->everyFifteenMinutes()
+                 ->withoutOverlapping()
+                 ->runInBackground();
+
+        $schedule->command('cache:warm --type=users')
+                 ->everyThirtyMinutes()
+                 ->withoutOverlapping()
+                 ->runInBackground();
+
+        $schedule->command('cache:warm --type=organizations')
+                 ->hourly()
+                 ->withoutOverlapping()
+                 ->runInBackground();
+
         $schedule->command('cache:prune-stale')
                  ->hourly()
                  ->withoutOverlapping();
