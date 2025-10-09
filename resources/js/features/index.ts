@@ -7,6 +7,7 @@
 
 // Feature Components
 export * from './accounting/components';
+export * from './dashboard/components';
 export * from './inventory/components';
 export * from './reporting/components';
 export * from './organization/components';
