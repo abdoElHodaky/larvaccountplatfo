@@ -85,6 +85,12 @@ export const formatFileSize = (bytes: number, decimals: number = 1): string => {
     const i = Math.floor(Math.log(bytes) / Math.log(k));
 
     const value = bytes / Math.pow(k, i);
+    
+    // For bytes, don't show decimals
+    if (i === 0) {
+        return `${Math.round(value)} ${sizes[i]}`;
+    }
+    
     const formatted = decimals === 0 ? Math.round(value) : value.toFixed(decimals);
     
     return `${formatted} ${sizes[i]}`;

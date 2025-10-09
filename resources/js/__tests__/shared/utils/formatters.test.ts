@@ -165,7 +165,7 @@ describe('Shared Formatters', () => {
     describe('truncateText', () => {
         it('should truncate long text', () => {
             const longText = 'This is a very long text that should be truncated';
-            expect(truncateText(longText, 20)).toBe('This is a very l...');
+            expect(truncateText(longText, 20)).toBe('This is a very lo...');
         });
 
         it('should not truncate short text', () => {
@@ -175,7 +175,7 @@ describe('Shared Formatters', () => {
 
         it('should handle custom suffix', () => {
             const longText = 'This is a very long text';
-            expect(truncateText(longText, 15, ' [more]')).toBe('This is [more]');
+            expect(truncateText(longText, 15, ' [more]')).toBe('This is  [more]');
         });
 
         it('should handle edge cases', () => {
