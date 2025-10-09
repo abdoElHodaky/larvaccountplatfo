@@ -18,7 +18,7 @@ import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import { ReportCanvas } from './ReportCanvas';
 import { WidgetPalette } from './WidgetPalette';
-import { useReportBuilder } from '@/features/reporting/hooks';
+import { useReportBuilder } from '@/shared/hooks';
 import { useMemoizedCallback } from '@/shared/hooks';
 
 /**
