@@ -97,7 +97,7 @@ export const BalanceSheetReport = lazyWithRetry(
 );
 
 export const TrialBalance = lazyWithRetry(
-  () => import('../components/reports/TrialBalance')
+  () => import('../../features/accounting/components/organisms/TrialBalance')
 );
 
 export const ReportBuilder = lazyWithRetry(
@@ -173,7 +173,7 @@ export const preloadByRoute = (currentRoute: string) => {
       break;
     case '/reports':
       import('../components/reports/BalanceSheet');
-      import('../components/reports/TrialBalance');
+      import('../../features/accounting/components/organisms/TrialBalance');
       break;
     case '/settings':
       import('../components/settings/UserManagement');

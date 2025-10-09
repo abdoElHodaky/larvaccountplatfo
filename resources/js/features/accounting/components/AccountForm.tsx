@@ -2,8 +2,9 @@ import React, { useState } from 'react';
 import { useForm } from '@inertiajs/react';
 import { Button } from '@/shared/components/atoms/Button';
 import { FormInput } from '@/shared/components/molecules/FormInput';
+import { FormSelect } from '@/shared/components/molecules/FormSelect';
 import { CardContainer } from '@/shared/components/molecules/Container';
-import { Select, Text } from '@chakra-ui/react';
+import { Text } from '@chakra-ui/react';
 
 interface Account {
     id?: number;
@@ -107,7 +108,7 @@ export default function AccountForm({ account, accounts, onSubmit, onCancel }: A
                                 value={data.code}
                                 onChange={(value) => setData('code', value as string)}
                                 error={errors.code}
-                                required
+                                isRequired
                                 placeholder="e.g., 1000"
                             />
                         </div>
@@ -117,7 +118,7 @@ export default function AccountForm({ account, accounts, onSubmit, onCancel }: A
                                 value={data.name}
                                 onChange={(value) => setData('name', value as string)}
                                 error={errors.name}
-                                required
+                                isRequired
                                 placeholder="e.g., Cash"
                             />
                         </div>
@@ -125,30 +126,30 @@ export default function AccountForm({ account, accounts, onSubmit, onCancel }: A
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
-                            <Select
+                            <FormSelect
                                 label="Account Type"
                                 value={data.type}
                                 onChange={(value) => handleTypeChange(value)}
                                 options={accountTypes}
                                 error={errors.type}
-                                required
+                                isRequired
                             />
                         </div>
                         <div>
-                            <Select
+                            <FormSelect
                                 label="Account Subtype"
                                 value={data.subtype}
                                 onChange={(value) => setData('subtype', value)}
                                 options={accountSubtypes[selectedType as keyof typeof accountSubtypes] || []}
                                 error={errors.subtype}
-                                required
+                                isRequired
                             />
                         </div>
                     </div>
 
                     {parentAccountOptions.length > 0 && (
                         <div>
-                            <Select
+                            <FormSelect
                                 label="Parent Account (Optional)"
                                 value={data.parent_id?.toString() || ''}
                                 onChange={(value) => setData('parent_id', value ? parseInt(value) : undefined)}

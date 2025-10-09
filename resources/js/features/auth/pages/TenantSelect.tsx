@@ -1,7 +1,6 @@
-import React, { FormEvent } from 'react';
+// import { FormEvent } from 'react';
 import { Head, Link, useForm } from '@inertiajs/react';
 import AuthLayout from '@/shared/components/layouts/AuthLayout';
-import PrimaryButton from '@/shared/components/atoms/PrimaryButton';
 
 interface Tenant {
     id: number;
@@ -27,17 +26,9 @@ interface TenantSelectData {
 }
 
 export default function TenantSelect({ user, tenants }: TenantSelectProps) {
-    const { data, setData, post, processing } = useForm<TenantSelectData>({
+    const { setData, post } = useForm<TenantSelectData>({
         tenant_id: 0,
     });
-
-    const submit = (e: FormEvent) => {
-        e.preventDefault();
-        
-        if (data.tenant_id) {
-            post(route('tenant.switch'));
-        }
-    };
 
     const selectTenant = (tenantId: number) => {
         setData('tenant_id', tenantId);
