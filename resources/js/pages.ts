@@ -49,10 +49,13 @@ export const pageRegistry = {
 export type PageName = keyof typeof pageRegistry;
 
 // Helper function to resolve page component
-export function resolvePageComponent(name: string) {
+export function resolvePage(name: string) {
     const component = pageRegistry[name as PageName];
     if (!component) {
         throw new Error(`Page component "${name}" not found in registry`);
     }
     return component;
 }
+
+// Alias for backward compatibility
+export const resolvePageComponent = resolvePage;
