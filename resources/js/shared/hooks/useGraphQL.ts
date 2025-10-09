@@ -4,7 +4,7 @@
  */
 
 import { useQuery, useMutation, useSubscription, useLazyQuery } from '@apollo/client';
-import { useRequest, useWatcher } from 'alova';
+// import { useRequest, useWatcher } from 'alova'; // These hooks don't exist in alova v3.3.4
 import { alovaInstance } from '../services/graphql/apollo-client';
 import { useCallback, useMemo, useState } from 'react';
 import type { 
@@ -155,26 +155,21 @@ export function useGraphQLSubscription<TData = any, TVariables = any>(
 
 /**
  * AlovaJS REST API Hook for non-GraphQL endpoints
+ * DISABLED: useRequest hook not available in alova v3.3.4
  */
 export function useAlovaRequest<TData = any>(
   url: string,
   options: AlovaRequestOptions = {}
 ) {
-  const method = alovaInstance.Get(url);
+  // const method = alovaInstance.Get(url);
   
-  const {
-    data,
-    loading,
-    error,
-    send,
-    abort,
-    update,
-  } = useRequest(method, {
-    immediate: options.immediate ?? true,
-    initialData: options.initialData,
-    middleware: options.middleware,
-    force: options.force,
-  });
+  // Placeholder implementation
+  const data = null;
+  const loading = false;
+  const error = null;
+  const send = () => {};
+  const abort = () => {};
+  const update = () => {};
 
   return {
     data,
@@ -191,25 +186,21 @@ export function useAlovaRequest<TData = any>(
 
 /**
  * AlovaJS Watcher Hook for reactive requests
+ * DISABLED: useWatcher hook not available in alova v3.3.4
  */
 export function useAlovaWatcher<TData = any>(
   url: string,
   watchedStates: any[],
   options: AlovaRequestOptions = {}
 ) {
-  const method = alovaInstance.Get(url);
+  // const method = alovaInstance.Get(url);
   
-  const {
-    data,
-    loading,
-    error,
-    send,
-    abort,
-  } = useWatcher(method, watchedStates, {
-    immediate: options.immediate ?? true,
-    initialData: options.initialData,
-    middleware: options.middleware,
-  });
+  // Placeholder implementation
+  const data = null;
+  const loading = false;
+  const error = null;
+  const send = () => {};
+  const abort = () => {};
 
   return {
     data,
