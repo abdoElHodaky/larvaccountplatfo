@@ -171,8 +171,8 @@ return [
         ],
 
         RequestReceived::class => [
-            ...Octane::prepareApplicationForNextOperation(),
-            ...Octane::prepareApplicationForNextRequest(),
+            ...\Laravel\Octane\Facades\Octane::prepareApplicationForNextOperation(),
+            ...\Laravel\Octane\Facades\Octane::prepareApplicationForNextRequest(),
             // Custom listeners for multi-tenant setup
             FlushTenantContext::class,
             SetupDatabaseConnection::class,
@@ -191,7 +191,7 @@ return [
         ],
 
         TaskReceived::class => [
-            ...Octane::prepareApplicationForNextOperation(),
+            ...\Laravel\Octane\Facades\Octane::prepareApplicationForNextOperation(),
         ],
 
         TaskTerminated::class => [
@@ -199,7 +199,7 @@ return [
         ],
 
         TickReceived::class => [
-            ...Octane::prepareApplicationForNextOperation(),
+            ...\Laravel\Octane\Facades\Octane::prepareApplicationForNextOperation(),
         ],
 
         TickTerminated::class => [
