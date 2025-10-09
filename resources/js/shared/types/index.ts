@@ -9,6 +9,9 @@ export * from './common';
 // Authentication types
 export * from './auth';
 
+// Laravel/Inertia types
+export * from './laravel';
+
 // Re-export accounting types for backward compatibility
 export * from '@/features/accounting/types';
 

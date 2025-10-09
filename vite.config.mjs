@@ -20,11 +20,12 @@ export default defineConfig({
             '@/Components': resolve(__dirname, 'resources/js/Components'),
             '@/Layouts': resolve(__dirname, 'resources/js/Layouts'),
             '@/Pages': resolve(__dirname, 'resources/js/Pages'),
-            '@/Types': resolve(__dirname, 'resources/js/Types'),
-            '@/Utils': resolve(__dirname, 'resources/js/Utils'),
-            '@/Hooks': resolve(__dirname, 'resources/js/Hooks'),
             '@/Providers': resolve(__dirname, 'resources/js/Providers'),
             '@/theme': resolve(__dirname, 'resources/js/theme'),
+            // New consolidated structure
+            '@/shared': resolve(__dirname, 'resources/js/shared'),
+            '@/features': resolve(__dirname, 'resources/js/features'),
+            '@/app': resolve(__dirname, 'resources/js/app'),
         },
     },
     define: {

@@ -1,24 +1,17 @@
 /**
  * Reporting Hooks Index
  * Hooks specific to reporting and analytics features
+ * 
+ * Note: useChartData and useReportBuilder have been moved to @/shared/hooks
+ * for better reusability across the application.
  */
 
+// Re-export from shared hooks for backward compatibility
 export {
   useChartData,
-  useFinancialTimeSeriesData,
-  useFinancialCategoricalData,
-  type ChartDataOptions,
-  type UseChartDataReturn,
-} from './useChartData';
-
-export {
   useReportBuilder,
-  type ReportWidget,
-  type ReportTemplate,
-  type UseReportBuilderOptions,
-  type UseReportBuilderReturn,
-} from './useReportBuilder';
-
-// Default exports
-export { default as useChartData } from './useChartData';
-export { default as useReportBuilder } from './useReportBuilder';
+  type ChartDataOptions,
+  type ChartDataReturn,
+  type ReportBuilderOptions,
+  type ReportBuilderReturn,
+} from '@/shared/hooks';
