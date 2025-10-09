@@ -12,6 +12,7 @@ import { appModel, type AppModel } from './models/appModel';
 import { authModel, type AuthModel } from './models/authModel';
 import { accountingModel, type AccountingModel } from '../../features/accounting/stores/accountingModel';
 import { inventoryModel, type InventoryModel } from '../../features/inventory/stores/inventoryModel';
+import { dashboardModel, type DashboardModel } from '../../features/dashboard/stores/dashboardModel';
 
 // Import persistence configuration and dev tools
 import persistConfig from './persistence';
@@ -23,6 +24,7 @@ export interface RootModel {
   auth: AuthModel;
   accounting: AccountingModel;
   inventory: InventoryModel;
+  dashboard: DashboardModel;
 }
 
 // Create the models object
@@ -31,6 +33,7 @@ const models: RootModel = {
   auth: authModel,
   accounting: accountingModel,
   inventory: inventoryModel,
+  dashboard: dashboardModel,
 };
 
 // Configure the store
@@ -61,11 +64,12 @@ export type Dispatch = RematchDispatch<RootModel>;
 export type RootState = RematchRootState<RootModel, ExtraModelsFromLoading<RootModel>>;
 
 // Export models for type inference
-export { appModel, authModel, accountingModel, inventoryModel };
-export type { AppModel, AuthModel, AccountingModel, InventoryModel };
+export { appModel, authModel, accountingModel, inventoryModel, dashboardModel };
+export type { AppModel, AuthModel, AccountingModel, InventoryModel, DashboardModel };
 
 // Export model types
 export type { AppState, AppSettings, UIState, Notification } from './models/appModel';
 export type { AuthState, User, Tenant, UserTenant, RegisterData } from './models/authModel';
 export type { AccountingState, Account, Transaction, JournalEntry, AccountingFilters } from '../../features/accounting/stores/accountingModel';
 export type { InventoryState, InventoryItem, StockMovement, InventoryFilters } from '../../features/inventory/stores/inventoryModel';
+export type { DashboardState, Widget, DashboardLayout, MetricData, ChartData, DashboardFilters } from '../../features/dashboard/stores/dashboardModel';
