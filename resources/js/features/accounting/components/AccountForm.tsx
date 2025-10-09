@@ -3,7 +3,7 @@ import { useForm } from '@inertiajs/react';
 import { Button } from '@/shared/components/atoms/Button';
 import { FormInput } from '@/shared/components/molecules/FormInput';
 import { CardContainer } from '@/shared/components/molecules/Container';
-import { Box, Select, Text } from '@chakra-ui/react';
+import { Select, Text } from '@chakra-ui/react';
 
 interface Account {
     id?: number;
