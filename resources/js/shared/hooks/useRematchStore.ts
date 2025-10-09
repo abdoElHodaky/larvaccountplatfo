@@ -280,4 +280,3 @@ export const useTenantActions = () => {
     updateSettings: dispatch.tenant.updateSettings,
   };
 };
-

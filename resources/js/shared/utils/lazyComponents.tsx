@@ -53,21 +53,38 @@ export const CashFlowWidget = lazyWithRetry(
   () => import('../components/dashboard/CashFlowWidget')
 );
 
-// Accounting Components
+// Accounting Components - Feature-specific lazy loading
 export const ChartOfAccounts = lazyWithRetry(
-  () => import('../components/accounting/ChartOfAccounts')
+  () => import('../../features/accounting/components/organisms/ChartOfAccounts')
 );
 
 export const TransactionList = lazyWithRetry(
-  () => import('../components/accounting/TransactionList')
+  () => import('../../features/accounting/components/organisms/TransactionList')
 );
 
 export const TransactionForm = lazyWithRetry(
-  () => import('../components/accounting/TransactionForm')
+  () => import('../../features/accounting/components/organisms/TransactionForm')
 );
 
 export const JournalEntries = lazyWithRetry(
-  () => import('../components/accounting/JournalEntries')
+  () => import('../../features/accounting/components/organisms/JournalEntries')
+);
+
+export const BalanceSheet = lazyWithRetry(
+  () => import('../../features/accounting/components/organisms/BalanceSheet')
+);
+
+// Accounting Pages
+export const AccountsPage = lazyWithRetry(
+  () => import('../../features/accounting/pages/Accounts')
+);
+
+export const TransactionsPage = lazyWithRetry(
+  () => import('../../features/accounting/pages/Transactions')
+);
+
+export const JournalEntriesPage = lazyWithRetry(
+  () => import('../../features/accounting/pages/JournalEntries')
 );
 
 // Report Components
@@ -165,6 +182,47 @@ export const preloadByRoute = (currentRoute: string) => {
   }
 };
 
+// Inventory Components
+export const InventoryList = lazyWithRetry(
+  () => import('../../features/inventory/components/organisms/InventoryList')
+);
+
+export const InventoryForm = lazyWithRetry(
+  () => import('../../features/inventory/components/organisms/InventoryForm')
+);
+
+// Organization Components
+export const OrganizationSettings = lazyWithRetry(
+  () => import('../../features/organization/components/organisms/OrganizationSettings')
+);
+
+export const UserManagementOrg = lazyWithRetry(
+  () => import('../../features/organization/components/organisms/UserManagement')
+);
+
+// Reporting Components
+export const ReportDashboard = lazyWithRetry(
+  () => import('../../features/reporting/components/organisms/ReportDashboard')
+);
+
+export const CustomReportBuilder = lazyWithRetry(
+  () => import('../../features/reporting/components/organisms/CustomReportBuilder')
+);
+
+// Auth Pages
+export const LoginPage = lazyWithRetry(
+  () => import('../../features/auth/pages/Login')
+);
+
+export const RegisterPage = lazyWithRetry(
+  () => import('../../features/auth/pages/Register')
+);
+
+// Dashboard Pages
+export const DashboardPage = lazyWithRetry(
+  () => import('../../features/dashboard/pages/Dashboard')
+);
+
 // Component bundle information for monitoring
 export const componentBundles = {
   dashboard: [
@@ -173,19 +231,38 @@ export const componentBundles = {
     'RecentTransactions',
     'QuickActions',
     'FinancialChart',
-    'CashFlowWidget'
+    'CashFlowWidget',
+    'DashboardPage'
   ],
   accounting: [
     'ChartOfAccounts',
     'TransactionList',
     'TransactionForm', 
-    'JournalEntries'
+    'JournalEntries',
+    'BalanceSheet',
+    'AccountsPage',
+    'TransactionsPage',
+    'JournalEntriesPage'
   ],
-  reports: [
+  inventory: [
+    'InventoryList',
+    'InventoryForm'
+  ],
+  organization: [
+    'OrganizationSettings',
+    'UserManagementOrg'
+  ],
+  reporting: [
     'IncomeStatement',
     'BalanceSheet',
     'TrialBalance',
-    'ReportBuilder'
+    'ReportBuilder',
+    'ReportDashboard',
+    'CustomReportBuilder'
+  ],
+  auth: [
+    'LoginPage',
+    'RegisterPage'
   ],
   settings: [
     'TenantSettings',
@@ -233,18 +310,36 @@ export default {
   QuickActions,
   FinancialChart,
   CashFlowWidget,
+  DashboardPage,
   
   // Accounting
   ChartOfAccounts,
   TransactionList,
   TransactionForm,
   JournalEntries,
+  BalanceSheet,
+  AccountsPage,
+  TransactionsPage,
+  JournalEntriesPage,
+  
+  // Inventory
+  InventoryList,
+  InventoryForm,
+  
+  // Organization
+  OrganizationSettings,
+  UserManagementOrg,
   
   // Reports
   IncomeStatement,
-  BalanceSheet,
   TrialBalance,
   ReportBuilder,
+  ReportDashboard,
+  CustomReportBuilder,
+  
+  // Auth
+  LoginPage,
+  RegisterPage,
   
   // Settings
   TenantSettings,

@@ -4,6 +4,7 @@
  */
 
 import React, { Suspense, useEffect } from 'react';
+import { Provider } from 'react-redux';
 import { ApolloProvider } from '@apollo/client';
 import { ChakraProvider, ColorModeScript } from '@chakra-ui/react';
 
@@ -12,6 +13,7 @@ import { HTML5Backend } from 'react-dnd-html5-backend';
 import { ErrorBoundary } from 'react-error-boundary';
 
 // Services and stores
+import { store } from '../stores';
 import { apolloClient } from '../services/graphql/apollo-client';
 import { useAuth, useApp, useAppActions } from '../hooks/useRematchStore';
 import { SocketProvider } from './SocketProvider';
@@ -207,27 +209,29 @@ export const AppProviders: React.FC<AppProvidersProps> = ({ children }) => {
       onError={handleError}
       onReset={() => window.location.reload()}
     >
-      <ApolloProvider client={apolloClient}>
-          <ThemeProvider>
-            <DndProvider backend={HTML5Backend}>
-              <SocketProvider>
-                <PerformanceMonitor>
-                  <ConnectionMonitor>
-                    <AppInitializer>
-                      <AuthInitializer>
-                        <Suspense fallback={<LoadingFallback />}>
-                          {children}
-                          <NotificationContainer />
-                          <PWAInstallPrompt />
-                        </Suspense>
-                      </AuthInitializer>
-                    </AppInitializer>
-                  </ConnectionMonitor>
-                </PerformanceMonitor>
-              </SocketProvider>
-            </DndProvider>
-          </ThemeProvider>
-      </ApolloProvider>
+      <Provider store={store}>
+        <ApolloProvider client={apolloClient}>
+            <ThemeProvider>
+              <DndProvider backend={HTML5Backend}>
+                <SocketProvider>
+                  <PerformanceMonitor>
+                    <ConnectionMonitor>
+                      <AppInitializer>
+                        <AuthInitializer>
+                          <Suspense fallback={<LoadingFallback />}>
+                            {children}
+                            <NotificationContainer />
+                            <PWAInstallPrompt />
+                          </Suspense>
+                        </AuthInitializer>
+                      </AppInitializer>
+                    </ConnectionMonitor>
+                  </PerformanceMonitor>
+                </SocketProvider>
+              </DndProvider>
+            </ThemeProvider>
+        </ApolloProvider>
+      </Provider>
     </ErrorBoundary>
   );
 };
