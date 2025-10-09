@@ -15,3 +15,12 @@ export * from './organization/components';
 export * as AuthPages from './auth/pages';
 export * as AccountingPages from './accounting/pages';
 export * as DashboardPages from './dashboard/pages';
+export * as InventoryPages from './inventory/pages';
+export * as OrganizationPages from './organization/pages';
+export * as SalesPages from './sales/pages';
+
+// Feature Types
+export * as AccountingTypes from './accounting/types';
+export * as InventoryTypes from './inventory/types';
+export * as SalesTypes from './sales/types';
+export * as OrganizationTypes from './organization/types';

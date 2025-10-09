@@ -1,6 +1,7 @@
 import React from 'react';
 import { Head, Link } from '@inertiajs/react';
 import AppLayout from '@/shared/components/layouts/AppLayout';
+import { formatCurrency, formatDate, formatNumber } from '@/shared/utils';
 import { Product, StockMovement, InventoryStats } from '../types';
 
 interface DashboardProps {
@@ -43,20 +44,7 @@ export default function Dashboard({
         );
     }
 
-    const formatCurrency = (amount: number) => {
-        return new Intl.NumberFormat('en-US', {
-            style: 'currency',
-            currency: 'USD'
-        }).format(amount);
-    };
-
-    const formatDate = (dateString: string) => {
-        return new Date(dateString).toLocaleDateString();
-    };
-
-    const formatNumber = (num: number) => {
-        return new Intl.NumberFormat('en-US').format(num);
-    };
+    // Using shared formatters from utils
 
     return (
         <AppLayout>

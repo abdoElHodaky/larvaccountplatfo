@@ -6,6 +6,9 @@
 // Class name utilities
 export { cn } from './cn';
 
+// Formatting utilities
+export * from './formatters';
+
 // PWA Utilities
 export {
   PWAManager,
