@@ -115,6 +115,91 @@ public function index(): Response
 
 ---
 
+### **4. InventoryController (Product Detail)**
+**File**: `app/Features/Inventory/Controllers/InventoryController.php`
+
+#### **Changes Made:**
+- ✅ **Updated `show()` method**: Now returns `Inertia::render('Inventory/ProductDetail')` instead of JSON
+- ✅ **Added `productData()` method**: New API endpoint that returns JSON for AJAX requests
+- ✅ **Enhanced data structure**: Includes product details, related products, and categories
+- ✅ **Error handling**: Graceful error handling with Inertia error pages
+
+#### **Before:**
+```php
+public function show(Product $product): JsonResponse
+{
+    // Returns JSON response
+    return response()->json([...]);
+}
+```
+
+#### **After:**
+```php
+public function show(Product $product): Response
+{
+    // Returns Inertia page
+    return Inertia::render('Inventory/ProductDetail', [
+        'product' => [...],
+        'relatedProducts' => $relatedProducts,
+        'categories' => $categories,
+        'organization' => [...],
+    ]);
+}
+
+public function productData(Product $product): JsonResponse
+{
+    // API endpoint for JSON data
+    return response()->json([...]);
+}
+```
+
+---
+
+### **5. SalesController (New Controller)**
+**File**: `app/Features/Sales/Controllers/SalesController.php`
+
+#### **Changes Made:**
+- ✅ **Created new controller**: Complete new controller for Sales page views
+- ✅ **Multiple page methods**: `index()`, `customers()`, `orders()`, `createOrder()`, `createCustomer()`
+- ✅ **Consistent patterns**: Follows same structure as other feature controllers
+- ✅ **Error handling**: Graceful error handling with Inertia error pages
+
+#### **Methods Added:**
+```php
+public function index(): Response
+{
+    return Inertia::render('Sales/Dashboard', [
+        'overview' => $overview,
+        'recentOrders' => $recentOrders,
+        'topCustomers' => $topCustomers,
+        'salesTrends' => $salesTrends,
+        'organization' => [...],
+    ]);
+}
+
+public function customers(): Response
+{
+    return Inertia::render('Sales/Customers', [...]);
+}
+
+public function orders(): Response
+{
+    return Inertia::render('Sales/Orders', [...]);
+}
+
+public function createOrder(): Response
+{
+    return Inertia::render('Sales/CreateOrder', [...]);
+}
+
+public function createCustomer(): Response
+{
+    return Inertia::render('Sales/CreateCustomer', [...]);
+}
+```
+
+---
+
 ## ✅ **Controllers Already Correct**
 
 ### **1. DashboardController**
@@ -233,16 +318,100 @@ return response()->json([
 
 ---
 
+## 🔄 **Route Updates**
+
+### **Web Routes Updated**
+**File**: `routes/web.php`
+
+#### **Changes Made:**
+- ✅ **Updated imports**: Changed from old module-based controllers to new feature-based controllers
+- ✅ **Simplified routes**: Removed complex old accounting routes, added clean feature routes
+- ✅ **Added new routes**: Complete route structure for all features
+
+#### **New Route Structure:**
+```php
+// Accounting
+Route::prefix('accounting')->name('accounting.')->group(function () {
+    Route::get('/', [AccountingController::class, 'index'])->name('index');
+    Route::get('/dashboard', [AccountingController::class, 'index'])->name('dashboard');
+});
+
+// Inventory
+Route::prefix('inventory')->name('inventory.')->group(function () {
+    Route::get('/', [InventoryController::class, 'index'])->name('index');
+    Route::get('/dashboard', [InventoryController::class, 'index'])->name('dashboard');
+    Route::get('/products/{product}', [InventoryController::class, 'show'])->name('products.show');
+});
+
+// Sales
+Route::prefix('sales')->name('sales.')->group(function () {
+    Route::get('/', [SalesController::class, 'index'])->name('index');
+    Route::get('/dashboard', [SalesController::class, 'index'])->name('dashboard');
+    Route::get('/customers', [SalesController::class, 'customers'])->name('customers');
+    Route::get('/customers/create', [SalesController::class, 'createCustomer'])->name('customers.create');
+    Route::get('/orders', [SalesController::class, 'orders'])->name('orders');
+    Route::get('/orders/create', [SalesController::class, 'createOrder'])->name('orders.create');
+});
+
+// Organization
+Route::prefix('organization')->name('organization.')->group(function () {
+    Route::get('/', [OrganizationController::class, 'index'])->name('index');
+    Route::get('/dashboard', [OrganizationController::class, 'dashboard'])->name('dashboard');
+    Route::get('/settings', [OrganizationController::class, 'settings'])->name('settings');
+    Route::get('/profile', [OrganizationController::class, 'profile'])->name('profile');
+});
+```
+
+### **Sales Routes Added**
+**File**: `app/Features/Sales/Routes/sales.php`
+
+#### **Changes Made:**
+- ✅ **Added web routes**: Complete web route structure for Sales feature
+- ✅ **Maintained API routes**: Existing API routes remain unchanged
+- ✅ **Consistent naming**: Follows same pattern as other features
+
+---
+
 ## 🎯 **Next Steps**
 
-1. **Update Routes**: Ensure web routes point to Inertia methods
-2. **Create Frontend Components**: Build React components for each Inertia page
+1. ✅ **Update Routes**: Web routes now point to correct Inertia methods
+2. **Create Frontend Components**: Build React components for each Inertia page:
+   - `Accounting/Dashboard.tsx`
+   - `Inventory/Dashboard.tsx`
+   - `Inventory/ProductDetail.tsx`
+   - `Organization/Index.tsx`
+   - `Sales/Dashboard.tsx`
+   - `Sales/Customers.tsx`
+   - `Sales/Orders.tsx`
+   - `Sales/CreateOrder.tsx`
+   - `Sales/CreateCustomer.tsx`
 3. **Test Integration**: Verify SSR and client-side navigation work correctly
 4. **Update Documentation**: Document the new controller patterns for the team
 5. **Performance Testing**: Monitor the impact of SSR on server performance
 
 ---
 
-**Last Updated**: $(date)  
-**Status**: Controllers updated and ready for frontend integration  
-**Next Review**: After frontend components are created
+## 📋 **Summary of All Changes**
+
+### **Controllers Updated/Created:**
+- ✅ **AccountingController**: Updated `index()` method + added `dashboardData()` API method
+- ✅ **InventoryController**: Updated `index()` and `show()` methods + added API methods
+- ✅ **OrganizationController**: Added `index()` method
+- ✅ **SalesController**: Created complete new controller with 5 page methods
+
+### **Routes Updated:**
+- ✅ **Main web routes**: Updated to use new feature-based controllers
+- ✅ **Sales routes**: Added complete web route structure
+- ✅ **API routes**: Updated to point to new API methods
+
+### **Files Created/Modified:**
+- ✅ **4 controllers updated**: AccountingController, InventoryController, OrganizationController
+- ✅ **1 controller created**: SalesController
+- ✅ **2 route files updated**: routes/web.php, app/Features/Sales/Routes/sales.php
+- ✅ **1 documentation file**: CONTROLLER_INERTIA_UPDATES.md
+
+---
+
+**Last Updated**: October 9, 2025  
+**Status**: All controllers updated with Inertia.js responses, routes configured, ready for frontend integration  
+**Next Review**: After frontend components are created and tested
