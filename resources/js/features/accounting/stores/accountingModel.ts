@@ -349,7 +349,7 @@ export const accountingModel = createModel<RootModel>()({
     },
     
     // Transaction effects
-    async fetchTransactions(filters?: Partial<AccountingFilters>) {
+    async fetchTransactions(_filters?: Partial<AccountingFilters>) {
       dispatch.accounting.setTransactionsLoading(true);
       dispatch.accounting.clearError();
       
@@ -370,7 +370,7 @@ export const accountingModel = createModel<RootModel>()({
     },
     
     // Journal Entry effects
-    async fetchJournalEntries(filters?: Partial<AccountingFilters>) {
+    async fetchJournalEntries(_filters?: Partial<AccountingFilters>) {
       dispatch.accounting.setJournalEntriesLoading(true);
       dispatch.accounting.clearError();
       

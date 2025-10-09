@@ -80,6 +80,25 @@ return [
             'lock_connection' => 'default',
         ],
 
+        // Multi-tenant cache stores
+        'tenant_redis' => [
+            'driver' => 'redis',
+            'connection' => 'tenant_cache',
+            'lock_connection' => 'default',
+            'prefix' => env('CACHE_PREFIX', Str::slug(env('APP_NAME', 'laravel'), '_').'_cache_') . 'tenant_',
+        ],
+
+        // High-performance cache for frequently accessed data
+        'redis_cluster' => [
+            'driver' => 'redis',
+            'connection' => 'cluster',
+            'lock_connection' => 'default',
+            'options' => [
+                'cluster' => 'redis',
+                'prefix' => env('CACHE_PREFIX', Str::slug(env('APP_NAME', 'laravel'), '_').'_cache_') . 'cluster_',
+            ],
+        ],
+
         'dynamodb' => [
             'driver' => 'dynamodb',
             'key' => env('AWS_ACCESS_KEY_ID'),

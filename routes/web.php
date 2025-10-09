@@ -6,10 +6,10 @@ use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\TenantController;
 use App\Http\Controllers\DashboardController;
-use Modules\Accounting\Http\Controllers\AccountController;
-use Modules\Accounting\Http\Controllers\TransactionController;
-use Modules\Accounting\Http\Controllers\JournalEntryController;
-use Modules\Accounting\Http\Controllers\ReportController;
+use App\Features\Accounting\Controllers\AccountingController;
+use App\Features\Inventory\Controllers\InventoryController;
+use App\Features\Organization\Controllers\OrganizationController;
+use App\Features\Sales\Controllers\SalesController;
 
 /*
 |--------------------------------------------------------------------------
@@ -71,43 +71,37 @@ Route::middleware(['auth', 'verified', 'tenant'])->group(function () {
         Route::post('/users/invite', [TenantController::class, 'inviteUser'])->name('users.invite');
     });
     
-    // Accounting Module Routes
+    // Feature Module Routes
+    
+    // Accounting
     Route::prefix('accounting')->name('accounting.')->group(function () {
-        // Chart of Accounts
-        Route::resource('accounts', AccountController::class);
-        Route::get('accounts/{account}/balance-history', [AccountController::class, 'balanceHistory'])
-            ->name('accounts.balance-history');
-        Route::post('accounts/{account}/recalculate-balance', [AccountController::class, 'recalculateBalance'])
-            ->name('accounts.recalculate-balance');
-        Route::get('accounts-tree', [AccountController::class, 'tree'])
-            ->name('accounts.tree');
-        
-        // Transactions
-        Route::resource('transactions', TransactionController::class);
-        Route::post('transactions/{transaction}/post', [TransactionController::class, 'post'])
-            ->name('transactions.post');
-        Route::post('transactions/{transaction}/reverse', [TransactionController::class, 'reverse'])
-            ->name('transactions.reverse');
-        Route::get('transactions/{transaction}/duplicate', [TransactionController::class, 'duplicate'])
-            ->name('transactions.duplicate');
-        
-        // Journal Entries
-        Route::resource('journal-entries', JournalEntryController::class);
-        Route::get('journal-entries/create/quick', [JournalEntryController::class, 'createQuick'])
-            ->name('journal-entries.create-quick');
-        Route::post('journal-entries/validate', [JournalEntryController::class, 'validate'])
-            ->name('journal-entries.validate');
-        
-        // Reports
-        Route::prefix('reports')->name('reports.')->group(function () {
-            Route::get('/', [ReportController::class, 'index'])->name('index');
-            Route::get('/trial-balance', [ReportController::class, 'trialBalance'])->name('trial-balance');
-            Route::get('/balance-sheet', [ReportController::class, 'balanceSheet'])->name('balance-sheet');
-            Route::get('/income-statement', [ReportController::class, 'incomeStatement'])->name('income-statement');
-            Route::get('/cash-flow', [ReportController::class, 'cashFlow'])->name('cash-flow');
-            Route::get('/general-ledger', [ReportController::class, 'generalLedger'])->name('general-ledger');
-            Route::get('/account-activity', [ReportController::class, 'accountActivity'])->name('account-activity');
-        });
+        Route::get('/', [AccountingController::class, 'index'])->name('index');
+        Route::get('/dashboard', [AccountingController::class, 'index'])->name('dashboard');
+    });
+    
+    // Inventory
+    Route::prefix('inventory')->name('inventory.')->group(function () {
+        Route::get('/', [InventoryController::class, 'index'])->name('index');
+        Route::get('/dashboard', [InventoryController::class, 'index'])->name('dashboard');
+        Route::get('/products/{product}', [InventoryController::class, 'show'])->name('products.show');
+    });
+    
+    // Sales
+    Route::prefix('sales')->name('sales.')->group(function () {
+        Route::get('/', [SalesController::class, 'index'])->name('index');
+        Route::get('/dashboard', [SalesController::class, 'index'])->name('dashboard');
+        Route::get('/customers', [SalesController::class, 'customers'])->name('customers');
+        Route::get('/customers/create', [SalesController::class, 'createCustomer'])->name('customers.create');
+        Route::get('/orders', [SalesController::class, 'orders'])->name('orders');
+        Route::get('/orders/create', [SalesController::class, 'createOrder'])->name('orders.create');
+    });
+    
+    // Organization
+    Route::prefix('organization')->name('organization.')->group(function () {
+        Route::get('/', [OrganizationController::class, 'index'])->name('index');
+        Route::get('/dashboard', [OrganizationController::class, 'dashboard'])->name('dashboard');
+        Route::get('/settings', [OrganizationController::class, 'settings'])->name('settings');
+        Route::get('/profile', [OrganizationController::class, 'profile'])->name('profile');
     });
     
     // API routes for AJAX requests
@@ -116,15 +110,16 @@ Route::middleware(['auth', 'verified', 'tenant'])->group(function () {
         Route::get('/dashboard/stats', [DashboardController::class, 'stats'])->name('dashboard.stats');
         Route::get('/dashboard/recent-activity', [DashboardController::class, 'recentActivity'])->name('dashboard.recent-activity');
         
-        // Account search and autocomplete
-        Route::get('/accounts/search', [AccountController::class, 'search'])->name('accounts.search');
-        Route::get('/accounts/autocomplete', [AccountController::class, 'autocomplete'])->name('accounts.autocomplete');
+        // Accounting API endpoints
+        Route::get('/accounting/dashboard', [AccountingController::class, 'dashboardData'])->name('accounting.dashboard');
         
-        // Transaction validation
-        Route::post('/transactions/validate-entries', [TransactionController::class, 'validateEntries'])->name('transactions.validate-entries');
+        // Inventory API endpoints
+        Route::get('/inventory/dashboard', [InventoryController::class, 'dashboardData'])->name('inventory.dashboard');
+        Route::get('/inventory/products/{product}', [InventoryController::class, 'productData'])->name('inventory.products.data');
         
-        // Quick actions
-        Route::post('/quick-journal-entry', [JournalEntryController::class, 'quickEntry'])->name('quick-journal-entry');
+        // Organization API endpoints
+        Route::put('/organization/settings', [OrganizationController::class, 'updateSettings'])->name('organization.settings.update');
+        Route::put('/organization/profile', [OrganizationController::class, 'updateProfile'])->name('organization.profile.update');
     });
 });
 

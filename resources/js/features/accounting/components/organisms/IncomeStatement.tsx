@@ -11,10 +11,10 @@ import {
   Th,
   Td,
   useColorModeValue,
-  Badge,
+  // Badge,
   Button,
   Select,
-  Flex,
+  // Flex,
   Spacer,
   Divider,
   Progress,
@@ -84,7 +84,7 @@ export const IncomeStatement: React.FC<IncomeStatementProps> = memo(({
   onExport,
   showPercentages = true,
   showTrends = true,
-  comparisonData,
+  // comparisonData,
   className,
   loading = false,
 }) => {
@@ -92,8 +92,8 @@ export const IncomeStatement: React.FC<IncomeStatementProps> = memo(({
   const [sortBy, setSortBy] = useState<'name' | 'amount' | 'percentage'>('amount');
 
   // Memoized color values
-  const bgColor = useColorModeValue('white', 'gray.800');
-  const borderColor = useColorModeValue('gray.200', 'gray.600');
+  // const bgColor = useColorModeValue('white', 'gray.800');
+  // const borderColor = useColorModeValue('gray.200', 'gray.600');
   const headerBg = useColorModeValue('gray.50', 'gray.700');
   const sectionBg = useColorModeValue('blue.50', 'blue.900');
   const positiveColor = useColorModeValue('green.500', 'green.400');
@@ -195,7 +195,7 @@ export const IncomeStatement: React.FC<IncomeStatementProps> = memo(({
   ), [showPercentages, showTrends, sectionBg, headerBg, positiveColor, negativeColor, formatCurrency]);
 
   // Render item row
-  const renderItemRow = useMemoizedCallback((item: IncomeStatementItem, index: number) => (
+  const renderItemRow = useMemoizedCallback((item: IncomeStatementItem, _index: number) => (
     <Tr
       key={item.id}
       _hover={{ bg: useColorModeValue('gray.50', 'gray.700') }}

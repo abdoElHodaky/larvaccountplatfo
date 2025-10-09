@@ -3,7 +3,7 @@
  * Displays and manages the company's chart of accounts
  */
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { useAccounts, useAccountingFilters } from '../../hooks/useAccounting';
 import type { Account } from '../../stores/accountingModel';
 
@@ -16,10 +16,10 @@ export const ChartOfAccounts: React.FC<ChartOfAccountsProps> = ({
   className = '',
   onAccountSelect,
 }) => {
-  const { accounts, loading, error, fetch, create, update, delete: deleteAccount, select } = useAccounts();
+  const { accounts, loading, error, fetch, delete: deleteAccount, select } = useAccounts();
   const { filters, setSearchTerm, setAccountTypes } = useAccountingFilters();
-  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
-  const [editingAccount, setEditingAccount] = useState<Account | null>(null);
+  // const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+  // const [editingAccount, setEditingAccount] = useState<Account | null>(null);
 
   useEffect(() => {
     fetch(filters);
@@ -30,19 +30,19 @@ export const ChartOfAccounts: React.FC<ChartOfAccountsProps> = ({
     onAccountSelect?.(account);
   };
 
-  const handleCreateAccount = async (accountData: Omit<Account, 'id' | 'createdAt' | 'updatedAt'>) => {
-    const result = await create(accountData);
-    if (result.success) {
-      setIsCreateModalOpen(false);
-    }
-  };
+  // const handleCreateAccount = async (accountData: Omit<Account, 'id' | 'createdAt' | 'updatedAt'>) => {
+  //   const result = await create(accountData);
+  //   if (result.success) {
+  //     setIsCreateModalOpen(false);
+  //   }
+  // };
 
-  const handleUpdateAccount = async (id: string, data: Partial<Account>) => {
-    const result = await update({ id, data });
-    if (result.success) {
-      setEditingAccount(null);
-    }
-  };
+  // const handleUpdateAccount = async (id: string, data: Partial<Account>) => {
+  //   const result = await update({ id, data });
+  //   if (result.success) {
+  //     setEditingAccount(null);
+  //   }
+  // };
 
   const handleDeleteAccount = async (id: string) => {
     if (window.confirm('Are you sure you want to delete this account?')) {
@@ -101,7 +101,7 @@ export const ChartOfAccounts: React.FC<ChartOfAccountsProps> = ({
         <div className="flex items-center justify-between">
           <h2 className="text-lg font-medium text-gray-900">Chart of Accounts</h2>
           <button
-            onClick={() => setIsCreateModalOpen(true)}
+            onClick={() => {/* setIsCreateModalOpen(true) */}}
             className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
           >
             <svg className="-ml-1 mr-2 h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -180,7 +180,7 @@ export const ChartOfAccounts: React.FC<ChartOfAccountsProps> = ({
                       <button
                         onClick={(e) => {
                           e.stopPropagation();
-                          setEditingAccount(account);
+                          /* setEditingAccount(account); */
                         }}
                         className="text-blue-600 hover:text-blue-800"
                       >
@@ -218,7 +218,7 @@ export const ChartOfAccounts: React.FC<ChartOfAccountsProps> = ({
           <p className="mt-1 text-sm text-gray-500">Get started by creating your first account.</p>
           <div className="mt-6">
             <button
-              onClick={() => setIsCreateModalOpen(true)}
+              onClick={() => {/* setIsCreateModalOpen(true) */}}
               className="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
             >
               <svg className="-ml-1 mr-2 h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">

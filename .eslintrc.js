@@ -5,31 +5,11 @@ module.exports = {
         es2020: true,
         node: true,
     },
-    globals: {
-        NodeJS: 'readonly',
-        route: 'readonly',
-        NotificationOptions: 'readonly',
-        NotificationPermission: 'readonly',
-        NotificationAction: 'readonly',
-        React: 'readonly',
-        // Vitest globals (when globals: true is set in vitest.config.ts)
-        describe: 'readonly',
-        it: 'readonly',
-        test: 'readonly',
-        expect: 'readonly',
-        beforeAll: 'readonly',
-        afterAll: 'readonly',
-        beforeEach: 'readonly',
-        afterEach: 'readonly',
-        vi: 'readonly',
-        vitest: 'readonly',
-        jest: 'readonly', // For jest compatibility in vitest
-    },
     extends: [
         'eslint:recommended',
-        // Note: TypeScript rules will be added via plugins for now
+        '@typescript-eslint/recommended',
     ],
-    ignorePatterns: ['node_modules', 'dist', 'public', 'storage', 'vendor'],
+    ignorePatterns: ['dist', 'node_modules'],
     parser: '@typescript-eslint/parser',
     parserOptions: {
         ecmaVersion: 'latest',
@@ -40,39 +20,10 @@ module.exports = {
     },
     plugins: [
         '@typescript-eslint',
-        'react',
-        'react-hooks',
-        'react-refresh',
     ],
     rules: {
-        // Basic rules
-        'no-unused-vars': 'off', // Use TypeScript version instead
-        'no-console': 'warn',
-        
-        // TypeScript rules (warnings for gradual adoption)
-        '@typescript-eslint/no-unused-vars': ['warn', { argsIgnorePattern: '^_' }],
+        '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
         '@typescript-eslint/no-explicit-any': 'warn',
-        '@typescript-eslint/no-undef': 'off', // TypeScript handles this
-        
-        // React rules (warnings for gradual adoption)
-        'react/prop-types': 'off',
-        'react/jsx-uses-react': 'off',
-        'react/react-in-jsx-scope': 'off',
-        'react-hooks/rules-of-hooks': 'warn',
-        'react-hooks/exhaustive-deps': 'warn',
-        
-        // React Refresh
-        'react-refresh/only-export-components': [
-            'warn',
-            { allowConstantExport: true },
-        ],
-        
-        // Disable case declarations rule as it's giving false positives
-        'no-case-declarations': 'off',
-    },
-    settings: {
-        react: {
-            version: 'detect',
-        },
+        'no-console': 'warn',
     },
 };

@@ -19,13 +19,14 @@ import {
   ScaleFade,
 } from '@chakra-ui/react';
 import { AnimatePresence, motion } from 'framer-motion';
-import { useNotifications, useAppActions } from '../../stores/appStore';
+import { useSelector, useDispatch } from 'react-redux';
+import type { RootState, Dispatch } from '../../stores';
 
 const MotionBox = motion(Box);
 
 export const NotificationContainer: React.FC = () => {
-  const notifications = useNotifications();
-  const { removeNotification } = useAppActions();
+  const notifications = useSelector((state: RootState) => state.app.notifications);
+  const dispatch = useDispatch<Dispatch>();
 
   const bg = useColorModeValue('white', 'gray.800');
   const shadow = useColorModeValue('lg', 'dark-lg');
@@ -83,7 +84,7 @@ export const NotificationContainer: React.FC = () => {
                           colorScheme={notification.type === 'error' ? 'red' : 'blue'}
                           onClick={() => {
                             action.action();
-                            removeNotification(notification.id);
+                            dispatch.app.removeNotification(notification.id);
                           }}
                         >
                           {action.label}
@@ -99,7 +100,7 @@ export const NotificationContainer: React.FC = () => {
                   right={2}
                   top={2}
                   size="sm"
-                  onClick={() => removeNotification(notification.id)}
+                  onClick={() => dispatch.app.removeNotification(notification.id)}
                 />
               </Alert>
             </MotionBox>
@@ -109,4 +110,3 @@ export const NotificationContainer: React.FC = () => {
     </Box>
   );
 };
-

@@ -16,6 +16,22 @@ class OrganizationController extends Controller
     ) {}
 
     /**
+     * Display organization overview page
+     */
+    public function index(): Response
+    {
+        $organization = auth()->user()->organization;
+        $stats = $this->organizationService->getDashboardStats();
+        $recentActivity = $this->organizationService->getRecentActivity($organization->id);
+        
+        return Inertia::render('Organization/Index', [
+            'organization' => $organization,
+            'stats' => $stats,
+            'recentActivity' => $recentActivity,
+        ]);
+    }
+
+    /**
      * Show the organization dashboard
      */
     public function dashboard(): Response

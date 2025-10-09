@@ -30,27 +30,27 @@ const lazyWithRetry = (importFunc: () => Promise<{ default: ComponentType<any> }
 
 // Dashboard Components
 export const DashboardOverview = lazyWithRetry(
-  () => import('../components/dashboard/DashboardOverview')
+  () => import('../../features/dashboard/components/organisms/DashboardOverview')
 );
 
 export const MetricsCards = lazyWithRetry(
-  () => import('../components/dashboard/MetricsCards')
+  () => import('../../features/dashboard/components/organisms/MetricsCards')
 );
 
 export const RecentTransactions = lazyWithRetry(
-  () => import('../components/dashboard/RecentTransactions')
+  () => import('../../features/dashboard/components/organisms/RecentTransactions')
 );
 
 export const QuickActions = lazyWithRetry(
-  () => import('../components/dashboard/QuickActions')
+  () => import('../../features/dashboard/components/organisms/QuickActions')
 );
 
 export const FinancialChart = lazyWithRetry(
-  () => import('../components/dashboard/FinancialChart')
+  () => import('../../features/dashboard/components/organisms/FinancialChart')
 );
 
 export const CashFlowWidget = lazyWithRetry(
-  () => import('../components/dashboard/CashFlowWidget')
+  () => import('../../features/dashboard/components/organisms/CashFlowWidget')
 );
 
 // Accounting Components - Feature-specific lazy loading
@@ -97,28 +97,28 @@ export const BalanceSheetReport = lazyWithRetry(
 );
 
 export const TrialBalance = lazyWithRetry(
-  () => import('../components/reports/TrialBalance')
+  () => import('../../features/accounting/components/organisms/TrialBalance')
 );
 
 export const ReportBuilder = lazyWithRetry(
   () => import('../components/reports/ReportBuilder')
 );
 
-// Settings Components
+// Organization Components (formerly Settings)
 export const TenantSettings = lazyWithRetry(
-  () => import('../components/settings/TenantSettings')
+  () => import('../../features/organization/components/organisms/TenantSettings')
 );
 
 export const UserManagement = lazyWithRetry(
-  () => import('../components/settings/UserManagement')
+  () => import('../../features/organization/components/organisms/UserManagement')
 );
 
 export const IntegrationSettings = lazyWithRetry(
-  () => import('../components/settings/IntegrationSettings')
+  () => import('../../features/organization/components/organisms/IntegrationSettings')
 );
 
 export const BillingSettings = lazyWithRetry(
-  () => import('../components/settings/BillingSettings')
+  () => import('../../features/organization/components/organisms/BillingSettings')
 );
 
 // Real-time Components
@@ -129,22 +129,22 @@ export const WebSocketProvider = lazyWithRetry(
 // Preload critical components
 export const preloadCriticalComponents = () => {
   // Preload dashboard components as they're most likely to be used first
-  import('../components/dashboard/DashboardOverview');
-  import('../components/dashboard/MetricsCards');
-  import('../components/dashboard/RecentTransactions');
-  import('../components/dashboard/QuickActions');
+  import('../../features/dashboard/components/organisms/DashboardOverview');
+  import('../../features/dashboard/components/organisms/MetricsCards');
+  import('../../features/dashboard/components/organisms/RecentTransactions');
+  import('../../features/dashboard/components/organisms/QuickActions');
 };
 
 // Preload components based on user role/permissions
 export const preloadByRole = (userRole: string, permissions: string[]) => {
   if (permissions.includes('view_dashboard')) {
-    import('../components/dashboard/DashboardOverview');
-    import('../components/dashboard/MetricsCards');
+    import('../../features/dashboard/components/organisms/DashboardOverview');
+    import('../../features/dashboard/components/organisms/MetricsCards');
   }
   
   if (permissions.includes('manage_transactions')) {
-    import('../components/accounting/TransactionList');
-    import('../components/accounting/TransactionForm');
+    import('../../features/accounting/components/organisms/TransactionList');
+    import('../../features/accounting/components/organisms/TransactionForm');
   }
   
   if (permissions.includes('view_reports')) {
@@ -152,8 +152,8 @@ export const preloadByRole = (userRole: string, permissions: string[]) => {
   }
   
   if (userRole === 'admin') {
-    import('../components/settings/TenantSettings');
-    import('../components/settings/UserManagement');
+    import('../../features/organization/components/organisms/TenantSettings');
+    import('../../features/organization/components/organisms/UserManagement');
   }
 };
 
@@ -161,19 +161,19 @@ export const preloadByRole = (userRole: string, permissions: string[]) => {
 export const preloadByRoute = (currentRoute: string) => {
   switch (currentRoute) {
     case '/dashboard':
-      import('../components/dashboard/FinancialChart');
-      import('../components/dashboard/CashFlowWidget');
+      import('../../features/dashboard/components/organisms/FinancialChart');
+      import('../../features/dashboard/components/organisms/CashFlowWidget');
       break;
     case '/transactions':
-      import('../components/accounting/TransactionForm');
-      import('../components/accounting/JournalEntries');
+      import('../../features/accounting/components/organisms/TransactionForm');
+      import('../../features/accounting/components/organisms/JournalEntries');
       break;
     case '/accounts':
-      import('../components/accounting/TransactionList');
+      import('../../features/accounting/components/organisms/TransactionList');
       break;
     case '/reports':
       import('../components/reports/BalanceSheet');
-      import('../components/reports/TrialBalance');
+      import('../../features/accounting/components/organisms/TrialBalance');
       break;
     case '/settings':
       import('../components/settings/UserManagement');

@@ -390,6 +390,3 @@ export class AccountingApiService {
 
 // Create and export singleton instance
 export const accountingApi = new AccountingApiService();
-
-// Export for testing
-export { AccountingApiService };

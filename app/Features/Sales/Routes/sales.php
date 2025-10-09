@@ -1,5 +1,6 @@
 <?php
 
+use App\Features\Sales\Controllers\SalesController;
 use App\Features\Sales\Controllers\Api\SalesApiController;
 use Illuminate\Support\Facades\Route;
 
@@ -8,6 +9,23 @@ use Illuminate\Support\Facades\Route;
 | Sales Feature Routes
 |--------------------------------------------------------------------------
 */
+
+// Web Routes (Page Views)
+Route::middleware(['web', 'auth', 'tenant'])->prefix('sales')->name('sales.')->group(function () {
+    
+    // Dashboard
+    Route::get('/', [SalesController::class, 'index'])->name('index');
+    Route::get('/dashboard', [SalesController::class, 'index'])->name('dashboard');
+    
+    // Customers
+    Route::get('/customers', [SalesController::class, 'customers'])->name('customers');
+    Route::get('/customers/create', [SalesController::class, 'createCustomer'])->name('customers.create');
+    
+    // Orders
+    Route::get('/orders', [SalesController::class, 'orders'])->name('orders');
+    Route::get('/orders/create', [SalesController::class, 'createOrder'])->name('orders.create');
+    
+});
 
 // API Routes
 Route::middleware(['api', 'auth:sanctum', 'tenant'])->prefix('api/sales')->name('api.sales.')->group(function () {
