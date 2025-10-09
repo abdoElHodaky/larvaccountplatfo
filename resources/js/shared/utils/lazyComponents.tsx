@@ -92,7 +92,7 @@ export const IncomeStatement = lazyWithRetry(
   () => import('../components/reports/IncomeStatement')
 );
 
-export const BalanceSheet = lazyWithRetry(
+export const BalanceSheetReport = lazyWithRetry(
   () => import('../components/reports/BalanceSheet')
 );
 

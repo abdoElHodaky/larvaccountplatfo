@@ -372,6 +372,10 @@ export class AccountingApiService {
       // TODO: Implement reconciliation mutation
       // This is a placeholder for the reconciliation logic
       
+      if (!transactionIds || transactionIds.length === 0) {
+        throw new Error('No transaction IDs provided for reconciliation');
+      }
+      
       return {
         data: true,
         success: true,

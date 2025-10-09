@@ -12,6 +12,18 @@ module.exports = {
         NotificationPermission: 'readonly',
         NotificationAction: 'readonly',
         React: 'readonly',
+        // Vitest globals (when globals: true is set in vitest.config.ts)
+        describe: 'readonly',
+        it: 'readonly',
+        test: 'readonly',
+        expect: 'readonly',
+        beforeAll: 'readonly',
+        afterAll: 'readonly',
+        beforeEach: 'readonly',
+        afterEach: 'readonly',
+        vi: 'readonly',
+        vitest: 'readonly',
+        jest: 'readonly', // For jest compatibility in vitest
     },
     extends: [
         'eslint:recommended',
