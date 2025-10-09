@@ -113,104 +113,37 @@ export const useBreadcrumbs = () => {
   return useAppSelector(state => state.app.breadcrumbs);
 };
 
-// Financial hooks
-export const useFinancial = () => {
-  const financial = useAppSelector(state => state.financial);
+// Accounting hooks (replacing financial)
+export const useAccounting = () => {
+  const accounting = useAppSelector(state => state.accounting);
   const dispatch = useAppDispatch();
   
   return {
-    ...financial,
-    loadAccounts: dispatch.financial.loadAccounts,
-    loadTransactions: dispatch.financial.loadTransactions,
-    loadDashboardMetrics: dispatch.financial.loadDashboardMetrics,
-    createTransaction: dispatch.financial.createTransaction,
-    updateFilters: dispatch.financial.updateFilters,
-    bulkUpdateTransactions: dispatch.financial.bulkUpdateTransactions,
-    setSelectedTransactions: dispatch.financial.setSelectedTransactions,
-    toggleTransactionSelection: dispatch.financial.toggleTransactionSelection,
-    clearTransactionSelection: dispatch.financial.clearTransactionSelection,
-    setSelectedAccounts: dispatch.financial.setSelectedAccounts,
-    toggleAccountSelection: dispatch.financial.toggleAccountSelection,
-    clearAccountSelection: dispatch.financial.clearAccountSelection,
-    setDateRange: dispatch.financial.setDateRange,
-    setSearchQuery: dispatch.financial.setSearchQuery,
-    clearError: dispatch.financial.clearError,
+    ...accounting,
+    // Add accounting actions here when they're implemented
   };
 };
 
-export const useAccounts = () => {
-  return useAppSelector(state => ({
-    accounts: state.financial.accounts,
-    loading: state.financial.accountsLoading,
-    selectedAccounts: state.financial.selectedAccounts,
-  }));
-};
-
-export const useTransactions = () => {
-  return useAppSelector(state => ({
-    transactions: state.financial.transactions,
-    loading: state.financial.transactionsLoading,
-    pagination: state.financial.transactionsPagination,
-    selectedTransactions: state.financial.selectedTransactions,
-  }));
-};
-
-export const useDashboardMetrics = () => {
-  return useAppSelector(state => ({
-    metrics: state.financial.dashboardMetrics,
-    loading: state.financial.dashboardLoading,
-  }));
-};
-
-export const useFinancialFilters = () => {
-  return useAppSelector(state => state.financial.filters);
-};
-
-// Tenant hooks
-export const useTenant = () => {
-  const tenant = useAppSelector(state => state.tenant);
+// Inventory hooks
+export const useInventory = () => {
+  const inventory = useAppSelector(state => state.inventory);
   const dispatch = useAppDispatch();
   
   return {
-    ...tenant,
-    loadTenantData: dispatch.tenant.loadTenantData,
-    loadTenantUsers: dispatch.tenant.loadTenantUsers,
-    loadTenantUsage: dispatch.tenant.loadTenantUsage,
-    loadAvailablePlans: dispatch.tenant.loadAvailablePlans,
-    inviteUser: dispatch.tenant.inviteUser,
-    updateSettings: dispatch.tenant.updateSettings,
-    clearError: dispatch.tenant.clearError,
+    ...inventory,
+    // Add inventory actions here when they're implemented
   };
 };
 
-export const useTenantUsers = () => {
-  return useAppSelector(state => ({
-    users: state.tenant.users,
-    loading: state.tenant.usersLoading,
-    invitations: state.tenant.invitations,
-    invitationsLoading: state.tenant.invitationsLoading,
-  }));
-};
-
-export const useTenantUsage = () => {
-  return useAppSelector(state => ({
-    usage: state.tenant.usage,
-    loading: state.tenant.usageLoading,
-  }));
-};
-
-export const useTenantSettings = () => {
-  return useAppSelector(state => ({
-    settings: state.tenant.tenantSettings,
-    loading: state.tenant.settingsLoading,
-  }));
-};
-
-export const useAvailablePlans = () => {
-  return useAppSelector(state => ({
-    plans: state.tenant.availablePlans,
-    loading: state.tenant.plansLoading,
-  }));
+// Dashboard hooks
+export const useDashboard = () => {
+  const dashboard = useAppSelector(state => state.dashboard);
+  const dispatch = useAppDispatch();
+  
+  return {
+    ...dashboard,
+    // Add dashboard actions here when they're implemented
+  };
 };
 
 // Loading hooks (from @rematch/loading plugin)
@@ -253,30 +186,32 @@ export const useAppActions = () => {
     openModal: dispatch.app.openModal,
     closeModal: dispatch.app.closeModal,
     setGlobalLoading: dispatch.app.setGlobalLoading,
-    updatePageContext: dispatch.app.updatePageContext,
+    handleGlobalError: dispatch.app.handleGlobalError,
+    loadFeatureFlags: dispatch.app.loadFeatureFlags,
+    initializeTheme: dispatch.app.initializeTheme,
   };
 };
 
-export const useFinancialActions = () => {
+export const useAccountingActions = () => {
   const dispatch = useAppDispatch();
   
   return {
-    loadAccounts: dispatch.financial.loadAccounts,
-    loadTransactions: dispatch.financial.loadTransactions,
-    loadDashboardMetrics: dispatch.financial.loadDashboardMetrics,
-    createTransaction: dispatch.financial.createTransaction,
-    updateFilters: dispatch.financial.updateFilters,
+    // Add accounting actions here when they're implemented
   };
 };
 
-export const useTenantActions = () => {
+export const useInventoryActions = () => {
   const dispatch = useAppDispatch();
   
   return {
-    loadTenantData: dispatch.tenant.loadTenantData,
-    loadTenantUsers: dispatch.tenant.loadTenantUsers,
-    loadTenantUsage: dispatch.tenant.loadTenantUsage,
-    inviteUser: dispatch.tenant.inviteUser,
-    updateSettings: dispatch.tenant.updateSettings,
+    // Add inventory actions here when they're implemented
+  };
+};
+
+export const useDashboardActions = () => {
+  const dispatch = useAppDispatch();
+  
+  return {
+    // Add dashboard actions here when they're implemented
   };
 };

@@ -67,6 +67,9 @@ export type RootState = RematchRootState<RootModel, ExtraModelsFromLoading<RootM
 export { appModel, authModel, accountingModel, inventoryModel, dashboardModel };
 export type { AppModel, AuthModel, AccountingModel, InventoryModel, DashboardModel };
 
+// Export models object for testing
+export { models };
+
 // Export model types
 export type { AppState, AppSettings, UIState, Notification } from './models/appModel';
 export type { AuthState, User, Tenant, UserTenant, RegisterData } from './models/authModel';

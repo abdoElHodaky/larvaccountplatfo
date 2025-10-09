@@ -458,6 +458,3 @@ export class InventoryApiService {
 
 // Create and export singleton instance
 export const inventoryApi = new InventoryApiService();
-
-// Export for testing
-export { InventoryApiService };

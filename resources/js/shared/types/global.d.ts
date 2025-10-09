@@ -1,5 +1,8 @@
 // Global type declarations for the application
 
+// Testing library jest-dom matchers
+import '@testing-library/jest-dom';
+
 // Browser API types that might not be available in all environments
 declare global {
   // Notification API types

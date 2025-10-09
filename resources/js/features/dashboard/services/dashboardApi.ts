@@ -494,6 +494,3 @@ export class DashboardApiService {
 
 // Create and export singleton instance
 export const dashboardApi = new DashboardApiService();
-
-// Export for testing
-export { DashboardApiService };

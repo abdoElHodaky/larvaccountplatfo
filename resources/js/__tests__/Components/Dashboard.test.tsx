@@ -10,7 +10,11 @@ const theme = extendTheme({});
 
 // Mock the Inertia hooks
 vi.mock('@inertiajs/react', () => ({
+  Head: ({ children }: { children?: React.ReactNode }) => <div data-testid="head">{children}</div>,
+  Link: ({ href, children, ...props }: { href: string; children: React.ReactNode; [key: string]: any }) => 
+    <a href={href} {...props}>{children}</a>,
   usePage: () => ({
+    url: '/dashboard',
     props: {
       auth: {
         user: {
@@ -36,11 +40,55 @@ const TestWrapper: React.FC<{ children: React.ReactNode }> = ({ children }) => (
   </ChakraProvider>
 );
 
+// Mock data for Dashboard props
+const mockDashboardProps = {
+  tenant: {
+    id: 1,
+    name: 'Test Tenant',
+    subdomain: 'test',
+    plan: 'basic',
+    enabled_modules: ['accounting', 'inventory'],
+    settings: { currency: 'USD' }
+  },
+  user: {
+    id: 1,
+    name: 'Test User',
+    email: 'test@example.com',
+    role: 'admin',
+    permissions: ['read', 'write']
+  },
+  stats: {
+    organization: {
+      total_users: 5,
+      enabled_modules: 2,
+      plan: 'basic',
+      created_at: '2024-01-01'
+    }
+  },
+  recentActivity: [
+    {
+      type: 'login',
+      user: 'Test User',
+      description: 'User logged in',
+      timestamp: '2024-01-01T10:00:00Z'
+    }
+  ],
+  quickActions: [
+    {
+      title: 'Create Invoice',
+      description: 'Create a new invoice',
+      icon: 'invoice',
+      route: '/invoices/create',
+      color: 'blue'
+    }
+  ]
+};
+
 describe('Dashboard Component', () => {
   it('renders without crashing', () => {
     render(
       <TestWrapper>
-        <Dashboard />
+        <Dashboard {...mockDashboardProps} />
       </TestWrapper>
     );
     
@@ -51,25 +99,22 @@ describe('Dashboard Component', () => {
   it('displays welcome message', () => {
     render(
       <TestWrapper>
-        <Dashboard />
+        <Dashboard {...mockDashboardProps} />
       </TestWrapper>
     );
     
-    // Look for welcome text or dashboard title
-    expect(screen.getByText(/dashboard/i)).toBeInTheDocument();
+    // Look for welcome text with user name
+    expect(screen.getByText(/welcome back, test user!/i)).toBeInTheDocument();
   });
 
   it('renders metrics cards section', () => {
     render(
       <TestWrapper>
-        <Dashboard />
+        <Dashboard {...mockDashboardProps} />
       </TestWrapper>
     );
     
-    // Check for metrics or stats section
-    const metricsSection = screen.getByTestId('metrics-section') || 
-                          screen.getByText(/metrics/i) ||
-                          screen.getByText(/overview/i);
-    expect(metricsSection).toBeInTheDocument();
+    // Check for stats cards - look for "Active Modules" text
+    expect(screen.getByText(/active modules/i)).toBeInTheDocument();
   });
 });
