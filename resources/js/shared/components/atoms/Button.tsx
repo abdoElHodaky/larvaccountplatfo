@@ -67,3 +67,5 @@ export function Button({
         </button>
     );
 }
+
+export default Button;

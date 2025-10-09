@@ -6,7 +6,7 @@ interface TextInputProps extends React.InputHTMLAttributes<HTMLInputElement> {
     hasError?: boolean;
 }
 
-export default forwardRef<HTMLInputElement, TextInputProps>(function TextInput(
+const TextInput = forwardRef<HTMLInputElement, TextInputProps>(function TextInput(
     { 
         type = 'text', 
         className = '', 
@@ -43,3 +43,6 @@ export default forwardRef<HTMLInputElement, TextInputProps>(function TextInput(
         />
     );
 });
+
+export { TextInput };
+export default TextInput;

@@ -9,7 +9,7 @@ interface PrimaryButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElemen
     loading?: boolean;
 }
 
-export default function PrimaryButton({ 
+function PrimaryButton({ 
     className = '', 
     disabled = false, 
     children, 
@@ -71,3 +71,6 @@ export default function PrimaryButton({
         </button>
     );
 }
+
+export { PrimaryButton };
+export default PrimaryButton;

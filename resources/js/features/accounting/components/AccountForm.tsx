@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { useForm } from '@inertiajs/react';
 import { Button } from '@/shared/components/atoms/Button';
-import { Input } from '@/shared/components/molecules/FormInput';
-import { Select } from '@/shared/components/molecules/FormInput';
-import { Card, CardContent, CardHeader, CardTitle } from '@/shared/components/molecules/Container';
+import { FormInput } from '@/shared/components/molecules/FormInput';
+import { CardContainer } from '@/shared/components/molecules/Container';
+import { Box, Select, Text } from '@chakra-ui/react';
 
 interface Account {
     id?: number;
@@ -91,30 +91,31 @@ export default function AccountForm({ account, accounts, onSubmit, onCancel }: A
         }));
 
     return (
-        <Card className="w-full max-w-2xl mx-auto">
-            <CardHeader>
-                <CardTitle>
+        <CardContainer 
+            className="w-full max-w-2xl mx-auto"
+            header={
+                <Text fontSize="xl" fontWeight="bold">
                     {account ? 'Edit Account' : 'Create New Account'}
-                </CardTitle>
-            </CardHeader>
-            <CardContent>
+                </Text>
+            }
+        >
                 <form onSubmit={handleSubmit} className="space-y-6">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
-                            <Input
+                            <FormInput
                                 label="Account Code"
                                 value={data.code}
-                                onChange={(e) => setData('code', e.target.value)}
+                                onChange={(value) => setData('code', value as string)}
                                 error={errors.code}
                                 required
                                 placeholder="e.g., 1000"
                             />
                         </div>
                         <div>
-                            <Input
+                            <FormInput
                                 label="Account Name"
                                 value={data.name}
-                                onChange={(e) => setData('name', e.target.value)}
+                                onChange={(value) => setData('name', value as string)}
                                 error={errors.name}
                                 required
                                 placeholder="e.g., Cash"
@@ -161,14 +162,12 @@ export default function AccountForm({ account, accounts, onSubmit, onCancel }: A
                     )}
 
                     <div>
-                        <Input
+                        <FormInput
                             label="Description (Optional)"
                             value={data.description}
-                            onChange={(e) => setData('description', e.target.value)}
+                            onChange={(value) => setData('description', value as string)}
                             error={errors.description}
                             placeholder="Brief description of the account"
-                            multiline
-                            rows={3}
                         />
                     </div>
 
@@ -203,7 +202,6 @@ export default function AccountForm({ account, accounts, onSubmit, onCancel }: A
                         </Button>
                     </div>
                 </form>
-            </CardContent>
-        </Card>
+        </CardContainer>
     );
 }
