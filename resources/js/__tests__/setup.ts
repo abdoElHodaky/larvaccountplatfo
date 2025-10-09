@@ -16,7 +16,7 @@ global.IntersectionObserver = class IntersectionObserver {
   rootMargin: string = '';
   thresholds: ReadonlyArray<number> = [];
   
-  constructor(callback: any, options?: any) {
+  constructor(_callback: any, options?: any) {
     this.root = options?.root || null;
     this.rootMargin = options?.rootMargin || '';
     this.thresholds = options?.threshold ? (Array.isArray(options.threshold) ? options.threshold : [options.threshold]) : [0];

@@ -1,4 +1,4 @@
-import React, { FormEvent, useState } from 'react';
+import { FormEvent, useState } from 'react';
 import { Head, Link, useForm } from '@inertiajs/react';
 import AuthLayout from '@/shared/components/layouts/AuthLayout';
 import InputError from '@/shared/components/atoms/InputError';

@@ -1,12 +1,12 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Head, Link } from '@inertiajs/react';
 import AppLayout from '@/shared/components/layouts/AppLayout';
 import { Account, AccountBalance, Transaction, PageProps, PaginatedData } from '@/shared/types';
 import { 
     ArrowLeftIcon, 
     PencilIcon, 
-    ChartBarIcon,
-    CalendarIcon,
+    // ChartBarIcon,
+    // CalendarIcon,
     CurrencyDollarIcon,
     DocumentTextIcon,
     ClockIcon

@@ -5,4 +5,4 @@
  * These pages provide overview and summary information for the application.
  */
 
-export { default as Dashboard } from './Dashboard';
+export { default as Index } from './Dashboard';

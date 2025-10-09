@@ -5,6 +5,9 @@
  * These pages handle chart of accounts, transactions, and journal entries management.
  */
 
+// Dashboard
+export { default as Dashboard } from './Dashboard';
+
 // Account pages
 export { default as AccountsIndex } from './Accounts/Index';
 export { default as AccountsCreate } from './Accounts/Create';

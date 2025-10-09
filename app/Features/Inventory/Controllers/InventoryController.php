@@ -8,6 +8,8 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Validator;
+use Inertia\Inertia;
+use Inertia\Response;
 
 class InventoryController extends Controller
 {
@@ -21,9 +23,52 @@ class InventoryController extends Controller
     }
 
     /**
-     * Display inventory dashboard
+     * Display inventory dashboard page
      */
-    public function index(): JsonResponse
+    public function index(): Response
+    {
+        try {
+            $organizationId = $this->getCurrentOrganizationId();
+            $overview = $this->inventoryService->getInventoryOverview($organizationId);
+            
+            // Get recent products and low stock alerts
+            $recentProducts = $this->inventoryService->getRecentProducts($organizationId, 10);
+            $lowStockProducts = $this->inventoryService->getLowStockProducts($organizationId);
+            $categories = $this->inventoryService->getProductCategories($organizationId);
+
+            return Inertia::render('Inventory/Dashboard', [
+                'overview' => $overview,
+                'recentProducts' => $recentProducts,
+                'lowStockProducts' => $lowStockProducts,
+                'categories' => $categories,
+                'organization' => [
+                    'id' => $organizationId,
+                    'name' => auth()->user()->current_organization->name ?? 'Default Organization',
+                ],
+            ]);
+
+        } catch (\Exception $e) {
+            \Log::error('Inventory dashboard error: ' . $e->getMessage());
+            
+            // Return error page with Inertia
+            return Inertia::render('Inventory/Dashboard', [
+                'overview' => null,
+                'recentProducts' => [],
+                'lowStockProducts' => [],
+                'categories' => [],
+                'error' => 'Failed to load inventory data. Please try again.',
+                'organization' => [
+                    'id' => $this->getCurrentOrganizationId(),
+                    'name' => auth()->user()->current_organization->name ?? 'Default Organization',
+                ],
+            ]);
+        }
+    }
+
+    /**
+     * Get inventory dashboard data (API endpoint)
+     */
+    public function dashboardData(): JsonResponse
     {
         try {
             $organizationId = $this->getCurrentOrganizationId();
@@ -131,9 +176,67 @@ class InventoryController extends Controller
     }
 
     /**
-     * Display the specified product
+     * Display the specified product page
      */
-    public function show(Product $product): JsonResponse
+    public function show(Product $product): Response
+    {
+        try {
+            $this->authorize('view', $product);
+
+            $product->load(['category', 'stockLevels.warehouse', 'stockMovements' => function ($query) {
+                $query->latest()->limit(10);
+            }]);
+
+            // Get related products and categories for context
+            $relatedProducts = $this->inventoryService->getRelatedProducts($product, 5);
+            $categories = $this->inventoryService->getProductCategories($product->organization_id);
+
+            return Inertia::render('Inventory/ProductDetail', [
+                'product' => [
+                    'id' => $product->id,
+                    'name' => $product->name,
+                    'sku' => $product->sku,
+                    'description' => $product->description,
+                    'price' => $product->price,
+                    'cost' => $product->cost,
+                    'category' => $product->category,
+                    'stock_levels' => $product->stockLevels,
+                    'stock_movements' => $product->stockMovements,
+                    'total_stock' => $product->stockLevels->sum('quantity'),
+                    'low_stock_threshold' => $product->low_stock_threshold,
+                    'is_low_stock' => $product->stockLevels->sum('quantity') <= $product->low_stock_threshold,
+                    'created_at' => $product->created_at,
+                    'updated_at' => $product->updated_at,
+                ],
+                'relatedProducts' => $relatedProducts,
+                'categories' => $categories,
+                'organization' => [
+                    'id' => $product->organization_id,
+                    'name' => auth()->user()->current_organization->name ?? 'Default Organization',
+                ],
+            ]);
+
+        } catch (\Exception $e) {
+            \Log::error('Product detail error: ' . $e->getMessage());
+            
+            // Return error page with Inertia
+            return Inertia::render('Inventory/ProductDetail', [
+                'product' => null,
+                'relatedProducts' => [],
+                'categories' => [],
+                'error' => 'Failed to load product details. Please try again.',
+                'organization' => [
+                    'id' => $this->getCurrentOrganizationId(),
+                    'name' => auth()->user()->current_organization->name ?? 'Default Organization',
+                ],
+            ]);
+        }
+    }
+
+    /**
+     * Get product data (API endpoint)
+     */
+    public function productData(Product $product): JsonResponse
     {
         try {
             $this->authorize('view', $product);

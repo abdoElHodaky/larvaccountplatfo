@@ -6,7 +6,7 @@
 import { useEffect, useCallback, useState, useRef } from 'react';
 import { socketClient } from '../services/socket/socket-client';
 import { useSocket } from '../providers/SocketProvider';
-import { useAuth, useAppActions, useFinancialActions } from './useRematchStore';
+import { useAuth, useAppActions } from './useRematchStore';
 
 // Types
 interface NotificationData {
@@ -104,7 +104,7 @@ export const useRealTimeNotifications = () => {
  */
 export const useRealTimeTransactions = () => {
   const { currentTenant } = useAuth();
-  const { loadTransactions } = useFinancialActions();
+  // const { loadTransactions } = useFinancialActions(); // useFinancialActions not available
   const { showSuccess, showInfo } = useAppActions();
   const { isConnected } = useSocket();
 
@@ -121,7 +121,7 @@ export const useRealTimeTransactions = () => {
         );
         
         // Refresh transactions list
-        loadTransactions(1);
+        // loadTransactions(1); // Function not available
       }
     };
 
@@ -135,7 +135,7 @@ export const useRealTimeTransactions = () => {
         );
         
         // Refresh transactions list
-        loadTransactions(1);
+        // loadTransactions(1); // Function not available
       }
     };
 
@@ -146,7 +146,7 @@ export const useRealTimeTransactions = () => {
         showInfo('Transaction deleted', 'Transaction Removed');
         
         // Refresh transactions list
-        loadTransactions(1);
+        // loadTransactions(1); // Function not available
       }
     };
 
@@ -160,7 +160,7 @@ export const useRealTimeTransactions = () => {
       socketClient.off('transaction.updated', handleTransactionUpdated);
       socketClient.off('transaction.deleted', handleTransactionDeleted);
     };
-  }, [isConnected, currentTenant?.id, loadTransactions, showSuccess, showInfo]);
+  }, [isConnected, currentTenant?.id, showSuccess, showInfo]);
 };
 
 /**
@@ -168,7 +168,7 @@ export const useRealTimeTransactions = () => {
  */
 export const useRealTimeAccountBalances = () => {
   const { currentTenant } = useAuth();
-  const { loadAccounts } = useFinancialActions();
+  // const { loadAccounts } = useFinancialActions(); // useFinancialActions not available
   const { isConnected } = useSocket();
   const [balanceUpdates, setBalanceUpdates] = useState<Map<string, number>>(new Map());
 
@@ -187,7 +187,7 @@ export const useRealTimeAccountBalances = () => {
         setBalanceUpdates(prev => new Map(prev).set(data.accountId, data.balance));
         
         // Refresh accounts data
-        loadAccounts();
+        // loadAccounts(); // Function not available
       }
     };
 
@@ -197,7 +197,7 @@ export const useRealTimeAccountBalances = () => {
     return () => {
       socketClient.off('account.balance.updated', handleBalanceUpdate);
     };
-  }, [isConnected, currentTenant?.id, loadAccounts]);
+  }, [isConnected, currentTenant?.id]);
 
   const getLatestBalance = useCallback((accountId: string): number | undefined => {
     return balanceUpdates.get(accountId);
@@ -400,4 +400,3 @@ export const useConnectionStatus = () => {
     connectionHistory,
   };
 };
-

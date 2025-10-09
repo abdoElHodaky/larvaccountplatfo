@@ -15,7 +15,7 @@ export type {
 } from './stores/accountingModel';
 
 // API exports
-export { accountingApi, AccountingApiService } from './services/accountingApi';
+export { accountingApi } from './services/accountingApi';
 export type { ApiResponse, PaginatedResponse } from './services/accountingApi';
 
 // Hook exports

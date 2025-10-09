@@ -1,4 +1,4 @@
-import React, { Fragment, memo, useMemo, useState, useEffect } from 'react';
+import React, { Fragment, memo, useMemo, useState } from 'react';
 import {
   Box,
   VStack,
@@ -15,7 +15,7 @@ import {
   Button,
   Select,
   Input,
-  Flex,
+  // Flex,
   Spacer,
   Divider,
   Alert,
@@ -76,7 +76,7 @@ export const TrialBalance: React.FC<TrialBalanceProps> = memo(({
   data,
   onAccountClick,
   onExport,
-  onPeriodChange,
+  // onPeriodChange,
   showComparison = false,
   comparisonData,
   className,
@@ -88,11 +88,11 @@ export const TrialBalance: React.FC<TrialBalanceProps> = memo(({
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('asc');
 
   // Memoized color values
-  const bgColor = useColorModeValue('white', 'gray.800');
-  const borderColor = useColorModeValue('gray.200', 'gray.600');
+  // const bgColor = useColorModeValue('white', 'gray.800');
+  // const borderColor = useColorModeValue('gray.200', 'gray.600');
   const headerBg = useColorModeValue('gray.50', 'gray.700');
   const evenRowBg = useColorModeValue('gray.50', 'gray.700');
-  const balancedColor = useColorModeValue('green.500', 'green.400');
+  // const balancedColor = useColorModeValue('green.500', 'green.400');
   const unbalancedColor = useColorModeValue('red.500', 'red.400');
 
   // Memoized filtered and sorted accounts

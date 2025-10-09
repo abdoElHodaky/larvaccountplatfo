@@ -5,7 +5,7 @@
 
 import { useMemo } from 'react';
 import { useGraphQLQuery, useGraphQLMutation, usePaginatedGraphQLQuery } from '../../../shared/hooks/useGraphQL';
-import { useCurrentTenant } from '../../../shared/stores/authStore';
+import { useCurrentTenant } from '../../../shared/hooks/useRematchStore';
 import {
   GET_CHART_OF_ACCOUNTS,
   GET_TRANSACTIONS,

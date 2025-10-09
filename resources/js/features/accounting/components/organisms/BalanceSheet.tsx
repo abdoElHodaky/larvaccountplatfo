@@ -14,7 +14,6 @@ import {
   Badge,
   Button,
   Select,
-  Flex,
   Spacer,
   Divider,
   Alert,
@@ -91,7 +90,7 @@ export const BalanceSheet: React.FC<BalanceSheetProps> = memo(({
   showPercentages = true,
   showTrends = true,
   showRatios = true,
-  comparisonData,
+  // comparisonData,
   className,
   loading = false,
 }) => {
@@ -99,13 +98,13 @@ export const BalanceSheet: React.FC<BalanceSheetProps> = memo(({
   const [sortBy, setSortBy] = useState<'name' | 'amount' | 'percentage'>('amount');
 
   // Memoized color values
-  const bgColor = useColorModeValue('white', 'gray.800');
-  const borderColor = useColorModeValue('gray.200', 'gray.600');
+  // const bgColor = useColorModeValue('white', 'gray.800');
+  // const borderColor = useColorModeValue('gray.200', 'gray.600');
   const headerBg = useColorModeValue('gray.50', 'gray.700');
   const sectionBg = useColorModeValue('blue.50', 'blue.900');
   const positiveColor = useColorModeValue('green.500', 'green.400');
   const negativeColor = useColorModeValue('red.500', 'red.400');
-  const balancedColor = useColorModeValue('green.500', 'green.400');
+  // const balancedColor = useColorModeValue('green.500', 'green.400');
   const unbalancedColor = useColorModeValue('red.500', 'red.400');
 
   // Group items by type
@@ -209,7 +208,7 @@ export const BalanceSheet: React.FC<BalanceSheetProps> = memo(({
   ), [showPercentages, showTrends, sectionBg, headerBg, positiveColor, negativeColor, formatCurrency]);
 
   // Render item row
-  const renderItemRow = useMemoizedCallback((item: BalanceSheetItem, index: number) => (
+  const renderItemRow = useMemoizedCallback((item: BalanceSheetItem, _index: number) => (
     <Tr
       key={item.id}
       _hover={{ bg: useColorModeValue('gray.50', 'gray.700') }}

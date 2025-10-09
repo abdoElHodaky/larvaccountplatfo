@@ -7,41 +7,42 @@ import React, { ReactElement, Suspense } from 'react';
 import { render, RenderOptions } from '@testing-library/react';
 import { Provider } from 'react-redux';
 import { BrowserRouter } from 'react-router-dom';
-import { init, RematchDispatch, RematchRootState } from '@rematch/core';
-import { models, RootModel } from '../../shared/stores';
+import { init } from '@rematch/core';
+import { models } from '../../shared/stores';
+import { vi } from 'vitest';
 
 // Mock Apollo Client for testing
-const mockApolloClient = {
-  query: jest.fn(),
-  mutate: jest.fn(),
-  watchQuery: jest.fn(),
-  readQuery: jest.fn(),
-  writeQuery: jest.fn(),
+export const mockApolloClient = {
+  query: vi.fn(),
+  mutate: vi.fn(),
+  watchQuery: vi.fn(),
+  readQuery: vi.fn(),
+  writeQuery: vi.fn(),
   cache: {
-    readQuery: jest.fn(),
-    writeQuery: jest.fn(),
-    evict: jest.fn(),
-    gc: jest.fn(),
-    modify: jest.fn(),
-    identify: jest.fn(),
+    readQuery: vi.fn(),
+    writeQuery: vi.fn(),
+    evict: vi.fn(),
+    gc: vi.fn(),
+    modify: vi.fn(),
+    identify: vi.fn(),
   },
 };
 
 // Mock GraphQL operations
 export const mockGraphQLOperations = {
-  getAccounts: jest.fn(),
-  createAccount: jest.fn(),
-  updateAccount: jest.fn(),
-  deleteAccount: jest.fn(),
-  getTransactions: jest.fn(),
-  getJournalEntries: jest.fn(),
-  createJournalEntry: jest.fn(),
+  getAccounts: vi.fn(),
+  createAccount: vi.fn(),
+  updateAccount: vi.fn(),
+  deleteAccount: vi.fn(),
+  getTransactions: vi.fn(),
+  getJournalEntries: vi.fn(),
+  createJournalEntry: vi.fn(),
 };
 
 // Create test store with initial state
-export const createTestStore = (initialState?: Partial<RematchRootState<RootModel>>) => {
+export const createTestStore = (initialState?: any) => {
   return init({
-    models,
+    models: models as any,
     redux: {
       initialState: initialState as any,
     },
@@ -51,7 +52,7 @@ export const createTestStore = (initialState?: Partial<RematchRootState<RootMode
 // Test wrapper component with providers
 interface TestWrapperProps {
   children: React.ReactNode;
-  initialState?: Partial<RematchRootState<RootModel>>;
+  initialState?: any;
   store?: ReturnType<typeof createTestStore>;
 }
 
@@ -77,7 +78,7 @@ const TestWrapper: React.FC<TestWrapperProps> = ({
 export const renderWithProviders = (
   ui: ReactElement,
   options?: {
-    initialState?: Partial<RematchRootState<RootModel>>;
+    initialState?: any;
     store?: ReturnType<typeof createTestStore>;
     renderOptions?: Omit<RenderOptions, 'wrapper'>;
   }
@@ -108,40 +109,40 @@ export const createMockLazyComponent = (name: string, props?: any) => {
 
 // Utility to wait for lazy components to load
 export const waitForLazyComponent = async (testId: string) => {
-  const { findByTestId } = await import('@testing-library/react');
-  return findByTestId(testId);
+  const { screen } = await import('@testing-library/react');
+  return screen.findByTestId(testId);
 };
 
 // Mock store actions for testing
 export const createMockStoreActions = () => ({
   app: {
-    setLoading: jest.fn(),
-    setError: jest.fn(),
-    clearError: jest.fn(),
-    setTheme: jest.fn(),
-    setLanguage: jest.fn(),
+    setLoading: vi.fn(),
+    setError: vi.fn(),
+    clearError: vi.fn(),
+    setTheme: vi.fn(),
+    setLanguage: vi.fn(),
   },
   auth: {
-    login: jest.fn(),
-    logout: jest.fn(),
-    setUser: jest.fn(),
-    clearAuth: jest.fn(),
+    login: vi.fn(),
+    logout: vi.fn(),
+    setUser: vi.fn(),
+    clearAuth: vi.fn(),
   },
   accounting: {
-    fetchAccounts: jest.fn(),
-    createAccount: jest.fn(),
-    updateAccountData: jest.fn(),
-    deleteAccount: jest.fn(),
-    setSelectedAccount: jest.fn(),
-    fetchTransactions: jest.fn(),
-    setSelectedTransaction: jest.fn(),
-    fetchJournalEntries: jest.fn(),
-    setSelectedJournalEntry: jest.fn(),
-    updateFilters: jest.fn(),
-    resetFilters: jest.fn(),
-    setCurrentView: jest.fn(),
-    clearError: jest.fn(),
-    initializeAccounting: jest.fn(),
+    fetchAccounts: vi.fn(),
+    createAccount: vi.fn(),
+    updateAccountData: vi.fn(),
+    deleteAccount: vi.fn(),
+    setSelectedAccount: vi.fn(),
+    fetchTransactions: vi.fn(),
+    setSelectedTransaction: vi.fn(),
+    fetchJournalEntries: vi.fn(),
+    setSelectedJournalEntry: vi.fn(),
+    updateFilters: vi.fn(),
+    resetFilters: vi.fn(),
+    setCurrentView: vi.fn(),
+    clearError: vi.fn(),
+    initializeAccounting: vi.fn(),
   },
 });
 
@@ -262,7 +263,7 @@ export const measureLazyLoadTime = async (importFn: () => Promise<any>) => {
 
 // Mock intersection observer for lazy loading tests
 export const mockIntersectionObserver = () => {
-  const mockIntersectionObserver = jest.fn();
+  const mockIntersectionObserver = vi.fn();
   mockIntersectionObserver.mockReturnValue({
     observe: () => null,
     unobserve: () => null,
@@ -273,7 +274,7 @@ export const mockIntersectionObserver = () => {
 
 // Cleanup utilities
 export const cleanupMocks = () => {
-  jest.clearAllMocks();
+  vi.clearAllMocks();
   // Reset any global mocks
 };
 
