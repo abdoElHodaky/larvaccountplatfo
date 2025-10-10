@@ -406,7 +406,7 @@ export class PerformanceAnalyticsDashboard {
 
     // Monitor JavaScript errors
     let errorCount = 0;
-    let totalPageViews = 1;
+    const totalPageViews = 1;
     
     window.addEventListener('error', () => {
       errorCount++;
@@ -557,12 +557,12 @@ export class PerformanceAnalyticsDashboard {
   private calculatePerformanceScore(): number {
     const coreWebVitals = CoreWebVitalsMonitor.getInstance().getCoreWebVitals();
     let score = 100;
-    let metricCount = 0;
+    // let metricCount = 0;
     
     // Score based on Core Web Vitals
     Object.values(coreWebVitals).forEach(metric => {
       if (metric) {
-        metricCount++;
+        // metricCount++;
         if (metric.rating === 'poor') score -= 30;
         else if (metric.rating === 'needs-improvement') score -= 15;
       }
