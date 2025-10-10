@@ -333,7 +333,7 @@ export const withPerformanceTracking = <P extends object>(
       const tracker = performanceMonitor.trackLazyLoad(componentName);
       tracker.start();
       
-      const endTime = performance.now();
+      const _endTime = performance.now();
       tracker.end({ 
         bundleSize: undefined, // Could be calculated if needed
         cacheHit: false, // Could be determined based on loading state

@@ -24,6 +24,7 @@ A sophisticated, enterprise-grade accounting platform featuring a modern Laravel
 - [🛠️ Development](#️-development)
 - [📊 Performance Metrics](#-performance-metrics)
 - [🚀 Deployment](#-deployment)
+- [📚 Documentation](#-documentation)
 
 ---
 
@@ -531,6 +532,34 @@ We welcome contributions! Please see our [Contributing Guidelines](CONTRIBUTING.
 3. Make your changes
 4. Add tests
 5. Submit a pull request
+
+---
+
+## 📚 Documentation
+
+Comprehensive documentation is organized in the `/docs` directory:
+
+### 📁 **Quick Access**
+- **[📋 Documentation Index](docs/README.md)** - Complete documentation overview
+- **[🏗️ Architecture](docs/architecture/)** - System design and architectural decisions
+- **[🔧 Implementation](docs/implementation/)** - Implementation guides and status
+- **[📊 Analysis](docs/analysis/)** - Technical analysis and evaluations
+- **[🚀 Deployment](docs/deployment/)** - Deployment and installation guides
+
+### 🎯 **For Developers**
+- Start with [Architecture Analysis](docs/architecture/ARCHITECTURE_ANALYSIS.md)
+- Review [Implementation Plan](docs/implementation/IMPLEMENTATION_PLAN.md)
+- Check [Short-term Improvement Plan](docs/SHORT_TERM_IMPROVEMENT_PLAN.md)
+
+### 🛠️ **For DevOps**
+- See [Deployment Guide](docs/deployment/DEPLOYMENT.md)
+- Review [Installation Instructions](docs/deployment/INSTALLATION.md)
+- Check service-specific setup guides in `/docs/deployment`
+
+### 📈 **For Project Management**
+- Review [Project Roadmap](docs/ROADMAP.md)
+- Check [Implementation Status](docs/implementation/implementation-status-report.md)
+- See [Analysis Reports](docs/analysis/)
 
 ---
 
