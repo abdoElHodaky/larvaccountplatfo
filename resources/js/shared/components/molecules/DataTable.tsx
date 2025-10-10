@@ -1,4 +1,4 @@
-import React, { Fragment, memo, useMemo, useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import {
   Table,
   Thead,
@@ -8,13 +8,9 @@ import {
   Td,
   Box,
   HStack,
-  VStack,
   Text,
   Input,
-  Select,
-  Button,
-  IconButton,
-  Spinner,
+
   Badge,
   useColorModeValue,
   Skeleton,
@@ -81,8 +77,8 @@ export const DataTable = <T extends TableData = TableData>({
   emptyMessage = 'No data available',
   pageSize = 10,
   currentPage = 1,
-  totalPages,
-  totalItems,
+  totalPages: _totalPages,
+  totalItems: _totalItems,
   onPageChange,
   onSort,
   onFilter,
@@ -95,7 +91,7 @@ export const DataTable = <T extends TableData = TableData>({
   rowKey = 'id',
   variant = 'default',
   size = 'md',
-  isVirtualized = false,
+  isVirtualized: _isVirtualized = false,
   className,
 }: DataTableProps<T>) => {
   const [localFilters, setLocalFilters] = useState<Record<string, string>>(filters);

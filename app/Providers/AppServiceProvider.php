@@ -2,14 +2,14 @@
 
 namespace App\Providers;
 
-use App\Auth\TenantAwareAuthManager;
+use App\Features\Authentication\Auth\TenantAwareAuthManager;
 use App\Services\AuthService;
 use App\Services\TenantResolver;
 use App\Services\TenantProvisioningService;
 use App\Services\DatabaseInitializationService;
-use Modules\Shared\Services\ModuleDiscoveryService;
-use Modules\Shared\Services\InterModuleBus;
-use Modules\Organization\Services\OrganizationService;
+use App\Shared\Services\ModuleDiscoveryService;
+use App\Shared\Services\InterModuleBus;
+use App\Features\Organization\Services\OrganizationService;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Auth;
 
@@ -215,4 +215,3 @@ class AppServiceProvider extends ServiceProvider
         ];
     }
 }
-

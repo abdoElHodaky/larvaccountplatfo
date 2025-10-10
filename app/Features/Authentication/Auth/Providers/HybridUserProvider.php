@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Auth\Providers;
+namespace App\Features\Authentication\Auth\Providers;
 
 use Illuminate\Auth\EloquentUserProvider;
 use Illuminate\Contracts\Auth\Authenticatable;
@@ -290,4 +290,3 @@ class HybridUserProvider extends EloquentUserProvider
         return $query->exists();
     }
 }
-

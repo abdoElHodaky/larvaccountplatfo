@@ -42,17 +42,78 @@ export default defineConfig({
     build: {
         rollupOptions: {
             output: {
-                manualChunks: {
-                    vendor: ['react', 'react-dom'],
-                    inertia: ['@inertiajs/react'],
-                    ui: ['@headlessui/react', '@heroicons/react'],
-                    chakra: ['@chakra-ui/react', '@emotion/react', '@emotion/styled'],
-                    motion: ['framer-motion'],
-                    charts: ['chart.js', 'react-chartjs-2'],
+                manualChunks: (id) => {
+                    // Core vendor chunks
+                    if (id.includes('node_modules')) {
+                        if (id.includes('react') || id.includes('react-dom')) {
+                            return 'vendor';
+                        }
+                        if (id.includes('@inertiajs/react')) {
+                            return 'inertia';
+                        }
+                        if (id.includes('@headlessui/react') || id.includes('@heroicons/react')) {
+                            return 'ui';
+                        }
+                        if (id.includes('@chakra-ui/react') || id.includes('@emotion/react') || id.includes('@emotion/styled')) {
+                            return 'chakra';
+                        }
+                        if (id.includes('framer-motion')) {
+                            return 'motion';
+                        }
+                        if (id.includes('chart.js') || id.includes('react-chartjs-2')) {
+                            return 'charts';
+                        }
+                        if (id.includes('lodash') || id.includes('date-fns') || id.includes('axios')) {
+                            return 'utils';
+                        }
+                        return 'vendor';
+                    }
+                    
+                    // Feature chunks for better code splitting
+                    if (id.includes('/features/accounting/')) {
+                        return 'feature-accounting';
+                    }
+                    if (id.includes('/features/dashboard/')) {
+                        return 'feature-dashboard';
+                    }
+                    if (id.includes('/features/inventory/')) {
+                        return 'feature-inventory';
+                    }
+                    if (id.includes('/features/sales/')) {
+                        return 'feature-sales';
+                    }
+                    if (id.includes('/features/auth/')) {
+                        return 'feature-auth';
+                    }
+                    if (id.includes('/features/organization/')) {
+                        return 'feature-organization';
+                    }
+                    if (id.includes('/features/reporting/')) {
+                        return 'feature-reporting';
+                    }
                 },
+                // Optimize chunk naming for better caching
+                chunkFileNames: (chunkInfo) => {
+                    const facadeModuleId = chunkInfo.facadeModuleId
+                        ? chunkInfo.facadeModuleId.split('/').pop().replace('.tsx', '').replace('.ts', '')
+                        : 'chunk';
+                    return `js/[name]-[hash].js`;
+                },
+                entryFileNames: 'js/[name]-[hash].js',
+                assetFileNames: 'assets/[name]-[hash].[ext]',
             },
         },
         chunkSizeWarningLimit: 1000,
+        // Enable source maps for better debugging
+        sourcemap: process.env.NODE_ENV === 'development',
+        // Optimize for production
+        minify: 'terser',
+        terserOptions: {
+            compress: {
+                drop_console: process.env.NODE_ENV === 'production',
+                drop_debugger: process.env.NODE_ENV === 'production',
+            },
+        },
     },
     optimizeDeps: {
         include: [

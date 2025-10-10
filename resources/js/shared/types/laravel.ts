@@ -143,7 +143,7 @@ export interface AccountBalance {
     updated_at: string;
 }
 
-export interface PageProps<T extends Record<string, unknown> = Record<string, unknown>> {
+export interface PageProps<_T extends Record<string, unknown> = Record<string, unknown>> {
     auth: {
         user: User;
         tenant?: Tenant;

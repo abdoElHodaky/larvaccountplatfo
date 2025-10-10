@@ -8,29 +8,26 @@ use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 use Inertia\Response;
 use App\Http\Controllers\Controller;
+use App\Features\TenantManagement\Services\TenantService;
 
 class TenantController extends Controller
 {
+    protected $tenantService;
+
+    public function __construct(TenantService $tenantService)
+    {
+        $this->tenantService = $tenantService;
+    }
     /**
      * Show tenant selection page
      */
     public function select(): Response
     {
         $user = Auth::user();
-        $tenants = $user ? $user->tenants : collect();
+        $tenants = $this->tenantService->getUserTenants($user);
 
         return Inertia::render('Auth/TenantSelect', [
-            'tenants' => $tenants->map(function ($tenant) {
-                return [
-                    'id' => $tenant->id,
-                    'name' => $tenant->name,
-                    'slug' => $tenant->slug,
-                    'subdomain' => $tenant->subdomain,
-                    'logo' => $tenant->logo,
-                    'description' => $tenant->description,
-                    'subscription_status' => $tenant->subscription_status,
-                ];
-            }),
+            'tenants' => $tenants,
         ]);
     }
 
@@ -46,19 +43,15 @@ class TenantController extends Controller
         $user = Auth::user();
         $tenantId = $request->input('tenant_id');
 
-        // Verify user has access to this tenant
-        $tenant = $user->tenants()->find($tenantId);
-        
-        if (!$tenant) {
+        $result = $this->tenantService->switchTenant($user, $tenantId);
+
+        if (!$result['success']) {
             return back()->withErrors([
-                'tenant_id' => 'You do not have access to this organization.',
+                'tenant_id' => $result['message'],
             ]);
         }
 
-        // Set tenant in session
-        session(['tenant_id' => $tenantId]);
-
-        return redirect()->route('dashboard')->with('success', "Switched to {$tenant->name}");
+        return redirect()->route('dashboard')->with('success', $result['message']);
     }
 
     /**
@@ -72,23 +65,10 @@ class TenantController extends Controller
             return redirect()->route('tenant.select');
         }
 
+        $tenantData = $this->tenantService->getTenantData($tenant);
+
         return Inertia::render('Tenant/Settings', [
-            'tenant' => [
-                'id' => $tenant->id,
-                'name' => $tenant->name,
-                'slug' => $tenant->slug,
-                'subdomain' => $tenant->subdomain,
-                'domain' => $tenant->domain,
-                'logo' => $tenant->logo,
-                'description' => $tenant->description,
-                'website' => $tenant->website,
-                'industry' => $tenant->industry,
-                'size' => $tenant->size,
-                'settings' => $tenant->settings ?? [],
-                'subscription_status' => $tenant->subscription_status,
-                'created_at' => $tenant->created_at,
-                'updated_at' => $tenant->updated_at,
-            ],
+            'tenant' => $tenantData,
         ]);
     }
 
@@ -112,17 +92,13 @@ class TenantController extends Controller
             'logo' => 'nullable|image|max:2048',
         ]);
 
-        $data = $request->only(['name', 'description', 'website', 'industry', 'size']);
+        $result = $this->tenantService->updateTenantSettings($tenant, $request);
 
-        // Handle logo upload
-        if ($request->hasFile('logo')) {
-            $logoPath = $request->file('logo')->store('tenant-logos', 'public');
-            $data['logo'] = $logoPath;
+        if (!$result['success']) {
+            return back()->withErrors(['error' => $result['message']]);
         }
 
-        $tenant->update($data);
-
-        return back()->with('success', 'Organization settings updated successfully.');
+        return back()->with('success', $result['message']);
     }
 
     /**
@@ -136,22 +112,10 @@ class TenantController extends Controller
             return redirect()->route('tenant.select');
         }
 
-        $users = $tenant->users()->with('roles', 'permissions')->get();
+        $users = $this->tenantService->getTenantUsers($tenant);
 
         return Inertia::render('Tenant/Users', [
-            'users' => $users->map(function ($user) {
-                return [
-                    'id' => $user->id,
-                    'name' => $user->name,
-                    'email' => $user->email,
-                    'avatar' => $user->avatar,
-                    'role' => $user->role,
-                    'permissions' => $user->getAllPermissions()->pluck('name'),
-                    'last_login_at' => $user->last_login_at,
-                    'created_at' => $user->created_at,
-                    'updated_at' => $user->updated_at,
-                ];
-            }),
+            'users' => $users,
         ]);
     }
 
@@ -172,12 +136,12 @@ class TenantController extends Controller
             'message' => 'nullable|string|max:500',
         ]);
 
-        // TODO: Implement user invitation logic
-        // This would typically:
-        // 1. Create an invitation record
-        // 2. Send an email invitation
-        // 3. Handle invitation acceptance
+        $result = $this->tenantService->inviteUser($tenant, $request);
 
-        return back()->with('success', 'User invitation sent successfully.');
+        if (!$result['success']) {
+            return back()->withErrors(['error' => $result['message']]);
+        }
+
+        return back()->with('success', $result['message']);
     }
 }

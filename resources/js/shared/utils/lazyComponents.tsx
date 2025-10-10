@@ -4,7 +4,6 @@
  */
 
 import React, { lazy, ComponentType } from 'react';
-import { LoadingSpinner } from '../components/ui/LoadingSpinner';
 
 // Retry mechanism for failed dynamic imports
 const retry = (fn: () => Promise<any>, retriesLeft = 5, interval = 1000): Promise<any> => {
@@ -89,11 +88,11 @@ export const JournalEntriesPage = lazyWithRetry(
 
 // Report Components
 export const IncomeStatement = lazyWithRetry(
-  () => import('../components/reports/IncomeStatement')
+  () => import('../../features/accounting/components/organisms/IncomeStatement')
 );
 
 export const BalanceSheetReport = lazyWithRetry(
-  () => import('../components/reports/BalanceSheet')
+  () => import('../../features/accounting/components/organisms/BalanceSheet')
 );
 
 export const TrialBalance = lazyWithRetry(
@@ -101,7 +100,7 @@ export const TrialBalance = lazyWithRetry(
 );
 
 export const ReportBuilder = lazyWithRetry(
-  () => import('../components/reports/ReportBuilder')
+  () => import('../../features/reporting/components/organisms/ReportBuilder')
 );
 
 // Organization Components (formerly Settings)
@@ -148,7 +147,7 @@ export const preloadByRole = (userRole: string, permissions: string[]) => {
   }
   
   if (permissions.includes('view_reports')) {
-    import('../components/reports/IncomeStatement');
+    import('../../features/accounting/components/organisms/IncomeStatement');
   }
   
   if (userRole === 'admin') {
@@ -172,12 +171,12 @@ export const preloadByRoute = (currentRoute: string) => {
       import('../../features/accounting/components/organisms/TransactionList');
       break;
     case '/reports':
-      import('../components/reports/BalanceSheet');
+      import('../../features/accounting/components/organisms/BalanceSheet');
       import('../../features/accounting/components/organisms/TrialBalance');
       break;
     case '/settings':
-      import('../components/settings/UserManagement');
-      import('../components/settings/IntegrationSettings');
+      import('../../features/organization/components/organisms/UserManagement');
+      import('../../features/organization/components/organisms/IntegrationSettings');
       break;
   }
 };

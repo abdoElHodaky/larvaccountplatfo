@@ -13,11 +13,9 @@ import {
   DrawerCloseButton,
   useDisclosure,
   useColorModeValue,
-  Flex,
-  Spacer,
-  Badge,
+
 } from '@chakra-ui/react';
-import { Container } from '@/shared/components/molecules/Container';
+
 import { AppLayout } from '@/shared/components/layouts/AppLayout';
 import { useMemoizedCallback } from '@/shared/hooks';
 

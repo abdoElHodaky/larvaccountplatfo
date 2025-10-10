@@ -51,7 +51,7 @@ declare global {
   declare function route(name: string, params?: any): string;
   
   // Make route available as a global variable
-  var route: (name: string, params?: any) => string;
+  const route: (name: string, params?: any) => string;
 }
 
 export {};

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Auth\Guards;
+namespace App\Features\Authentication\Auth\Guards;
 
 use Illuminate\Auth\SessionGuard;
 use Illuminate\Contracts\Auth\Authenticatable;
@@ -300,4 +300,3 @@ class TenantUserGuard extends SessionGuard
         }
     }
 }
-

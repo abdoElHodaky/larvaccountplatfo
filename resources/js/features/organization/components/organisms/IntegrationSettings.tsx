@@ -26,8 +26,6 @@ import {
   Flex,
   Spacer,
   SimpleGrid,
-  Image,
-  Code,
   Tabs,
   TabList,
   TabPanels,
@@ -40,11 +38,7 @@ import {
   FiPlus, 
   FiEdit2, 
   FiTrash2, 
-  FiExternalLink,
-  FiKey,
-  FiSettings,
   FiCheck,
-  FiX,
   FiRefreshCw
 } from 'react-icons/fi';
 import { CardContainer } from '@/shared/components/molecules/Container';
@@ -131,7 +125,6 @@ export const IntegrationSettings = memo<IntegrationSettingsProps>(({
   const { isOpen: isEditOpen, onOpen: onEditOpen, onClose: onEditClose } = useDisclosure();
   const toast = useToast();
 
-  const bgColor = useColorModeValue('white', 'gray.800');
   const borderColor = useColorModeValue('gray.200', 'gray.600');
 
   const handleCreateIntegration = useMemoizedCallback(async () => {
@@ -632,4 +625,3 @@ export const IntegrationSettings = memo<IntegrationSettingsProps>(({
 IntegrationSettings.displayName = 'IntegrationSettings';
 
 export default IntegrationSettings;
-

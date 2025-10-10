@@ -37,7 +37,7 @@ interface DevTools {
 // Global state for dev tools
 let globalStore: any = null;
 let verboseLogging = false;
-let stateChangeListeners: (() => void)[] = [];
+const stateChangeListeners: (() => void)[] = [];
 
 // Component loading tracking
 const loadedComponents = new Set<string>();
