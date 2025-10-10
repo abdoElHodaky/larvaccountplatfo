@@ -38,6 +38,7 @@ export const AccountBalances: React.FC<AccountBalancesProps> = ({
   const [sortBy, setSortBy] = useState<'name' | 'code' | 'balance' | 'type'>('name');
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc');
   const [searchTerm, setSearchTerm] = useState('');
+  const [localFilterByType, setLocalFilterByType] = useState<string | undefined>(filterByType);
 
   // Filter and sort balances
   const filteredBalances = useMemo(() => {
@@ -46,7 +47,7 @@ export const AccountBalances: React.FC<AccountBalancesProps> = ({
       if (!showInactive && !balance.isActive) return false;
       
       // Filter by account type
-      if (filterByType && balance.accountType !== filterByType) return false;
+      if (localFilterByType && balance.accountType !== localFilterByType) return false;
       
       // Filter by search term
       if (searchTerm) {
@@ -91,7 +92,7 @@ export const AccountBalances: React.FC<AccountBalancesProps> = ({
     });
 
     return filtered;
-  }, [balances, showInactive, filterByType, searchTerm, sortBy, sortOrder]);
+  }, [balances, showInactive, localFilterByType, searchTerm, sortBy, sortOrder]);
 
   const handleSort = (field: typeof sortBy) => {
     if (sortBy === field) {
@@ -165,8 +166,8 @@ export const AccountBalances: React.FC<AccountBalancesProps> = ({
         
         <div className="filter-controls">
           <select
-            value={filterByType || ''}
-            onChange={(e) => setFilterByType(e.target.value || undefined)}
+            value={localFilterByType || ''}
+            onChange={(e) => setLocalFilterByType(e.target.value || undefined)}
             className="type-filter"
           >
             <option value="">All Types</option>

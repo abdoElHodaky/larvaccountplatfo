@@ -585,7 +585,7 @@ export function useTransactions(filters?: TransactionFilters, options?: {
     () => accountingApi.getTransactions(filters),
     {
       immediate: options?.enabled !== false,
-      initialData: [],
+      initialData: { data: { transactions: [] } },
     }
   );
 
@@ -605,7 +605,7 @@ export function useJournalEntries(organizationId: number, filters?: any, options
     () => accountingApi.getJournalEntries(organizationId, filters),
     {
       immediate: options?.enabled !== false && !!organizationId,
-      initialData: [],
+      initialData: { data: { journalEntries: [] } },
     }
   );
 
@@ -625,7 +625,7 @@ export function useAccountBalances(organizationId: number, asOfDate?: string, op
     () => accountingApi.getAccountBalances(organizationId, asOfDate),
     {
       immediate: options?.enabled !== false && !!organizationId,
-      initialData: [],
+      initialData: { data: { accountBalances: [] } },
     }
   );
 
@@ -645,7 +645,7 @@ export function useTrialBalance(organizationId: number, asOfDate?: string, optio
     () => accountingApi.getTrialBalance(organizationId, asOfDate),
     {
       immediate: options?.enabled !== false && !!organizationId,
-      initialData: [],
+      initialData: { data: { trialBalance: [] } },
     }
   );
 
