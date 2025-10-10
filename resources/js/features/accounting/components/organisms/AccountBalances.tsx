@@ -41,7 +41,7 @@ export const AccountBalances: React.FC<AccountBalancesProps> = ({
 
   // Filter and sort balances
   const filteredBalances = useMemo(() => {
-    let filtered = balances.filter(balance => {
+    const filtered = balances.filter(balance => {
       // Filter by active status
       if (!showInactive && !balance.isActive) return false;
       

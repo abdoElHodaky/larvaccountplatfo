@@ -172,7 +172,7 @@ describe('useRealtimeDashboard Hook', () => {
   });
 
   it('should update metrics on real-time events', async () => {
-    let metricsUpdateCallback: Function;
+    let metricsUpdateCallback: (data: any) => void;
     mockSocketManager.on.mockImplementation((event, callback) => {
       if (event === 'dashboard:metrics_updated') {
         metricsUpdateCallback = callback;
@@ -202,7 +202,7 @@ describe('useRealtimeDashboard Hook', () => {
   });
 
   it('should update widgets on real-time events', async () => {
-    let widgetUpdateCallback: Function;
+    let widgetUpdateCallback: (data: any) => void;
     mockSocketManager.on.mockImplementation((event, callback) => {
       if (event === 'dashboard:widget_updated') {
         widgetUpdateCallback = callback;
@@ -231,7 +231,7 @@ describe('useRealtimeDashboard Hook', () => {
   });
 
   it('should handle widget position updates', async () => {
-    let positionUpdateCallback: Function;
+    let positionUpdateCallback: (data: any) => void;
     mockSocketManager.on.mockImplementation((event, callback) => {
       if (event === 'dashboard:widget_position_updated') {
         positionUpdateCallback = callback;
@@ -301,7 +301,7 @@ describe('useRealtimeAccounting Hook', () => {
   });
 
   it('should update transactions on real-time events', async () => {
-    let transactionCallback: Function;
+    let transactionCallback: (data: any) => void;
     mockSocketManager.on.mockImplementation((event, callback) => {
       if (event === 'accounting:transaction_created') {
         transactionCallback = callback;
@@ -331,7 +331,7 @@ describe('useRealtimeAccounting Hook', () => {
   });
 
   it('should update account balances on real-time events', async () => {
-    let balanceCallback: Function;
+    let balanceCallback: (data: any) => void;
     mockSocketManager.on.mockImplementation((event, callback) => {
       if (event === 'accounting:account_balance_updated') {
         balanceCallback = callback;
@@ -367,7 +367,7 @@ describe('useRealtimeAccounting Hook', () => {
   });
 
   it('should handle transaction updates', async () => {
-    let updateCallback: Function;
+    let updateCallback: (data: any) => void;
     mockSocketManager.on.mockImplementation((event, callback) => {
       if (event === 'accounting:transaction_updated') {
         updateCallback = callback;

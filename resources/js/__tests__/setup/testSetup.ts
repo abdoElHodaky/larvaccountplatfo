@@ -81,7 +81,7 @@ class MockWebSocket {
     }, 100);
   }
 
-  send(data: string | ArrayBuffer | Blob | ArrayBufferView): void {
+  send(_data: string | ArrayBuffer | Blob | ArrayBufferView): void {
     // Mock send implementation
   }
 
@@ -99,7 +99,7 @@ class MockWebSocket {
     if (type === 'error') this.onerror = listener as any;
   }
 
-  removeEventListener(type: string, listener: EventListener): void {
+  removeEventListener(type: string, _listener: EventListener): void {
     if (type === 'open') this.onopen = null;
     if (type === 'close') this.onclose = null;
     if (type === 'message') this.onmessage = null;
