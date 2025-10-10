@@ -1,0 +1,460 @@
+"A datetime string with format `Y-m-d H:i:s`, e.g. `2018-05-23 13:43:32`."
+scalar DateTime @scalar(class: "Nuwave\\Lighthouse\\Schema\\Types\\Scalars\\DateTime")
+
+"Indicates what fields are available at the top level of a query operation."
+type Query {
+    "Find a single user by an identifying attribute."
+    user(
+      "Search by primary key."
+      id: ID @eq @rules(apply: ["prohibits:email", "required_without:email"])
+
+      "Search by email address."
+      email: String @eq @rules(apply: ["prohibits:id", "required_without:id", "email"])
+    ): User @find
+
+    "List multiple users."
+    users(
+      "Filters by name. Accepts SQL LIKE wildcards `%` and `_`."
+      name: String @where(operator: "like")
+    ): [User!]! @paginate(defaultCount: 10)
+
+    # Inventory Queries
+    "Get inventory dashboard data"
+    inventoryDashboard: InventoryDashboard @field(resolver: "App\\Features\\Inventory\\GraphQL\\Queries\\InventoryDashboard")
+
+    "Find a single product by ID"
+    product(id: ID! @eq): Product @find
+
+    "List multiple products with filtering and pagination"
+    products(
+        "Filter by name"
+        name: String @where(operator: "like")
+        "Filter by SKU"
+        sku: String @where(operator: "like")
+        "Filter by category"
+        category_id: ID @eq
+        "Filter by status"
+        status: ProductStatus @eq
+        "Search across multiple fields"
+        search: String
+    ): [Product!]! @paginate(defaultCount: 15)
+
+    "Get low stock products"
+    lowStockProducts: [Product!]! @field(resolver: "App\\Features\\Inventory\\GraphQL\\Queries\\LowStockProducts")
+
+    "Get out of stock products"
+    outOfStockProducts: [Product!]! @field(resolver: "App\\Features\\Inventory\\GraphQL\\Queries\\OutOfStockProducts")
+
+    "Find a single product category by ID"
+    productCategory(id: ID! @eq): ProductCategory @find
+
+    "List multiple product categories"
+    productCategories(
+        "Filter by name"
+        name: String @where(operator: "like")
+        "Filter by status"
+        status: CategoryStatus @eq
+    ): [ProductCategory!]! @paginate(defaultCount: 15)
+
+    # Accounting Queries
+    "Get accounting dashboard data"
+    accountingDashboard: AccountingDashboard @field(resolver: "App\\Features\\Accounting\\GraphQL\\Queries\\AccountingDashboard")
+
+    "Find a single account by ID"
+    account(id: ID! @eq): Account @find
+
+    "List multiple accounts with filtering"
+    accounts(
+        "Filter by name"
+        name: String @where(operator: "like")
+        "Filter by code"
+        code: String @where(operator: "like")
+        "Filter by type"
+        type: AccountType @eq
+        "Filter by status"
+        status: AccountStatus @eq
+    ): [Account!]! @paginate(defaultCount: 15)
+
+    "Find a single transaction by ID"
+    transaction(id: ID! @eq): Transaction @find
+
+    "List multiple transactions with filtering"
+    transactions(
+        "Filter by account"
+        account_id: ID @eq
+        "Filter by type"
+        type: TransactionType @eq
+        "Filter by date range"
+        date_from: DateTime @where(operator: ">=", key: "date")
+        date_to: DateTime @where(operator: "<=", key: "date")
+        "Filter by amount range"
+        amount_from: Float @where(operator: ">=", key: "amount")
+        amount_to: Float @where(operator: "<=", key: "amount")
+    ): [Transaction!]! @paginate(defaultCount: 15)
+
+    "Find a single journal entry by ID"
+    journalEntry(id: ID! @eq): JournalEntry @find
+
+    "List multiple journal entries"
+    journalEntries(
+        "Filter by date range"
+        date_from: DateTime @where(operator: ">=", key: "date")
+        date_to: DateTime @where(operator: "<=", key: "date")
+        "Filter by reference"
+        reference: String @where(operator: "like")
+    ): [JournalEntry!]! @paginate(defaultCount: 15)
+
+    "Get financial reports"
+    balanceSheet(
+        "As of date"
+        as_of_date: DateTime
+    ): BalanceSheet @field(resolver: "App\\Features\\Accounting\\GraphQL\\Queries\\BalanceSheet")
+
+    "Get profit and loss report"
+    profitLoss(
+        "From date"
+        from_date: DateTime
+        "To date"
+        to_date: DateTime
+    ): ProfitLoss @field(resolver: "App\\Features\\Accounting\\GraphQL\\Queries\\ProfitLoss")
+}
+
+"Account for mutations"
+type Mutation {
+    # Inventory Mutations
+    "Create a new product"
+    createProduct(input: CreateProductInput! @spread): Product @create
+
+    "Update an existing product"
+    updateProduct(id: ID!, input: UpdateProductInput! @spread): Product @update
+
+    "Delete a product"
+    deleteProduct(id: ID!): Product @delete
+
+    "Update stock level for a product"
+    updateStock(input: UpdateStockInput! @spread): StockMovement @field(resolver: "App\\Features\\Inventory\\GraphQL\\Mutations\\UpdateStock")
+
+    "Create a new product category"
+    createProductCategory(input: CreateProductCategoryInput! @spread): ProductCategory @create
+
+    "Update an existing product category"
+    updateProductCategory(id: ID!, input: UpdateProductCategoryInput! @spread): ProductCategory @update
+
+    # Accounting Mutations
+    "Create a new account"
+    createAccount(input: CreateAccountInput! @spread): Account @create
+
+    "Update an existing account"
+    updateAccount(id: ID!, input: UpdateAccountInput! @spread): Account @update
+
+    "Create a new transaction"
+    createTransaction(input: CreateTransactionInput! @spread): Transaction @create
+
+    "Create a new journal entry"
+    createJournalEntry(input: CreateJournalEntryInput! @spread): JournalEntry @field(resolver: "App\\Features\\Accounting\\GraphQL\\Mutations\\CreateJournalEntry")
+}
+
+# User Types
+type User {
+    id: ID!
+    name: String!
+    email: String!
+    email_verified_at: DateTime
+    created_at: DateTime!
+    updated_at: DateTime!
+}
+
+# Inventory Types
+type InventoryDashboard {
+    total_products: Int!
+    low_stock_items: Int!
+    out_of_stock_items: Int!
+    total_value: Float!
+    recent_movements: [StockMovement!]!
+}
+
+type Product {
+    id: ID!
+    name: String!
+    sku: String!
+    description: String
+    category: ProductCategory @belongsTo
+    category_id: ID!
+    price: Float!
+    cost_price: Float
+    min_stock_level: Int
+    max_stock_level: Int
+    reorder_point: Int
+    status: ProductStatus!
+    stock_quantity: Int
+    stock_levels: [StockLevel!]! @hasMany
+    created_at: DateTime!
+    updated_at: DateTime!
+}
+
+type ProductCategory {
+    id: ID!
+    name: String!
+    description: String
+    parent_id: ID
+    parent: ProductCategory @belongsTo(relation: "parent")
+    children: [ProductCategory!]! @hasMany(relation: "children")
+    products: [Product!]! @hasMany
+    status: CategoryStatus!
+    created_at: DateTime!
+    updated_at: DateTime!
+}
+
+type StockLevel {
+    id: ID!
+    product: Product! @belongsTo
+    product_id: ID!
+    quantity: Int!
+    location: String
+    created_at: DateTime!
+    updated_at: DateTime!
+}
+
+type StockMovement {
+    id: ID!
+    product: Product! @belongsTo
+    product_id: ID!
+    quantity: Int!
+    previous_quantity: Int!
+    movement_type: StockMovementType!
+    reason: String
+    reference: String
+    created_at: DateTime!
+}
+
+# Accounting Types
+type AccountingDashboard {
+    total_revenue: Float!
+    total_expenses: Float!
+    net_income: Float!
+    cash_flow: Float!
+    recent_transactions: [Transaction!]!
+    account_balances: [AccountBalance!]!
+}
+
+type Account {
+    id: ID!
+    name: String!
+    code: String!
+    type: AccountType!
+    description: String
+    parent_id: ID
+    parent: Account @belongsTo(relation: "parent")
+    children: [Account!]! @hasMany(relation: "children")
+    balance: Float!
+    status: AccountStatus!
+    transactions: [Transaction!]! @hasMany
+    created_at: DateTime!
+    updated_at: DateTime!
+}
+
+type Transaction {
+    id: ID!
+    account: Account! @belongsTo
+    account_id: ID!
+    amount: Float!
+    type: TransactionType!
+    description: String
+    reference: String
+    date: DateTime!
+    status: TransactionStatus!
+    created_at: DateTime!
+    updated_at: DateTime!
+}
+
+type JournalEntry {
+    id: ID!
+    date: DateTime!
+    reference: String!
+    description: String
+    total_debit: Float!
+    total_credit: Float!
+    status: JournalEntryStatus!
+    entries: [JournalEntryLine!]! @hasMany(relation: "lines")
+    created_at: DateTime!
+    updated_at: DateTime!
+}
+
+type JournalEntryLine {
+    id: ID!
+    journal_entry: JournalEntry! @belongsTo
+    journal_entry_id: ID!
+    account: Account! @belongsTo
+    account_id: ID!
+    debit: Float!
+    credit: Float!
+    description: String
+    created_at: DateTime!
+    updated_at: DateTime!
+}
+
+type AccountBalance {
+    account: Account!
+    balance: Float!
+    as_of_date: DateTime!
+}
+
+type BalanceSheet {
+    as_of_date: DateTime!
+    assets: [AccountBalance!]!
+    liabilities: [AccountBalance!]!
+    equity: [AccountBalance!]!
+    total_assets: Float!
+    total_liabilities: Float!
+    total_equity: Float!
+}
+
+type ProfitLoss {
+    from_date: DateTime!
+    to_date: DateTime!
+    revenue: [AccountBalance!]!
+    expenses: [AccountBalance!]!
+    total_revenue: Float!
+    total_expenses: Float!
+    gross_profit: Float!
+    net_income: Float!
+}
+
+# Enums
+enum ProductStatus {
+    ACTIVE @enum(value: "active")
+    INACTIVE @enum(value: "inactive")
+    DISCONTINUED @enum(value: "discontinued")
+}
+
+enum CategoryStatus {
+    ACTIVE @enum(value: "active")
+    INACTIVE @enum(value: "inactive")
+}
+
+enum StockMovementType {
+    IN @enum(value: "in")
+    OUT @enum(value: "out")
+    ADJUSTMENT @enum(value: "adjustment")
+    TRANSFER @enum(value: "transfer")
+}
+
+enum AccountType {
+    ASSET @enum(value: "asset")
+    LIABILITY @enum(value: "liability")
+    EQUITY @enum(value: "equity")
+    REVENUE @enum(value: "revenue")
+    EXPENSE @enum(value: "expense")
+}
+
+enum AccountStatus {
+    ACTIVE @enum(value: "active")
+    INACTIVE @enum(value: "inactive")
+}
+
+enum TransactionType {
+    DEBIT @enum(value: "debit")
+    CREDIT @enum(value: "credit")
+}
+
+enum TransactionStatus {
+    PENDING @enum(value: "pending")
+    COMPLETED @enum(value: "completed")
+    CANCELLED @enum(value: "cancelled")
+}
+
+enum JournalEntryStatus {
+    DRAFT @enum(value: "draft")
+    POSTED @enum(value: "posted")
+    CANCELLED @enum(value: "cancelled")
+}
+
+# Input Types
+input CreateProductInput {
+    name: String! @rules(apply: ["required", "string", "max:255"])
+    sku: String! @rules(apply: ["required", "string", "unique:products,sku"])
+    description: String
+    category_id: ID! @rules(apply: ["required", "exists:product_categories,id"])
+    price: Float! @rules(apply: ["required", "numeric", "min:0"])
+    cost_price: Float @rules(apply: ["nullable", "numeric", "min:0"])
+    min_stock_level: Int @rules(apply: ["nullable", "integer", "min:0"])
+    max_stock_level: Int @rules(apply: ["nullable", "integer", "min:0"])
+    reorder_point: Int @rules(apply: ["nullable", "integer", "min:0"])
+    status: ProductStatus = ACTIVE
+}
+
+input UpdateProductInput {
+    name: String @rules(apply: ["string", "max:255"])
+    sku: String @rules(apply: ["string"])
+    description: String
+    category_id: ID @rules(apply: ["exists:product_categories,id"])
+    price: Float @rules(apply: ["numeric", "min:0"])
+    cost_price: Float @rules(apply: ["nullable", "numeric", "min:0"])
+    min_stock_level: Int @rules(apply: ["nullable", "integer", "min:0"])
+    max_stock_level: Int @rules(apply: ["nullable", "integer", "min:0"])
+    reorder_point: Int @rules(apply: ["nullable", "integer", "min:0"])
+    status: ProductStatus
+}
+
+input UpdateStockInput {
+    product_id: ID! @rules(apply: ["required", "exists:products,id"])
+    quantity: Int! @rules(apply: ["required", "integer", "min:0"])
+    movement_type: StockMovementType!
+    reason: String
+    reference: String
+}
+
+input CreateProductCategoryInput {
+    name: String! @rules(apply: ["required", "string", "max:255"])
+    description: String
+    parent_id: ID @rules(apply: ["nullable", "exists:product_categories,id"])
+    status: CategoryStatus = ACTIVE
+}
+
+input UpdateProductCategoryInput {
+    name: String @rules(apply: ["string", "max:255"])
+    description: String
+    parent_id: ID @rules(apply: ["nullable", "exists:product_categories,id"])
+    status: CategoryStatus
+}
+
+input CreateAccountInput {
+    name: String! @rules(apply: ["required", "string", "max:255"])
+    code: String! @rules(apply: ["required", "string", "unique:accounts,code"])
+    type: AccountType!
+    description: String
+    parent_id: ID @rules(apply: ["nullable", "exists:accounts,id"])
+    status: AccountStatus = ACTIVE
+}
+
+input UpdateAccountInput {
+    name: String @rules(apply: ["string", "max:255"])
+    code: String @rules(apply: ["string"])
+    type: AccountType
+    description: String
+    parent_id: ID @rules(apply: ["nullable", "exists:accounts,id"])
+    status: AccountStatus
+}
+
+input CreateTransactionInput {
+    account_id: ID! @rules(apply: ["required", "exists:accounts,id"])
+    amount: Float! @rules(apply: ["required", "numeric", "min:0"])
+    type: TransactionType!
+    description: String
+    reference: String
+    date: DateTime!
+}
+
+input CreateJournalEntryInput {
+    date: DateTime!
+    reference: String! @rules(apply: ["required", "string"])
+    description: String
+    entries: [CreateJournalEntryLineInput!]! @rules(apply: ["required", "array", "min:2"])
+}
+
+input CreateJournalEntryLineInput {
+    account_id: ID! @rules(apply: ["required", "exists:accounts,id"])
+    debit: Float! @rules(apply: ["required", "numeric", "min:0"])
+    credit: Float! @rules(apply: ["required", "numeric", "min:0"])
+    description: String
+}
