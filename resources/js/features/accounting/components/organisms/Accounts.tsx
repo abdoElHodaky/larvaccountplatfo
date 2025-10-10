@@ -4,20 +4,20 @@
  */
 
 import React, { useEffect } from 'react';
-import { useAccounts, useAccountingFilters } from '../../hooks/useAccounting';
+import { useAccounts, useFilters } from '../../hooks/useAccounting';
 import type { Account } from '../../stores/accountingModel';
 
-interface ChartOfAccountsProps {
+interface AccountsProps {
   className?: string;
   onAccountSelect?: (account: Account) => void;
 }
 
-export const ChartOfAccounts: React.FC<ChartOfAccountsProps> = ({
+export const Accounts: React.FC<AccountsProps> = ({
   className = '',
   onAccountSelect,
 }) => {
   const { accounts, loading, error, fetch, delete: deleteAccount, select } = useAccounts();
-  const { filters, setSearchTerm, setAccountTypes } = useAccountingFilters();
+  const { filters, setSearchTerm, setAccountTypes } = useFilters();
   // const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   // const [editingAccount, setEditingAccount] = useState<Account | null>(null);
 
@@ -236,4 +236,4 @@ export const ChartOfAccounts: React.FC<ChartOfAccountsProps> = ({
   );
 };
 
-export default ChartOfAccounts;
+export default Accounts;

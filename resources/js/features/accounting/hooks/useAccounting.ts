@@ -6,7 +6,7 @@
 import { useSelector } from 'react-redux';
 import { useAppDispatch } from '../../../shared/hooks/useRematchStore';
 import type { RootState } from '../../../shared/stores';
-import type { Account, Transaction, JournalEntry, AccountingFilters } from '../stores/accountingModel';
+import type { Account, Transaction, JournalEntry, Filters } from '../stores/accountingModel';
 
 // Main accounting hook
 export const useAccounting = () => {
@@ -18,7 +18,7 @@ export const useAccounting = () => {
     ...accounting,
     
     // Actions
-    fetchAccounts: (filters?: Partial<AccountingFilters>) => 
+    fetchAccounts: (filters?: Partial<Filters>) => 
       dispatch.accounting.fetchAccounts(filters),
     createAccount: (accountData: Omit<Account, 'id' | 'createdAt' | 'updatedAt'>) => 
       dispatch.accounting.createAccount(accountData),
@@ -29,17 +29,17 @@ export const useAccounting = () => {
     setSelectedAccount: (account: Account | null) => 
       dispatch.accounting.setSelectedAccount(account),
     
-    fetchTransactions: (filters?: Partial<AccountingFilters>) => 
+    fetchTransactions: (filters?: Partial<Filters>) => 
       dispatch.accounting.fetchTransactions(filters),
     setSelectedTransaction: (transaction: Transaction | null) => 
       dispatch.accounting.setSelectedTransaction(transaction),
     
-    fetchJournalEntries: (filters?: Partial<AccountingFilters>) => 
+    fetchJournalEntries: (filters?: Partial<Filters>) => 
       dispatch.accounting.fetchJournalEntries(filters),
     setSelectedJournalEntry: (entry: JournalEntry | null) => 
       dispatch.accounting.setSelectedJournalEntry(entry),
     
-    updateFilters: (filters: Partial<AccountingFilters>) => 
+    updateFilters: (filters: Partial<Filters>) => 
       dispatch.accounting.updateFilters(filters),
     resetFilters: () => 
       dispatch.accounting.resetFilters(),
@@ -66,7 +66,7 @@ export const useAccounts = () => {
     selectedAccount,
     error,
     
-    fetch: (filters?: Partial<AccountingFilters>) => 
+    fetch: (filters?: Partial<Filters>) => 
       dispatch.accounting.fetchAccounts(filters),
     create: (accountData: Omit<Account, 'id' | 'createdAt' | 'updatedAt'>) => 
       dispatch.accounting.createAccount(accountData),
@@ -91,7 +91,7 @@ export const useTransactions = () => {
     selectedTransaction,
     error,
     
-    fetch: (filters?: Partial<AccountingFilters>) => 
+    fetch: (filters?: Partial<Filters>) => 
       dispatch.accounting.fetchTransactions(filters),
     select: (transaction: Transaction | null) => 
       dispatch.accounting.setSelectedTransaction(transaction),
@@ -110,21 +110,21 @@ export const useJournalEntries = () => {
     selectedJournalEntry,
     error,
     
-    fetch: (filters?: Partial<AccountingFilters>) => 
+    fetch: (filters?: Partial<Filters>) => 
       dispatch.accounting.fetchJournalEntries(filters),
     select: (entry: JournalEntry | null) => 
       dispatch.accounting.setSelectedJournalEntry(entry),
   };
 };
 
-export const useAccountingFilters = () => {
+export const useFilters = () => {
   const { filters } = useSelector((state: RootState) => state.accounting);
   const dispatch = useAppDispatch();
   
   return {
     filters,
     
-    update: (newFilters: Partial<AccountingFilters>) => 
+    update: (newFilters: Partial<Filters>) => 
       dispatch.accounting.updateFilters(newFilters),
     reset: () => 
       dispatch.accounting.resetFilters(),

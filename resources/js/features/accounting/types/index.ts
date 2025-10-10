@@ -161,7 +161,7 @@ export type AccountType =
     | 'revenue'
     | 'expense';
 
-export interface AccountingFilters {
+export interface Filters {
     account_type?: AccountType;
     date_from?: string;
     date_to?: string;

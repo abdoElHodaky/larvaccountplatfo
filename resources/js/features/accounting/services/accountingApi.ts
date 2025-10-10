@@ -5,7 +5,7 @@
 
 import { apolloClient } from '../../../shared/services/graphql/apollo-client';
 import { gql } from '@apollo/client';
-import type { Account, Transaction, JournalEntry, AccountingFilters } from '../stores/accountingModel';
+import type { Account, Transaction, JournalEntry, Filters } from '../stores/accountingModel';
 
 // GraphQL Queries
 const GET_ACCOUNTS = gql`
@@ -180,7 +180,7 @@ export interface PaginatedResponse<T> {
 // API Service Class
 export class AccountingApiService {
   // Account methods
-  async getAccounts(filters?: Partial<AccountingFilters>): Promise<ApiResponse<Account[]>> {
+  async getAccounts(filters?: Partial<Filters>): Promise<ApiResponse<Account[]>> {
     try {
       const { data } = await apolloClient.query({
         query: GET_ACCOUNTS,
@@ -279,7 +279,7 @@ export class AccountingApiService {
   }
 
   // Transaction methods
-  async getTransactions(filters?: Partial<AccountingFilters>): Promise<ApiResponse<Transaction[]>> {
+  async getTransactions(filters?: Partial<Filters>): Promise<ApiResponse<Transaction[]>> {
     try {
       const { data } = await apolloClient.query({
         query: GET_TRANSACTIONS,
@@ -298,7 +298,7 @@ export class AccountingApiService {
   }
 
   // Journal Entry methods
-  async getJournalEntries(filters?: Partial<AccountingFilters>): Promise<ApiResponse<JournalEntry[]>> {
+  async getJournalEntries(filters?: Partial<Filters>): Promise<ApiResponse<JournalEntry[]>> {
     try {
       const { data } = await apolloClient.query({
         query: GET_JOURNAL_ENTRIES,
@@ -369,15 +369,34 @@ export class AccountingApiService {
 
   async reconcileTransactions(transactionIds: string[]): Promise<ApiResponse<boolean>> {
     try {
-      // TODO: Implement reconciliation mutation
-      // This is a placeholder for the reconciliation logic
-      
       if (!transactionIds || transactionIds.length === 0) {
         throw new Error('No transaction IDs provided for reconciliation');
       }
+
+      // Implement reconciliation mutation with GraphQL
+      const mutation = `
+        mutation ReconcileTransactions($transactionIds: [ID!]!) {
+          reconcileTransactions(transactionIds: $transactionIds) {
+            success
+            reconciledCount
+            errors {
+              transactionId
+              message
+            }
+          }
+        }
+      `;
+
+      const response = await this.graphqlClient.request(mutation, {
+        transactionIds
+      });
+
+      if (response.reconcileTransactions.errors?.length > 0) {
+        console.warn('Some transactions failed to reconcile:', response.reconcileTransactions.errors);
+      }
       
       return {
-        data: true,
+        data: response.reconcileTransactions.success,
         success: true,
         message: 'Transactions reconciled successfully',
       };

@@ -331,11 +331,25 @@ export const authModel = createModel<RootModel>()({
         // Optimistically update UI
         dispatch.auth.updateUserPreferences(preferences);
         
-        // TODO: Add API call to update preferences on server
-        // const { data } = await apolloClient.mutate({
-        //   mutation: UPDATE_USER_PREFERENCES,
-        //   variables: { preferences },
-        // });
+        // API call to update preferences on server
+        const mutation = `
+          mutation UpdateUserPreferences($preferences: UserPreferencesInput!) {
+            updateUserPreferences(preferences: $preferences) {
+              id
+              preferences {
+                theme
+                language
+                notifications
+                dashboard
+              }
+            }
+          }
+        `;
+        
+        const { data } = await apolloClient.mutate({
+          mutation,
+          variables: { preferences },
+        });
         
         return { success: true };
       } catch (error: any) {
