@@ -1,5 +1,4 @@
 import { createInertiaApp } from '@inertiajs/react';
-import createServer from '@inertiajs/server';
 import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
 import ReactDOMServer from 'react-dom/server';
 import { AppProviders } from './shared/providers/AppProviders';
@@ -72,7 +71,8 @@ function getPreloadHints(pageName: string): string[] {
   return preloadMap[pageName] || [];
 }
 
-createServer((page) => {
+// Export the SSR function for Laravel to use
+export default function render(page: any) {
   const cacheKey = generateCacheKey(page);
   const now = Date.now();
   
@@ -120,4 +120,4 @@ createServer((page) => {
       return WrappedApp;
     },
   });
-});
+}
