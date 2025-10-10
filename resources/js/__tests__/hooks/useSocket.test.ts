@@ -4,26 +4,27 @@
  */
 
 import { renderHook, act, waitFor } from '@testing-library/react';
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { useSocket, useRealtimeDashboard, useRealtimeAccounting } from '../../shared/hooks/useSocket';
 import { socketManager } from '../../shared/services/socket/socketManager';
 import { testUtils, localStorageMock } from '../setup/testSetup';
 
 // Mock the socket manager
-jest.mock('../../shared/services/socket/socketManager', () => ({
+vi.mock('../../shared/services/socket/socketManager', () => ({
   socketManager: {
-    connect: jest.fn(),
-    disconnect: jest.fn(),
-    emit: jest.fn(),
-    on: jest.fn(),
-    off: jest.fn(),
-    joinRoom: jest.fn(),
-    leaveRoom: jest.fn(),
-    sendToRoom: jest.fn(),
-    broadcastToOrganization: jest.fn(),
-    sendToUser: jest.fn(),
+    connect: vi.fn(),
+    disconnect: vi.fn(),
+    emit: vi.fn(),
+    on: vi.fn(),
+    off: vi.fn(),
+    joinRoom: vi.fn(),
+    leaveRoom: vi.fn(),
+    sendToRoom: vi.fn(),
+    broadcastToOrganization: vi.fn(),
+    sendToUser: vi.fn(),
     isConnected: false,
     socketId: undefined,
-    getStats: jest.fn(() => ({
+    getStats: vi.fn(() => ({
       connected: false,
       socketId: undefined,
       reconnectAttempts: 0,
@@ -33,11 +34,11 @@ jest.mock('../../shared/services/socket/socketManager', () => ({
   },
 }));
 
-const mockSocketManager = socketManager as jest.Mocked<typeof socketManager>;
+const mockSocketManager = socketManager as any;
 
 describe('useSocket Hook', () => {
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
     testUtils.setupAuthenticatedUser();
     mockSocketManager.connect.mockResolvedValue({} as any);
     mockSocketManager.on.mockReturnValue(() => {});
@@ -141,7 +142,7 @@ describe('useRealtimeDashboard Hook', () => {
   const mockOrganizationId = 1;
 
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
     testUtils.setupAuthenticatedUser();
     mockSocketManager.isConnected = true;
     mockSocketManager.on.mockReturnValue(() => {});
@@ -280,7 +281,7 @@ describe('useRealtimeAccounting Hook', () => {
   const mockOrganizationId = 1;
 
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
     testUtils.setupAuthenticatedUser();
     mockSocketManager.isConnected = true;
     mockSocketManager.on.mockReturnValue(() => {});
@@ -417,7 +418,7 @@ describe('useRealtimeAccounting Hook', () => {
 
 describe('Socket Hook Error Handling', () => {
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
     testUtils.setupAuthenticatedUser();
   });
 
@@ -452,7 +453,7 @@ describe('Socket Hook Error Handling', () => {
   });
 
   it('should handle event listener errors', () => {
-    const errorCallback = jest.fn();
+    const errorCallback = vi.fn();
     mockSocketManager.on.mockImplementation((event, callback) => {
       if (event === 'dashboard:metrics_updated') {
         // Simulate callback error
