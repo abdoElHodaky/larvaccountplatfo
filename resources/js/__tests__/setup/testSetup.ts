@@ -5,7 +5,7 @@
 
 import '@testing-library/jest-dom';
 import { configure } from '@testing-library/react';
-import { beforeAll, afterEach, afterAll, vi } from 'vitest';
+import { afterEach, vi } from 'vitest';
 // import { server } from './mocks/server'; // TODO: Create MSW server mock
 
 // Configure React Testing Library

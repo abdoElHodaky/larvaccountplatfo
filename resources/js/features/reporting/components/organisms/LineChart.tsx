@@ -67,8 +67,7 @@ export const LineChart: React.FC<LineChartProps> = memo(({
   showGrid = true,
   showLegend = true,
   showTooltip = true,
-  enableZoom = false,
-  enableBrush = false,
+
   animationDuration = 300,
   margin = { top: 20, right: 30, left: 20, bottom: 20 },
   ...containerProps

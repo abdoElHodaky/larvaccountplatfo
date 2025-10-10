@@ -253,7 +253,7 @@ export class LazyLoadErrorBoundary extends Component<LazyLoadErrorBoundaryProps,
   };
 
   render() {
-    const { hasError, error, retryCount } = this.state;
+    const { hasError, error: _error, retryCount } = this.state;
     const { children, componentName, fallbackComponent, maxRetries = 3 } = this.props;
 
     if (hasError) {
