@@ -6,8 +6,7 @@ import {
 
   IconButton,
   useColorModeValue,
-  Flex,
-  Spacer,
+
 } from '@chakra-ui/react';
 import { useMemoizedCallback } from '@/shared/hooks';
 
