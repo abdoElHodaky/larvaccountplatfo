@@ -138,7 +138,7 @@ export const graphqlClient = createAlova({
   
   // GraphQL response interceptor
   responded: {
-    onSuccess: async (response, method) => {
+    onSuccess: async (response, _method) => {
       const result = await response.json();
       
       console.log(`✅ GraphQL Success:`, {
@@ -168,7 +168,7 @@ export const graphqlClient = createAlova({
       return result;
     },
     
-    onError: (error, method) => {
+    onError: (error, _method) => {
       console.error(`❌ GraphQL Error:`, error);
       throw error;
     }

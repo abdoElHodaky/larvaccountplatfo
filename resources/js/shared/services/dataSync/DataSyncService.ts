@@ -50,8 +50,8 @@ class DataSyncService {
       realtime = false,
       cacheTime = 300000, // 5 minutes
       staleTime = 60000,  // 1 minute
-      refetchOnWindowFocus = true,
-      refetchOnReconnect = true
+      refetchOnWindowFocus: _refetchOnWindowFocus = true,
+      refetchOnReconnect: _refetchOnReconnect = true
     } = options;
 
     // Add callback to subscriptions
