@@ -108,25 +108,7 @@ if ('serviceWorker' in navigator && process.env.NODE_ENV === 'production') {
 
 // Preload critical resources
 if (typeof window !== 'undefined') {
-  // Preload critical fonts
-  const preloadFont = (href: string) => {
-    const link = document.createElement('link');
-    link.rel = 'preload';
-    link.as = 'font';
-    link.type = 'font/woff2';
-    link.crossOrigin = 'anonymous';
-    link.href = href;
-    document.head.appendChild(link);
-  };
-  
-  // Preload critical images
-  const preloadImage = (src: string) => {
-    const link = document.createElement('link');
-    link.rel = 'preload';
-    link.as = 'image';
-    link.href = src;
-    document.head.appendChild(link);
-  };
+  // Font and image preloading functionality can be added here when needed
   
   // Add resource hints for better performance
   const addResourceHints = () => {

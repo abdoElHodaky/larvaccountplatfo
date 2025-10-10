@@ -10,7 +10,7 @@ import { describe, it, expect } from 'vitest';
 describe('Import/Export System', () => {
     describe('Feature Pages', () => {
         it('should import all auth pages', async () => {
-            const { Login, Register, TenantSelect, ForgotPassword, ResetPassword } = await import('../features/auth/pages');
+            const { Login, Register, TenantSelect, ForgotPassword, ResetPassword } = await import('../../../features/auth/pages');
             
             expect(Login).toBeDefined();
             expect(Register).toBeDefined();
@@ -20,7 +20,7 @@ describe('Import/Export System', () => {
         });
 
         it('should import all dashboard pages', async () => {
-            const { Index } = await import('../features/dashboard/pages');
+            const { Index } = await import('../../../features/dashboard/pages');
             
             expect(Index).toBeDefined();
         });
@@ -33,7 +33,7 @@ describe('Import/Export System', () => {
                 AccountsShow,
                 TransactionsIndex,
                 JournalEntriesIndex 
-            } = await import('../features/accounting/pages');
+            } = await import('../../../features/accounting/pages');
             
             expect(Dashboard).toBeDefined();
             expect(AccountsIndex).toBeDefined();
@@ -44,20 +44,20 @@ describe('Import/Export System', () => {
         });
 
         it('should import all inventory pages', async () => {
-            const { Dashboard, ProductDetail } = await import('../features/inventory/pages');
+            const { Dashboard, ProductDetail } = await import('../../../features/inventory/pages');
             
             expect(Dashboard).toBeDefined();
             expect(ProductDetail).toBeDefined();
         });
 
         it('should import all organization pages', async () => {
-            const { Index } = await import('../features/organization/pages');
+            const { Index } = await import('../../../features/organization/pages');
             
             expect(Index).toBeDefined();
         });
 
         it('should import all sales pages', async () => {
-            const { Dashboard } = await import('../features/sales/pages');
+            const { Dashboard } = await import('../../../features/sales/pages');
             
             expect(Dashboard).toBeDefined();
         });
@@ -65,28 +65,28 @@ describe('Import/Export System', () => {
 
     describe('Feature Types', () => {
         it('should import all accounting types', async () => {
-            const accountingTypes = await import('../features/accounting/types');
+            const accountingTypes = await import('../../../features/accounting/types');
             
             expect(accountingTypes).toBeDefined();
             expect(typeof accountingTypes).toBe('object');
         });
 
         it('should import all inventory types', async () => {
-            const inventoryTypes = await import('../features/inventory/types');
+            const inventoryTypes = await import('../../../features/inventory/types');
             
             expect(inventoryTypes).toBeDefined();
             expect(typeof inventoryTypes).toBe('object');
         });
 
         it('should import all organization types', async () => {
-            const organizationTypes = await import('../features/organization/types');
+            const organizationTypes = await import('../../../features/organization/types');
             
             expect(organizationTypes).toBeDefined();
             expect(typeof organizationTypes).toBe('object');
         });
 
         it('should import all sales types', async () => {
-            const salesTypes = await import('../features/sales/types');
+            const salesTypes = await import('../../../features/sales/types');
             
             expect(salesTypes).toBeDefined();
             expect(typeof salesTypes).toBe('object');
@@ -106,7 +106,7 @@ describe('Import/Export System', () => {
                 truncateText,
                 capitalizeFirst,
                 slugify
-            } = await import('../shared/utils/formatters');
+            } = await import('../../../shared/utils/formatters');
             
             expect(formatCurrency).toBeDefined();
             expect(formatNumber).toBeDefined();
@@ -121,7 +121,7 @@ describe('Import/Export System', () => {
         });
 
         it('should import shared utilities from main index', async () => {
-            const sharedUtils = await import('../shared/utils');
+            const sharedUtils = await import('../../../shared/utils');
             
             expect(sharedUtils.formatCurrency).toBeDefined();
             expect(sharedUtils.formatNumber).toBeDefined();
@@ -138,7 +138,7 @@ describe('Import/Export System', () => {
                 SalesPages,
                 AuthPages,
                 DashboardPages
-            } = await import('../features');
+            } = await import('../../../features');
             
             expect(AccountingPages).toBeDefined();
             expect(InventoryPages).toBeDefined();
@@ -154,7 +154,7 @@ describe('Import/Export System', () => {
                 InventoryTypes,
                 OrganizationTypes,
                 SalesTypes
-            } = await import('../features');
+            } = await import('../../../features');
             
             expect(AccountingTypes).toBeDefined();
             expect(InventoryTypes).toBeDefined();
@@ -165,7 +165,7 @@ describe('Import/Export System', () => {
 
     describe('Page Registry', () => {
         it('should import page registry', async () => {
-            const { pageRegistry, resolvePage } = await import('../pages');
+            const { pageRegistry, resolvePage } = await import('../../../pages');
             
             expect(pageRegistry).toBeDefined();
             expect(resolvePage).toBeDefined();
@@ -174,7 +174,7 @@ describe('Import/Export System', () => {
         });
 
         it('should resolve auth pages correctly', async () => {
-            const { resolvePage } = await import('../pages');
+            const { resolvePage } = await import('../../../pages');
             
             const LoginPage = resolvePage('auth/Login');
             const RegisterPage = resolvePage('auth/Register');
@@ -186,7 +186,7 @@ describe('Import/Export System', () => {
         });
 
         it('should resolve dashboard pages correctly', async () => {
-            const { resolvePage } = await import('../pages');
+            const { resolvePage } = await import('../../../pages');
             
             const DashboardPage = resolvePage('dashboard/Index');
             
@@ -194,7 +194,7 @@ describe('Import/Export System', () => {
         });
 
         it('should resolve accounting pages correctly', async () => {
-            const { resolvePage } = await import('../pages');
+            const { resolvePage } = await import('../../../pages');
             
             const AccountingDashboard = resolvePage('accounting/Dashboard');
             const AccountsIndex = resolvePage('accounting/Accounts/Index');
@@ -204,7 +204,7 @@ describe('Import/Export System', () => {
         });
 
         it('should handle invalid page names gracefully', async () => {
-            const { resolvePage } = await import('../pages');
+            const { resolvePage } = await import('../../../pages');
             
             expect(() => resolvePage('invalid/page')).toThrow();
         });
