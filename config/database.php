@@ -15,9 +15,7 @@ return [
     |
     */
 
-    'default' => env('DB_CONNECTION', 
-        App\Services\FeatureFlag::shouldUseSharding() ? 'landlord' : 'mysql'
-    ),
+    'default' => env('DB_CONNECTION', 'mysql'),
 
     /*
     |--------------------------------------------------------------------------

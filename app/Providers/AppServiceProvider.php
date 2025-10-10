@@ -20,6 +20,9 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
+        // Temporarily disable complex service registrations for CI
+        // TODO: Re-enable after fixing bootstrap issues
+        
         // Register core tenant services
         // $this->registerTenantServices();
         
@@ -38,6 +41,9 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        // Temporarily disable complex service bootstrapping for CI
+        // TODO: Re-enable after fixing bootstrap issues
+        
         // Boot authentication manager
         // $this->bootAuthenticationManager();
         
