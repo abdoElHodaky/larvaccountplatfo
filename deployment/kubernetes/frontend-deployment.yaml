@@ -1,0 +1,417 @@
+# Kubernetes Deployment for Laravel Accounting Platform Frontend
+# Production-ready deployment with auto-scaling and monitoring
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: accounting-frontend
+  namespace: accounting-platform
+  labels:
+    app: accounting-frontend
+    version: v1.0.0
+    component: frontend
+    tier: presentation
+spec:
+  replicas: 3
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  selector:
+    matchLabels:
+      app: accounting-frontend
+  template:
+    metadata:
+      labels:
+        app: accounting-frontend
+        version: v1.0.0
+        component: frontend
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "9090"
+        prometheus.io/path: "/metrics"
+    spec:
+      serviceAccountName: accounting-frontend-sa
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1001
+        runAsGroup: 1001
+        fsGroup: 1001
+      containers:
+      - name: frontend
+        image: accounting-platform/frontend:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 80
+          name: http
+          protocol: TCP
+        - containerPort: 443
+          name: https
+          protocol: TCP
+        env:
+        - name: NODE_ENV
+          value: "production"
+        - name: VITE_API_URL
+          valueFrom:
+            configMapKeyRef:
+              name: frontend-config
+              key: api-url
+        - name: VITE_WEBSOCKET_URL
+          valueFrom:
+            configMapKeyRef:
+              name: frontend-config
+              key: websocket-url
+        - name: VITE_SENTRY_DSN
+          valueFrom:
+            secretKeyRef:
+              name: frontend-secrets
+              key: sentry-dsn
+        - name: VITE_ANALYTICS_KEY
+          valueFrom:
+            secretKeyRef:
+              name: frontend-secrets
+              key: analytics-key
+        resources:
+          requests:
+            memory: "128Mi"
+            cpu: "100m"
+          limits:
+            memory: "512Mi"
+            cpu: "500m"
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 80
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          timeoutSeconds: 5
+          failureThreshold: 3
+        readinessProbe:
+          httpGet:
+            path: /ready
+            port: 80
+          initialDelaySeconds: 5
+          periodSeconds: 5
+          timeoutSeconds: 3
+          failureThreshold: 3
+        volumeMounts:
+        - name: nginx-config
+          mountPath: /etc/nginx/conf.d
+          readOnly: true
+        - name: ssl-certs
+          mountPath: /etc/ssl/certs
+          readOnly: true
+        - name: cache-volume
+          mountPath: /var/cache/nginx
+        - name: log-volume
+          mountPath: /var/log/nginx
+        securityContext:
+          allowPrivilegeEscalation: false
+          readOnlyRootFilesystem: true
+          capabilities:
+            drop:
+            - ALL
+      - name: metrics-exporter
+        image: nginx/nginx-prometheus-exporter:0.10.0
+        args:
+        - -nginx.scrape-uri=http://localhost:80/nginx_status
+        ports:
+        - containerPort: 9113
+          name: metrics
+        resources:
+          requests:
+            memory: "32Mi"
+            cpu: "10m"
+          limits:
+            memory: "64Mi"
+            cpu: "50m"
+        securityContext:
+          allowPrivilegeEscalation: false
+          readOnlyRootFilesystem: true
+          capabilities:
+            drop:
+            - ALL
+      volumes:
+      - name: nginx-config
+        configMap:
+          name: nginx-config
+      - name: ssl-certs
+        secret:
+          secretName: ssl-certificates
+      - name: cache-volume
+        emptyDir: {}
+      - name: log-volume
+        emptyDir: {}
+      nodeSelector:
+        kubernetes.io/arch: amd64
+      tolerations:
+      - key: "frontend"
+        operator: "Equal"
+        value: "true"
+        effect: "NoSchedule"
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - weight: 100
+            podAffinityTerm:
+              labelSelector:
+                matchExpressions:
+                - key: app
+                  operator: In
+                  values:
+                  - accounting-frontend
+              topologyKey: kubernetes.io/hostname
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: accounting-frontend-service
+  namespace: accounting-platform
+  labels:
+    app: accounting-frontend
+    component: frontend
+  annotations:
+    service.beta.kubernetes.io/aws-load-balancer-type: "nlb"
+    service.beta.kubernetes.io/aws-load-balancer-ssl-cert: "arn:aws:acm:region:account:certificate/cert-id"
+    service.beta.kubernetes.io/aws-load-balancer-ssl-ports: "https"
+spec:
+  type: LoadBalancer
+  ports:
+  - name: http
+    port: 80
+    targetPort: 80
+    protocol: TCP
+  - name: https
+    port: 443
+    targetPort: 443
+    protocol: TCP
+  selector:
+    app: accounting-frontend
+
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: frontend-config
+  namespace: accounting-platform
+data:
+  api-url: "https://api.accounting-platform.com/api"
+  websocket-url: "wss://ws.accounting-platform.com"
+  environment: "production"
+  log-level: "info"
+  cache-ttl: "300"
+  max-file-size: "10MB"
+
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: nginx-config
+  namespace: accounting-platform
+data:
+  default.conf: |
+    upstream backend {
+        server accounting-backend-service:8000;
+        keepalive 32;
+    }
+
+    upstream websocket {
+        server accounting-websocket-service:6001;
+        keepalive 32;
+    }
+
+    server {
+        listen 80;
+        server_name _;
+        root /usr/share/nginx/html;
+        index index.html;
+
+        # Security headers
+        add_header X-Frame-Options "SAMEORIGIN" always;
+        add_header X-Content-Type-Options "nosniff" always;
+        add_header X-XSS-Protection "1; mode=block" always;
+        add_header Referrer-Policy "strict-origin-when-cross-origin" always;
+        add_header Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' data:; connect-src 'self' wss: https:;" always;
+
+        # Gzip compression
+        gzip on;
+        gzip_vary on;
+        gzip_min_length 1024;
+        gzip_types text/plain text/css text/xml text/javascript application/javascript application/xml+rss application/json;
+
+        # Cache static assets
+        location ~* \.(js|css|png|jpg|jpeg|gif|ico|svg|woff|woff2|ttf|eot)$ {
+            expires 1y;
+            add_header Cache-Control "public, immutable";
+            add_header Vary "Accept-Encoding";
+        }
+
+        # API proxy
+        location /api/ {
+            proxy_pass http://backend;
+            proxy_set_header Host $host;
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header X-Forwarded-Proto $scheme;
+            proxy_connect_timeout 30s;
+            proxy_send_timeout 30s;
+            proxy_read_timeout 30s;
+        }
+
+        # WebSocket proxy
+        location /socket.io/ {
+            proxy_pass http://websocket;
+            proxy_http_version 1.1;
+            proxy_set_header Upgrade $http_upgrade;
+            proxy_set_header Connection "upgrade";
+            proxy_set_header Host $host;
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header X-Forwarded-Proto $scheme;
+            proxy_connect_timeout 7d;
+            proxy_send_timeout 7d;
+            proxy_read_timeout 7d;
+        }
+
+        # Health check endpoint
+        location /health {
+            access_log off;
+            return 200 "healthy\n";
+            add_header Content-Type text/plain;
+        }
+
+        # Readiness check endpoint
+        location /ready {
+            access_log off;
+            return 200 "ready\n";
+            add_header Content-Type text/plain;
+        }
+
+        # Nginx status for metrics
+        location /nginx_status {
+            stub_status on;
+            access_log off;
+            allow 127.0.0.1;
+            deny all;
+        }
+
+        # SPA fallback
+        location / {
+            try_files $uri $uri/ /index.html;
+        }
+
+        # Error pages
+        error_page 404 /404.html;
+        error_page 500 502 503 504 /50x.html;
+    }
+
+---
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: accounting-frontend-hpa
+  namespace: accounting-platform
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: accounting-frontend
+  minReplicas: 3
+  maxReplicas: 10
+  metrics:
+  - type: Resource
+    resource:
+      name: cpu
+      target:
+        type: Utilization
+        averageUtilization: 70
+  - type: Resource
+    resource:
+      name: memory
+      target:
+        type: Utilization
+        averageUtilization: 80
+  behavior:
+    scaleDown:
+      stabilizationWindowSeconds: 300
+      policies:
+      - type: Percent
+        value: 10
+        periodSeconds: 60
+    scaleUp:
+      stabilizationWindowSeconds: 60
+      policies:
+      - type: Percent
+        value: 50
+        periodSeconds: 60
+
+---
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: accounting-frontend-pdb
+  namespace: accounting-platform
+spec:
+  minAvailable: 2
+  selector:
+    matchLabels:
+      app: accounting-frontend
+
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: accounting-frontend-sa
+  namespace: accounting-platform
+  annotations:
+    eks.amazonaws.com/role-arn: arn:aws:iam::ACCOUNT:role/accounting-frontend-role
+
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: accounting-frontend-netpol
+  namespace: accounting-platform
+spec:
+  podSelector:
+    matchLabels:
+      app: accounting-frontend
+  policyTypes:
+  - Ingress
+  - Egress
+  ingress:
+  - from:
+    - namespaceSelector:
+        matchLabels:
+          name: ingress-nginx
+    - podSelector:
+        matchLabels:
+          app: accounting-backend
+    ports:
+    - protocol: TCP
+      port: 80
+    - protocol: TCP
+      port: 443
+  egress:
+  - to:
+    - podSelector:
+        matchLabels:
+          app: accounting-backend
+    ports:
+    - protocol: TCP
+      port: 8000
+  - to:
+    - podSelector:
+        matchLabels:
+          app: accounting-websocket
+    ports:
+    - protocol: TCP
+      port: 6001
+  - to: []
+    ports:
+    - protocol: TCP
+      port: 53
+    - protocol: UDP
+      port: 53
