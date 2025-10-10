@@ -3,6 +3,15 @@
  * Manages feature flags for different deployment environments
  */
 
+import * as React from 'react';
+
+// Extend Window interface for deployment detection
+declare global {
+  interface Window {
+    FORGE_DEPLOYMENT?: boolean;
+  }
+}
+
 interface FeatureFlags {
   pwa: boolean;
   offlineSupport: boolean;

@@ -52,6 +52,11 @@ declare global {
   
   // Make route available as a global variable
   const route: (name: string, params?: any) => string;
+  
+  // Window interface extensions
+  interface Window {
+    FORGE_DEPLOYMENT?: boolean;
+  }
 }
 
 export {};
