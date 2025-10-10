@@ -4,7 +4,7 @@
  */
 
 import { gql, mutation } from '../../../shared/services/alova/alova.config';
-import { useRequest } from 'alova';
+import { useRequest, useAutoRequest } from 'alova/client';
 
 // TypeScript interfaces
 export interface DashboardMetric {
@@ -362,12 +362,16 @@ export function useDashboardMetrics(filters?: DashboardFilters, options?: {
   pollingInterval?: number;
   enabled?: boolean;
 }) {
-  const { data, loading, error, send } = useRequest(
+  const { data, loading, error, send } = useAutoRequest(
     () => dashboardApi.getMetrics(filters),
     {
       immediate: options?.enabled !== false,
       initialData: [],
       pollingTime: options?.pollingInterval || 30000, // 30 seconds default
+      enableVisibility: true, // Refetch when browser becomes visible
+      enableFocus: true, // Refetch when browser gets focus
+      enableNetwork: true, // Refetch when network reconnects
+      throttle: 1000, // Throttle multiple triggers within 1 second
     }
   );
 

@@ -553,12 +553,4 @@ if (typeof window !== 'undefined') {
   }
 }
 
-// Export utilities
-export {
-  DeviceDetector,
-  TouchOptimizer,
-  ResponsiveImageOptimizer,
-  MobilePerformanceOptimizer,
-  MobileUIEnhancer,
-  MobileOptimizationManager,
-};
+// Classes are already exported individually above

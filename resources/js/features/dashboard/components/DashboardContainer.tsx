@@ -14,8 +14,8 @@ import { DashboardGrid } from './DashboardGrid';
 import { DashboardMetrics } from './DashboardMetrics';
 import { DashboardHeader } from './DashboardHeader';
 import { CollaborationIndicator } from './CollaborationIndicator';
-import { LoadingSpinner } from '../../../shared/components/LoadingSpinner';
-import { ErrorFallback } from '../../../shared/components/ErrorFallback';
+import { LoadingSpinner } from '../../../shared/components/ui/LoadingSpinner';
+import { ErrorFallback } from '../../../shared/components/ui/ErrorFallback';
 
 // Types
 interface DashboardContainerProps {

@@ -42,28 +42,55 @@ export default defineConfig({
     build: {
         rollupOptions: {
             output: {
-                manualChunks: {
+                manualChunks: (id) => {
                     // Core vendor chunks
-                    vendor: ['react', 'react-dom'],
-                    inertia: ['@inertiajs/react'],
-                    
-                    // UI library chunks
-                    ui: ['@headlessui/react', '@heroicons/react'],
-                    chakra: ['@chakra-ui/react', '@emotion/react', '@emotion/styled'],
-                    motion: ['framer-motion'],
-                    
-                    // Feature-specific chunks
-                    charts: ['chart.js', 'react-chartjs-2'],
-                    utils: ['lodash', 'date-fns', 'axios'],
+                    if (id.includes('node_modules')) {
+                        if (id.includes('react') || id.includes('react-dom')) {
+                            return 'vendor';
+                        }
+                        if (id.includes('@inertiajs/react')) {
+                            return 'inertia';
+                        }
+                        if (id.includes('@headlessui/react') || id.includes('@heroicons/react')) {
+                            return 'ui';
+                        }
+                        if (id.includes('@chakra-ui/react') || id.includes('@emotion/react') || id.includes('@emotion/styled')) {
+                            return 'chakra';
+                        }
+                        if (id.includes('framer-motion')) {
+                            return 'motion';
+                        }
+                        if (id.includes('chart.js') || id.includes('react-chartjs-2')) {
+                            return 'charts';
+                        }
+                        if (id.includes('lodash') || id.includes('date-fns') || id.includes('axios')) {
+                            return 'utils';
+                        }
+                        return 'vendor';
+                    }
                     
                     // Feature chunks for better code splitting
-                    'feature-accounting': ['./resources/js/features/accounting'],
-                    'feature-dashboard': ['./resources/js/features/dashboard'],
-                    'feature-inventory': ['./resources/js/features/inventory'],
-                    'feature-sales': ['./resources/js/features/sales'],
-                    'feature-auth': ['./resources/js/features/auth'],
-                    'feature-organization': ['./resources/js/features/organization'],
-                    'feature-reporting': ['./resources/js/features/reporting'],
+                    if (id.includes('/features/accounting/')) {
+                        return 'feature-accounting';
+                    }
+                    if (id.includes('/features/dashboard/')) {
+                        return 'feature-dashboard';
+                    }
+                    if (id.includes('/features/inventory/')) {
+                        return 'feature-inventory';
+                    }
+                    if (id.includes('/features/sales/')) {
+                        return 'feature-sales';
+                    }
+                    if (id.includes('/features/auth/')) {
+                        return 'feature-auth';
+                    }
+                    if (id.includes('/features/organization/')) {
+                        return 'feature-organization';
+                    }
+                    if (id.includes('/features/reporting/')) {
+                        return 'feature-reporting';
+                    }
                 },
                 // Optimize chunk naming for better caching
                 chunkFileNames: (chunkInfo) => {

@@ -1,12 +1,9 @@
 /**
  * Advanced AlovaJS Hooks
  * Enhanced hooks with throttling, debouncing, and advanced features
- * 
- * NOTE: Most functionality is disabled because the required hooks 
- * (useRequest, useWatcher, useFetcher) don't exist in alova v3.3.4
  */
 
-// import { useRequest, useWatcher, useFetcher } from 'alova'; // These hooks don't exist in alova v3.3.4
+import { useRequest, useWatcher, useAutoRequest } from 'alova/client';
 import { useCallback, useMemo, useRef, useEffect } from 'react';
 import { alovaInstance } from '../services/graphql/apollo-client';
 import { useCurrentTenant } from '../hooks/useRematchStore';
@@ -118,4 +115,3 @@ export const useRealTimeData = () => ({
   refresh: () => {}, 
   enabled: false 
 });
-

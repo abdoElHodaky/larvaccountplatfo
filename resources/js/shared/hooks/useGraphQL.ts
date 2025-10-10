@@ -4,7 +4,7 @@
  */
 
 import { useQuery, useMutation, useSubscription, useLazyQuery } from '@apollo/client';
-// import { useRequest, useWatcher } from 'alova'; // These hooks don't exist in alova v3.3.4
+import { useRequest, useWatcher, useAutoRequest } from 'alova/client';
 import { alovaInstance } from '../services/graphql/apollo-client';
 import { useCallback, useMemo, useState } from 'react';
 import type { 

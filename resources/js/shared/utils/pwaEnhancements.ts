@@ -788,13 +788,4 @@ export class PWAEnhancementManager {
   }
 }
 
-// Export all managers and utilities
-export {
-  PWAInstallManager,
-  BackgroundSyncManager,
-  PushNotificationManager,
-  AppShortcutsManager,
-  OfflineManager,
-  PWACapabilitiesDetector,
-  PWAEnhancementManager,
-};
+// Classes are already exported individually above
