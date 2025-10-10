@@ -2,9 +2,9 @@
 
 namespace App\Features\Authentication\Auth;
 
-use App\Auth\Guards\GlobalUserGuard;
-use App\Auth\Guards\TenantUserGuard;
-use App\Auth\Providers\HybridUserProvider;
+use App\Features\Authentication\Auth\Guards\GlobalUserGuard;
+use App\Features\Authentication\Auth\Guards\TenantUserGuard;
+use App\Features\Authentication\Auth\Providers\HybridUserProvider;
 use Illuminate\Auth\AuthManager;
 use Illuminate\Contracts\Foundation\Application;
 
@@ -187,7 +187,7 @@ class TenantAwareAuthManager extends AuthManager
     /**
      * Forget all resolved guards to force re-resolution
      */
-    protected function forgetGuards(): void
+    public function forgetGuards(): void
     {
         $this->guards = [];
     }
@@ -246,4 +246,3 @@ class TenantAwareAuthManager extends AuthManager
         $guard->logout();
     }
 }
-

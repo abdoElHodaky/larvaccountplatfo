@@ -2,7 +2,7 @@
 
 namespace App\Http\Middleware;
 
-use App\Auth\TenantAwareAuthManager;
+use App\Features\Authentication\Auth\TenantAwareAuthManager;
 use Closure;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Auth\Middleware\Authenticate as Middleware;
@@ -256,4 +256,3 @@ class AuthenticateTenant extends Middleware
         }
     }
 }
-
