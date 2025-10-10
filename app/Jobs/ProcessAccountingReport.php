@@ -44,12 +44,12 @@ class ProcessAccountingReport implements ShouldQueue
             'report_id' => $this->reportId,
             'tenant_id' => $this->tenantId,
             'report_type' => $this->reportType,
-            'deployment_profile' => FeatureFlag::getCurrentProfile()
+            'deployment_profile' => $this->getCurrentProfile()
         ]);
 
         try {
             // Switch tenant context if multi-tenancy is enabled
-            if (FeatureFlag::shouldUseSharding()) {
+            if ($this->shouldUseSharding()) {
                 $this->switchTenantContext();
             }
 
@@ -76,7 +76,7 @@ class ProcessAccountingReport implements ShouldQueue
      */
     protected function configureJobSettings(): void
     {
-        $profile = FeatureFlag::getCurrentProfile();
+        $profile = $this->getCurrentProfile();
 
         switch ($profile) {
             case 'cloud':
@@ -117,11 +117,11 @@ class ProcessAccountingReport implements ShouldQueue
      */
     protected function processReport(): void
     {
-        $profile = FeatureFlag::getCurrentProfile();
+        $profile = $this->getCurrentProfile();
 
         switch ($this->reportType) {
             case 'advanced':
-                if (FeatureFlag::shouldUseAdvancedReporting()) {
+                if ($this->shouldUseAdvancedReporting()) {
                     $this->processAdvancedReport();
                 } else {
                     $this->processBasicReport();
@@ -129,7 +129,7 @@ class ProcessAccountingReport implements ShouldQueue
                 break;
 
             case 'real-time':
-                if (FeatureFlag::enabled('real_time_financial_updates')) {
+                if ($this->isFeatureEnabled('real_time_financial_updates')) {
                     $this->processRealTimeReport();
                 } else {
                     $this->processStandardReport();
@@ -228,7 +228,7 @@ class ProcessAccountingReport implements ShouldQueue
      */
     protected function createVisualizationData(): void
     {
-        if (FeatureFlag::enabled('advanced_reporting')) {
+        if ($this->isFeatureEnabled('advanced_reporting')) {
             Log::debug("Creating visualization data");
             // Generate charts, graphs, etc.
         }
@@ -239,7 +239,7 @@ class ProcessAccountingReport implements ShouldQueue
      */
     protected function sendNotifications(): void
     {
-        if (FeatureFlag::enabled('email_reports')) {
+        if ($this->isFeatureEnabled('email_reports')) {
             Log::debug("Sending report notifications");
             // Send email notifications
         }
@@ -259,7 +259,7 @@ class ProcessAccountingReport implements ShouldQueue
      */
     protected function broadcastUpdates(): void
     {
-        if (FeatureFlag::enabled('real_time_financial_updates')) {
+        if ($this->isFeatureEnabled('real_time_financial_updates')) {
             Log::debug("Broadcasting real-time updates");
             // Broadcast to connected clients
         }
@@ -274,12 +274,98 @@ class ProcessAccountingReport implements ShouldQueue
             'report_id' => $this->reportId,
             'tenant_id' => $this->tenantId,
             'error' => $exception->getMessage(),
-            'deployment_profile' => FeatureFlag::getCurrentProfile()
+            'deployment_profile' => $this->getCurrentProfile()
         ]);
 
         // Send failure notification if enabled
-        if (FeatureFlag::enabled('email_reports')) {
+        if ($this->isFeatureEnabled('email_reports')) {
             // Send failure notification
         }
+    }
+
+    /**
+     * Check if sharding should be used (safe version)
+     */
+    protected function shouldUseSharding(): bool
+    {
+        if (!class_exists(FeatureFlag::class)) {
+            return config('features.sharding', false);
+        }
+
+        try {
+            return FeatureFlag::shouldUseSharding();
+        } catch (\Exception $e) {
+            return config('features.sharding', false);
+        }
+    }
+
+    /**
+     * Check if advanced reporting should be used (safe version)
+     */
+    protected function shouldUseAdvancedReporting(): bool
+    {
+        if (!class_exists(FeatureFlag::class)) {
+            return config('features.advanced_reporting', false);
+        }
+
+        try {
+            return FeatureFlag::shouldUseAdvancedReporting();
+        } catch (\Exception $e) {
+            return config('features.advanced_reporting', false);
+        }
+    }
+
+    /**
+     * Check if a feature is enabled (safe version)
+     */
+    protected function isFeatureEnabled(string $feature): bool
+    {
+        if (!class_exists(FeatureFlag::class)) {
+            return config("features.{$feature}", false);
+        }
+
+        try {
+            return FeatureFlag::enabled($feature);
+        } catch (\Exception $e) {
+            return config("features.{$feature}", false);
+        }
+    }
+
+    /**
+     * Get current deployment profile (safe version)
+     */
+    protected function getCurrentProfile(): string
+    {
+        if (!class_exists(FeatureFlag::class)) {
+            return $this->detectProfileFromEnvironment();
+        }
+
+        try {
+            return FeatureFlag::getCurrentProfile();
+        } catch (\Exception $e) {
+            return $this->detectProfileFromEnvironment();
+        }
+    }
+
+    /**
+     * Detect deployment profile from environment variables
+     */
+    protected function detectProfileFromEnvironment(): string
+    {
+        $env = config('app.env', 'local');
+        
+        if (str_contains(config('app.url', ''), 'laravel.cloud')) {
+            return 'cloud';
+        }
+        
+        if (env('FORGE_DEPLOYMENT', false)) {
+            return 'forge';
+        }
+        
+        if ($env === 'production') {
+            return 'enterprise';
+        }
+        
+        return 'enterprise'; // Default to full features for development
     }
 }

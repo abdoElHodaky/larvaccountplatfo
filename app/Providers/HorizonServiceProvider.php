@@ -17,7 +17,7 @@ class HorizonServiceProvider extends HorizonApplicationServiceProvider
         parent::boot();
 
         // Only configure Horizon if it's enabled for this deployment
-        if (!FeatureFlag::shouldUseHorizon()) {
+        if (!$this->shouldUseHorizon()) {
             return;
         }
 
@@ -47,7 +47,7 @@ class HorizonServiceProvider extends HorizonApplicationServiceProvider
             }
 
             // For cloud deployment, disable Horizon dashboard
-            if (FeatureFlag::getCurrentProfile() === 'cloud') {
+            if ($this->getCurrentProfile() === 'cloud') {
                 return false;
             }
 
@@ -64,7 +64,7 @@ class HorizonServiceProvider extends HorizonApplicationServiceProvider
      */
     protected function configureEnvironment(): void
     {
-        $profile = FeatureFlag::getCurrentProfile();
+        $profile = $this->getCurrentProfile();
         
         // Set the appropriate environment configuration
         switch ($profile) {
@@ -144,7 +144,7 @@ class HorizonServiceProvider extends HorizonApplicationServiceProvider
         parent::register();
 
         // Only register Horizon if it's enabled
-        if (!FeatureFlag::shouldUseHorizon()) {
+        if (!$this->shouldUseHorizon()) {
             return;
         }
 
@@ -157,7 +157,7 @@ class HorizonServiceProvider extends HorizonApplicationServiceProvider
      */
     protected function configureHorizonForDeployment(): void
     {
-        $profile = FeatureFlag::getCurrentProfile();
+        $profile = $this->getCurrentProfile();
 
         // Configure Horizon path based on deployment
         if ($profile === 'forge') {
@@ -174,5 +174,65 @@ class HorizonServiceProvider extends HorizonApplicationServiceProvider
         if (app()->environment('production')) {
             config(['horizon.fast_termination' => true]);
         }
+    }
+
+    /**
+     * Check if Horizon should be used (safe version that doesn't depend on FeatureFlag during bootstrap)
+     */
+    protected function shouldUseHorizon(): bool
+    {
+        // During bootstrap, we can't use FeatureFlag service yet
+        // So we'll use a simple environment check
+        if (!class_exists(FeatureFlag::class)) {
+            return config('features.horizon', true);
+        }
+
+        try {
+            return FeatureFlag::shouldUseHorizon();
+        } catch (\Exception $e) {
+            // Fallback to config if FeatureFlag fails
+            return config('features.horizon', true);
+        }
+    }
+
+    /**
+     * Get current deployment profile (safe version)
+     */
+    protected function getCurrentProfile(): string
+    {
+        // During bootstrap, we can't use FeatureFlag service yet
+        if (!class_exists(FeatureFlag::class)) {
+            return $this->detectProfileFromEnvironment();
+        }
+
+        try {
+            return FeatureFlag::getCurrentProfile();
+        } catch (\Exception $e) {
+            // Fallback to environment detection
+            return $this->detectProfileFromEnvironment();
+        }
+    }
+
+    /**
+     * Detect deployment profile from environment variables
+     */
+    protected function detectProfileFromEnvironment(): string
+    {
+        $env = config('app.env', 'local');
+        
+        // Detect deployment type based on URL or environment variables
+        if (str_contains(config('app.url', ''), 'laravel.cloud')) {
+            return 'cloud';
+        }
+        
+        if (env('FORGE_DEPLOYMENT', false)) {
+            return 'forge';
+        }
+        
+        if ($env === 'production') {
+            return 'enterprise';
+        }
+        
+        return 'enterprise'; // Default to full features for development
     }
 }

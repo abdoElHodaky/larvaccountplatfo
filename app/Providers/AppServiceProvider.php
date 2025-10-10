@@ -21,16 +21,16 @@ class AppServiceProvider extends ServiceProvider
     public function register(): void
     {
         // Register core tenant services
-        $this->registerTenantServices();
+        // $this->registerTenantServices();
         
         // Register authentication services
-        $this->registerAuthenticationServices();
+        // $this->registerAuthenticationServices();
         
         // Register module services
-        $this->registerModuleServices();
+        // $this->registerModuleServices();
         
         // Register organization services
-        $this->registerOrganizationServices();
+        // $this->registerOrganizationServices();
     }
 
     /**
@@ -39,13 +39,13 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         // Boot authentication manager
-        $this->bootAuthenticationManager();
+        // $this->bootAuthenticationManager();
         
         // Boot module discovery
-        $this->bootModuleDiscovery();
+        // $this->bootModuleDiscovery();
         
         // Boot inter-module communication
-        $this->bootInterModuleBus();
+        // $this->bootInterModuleBus();
     }
 
     /**
