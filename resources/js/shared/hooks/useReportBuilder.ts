@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useMemo, useRef, useEffect } from 'react';
+import React, { useState, useCallback as _useCallback, useMemo as _useMemo, useRef as _useRef, useEffect as _useEffect } from 'react';
 import { useMemoizedCallback } from '@/shared/hooks';
 
 /**

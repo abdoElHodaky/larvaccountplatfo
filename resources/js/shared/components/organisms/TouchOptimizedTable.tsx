@@ -130,7 +130,7 @@ export const TouchOptimizedTable: React.FC<TouchOptimizedTableProps> = memo(({
   }, [columns, isMobile, compactMode]);
 
   // Touch handlers for swipe gestures
-  const handleTouchStart = useMemoizedCallback((e: React.TouchEvent, rowId: string) => {
+  const handleTouchStart = useMemoizedCallback((e: React.TouchEvent, _rowId: string) => {
     if (!enableSwipeActions) return;
     
     const touch = e.touches[0];
@@ -301,7 +301,7 @@ export const TouchOptimizedTable: React.FC<TouchOptimizedTableProps> = memo(({
           transform={isSwipedRow ? 'translateX(80px)' : 'translateX(0)'}
           transition="transform 0.2s ease"
         >
-          {mobileColumns.map((column, colIndex) => (
+          {mobileColumns.map((column, _colIndex) => (
             <HStack key={column.key} justify="space-between" align="flex-start">
               <Text fontSize="sm" color="gray.500" fontWeight="medium" minW="80px">
                 {column.label}:

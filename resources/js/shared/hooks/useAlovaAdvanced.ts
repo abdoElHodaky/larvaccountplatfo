@@ -4,12 +4,12 @@
  */
 
 import { useRequest as _useRequest, useWatcher as _useWatcher, useAutoRequest as _useAutoRequest } from 'alova/client';
-import { useCallback, useMemo, useRef, useEffect } from 'react';
-import { alovaInstance } from '../services/graphql/apollo-client';
-import { useCurrentTenant } from '../hooks/useRematchStore';
+import { useCallback as _useCallback, useMemo as _useMemo, useRef as _useRef, useEffect as _useEffect } from 'react';
+import { alovaInstance as _alovaInstance } from '../services/graphql/apollo-client';
+import { useCurrentTenant as _useCurrentTenant } from '../hooks/useRematchStore';
 
 // Types
-interface UseAdvancedRequestOptions {
+interface _UseAdvancedRequestOptions {
   throttle?: number;
   debounce?: number;
   cache?: boolean | number;
@@ -20,13 +20,13 @@ interface UseAdvancedRequestOptions {
   force?: boolean;
 }
 
-interface UseInfiniteScrollOptions {
+interface _UseInfiniteScrollOptions {
   pageSize?: number;
   threshold?: number;
   enabled?: boolean;
 }
 
-interface UsePaginationOptions {
+interface _UsePaginationOptions {
   pageSize?: number;
   initialPage?: number;
   enabled?: boolean;

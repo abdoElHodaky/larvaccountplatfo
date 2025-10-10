@@ -230,7 +230,7 @@ export function useCollaborativeDocument<T>(
 
   // Apply change to data structure
   const applyChange = useCallback((data: T, change: CollaborationChange): T => {
-    const { type, path, newValue, oldValue } = change;
+    const { type, path, newValue, oldValue: _oldValue } = change;
     const pathArray = path.split('.');
     
     switch (type) {
@@ -427,7 +427,7 @@ export function useCollaborationSessions(organizationId?: number) {
     if (!isConnected || !orgId) return;
 
     // Join organization collaboration room
-    const room = `collab:org:${orgId}`;
+    const _room = `collab:org:${orgId}`;
     
     // Request current sessions
     emit('collaboration:get_sessions', { organizationId: orgId });
