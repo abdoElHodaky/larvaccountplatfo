@@ -3,7 +3,7 @@
  * Enhanced hooks with throttling, debouncing, and advanced features
  */
 
-import { useRequest, useWatcher, useAutoRequest } from 'alova/client';
+import { useRequest as _useRequest, useWatcher as _useWatcher, useAutoRequest as _useAutoRequest } from 'alova/client';
 import { useCallback, useMemo, useRef, useEffect } from 'react';
 import { alovaInstance } from '../services/graphql/apollo-client';
 import { useCurrentTenant } from '../hooks/useRematchStore';
