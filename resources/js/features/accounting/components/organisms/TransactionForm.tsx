@@ -42,7 +42,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
     notes: initialData.notes || ''
   });
 
-  const [errors, setErrors] = useState<Partial<TransactionFormData>>({});
+  const [errors, setErrors] = useState<Record<string, string>>({});
 
   const accounts = [
     'Cash',

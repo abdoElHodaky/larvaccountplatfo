@@ -545,7 +545,7 @@ export function useAccounts(filters?: Filters, options?: {
     () => accountingApi.getAccounts(filters),
     {
       immediate: options?.enabled !== false,
-      initialData: [],
+      initialData: { data: { accounts: [] } },
     }
   );
 
@@ -565,7 +565,7 @@ export function useChartOfAccounts(organizationId: number, options?: {
     () => accountingApi.getChartOfAccounts(organizationId),
     {
       immediate: options?.enabled !== false && !!organizationId,
-      initialData: [],
+      initialData: { data: { chartOfAccounts: [] } },
     }
   );
 

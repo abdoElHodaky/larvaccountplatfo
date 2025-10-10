@@ -140,7 +140,7 @@ export const AccountingDashboard: React.FC<AccountingDashboardProps> = ({
   // Collaboration hooks for selected account
   const {
     collaborators: accountCollaborators,
-    updateData: updateCollaborativeAccount,
+    updateData: _updateCollaborativeAccount,
     isLocked: accountLocked,
   } = useCollaborativeAccount(selectedAccountId || '');
 

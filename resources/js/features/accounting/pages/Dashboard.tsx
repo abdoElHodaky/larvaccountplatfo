@@ -1,4 +1,4 @@
-import React from 'react';
+// import React from 'react'; // Not needed with new JSX transform
 import { Head } from '@inertiajs/react';
 import AppLayout from '@/shared/components/layouts/AppLayout';
 import { formatCurrency, formatDate } from '@/shared/utils';

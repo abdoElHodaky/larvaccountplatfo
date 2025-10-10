@@ -59,7 +59,7 @@ export function useChartOfAccounts(accountType?: string) {
 
   // Organize accounts by type
   const accountsByType = useMemo(() => {
-    const organized = {
+    const organized: Record<string, any[]> = {
       assets: [],
       liabilities: [],
       equity: [],
