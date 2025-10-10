@@ -21,18 +21,30 @@
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true,
 
-    /* Path mapping */
+    /* Path mapping - Phase 9 Unified Structure */
     "baseUrl": ".",
     "paths": {
       "@/*": ["resources/js/*"],
-      "@/shared/*": ["resources/js/shared/*"],
-      "@/features/*": ["resources/js/features/*"],
       "@/app/*": ["resources/js/app/*"],
+      "@/features/*": ["resources/js/features/*"],
+      "@/shared/*": ["resources/js/shared/*"],
+      "@/assets/*": ["resources/js/assets/*"],
+      "@/types/*": ["resources/js/types/*"],
+      "@/utils/*": ["resources/js/utils/*"],
+      
+      // Specific path shortcuts for common imports
+      "@/components/*": ["resources/js/shared/components/*"],
+      "@/hooks/*": ["resources/js/shared/hooks/*"],
+      "@/services/*": ["resources/js/shared/services/*"],
+      "@/api/*": ["resources/js/shared/services/api/*"],
+      "@/theme/*": ["resources/js/shared/theme/*"],
+      "@/providers/*": ["resources/js/app/providers/*"],
+      
+      // Legacy paths for backward compatibility (deprecated)
       "@/Components/*": ["resources/js/Components/*"],
       "@/Layouts/*": ["resources/js/Layouts/*"],
       "@/Pages/*": ["resources/js/Pages/*"],
-      "@/Providers/*": ["resources/js/Providers/*"],
-      "@/theme/*": ["resources/js/theme/*"]
+      "@/Providers/*": ["resources/js/Providers/*"]
     },
 
     /* Additional options */
