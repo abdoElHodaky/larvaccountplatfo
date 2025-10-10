@@ -175,8 +175,8 @@ export class GraphQLClient {
    */
   public subscribe<T = any>(
     subscription: string,
-    variables?: Record<string, any>,
-    callbacks?: {
+    _variables?: Record<string, any>,
+    _callbacks?: {
       onData?: (data: T) => void;
       onError?: (error: any) => void;
       onComplete?: () => void;
@@ -247,7 +247,7 @@ export class GraphQLClient {
   /**
    * Add query to batch queue
    */
-  private addToBatch<T>(query: GraphQLQuery, cacheKey: string | null): Promise<GraphQLResponse<T>> {
+  private addToBatch<T>(query: GraphQLQuery, _cacheKey: string | null): Promise<GraphQLResponse<T>> {
     return new Promise((resolve, reject) => {
       this.batchQueue.push({
         query,

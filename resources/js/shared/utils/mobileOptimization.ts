@@ -127,7 +127,7 @@ export class TouchOptimizer {
    * Optimize touch events for better responsiveness
    */
   static optimizeTouchEvents(element: HTMLElement): () => void {
-    const handleTouchStart = (e: TouchEvent) => {
+    const handleTouchStart = (_e: TouchEvent) => {
       TouchOptimizer.touchStartTime = Date.now();
       TouchOptimizer.touchMoved = false;
       
