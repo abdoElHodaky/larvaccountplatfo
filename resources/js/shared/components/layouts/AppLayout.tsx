@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { usePage } from '@inertiajs/react';
+
 import Sidebar from '@/shared/components/organisms/Sidebar';
 import TopBar from '@/shared/components/organisms/TopBar';
 

@@ -79,7 +79,7 @@ export const CollaborativeEditor: React.FC<CollaborativeEditorProps> = memo(({
 
   const editorRef = useRef<HTMLDivElement>(null);
   const typingTimeoutRef = useRef<NodeJS.Timeout | null>(null);
-  const operationQueueRef = useRef<EditOperation[]>([]);
+  const _operationQueueRef = useRef<EditOperation[]>([]);
 
   // Memoized color values
   const bgColor = useColorModeValue('white', 'gray.800');
@@ -177,7 +177,7 @@ export const CollaborativeEditor: React.FC<CollaborativeEditorProps> = memo(({
     // Typing indicator
     unsubscribers.push(
       subscribe('document.typing', (message) => {
-        const { userId, isTyping } = message.payload;
+        const { userId, isTyping: _isTyping } = message.payload;
         
         if (userId !== currentUserId) {
           setCollaborators(prev =>
