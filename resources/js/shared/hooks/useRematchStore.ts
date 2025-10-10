@@ -116,7 +116,7 @@ export const useBreadcrumbs = () => {
 // Accounting hooks (replacing financial)
 export const useAccounting = () => {
   const accounting = useAppSelector(state => state.accounting);
-  const dispatch = useAppDispatch();
+  const _dispatch = useAppDispatch();
   
   return {
     ...accounting,

@@ -526,7 +526,7 @@ function deleteNestedProperty(obj: any, path: string[]): any {
       const index = parseInt(path[0]);
       return [...obj.slice(0, index), ...obj.slice(index + 1)];
     } else {
-      const { [path[0]]: deleted, ...rest } = obj;
+      const { [path[0]]: _deleted, ...rest } = obj;
       return rest;
     }
   }
@@ -538,7 +538,7 @@ function deleteNestedProperty(obj: any, path: string[]): any {
   };
 }
 
-function moveNestedProperty(obj: any, path: string[], newPath: string): any {
+function moveNestedProperty(obj: any, _path: string[], _newPath: string): any {
   // Implementation for moving properties
   // This would be more complex and depend on the specific use case
   return obj;
