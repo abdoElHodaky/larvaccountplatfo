@@ -12,19 +12,40 @@ import { PerformanceAnalyticsDashboard } from './shared/utils/performanceAnalyti
 
 const appName = (import.meta as any).env?.VITE_APP_NAME || 'Laravel Accounting Platform';
 
-// Enhanced page resolver with lazy loading and preloading
-const resolvePageWithLazyLoading = async (name: string) => {
-  const pages = (import.meta as any).glob('./features/**/*.tsx');
+// Enhanced page resolver with Phase 6 optimizations
+const resolvePageWithEnhancements = async (name: string) => {
+  // Import enhanced page registry
+  const { enhancedPageRegistry, getPageComponent, getPageMetadata } = await import('@/shared/services/inertia/PageRegistry');
   
-  // Resolve the current page
-  const page = await resolvePageComponent(`./features/${name}.tsx`, pages);
-  
-  // Preload likely next pages based on current route
-  setTimeout(() => {
-    routePreloader.preloadLikelyRoutes(name, pages);
-  }, 100);
-  
-  return page;
+  try {
+    // Get page component from enhanced registry
+    const pageComponent = getPageComponent(name as any);
+    const metadata = getPageMetadata(name as any);
+    
+    // Load the component
+    const component = await pageComponent();
+    
+    // Preload related pages based on metadata
+    if (metadata.preload) {
+      setTimeout(() => {
+        metadata.preload?.forEach(async (preloadPage) => {
+          try {
+            const preloadComponent = getPageComponent(preloadPage as any);
+            preloadComponent(); // Start loading but don't await
+          } catch (error) {
+            console.warn(`Failed to preload page: ${preloadPage}`, error);
+          }
+        });
+      }, 100);
+    }
+    
+    return component;
+  } catch (error) {
+    // Fallback to original resolver
+    console.warn(`Enhanced resolver failed for ${name}, falling back to original`, error);
+    const pages = (import.meta as any).glob('./features/**/*.tsx');
+    return await resolvePageComponent(`./features/${name}.tsx`, pages);
+  }
 };
 
 // Performance monitoring
@@ -63,7 +84,7 @@ const performanceObserver = {
 
 createInertiaApp({
     title: (title) => `${title} - ${appName}`,
-    resolve: resolvePageWithLazyLoading,
+    resolve: resolvePageWithEnhancements,
     setup({ el, App, props }) {
         const root = createRoot(el);
         const pageName = props.initialPage?.component || 'unknown';
