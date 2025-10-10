@@ -38,7 +38,7 @@ class DatabaseSeeder extends Seeder
             $this->call([
                 // Add module seeders here when they're created
                 // OrganizationSeeder::class,
-                // AccountingSeeder::class,
+                AccountingSeeder::class,
                 // InventorySeeder::class,
             ]);
         }
