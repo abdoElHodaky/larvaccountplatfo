@@ -181,6 +181,11 @@ return [
          * GraphQL Service Provider...
          */
         App\Providers\GraphQLServiceProvider::class,
+
+        /*
+         * Horizon Service Provider...
+         */
+        App\Providers\HorizonServiceProvider::class,
     ])->toArray(),
 
     /*
