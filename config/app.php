@@ -171,21 +171,24 @@ return [
 
         /*
          * Feature Service Providers...
+         * Temporarily disabled for CI
          */
-        App\Features\Accounting\Providers\AccountingServiceProvider::class,
-        App\Features\Inventory\Providers\InventoryServiceProvider::class,
-        App\Features\Sales\Providers\SalesServiceProvider::class,
-        App\Features\Organization\Providers\OrganizationServiceProvider::class,
+        // App\Features\Accounting\Providers\AccountingServiceProvider::class,
+        // App\Features\Inventory\Providers\InventoryServiceProvider::class,
+        // App\Features\Sales\Providers\SalesServiceProvider::class,
+        // App\Features\Organization\Providers\OrganizationServiceProvider::class,
 
         /*
          * GraphQL Service Provider...
+         * Temporarily disabled for CI
          */
-        App\Providers\GraphQLServiceProvider::class,
+        // App\Providers\GraphQLServiceProvider::class,
 
         /*
          * Horizon Service Provider...
+         * Temporarily disabled for CI
          */
-        App\Providers\HorizonServiceProvider::class,
+        // App\Providers\HorizonServiceProvider::class,
     ])->toArray(),
 
     /*
