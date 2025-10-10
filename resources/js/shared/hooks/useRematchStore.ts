@@ -127,7 +127,7 @@ export const useAccounting = () => {
 // Inventory hooks
 export const useInventory = () => {
   const inventory = useAppSelector(state => state.inventory);
-  const dispatch = useAppDispatch();
+  const _dispatch = useAppDispatch();
   
   return {
     ...inventory,
@@ -138,7 +138,7 @@ export const useInventory = () => {
 // Dashboard hooks
 export const useDashboard = () => {
   const dashboard = useAppSelector(state => state.dashboard);
-  const dispatch = useAppDispatch();
+  const _dispatch = useAppDispatch();
   
   return {
     ...dashboard,
@@ -193,7 +193,7 @@ export const useAppActions = () => {
 };
 
 export const useAccountingActions = () => {
-  const dispatch = useAppDispatch();
+  const _dispatch = useAppDispatch();
   
   return {
     // Add accounting actions here when they're implemented
@@ -201,7 +201,7 @@ export const useAccountingActions = () => {
 };
 
 export const useInventoryActions = () => {
-  const dispatch = useAppDispatch();
+  const _dispatch = useAppDispatch();
   
   return {
     // Add inventory actions here when they're implemented
@@ -209,7 +209,7 @@ export const useInventoryActions = () => {
 };
 
 export const useDashboardActions = () => {
-  const dispatch = useAppDispatch();
+  const _dispatch = useAppDispatch();
   
   return {
     // Add dashboard actions here when they're implemented
