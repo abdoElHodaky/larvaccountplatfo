@@ -1,16 +1,89 @@
 # 🚀 Short-Term Improvement Plan (Next 30 Days)
 
-> **Strategic roadmap for immediate performance and feature enhancements**
+> **Strategic roadmap for immediate performance, organizational, and feature enhancements**
 
 ## 📋 **Executive Summary**
 
-This plan outlines critical improvements to be implemented over the next 30 days to enhance performance, user experience, and system reliability. All improvements are designed to be backward-compatible and can be implemented incrementally.
+This plan outlines critical improvements to be implemented over the next 30 days to enhance performance, code organization, user experience, and system reliability. All improvements are designed to be backward-compatible and can be implemented incrementally.
+
+## 🏗️ **NEW: Backend & Frontend Reorganization Priority**
+
+**CRITICAL**: Based on recent analysis, significant backend and frontend reorganization is needed before performance optimizations. See detailed analysis in `BACKEND_FRONTEND_REORGANIZATION_ANALYSIS.md`.
+
+### **Immediate Reorganization Needs:**
+- **29+ documentation files** cluttering root directory
+- **Empty placeholder features** (purchase, system, tenantManagement) 
+- **Incomplete backend features** missing core components
+- **Legacy HTTP controllers** duplicating feature-based structure
+- **Inconsistent component migration** from shared to features
+- **Test organization** needs standardization
 
 ---
 
-## 🎯 **Phase 1: Performance Optimization (Days 1-10)**
+## 🏗️ **Phase 0: Code Organization & Cleanup (Days 1-7)**
 
-### **Week 1: Frontend Performance**
+### **Week 1: Critical Reorganization**
+
+#### **📁 Priority 1: Documentation Organization**
+- **Objective**: Clean up root directory and organize documentation
+- **Tasks**:
+  - [ ] Create `/docs` directory structure (architecture, implementation, deployment, analysis)
+  - [ ] Move 29+ documentation files to appropriate subdirectories
+  - [ ] Update README.md with new documentation structure
+  - [ ] Create documentation index for easy navigation
+- **Expected Impact**: Cleaner project structure, easier navigation
+- **Effort**: 1 day
+- **Assignee**: DevOps/Documentation Team
+
+#### **🗑️ Priority 2: Remove Empty Placeholder Features**
+- **Objective**: Clean up incomplete/empty feature modules
+- **Tasks**:
+  - [ ] Remove empty frontend features (purchase, system, tenantManagement)
+  - [ ] Update feature index files to remove references
+  - [ ] Clean up routing configurations
+  - [ ] Update build configurations if needed
+- **Expected Impact**: Reduced bundle size, cleaner codebase
+- **Effort**: 0.5 days
+- **Assignee**: Frontend Team
+
+#### **🔧 Priority 3: Backend Feature Standardization**
+- **Objective**: Complete or remove incomplete backend features
+- **Tasks**:
+  - [ ] Audit incomplete features (Purchase, System, Dashboard, Reporting)
+  - [ ] Either complete missing components or remove features
+  - [ ] Migrate legacy HTTP controllers to feature-based structure
+  - [ ] Standardize feature module structure across all features
+- **Expected Impact**: Consistent architecture, easier maintenance
+- **Effort**: 2 days
+- **Assignee**: Backend Team
+
+#### **🧪 Priority 4: Test Organization Standardization**
+- **Objective**: Organize tests consistently across features
+- **Tasks**:
+  - [ ] Fix inconsistent naming (Components vs components)
+  - [ ] Create feature-specific test directories
+  - [ ] Move shared tests to appropriate locations
+  - [ ] Update test configurations and imports
+- **Expected Impact**: Better test organization, easier test maintenance
+- **Effort**: 1 day
+- **Assignee**: QA/Development Team
+
+#### **📦 Priority 5: Component Migration Completion**
+- **Objective**: Complete migration from shared to feature-specific components
+- **Tasks**:
+  - [ ] Audit shared components for feature-specific candidates
+  - [ ] Move appropriate components to feature directories
+  - [ ] Update import paths across the application
+  - [ ] Ensure only truly shared components remain in shared/
+- **Expected Impact**: Better component organization, clearer boundaries
+- **Effort**: 1.5 days
+- **Assignee**: Frontend Team
+
+---
+
+## 🎯 **Phase 1: Performance Optimization (Days 8-17)**
+
+### **Week 2: Frontend Performance**
 
 #### **🚀 Priority 1: Inertia.js SSR Optimization**
 - **Objective**: Reduce initial load time from 2.5s to <2s
@@ -34,7 +107,7 @@ This plan outlines critical improvements to be implemented over the next 30 days
 - **Effort**: 2 days
 - **Assignee**: Frontend Team
 
-### **Week 2: Backend Performance**
+### **Week 3: Backend Performance**
 
 #### **⚡ Priority 3: Cache Hit Rate Optimization**
 - **Objective**: Increase cache hit rate from 75% to >85%
@@ -60,9 +133,9 @@ This plan outlines critical improvements to be implemented over the next 30 days
 
 ---
 
-## 🌐 **Phase 2: Real-time Infrastructure (Days 11-20)**
+## 🌐 **Phase 2: Real-time Infrastructure (Days 18-27)**
 
-### **Week 3: WebSocket Optimization**
+### **Week 4: WebSocket Optimization**
 
 #### **🔄 Priority 5: Connection Management**
 - **Objective**: Support 15,000+ concurrent WebSocket connections
@@ -86,7 +159,7 @@ This plan outlines critical improvements to be implemented over the next 30 days
 - **Effort**: 3 days
 - **Assignee**: Infrastructure Team
 
-### **Week 4: Multi-Tenant Scaling**
+### **Week 5: Multi-Tenant Scaling**
 
 #### **🏢 Priority 7: Tenant Isolation Optimization**
 - **Objective**: Zero-impact tenant isolation
@@ -101,9 +174,9 @@ This plan outlines critical improvements to be implemented over the next 30 days
 
 ---
 
-## 🔧 **Phase 3: Feature Enhancements (Days 21-30)**
+## 🔧 **Phase 3: Feature Enhancements (Days 28-35)**
 
-### **Week 5: User Experience**
+### **Week 6: User Experience**
 
 #### **📱 Priority 8: Mobile Optimization**
 - **Objective**: Achieve 95+ Lighthouse mobile score
