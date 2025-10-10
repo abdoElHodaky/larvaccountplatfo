@@ -10,7 +10,6 @@ import {
   Grid,
   GridItem,
   Divider,
-  Flex,
   Spacer,
   Badge,
 } from '@chakra-ui/react';

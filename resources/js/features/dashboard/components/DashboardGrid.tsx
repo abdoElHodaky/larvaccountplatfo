@@ -3,7 +3,7 @@
  * Responsive grid layout for dashboard widgets
  */
 
-import React, { useState, useCallback, useMemo } from 'react';
+import React, { useCallback, useMemo } from 'react';
 
 // Types
 interface DashboardWidget {
@@ -33,8 +33,8 @@ interface DashboardGridProps {
 
 export const DashboardGrid: React.FC<DashboardGridProps> = ({
   widgets,
-  onWidgetMove,
-  onWidgetResize,
+  onWidgetMove: _onWidgetMove,
+  onWidgetResize: _onWidgetResize,
   onWidgetRemove,
   isEditable = false,
   className = ''
@@ -50,7 +50,7 @@ export const DashboardGrid: React.FC<DashboardGridProps> = ({
   }, [widgets]);
 
   // Render widget content
-  const renderWidget = useCallback((widget: DashboardWidget, index: number) => {
+  const renderWidget = useCallback((widget: DashboardWidget, _index: number) => {
     const WidgetComponent = widget.component;
     
     return (

@@ -4,7 +4,7 @@
  */
 
 import { gql, mutation } from '../../../shared/services/alova/alova.config';
-import { useRequest, useAutoRequest } from 'alova/client';
+import { useRequest } from 'alova/client';
 
 // TypeScript interfaces
 export interface Account {

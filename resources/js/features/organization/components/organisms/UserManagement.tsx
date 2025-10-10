@@ -13,7 +13,6 @@ import {
   IconButton,
   Badge,
   Avatar,
-  useColorModeValue,
   Modal,
   ModalOverlay,
   ModalContent,
@@ -108,8 +107,7 @@ export const UserManagement = memo<UserManagementProps>(({
   const { isOpen: isEditOpen, onOpen: onEditOpen, onClose: onEditClose } = useDisclosure();
   const toast = useToast();
 
-  const bgColor = useColorModeValue('white', 'gray.800');
-  const borderColor = useColorModeValue('gray.200', 'gray.600');
+
 
   const handleCreateUser = useMemoizedCallback(async () => {
     if (!onUserCreate) return;
@@ -182,7 +180,7 @@ export const UserManagement = memo<UserManagementProps>(({
     }
   }, [onUserDelete, toast]);
 
-  const handleRoleChange = useMemoizedCallback(async (userId: string, newRole: User['role']) => {
+  const _handleRoleChange = useMemoizedCallback(async (userId: string, newRole: User['role']) => {
     if (!onRoleChange) return;
     
     try {

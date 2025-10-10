@@ -1,18 +1,15 @@
-import React, { Fragment, memo, useMemo, useCallback, useState } from 'react';
+import React, { Fragment, memo, useMemo, useState } from 'react';
 import {
   Box,
   VStack,
   HStack,
   Text,
-  Button,
   IconButton,
   useColorModeValue,
-  Grid,
-  GridItem,
 } from '@chakra-ui/react';
 import { Responsive, WidthProvider } from 'react-grid-layout';
 import { useDrop } from 'react-dnd';
-import { CardContainer } from '@/shared/components/molecules/Container';
+
 import { useMemoizedCallback } from '@/shared/hooks';
 import 'react-grid-layout/css/styles.css';
 import 'react-resizable/css/styles.css';
@@ -66,7 +63,7 @@ export const ReportCanvas: React.FC<ReportCanvasProps> = memo(({
   margin = [10, 10],
   containerPadding = [10, 10],
 }) => {
-  const [draggedItem, setDraggedItem] = useState<any>(null);
+  const [_draggedItem, _setDraggedItem] = useState<any>(null);
 
   // Memoized color values
   const bgColor = useColorModeValue('gray.50', 'gray.900');
@@ -96,7 +93,7 @@ export const ReportCanvas: React.FC<ReportCanvasProps> = memo(({
   }, [widgets, cols]);
 
   // Memoized layout change handler
-  const handleLayoutChange = useMemoizedCallback((layout: any[], layouts: any) => {
+  const handleLayoutChange = useMemoizedCallback((layout: any[], _layouts: any) => {
     const updatedWidgets = widgets.map(widget => {
       const layoutItem = layout.find(item => item.i === widget.id);
       if (layoutItem) {

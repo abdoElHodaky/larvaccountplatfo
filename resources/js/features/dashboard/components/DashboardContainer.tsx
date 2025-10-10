@@ -100,7 +100,6 @@ export const DashboardContainer: React.FC<DashboardContainerProps> = ({
 
   // Collaboration hooks
   const {
-    data: collaborativeData,
     collaborators,
     updateData: updateCollaborativeData,
     isLocked: dashboardLocked,
