@@ -73,6 +73,6 @@ export { models };
 // Export model types
 export type { AppState, AppSettings, UIState, Notification } from './models/appModel';
 export type { AuthState, User, Tenant, UserTenant, RegisterData } from './models/authModel';
-export type { AccountingState, Account, Transaction, JournalEntry, AccountingFilters } from '../../features/accounting/stores/accountingModel';
+export type { AccountingState, Account, Transaction, JournalEntry, Filters } from '../../features/accounting/stores/accountingModel';
 export type { InventoryState, InventoryItem, StockMovement, InventoryFilters } from '../../features/inventory/stores/inventoryModel';
 export type { DashboardState, Widget, DashboardLayout, MetricData, ChartData, DashboardFilters } from '../../features/dashboard/stores/dashboardModel';

@@ -56,7 +56,7 @@ export interface JournalEntry {
   updatedAt: string;
 }
 
-export interface AccountingFilters {
+export interface Filters {
   organizationId?: number;
   accountType?: string[];
   dateRange?: {
@@ -134,7 +134,7 @@ export interface CreateJournalEntryInput {
  */
 export const accountingApi = {
   // Get accounts with hierarchy
-  getAccounts: (filters?: AccountingFilters) => gql(`
+  getAccounts: (filters?: Filters) => gql(`
     query GetAccounts($filters: AccountFiltersInput) {
       accounts(filters: $filters) {
         id
@@ -538,7 +538,7 @@ export const accountingApi = {
  */
 
 // Hook for accounts with real-time updates
-export function useAccounts(filters?: AccountingFilters, options?: {
+export function useAccounts(filters?: Filters, options?: {
   enabled?: boolean;
 }) {
   const { data, loading, error, send } = useRequest(
