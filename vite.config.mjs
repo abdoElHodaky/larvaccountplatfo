@@ -43,16 +43,50 @@ export default defineConfig({
         rollupOptions: {
             output: {
                 manualChunks: {
+                    // Core vendor chunks
                     vendor: ['react', 'react-dom'],
                     inertia: ['@inertiajs/react'],
+                    
+                    // UI library chunks
                     ui: ['@headlessui/react', '@heroicons/react'],
                     chakra: ['@chakra-ui/react', '@emotion/react', '@emotion/styled'],
                     motion: ['framer-motion'],
+                    
+                    // Feature-specific chunks
                     charts: ['chart.js', 'react-chartjs-2'],
+                    utils: ['lodash', 'date-fns', 'axios'],
+                    
+                    // Feature chunks for better code splitting
+                    'feature-accounting': ['./resources/js/features/accounting'],
+                    'feature-dashboard': ['./resources/js/features/dashboard'],
+                    'feature-inventory': ['./resources/js/features/inventory'],
+                    'feature-sales': ['./resources/js/features/sales'],
+                    'feature-auth': ['./resources/js/features/auth'],
+                    'feature-organization': ['./resources/js/features/organization'],
+                    'feature-reporting': ['./resources/js/features/reporting'],
                 },
+                // Optimize chunk naming for better caching
+                chunkFileNames: (chunkInfo) => {
+                    const facadeModuleId = chunkInfo.facadeModuleId
+                        ? chunkInfo.facadeModuleId.split('/').pop().replace('.tsx', '').replace('.ts', '')
+                        : 'chunk';
+                    return `js/[name]-[hash].js`;
+                },
+                entryFileNames: 'js/[name]-[hash].js',
+                assetFileNames: 'assets/[name]-[hash].[ext]',
             },
         },
         chunkSizeWarningLimit: 1000,
+        // Enable source maps for better debugging
+        sourcemap: process.env.NODE_ENV === 'development',
+        // Optimize for production
+        minify: 'terser',
+        terserOptions: {
+            compress: {
+                drop_console: process.env.NODE_ENV === 'production',
+                drop_debugger: process.env.NODE_ENV === 'production',
+            },
+        },
     },
     optimizeDeps: {
         include: [
