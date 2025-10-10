@@ -8,13 +8,18 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Container\Container as App;
 use Exception;
 
 /**
- * Base repository class that provides common data access functionality
+ * Laravel Eloquent Repository Pattern Base Implementation
+ * 
+ * This base repository follows Laravel's Eloquent Repository pattern
+ * with advanced caching, query optimization, and relationship management
  */
 abstract class BaseRepository implements RepositoryInterface
 {
+    protected App $app;
     protected Model $model;
     protected Builder $query;
     protected array $with = [];
@@ -25,17 +30,33 @@ abstract class BaseRepository implements RepositoryInterface
     protected int $cacheTTL = 3600; // 1 hour
     protected array $cacheTags = [];
 
-    public function __construct()
+    public function __construct(App $app)
     {
-        $this->model = $this->makeModel();
+        $this->app = $app;
+        $this->makeModel();
         $this->resetQuery();
         $this->initializeCache();
     }
 
     /**
-     * Create model instance (must be implemented by child classes)
+     * Specify Model class name
      */
-    abstract protected function makeModel(): Model;
+    abstract public function model(): string;
+
+    /**
+     * Create model instance using Laravel's service container
+     */
+    public function makeModel(): Model
+    {
+        $model = $this->app->make($this->model());
+
+        if (!$model instanceof Model) {
+            throw new Exception("Class {$this->model()} must be an instance of Illuminate\\Database\\Eloquent\\Model");
+        }
+
+        $this->model = $model;
+        return $this->model;
+    }
 
     /**
      * Initialize cache configuration
