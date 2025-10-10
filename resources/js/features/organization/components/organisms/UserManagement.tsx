@@ -91,7 +91,7 @@ export const UserManagement = memo<UserManagementProps>(({
   onUserCreate,
   onUserUpdate,
   onUserDelete,
-  onRoleChange,
+  onRoleChange: _onRoleChange,
   loading = false,
   canManageUsers = true,
 }) => {

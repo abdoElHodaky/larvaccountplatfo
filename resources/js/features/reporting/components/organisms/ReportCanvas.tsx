@@ -63,7 +63,7 @@ export const ReportCanvas: React.FC<ReportCanvasProps> = memo(({
   margin = [10, 10],
   containerPadding = [10, 10],
 }) => {
-  const [_draggedItem, _setDraggedItem] = useState<any>(null);
+
 
   // Memoized color values
   const bgColor = useColorModeValue('gray.50', 'gray.900');

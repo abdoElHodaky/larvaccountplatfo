@@ -49,7 +49,7 @@ export const PieChart: React.FC<PieChartProps> = memo(({
   dataKey = 'value',
   nameKey = 'name',
   formatValue,
-  formatTooltip,
+  formatTooltip: _formatTooltip,
   showLegend = true,
   showTooltip = true,
   showLabels = true,

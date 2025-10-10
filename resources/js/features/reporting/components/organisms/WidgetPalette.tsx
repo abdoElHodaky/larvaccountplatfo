@@ -195,7 +195,7 @@ export const WidgetPalette: React.FC<WidgetPaletteProps> = memo(({
 }) => {
   // Memoized color values
   const bgColor = useColorModeValue('white', 'gray.800');
-  const _borderColor = useColorModeValue('gray.200', 'gray.600');
+
   const hoverBg = useColorModeValue('gray.50', 'gray.700');
 
   // Memoized filtered widgets

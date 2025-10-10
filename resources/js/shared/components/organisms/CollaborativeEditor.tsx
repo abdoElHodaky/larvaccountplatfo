@@ -1,4 +1,4 @@
-import React, { Fragment, memo, useMemo, useState, useEffect, useRef } from 'react';
+import React, { memo, useMemo, useState, useEffect, useRef } from 'react';
 import {
   Box,
   VStack,
@@ -6,7 +6,7 @@ import {
   Text,
   Avatar,
   AvatarGroup,
-  Badge,
+
   useColorModeValue,
   Tooltip,
   Flex,

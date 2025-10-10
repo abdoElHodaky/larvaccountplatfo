@@ -9,7 +9,7 @@ interface AppLayoutProps {
 
 export default function AppLayout({ children }: AppLayoutProps) {
     const [sidebarOpen, setSidebarOpen] = useState(false);
-    const { props: _props } = usePage();
+
 
     return (
         <div className="min-h-screen bg-gray-50">
