@@ -6,6 +6,9 @@ import { createInertiaApp } from '@inertiajs/react';
 import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
 import { AppProviders } from './shared/providers/AppProviders';
 import { routePreloader } from './shared/utils/lazyLoading';
+import { MobileOptimizationManager } from './shared/utils/mobileOptimization';
+import { PWAEnhancementManager } from './shared/utils/pwaEnhancements';
+import { PerformanceAnalyticsDashboard } from './shared/utils/performanceAnalytics';
 
 const appName = (import.meta as any).env?.VITE_APP_NAME || 'Laravel Accounting Platform';
 
@@ -77,6 +80,9 @@ createInertiaApp({
         
         // Initialize Core Web Vitals monitoring
         performanceObserver.measureCoreWebVitals();
+        
+        // Initialize Phase 3 enhancements
+        initializePhase3Enhancements();
     },
     progress: {
         color: '#0066cc',
@@ -149,4 +155,30 @@ if (typeof window !== 'undefined') {
   
   // Initialize resource hints
   addResourceHints();
+  
+  // Initialize route preloading
+  routePreloader.initialize();
+}
+
+/**
+ * Initialize Phase 3: Feature Enhancements
+ * Mobile optimization, PWA features, and performance analytics
+ */
+function initializePhase3Enhancements(): void {
+    // Initialize mobile optimizations
+    MobileOptimizationManager.initialize();
+    
+    // Initialize PWA enhancements
+    PWAEnhancementManager.initialize(
+        process.env.VITE_VAPID_PUBLIC_KEY // Optional VAPID key for push notifications
+    );
+    
+    // Initialize performance analytics dashboard
+    PerformanceAnalyticsDashboard.getInstance().initialize();
+    
+    // Log Phase 3 initialization
+    console.log('🚀 Phase 3: Feature Enhancements initialized');
+    console.log('📱 Mobile optimization active');
+    console.log('🎯 PWA features enabled');
+    console.log('📊 Performance analytics running');
 }
