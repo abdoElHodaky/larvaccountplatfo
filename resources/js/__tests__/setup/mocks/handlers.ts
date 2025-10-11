@@ -3,15 +3,13 @@
  * Phase 9: Testing Infrastructure
  */
 
-import { rest, graphql } from 'msw';
+import { http, graphql } from 'msw';
 
 // REST API Handlers
 export const restHandlers = [
   // Authentication endpoints
-  rest.post('/api/auth/login', (req, res, ctx) => {
-    return res(
-      ctx.status(200),
-      ctx.json({
+  http.post('/api/auth/login', () => {
+    return Response.json({
         user: {
           id: 1,
           email: 'test@example.com',
@@ -19,74 +17,64 @@ export const restHandlers = [
           role: 'admin',
         },
         token: 'mock-jwt-token',
-      })
-    );
+      });
   }),
 
-  rest.post('/api/auth/logout', (req, res, ctx) => {
-    return res(ctx.status(200), ctx.json({ success: true }));
+  http.post('/api/auth/logout', () => {
+    return Response.json({ success: true });
   }),
 
   // Accounting endpoints
-  rest.get('/api/accounting/accounts', (req, res, ctx) => {
-    return res(
-      ctx.status(200),
-      ctx.json({
-        data: [
-          {
-            id: '1',
-            name: 'Cash',
-            type: 'asset',
-            balance: 10000,
-            code: '1000',
-          },
-          {
-            id: '2',
-            name: 'Accounts Receivable',
-            type: 'asset',
-            balance: 5000,
-            code: '1200',
-          },
-        ],
-      })
-    );
+  http.get('/api/accounting/accounts', () => {
+    return Response.json({
+      data: [
+        {
+          id: '1',
+          name: 'Cash',
+          type: 'asset',
+          balance: 10000,
+          code: '1000',
+        },
+        {
+          id: '2',
+          name: 'Accounts Receivable',
+          type: 'asset',
+          balance: 5000,
+          code: '1200',
+        },
+      ],
+    });
   }),
 
-  rest.get('/api/accounting/transactions', (req, res, ctx) => {
-    return res(
-      ctx.status(200),
-      ctx.json({
-        data: [
-          {
-            id: '1',
-            date: '2024-01-01',
-            description: 'Test Transaction',
-            amount: 100,
-            type: 'debit',
-            accountId: '1',
-          },
-        ],
-      })
-    );
+  http.get('/api/accounting/transactions', () => {
+    return Response.json({
+      data: [
+        {
+          id: '1',
+          date: '2024-01-01',
+          description: 'Test Transaction',
+          amount: 100,
+          type: 'debit',
+          accountId: '1',
+        },
+      ],
+    });
   }),
 
   // Reporting endpoints
-  rest.get('/api/reports/financial', (req, res, ctx) => {
-    return res(
-      ctx.status(200),
-      ctx.json({
-        data: {
-          revenue: 50000,
-          expenses: 30000,
-          profit: 20000,
-          chartData: [
-            { month: 'Jan', revenue: 4000, expenses: 2400 },
-            { month: 'Feb', revenue: 3000, expenses: 1398 },
-            { month: 'Mar', revenue: 2000, expenses: 9800 },
-          ],
-        },
-      })
-    );
+  http.get('/api/reports/financial', () => {
+    return Response.json({
+      data: {
+        revenue: 50000,
+        expenses: 30000,
+        profit: 20000,
+        chartData: [
+          { month: 'Jan', revenue: 4000, expenses: 2400 },
+          { month: 'Feb', revenue: 3000, expenses: 1398 },
+          { month: 'Mar', revenue: 2000, expenses: 9800 },
+        ],
+      },
+    });
   }),
 ];
 

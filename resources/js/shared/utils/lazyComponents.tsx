@@ -56,6 +56,22 @@ export const CashFlowWidget = lazyWithRetry(
 // Note: ChartOfAccounts, TransactionList, TransactionForm, JournalEntries are statically imported
 // in their respective pages, so we don't need lazy versions here
 
+export const ChartOfAccounts = lazyWithRetry(
+  () => import('../../features/accounting/components/organisms/Accounts')
+);
+
+export const TransactionList = lazyWithRetry(
+  () => import('../../features/accounting/components/organisms/TransactionList')
+);
+
+export const TransactionForm = lazyWithRetry(
+  () => import('../../features/accounting/components/organisms/TransactionForm')
+);
+
+export const JournalEntries = lazyWithRetry(
+  () => import('../../features/accounting/components/organisms/JournalEntries')
+);
+
 export const BalanceSheet = lazyWithRetry(
   () => import('../../features/accounting/components/organisms/BalanceSheet')
 );
@@ -109,6 +125,9 @@ export const BillingSettings = lazyWithRetry(
 
 // Real-time Components - Remove lazy loading for WebSocketProvider as it's statically imported
 // Note: WebSocketProvider is statically imported in useRealTimeNotifications.ts
+export const WebSocketProvider = lazyWithRetry(
+  () => import('../../shared/components/realtime/WebSocketProvider')
+);
 
 // Preload critical components
 export const preloadCriticalComponents = () => {
