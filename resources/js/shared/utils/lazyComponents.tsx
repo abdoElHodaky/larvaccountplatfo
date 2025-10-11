@@ -4,6 +4,7 @@
  */
 
 import React, { lazy, ComponentType } from 'react';
+import { LoadingSpinner } from '../components/ui/LoadingSpinner';
 
 // Retry mechanism for failed dynamic imports
 const retry = (fn: () => Promise<any>, retriesLeft = 5, interval = 1000): Promise<any> => {
@@ -88,11 +89,11 @@ export const JournalEntriesPage = lazyWithRetry(
 
 // Report Components
 export const IncomeStatement = lazyWithRetry(
-  () => import('../../features/accounting/components/organisms/IncomeStatement')
+  () => import('../components/reports/IncomeStatement')
 );
 
 export const BalanceSheetReport = lazyWithRetry(
-  () => import('../../features/accounting/components/organisms/BalanceSheet')
+  () => import('../components/reports/BalanceSheet')
 );
 
 export const TrialBalance = lazyWithRetry(
@@ -100,7 +101,7 @@ export const TrialBalance = lazyWithRetry(
 );
 
 export const ReportBuilder = lazyWithRetry(
-  () => import('../../features/reporting/components/organisms/ReportBuilder')
+  () => import('../components/reports/ReportBuilder')
 );
 
 // Organization Components (formerly Settings)
@@ -147,7 +148,7 @@ export const preloadByRole = (userRole: string, permissions: string[]) => {
   }
   
   if (permissions.includes('view_reports')) {
-    import('../../features/accounting/components/organisms/IncomeStatement');
+    import('../components/reports/IncomeStatement');
   }
   
   if (userRole === 'admin') {
@@ -171,12 +172,12 @@ export const preloadByRoute = (currentRoute: string) => {
       import('../../features/accounting/components/organisms/TransactionList');
       break;
     case '/reports':
-      import('../../features/accounting/components/organisms/BalanceSheet');
+      import('../components/reports/BalanceSheet');
       import('../../features/accounting/components/organisms/TrialBalance');
       break;
     case '/settings':
-      import('../../features/organization/components/organisms/UserManagement');
-      import('../../features/organization/components/organisms/IntegrationSettings');
+      import('../components/settings/UserManagement');
+      import('../components/settings/IntegrationSettings');
       break;
   }
 };

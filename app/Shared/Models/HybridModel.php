@@ -14,13 +14,13 @@ abstract class HybridModel extends Model
     protected static function booted(): void
     {
         // Only apply organization scope for shared databases
-        if (static::isUsingSharedDatabase()) {
+        if (static::isSharedDatabase()) {
             static::addGlobalScope(new OrganizationScope);
         }
 
         // Auto-set organization_id when creating records in shared databases
         static::creating(function ($model) {
-            if (static::isUsingSharedDatabase() && !$model->organization_id) {
+            if (static::isSharedDatabase() && !$model->organization_id) {
                 $model->organization_id = static::getCurrentOrganizationId();
             }
         });
@@ -61,19 +61,15 @@ abstract class HybridModel extends Model
      */
     public function isSharedDatabase(): bool
     {
-        return static::isUsingSharedDatabase();
+        return static::isSharedDatabase();
     }
 
     /**
      * Static method to check if current tenant is using shared database
      */
-    public static function isUsingSharedDatabase(): bool
+    public static function isSharedDatabase(): bool
     {
-        try {
-            $tenantStrategy = app('tenant_strategy');
-        } catch (\Exception $e) {
-            $tenantStrategy = 'shared';
-        }
+        $tenantStrategy = app('tenant_strategy', 'shared');
         return $tenantStrategy === 'shared';
     }
 
@@ -82,19 +78,15 @@ abstract class HybridModel extends Model
      */
     public function isDedicatedDatabase(): bool
     {
-        return static::isUsingDedicatedDatabase();
+        return static::isDedicatedDatabase();
     }
 
     /**
      * Static method to check if current tenant is using dedicated database
      */
-    public static function isUsingDedicatedDatabase(): bool
+    public static function isDedicatedDatabase(): bool
     {
-        try {
-            $tenantStrategy = app('tenant_strategy');
-        } catch (\Exception $e) {
-            $tenantStrategy = 'shared';
-        }
+        $tenantStrategy = app('tenant_strategy', 'shared');
         return $tenantStrategy === 'dedicated';
     }
 
@@ -103,19 +95,15 @@ abstract class HybridModel extends Model
      */
     public function isClusteredDatabase(): bool
     {
-        return static::isUsingClusteredDatabase();
+        return static::isClusteredDatabase();
     }
 
     /**
      * Static method to check if current tenant is using clustered database
      */
-    public static function isUsingClusteredDatabase(): bool
+    public static function isClusteredDatabase(): bool
     {
-        try {
-            $tenantStrategy = app('tenant_strategy');
-        } catch (\Exception $e) {
-            $tenantStrategy = 'shared';
-        }
+        $tenantStrategy = app('tenant_strategy', 'shared');
         return $tenantStrategy === 'clustered';
     }
 
@@ -132,11 +120,7 @@ abstract class HybridModel extends Model
      */
     public static function getCurrentTenant()
     {
-        try {
-            return app('tenant');
-        } catch (\Exception $e) {
-            return null;
-        }
+        return app('tenant');
     }
 
     /**

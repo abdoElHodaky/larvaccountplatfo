@@ -171,9 +171,8 @@ return [
         ],
 
         RequestReceived::class => [
-            // Only load Octane listeners if not in testing environment
-            ...(env('APP_ENV') === 'testing' ? [] : \Laravel\Octane\Facades\Octane::prepareApplicationForNextOperation()),
-            ...(env('APP_ENV') === 'testing' ? [] : \Laravel\Octane\Facades\Octane::prepareApplicationForNextRequest()),
+            ...\Laravel\Octane\Facades\Octane::prepareApplicationForNextOperation(),
+            ...\Laravel\Octane\Facades\Octane::prepareApplicationForNextRequest(),
             // Custom listeners for multi-tenant setup
             FlushTenantContext::class,
             SetupDatabaseConnection::class,
@@ -192,7 +191,7 @@ return [
         ],
 
         TaskReceived::class => [
-            ...(env('APP_ENV') === 'testing' ? [] : \Laravel\Octane\Facades\Octane::prepareApplicationForNextOperation()),
+            ...\Laravel\Octane\Facades\Octane::prepareApplicationForNextOperation(),
         ],
 
         TaskTerminated::class => [
@@ -200,7 +199,7 @@ return [
         ],
 
         TickReceived::class => [
-            ...(env('APP_ENV') === 'testing' ? [] : \Laravel\Octane\Facades\Octane::prepareApplicationForNextOperation()),
+            ...\Laravel\Octane\Facades\Octane::prepareApplicationForNextOperation(),
         ],
 
         TickTerminated::class => [

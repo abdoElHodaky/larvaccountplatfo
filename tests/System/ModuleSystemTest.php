@@ -3,8 +3,8 @@
 namespace Tests\System;
 
 use Tests\Shared\TenantTestCase;
-use App\Shared\Services\ModuleDiscoveryService;
-use App\Shared\Services\InterModuleBus;
+use Modules\Shared\Services\ModuleDiscoveryService;
+use Modules\Shared\Services\InterModuleBus;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class ModuleSystemTest extends TenantTestCase

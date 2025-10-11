@@ -130,7 +130,7 @@ const ConnectionMonitor: React.FC<{ children: React.ReactNode }> = ({ children }
  * Theme Provider Component
  */
 const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const { theme: _appTheme, colorMode, initializeTheme } = useApp();
+  const { theme: appTheme, colorMode, initializeTheme } = useApp();
 
   useEffect(() => {
     // Initialize theme on app start

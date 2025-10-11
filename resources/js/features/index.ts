@@ -12,6 +12,9 @@ export * from './inventory/components';
 export * from './reporting/components';
 export * from './organization/components';
 export * from './sales/components';
+export * from './purchase/components';
+export * from './system/components';
+export * from './tenantManagement/components';
 
 // Feature Pages
 export * as AuthPages from './auth/pages';
@@ -20,11 +23,11 @@ export * as DashboardPages from './dashboard/pages';
 export * as InventoryPages from './inventory/pages';
 export * as OrganizationPages from './organization/pages';
 export * as SalesPages from './sales/pages';
-// Note: Additional feature pages will be added as features are implemented
+// Note: Purchase, System, and TenantManagement pages will be added when created
 
 // Feature Types
 export * as AccountingTypes from './accounting/types';
 export * as InventoryTypes from './inventory/types';
 export * as SalesTypes from './sales/types';
 export * as OrganizationTypes from './organization/types';
-// Note: Additional feature types will be added as features are implemented
+// Note: Purchase, System, and TenantManagement types will be added when created

@@ -41,7 +41,7 @@ return [
     |
     */
 
-    'use' => env('HORIZON_REDIS_CONNECTION', 'default'),
+    'use' => env('HORIZON_REDIS_CONNECTION', 'horizon'),
 
     /*
     |--------------------------------------------------------------------------

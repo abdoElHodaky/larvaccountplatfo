@@ -1,4 +1,4 @@
-import React, { memo, useMemo, useRef } from 'react';
+import React, { Fragment, memo, useMemo, useRef } from 'react';
 import {
   PieChart as RechartsPieChart,
   Pie,
@@ -49,7 +49,7 @@ export const PieChart: React.FC<PieChartProps> = memo(({
   dataKey = 'value',
   nameKey = 'name',
   formatValue,
-  formatTooltip: _formatTooltip,
+  formatTooltip,
   showLegend = true,
   showTooltip = true,
   showLabels = true,
@@ -123,7 +123,25 @@ export const PieChart: React.FC<PieChartProps> = memo(({
     return String(value);
   }, [formatValue]);
 
-
+  // Memoized tooltip formatter
+  const tooltipFormatter = useMemoizedCallback((value: any, name: string) => {
+    if (formatTooltip) {
+      return formatTooltip(value, name);
+    }
+    
+    // Default financial formatting with percentage
+    if (typeof value === 'number') {
+      const item = processedData.find(d => d[nameKey] === name);
+      const percentage = item ? item.percentage : 0;
+      
+      return [
+        `${FinancialPerformanceUtils.formatCurrency(value, 'USD')} (${percentage.toFixed(1)}%)`,
+        name
+      ];
+    }
+    
+    return [String(value), name];
+  }, [formatTooltip, processedData, nameKey]);
 
   // Memoized export handler
   const handleExport = useMemoizedCallback((format: 'png' | 'pdf' | 'csv' | 'excel') => {

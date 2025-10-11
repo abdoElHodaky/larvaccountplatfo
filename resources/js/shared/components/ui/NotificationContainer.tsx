@@ -15,7 +15,8 @@ import {
   Button,
   HStack,
   useColorModeValue,
-
+  Slide,
+  ScaleFade,
 } from '@chakra-ui/react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useSelector, useDispatch } from 'react-redux';

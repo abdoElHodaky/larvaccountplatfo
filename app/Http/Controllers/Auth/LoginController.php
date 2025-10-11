@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Auth;
 
-use App\Features\Authentication\Auth\TenantAwareAuthManager;
+use App\Auth\TenantAwareAuthManager;
 use App\Http\Controllers\Controller;
 use App\Services\AuthService;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;

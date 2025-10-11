@@ -12,8 +12,12 @@ import {
   PopoverContent,
   PopoverHeader,
   PopoverBody,
+  PopoverCloseButton,
   Button,
   Divider,
+  Avatar,
+  Flex,
+  Spacer,
   useToast,
 } from '@chakra-ui/react';
 import { useFinancialWebSocket } from '@/shared/utils/websocket';

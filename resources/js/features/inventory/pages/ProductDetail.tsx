@@ -55,8 +55,8 @@ interface ProductDetailProps {
 export default function ProductDetail({ 
     product, 
     relatedProducts = [], 
-    categories: _categories = [], 
-    organization: _organization,
+    categories = [], 
+    organization,
     error 
 }: ProductDetailProps) {
     if (error || !product) {

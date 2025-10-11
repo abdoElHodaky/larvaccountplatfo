@@ -4,8 +4,8 @@
  */
 
 import { useQuery, useMutation, useSubscription, useLazyQuery } from '@apollo/client';
-import { useRequest as _useRequest, useWatcher as _useWatcher, useAutoRequest as _useAutoRequest } from 'alova/client';
-import { alovaInstance as _alovaInstance } from '../services/graphql/apollo-client';
+// import { useRequest, useWatcher } from 'alova'; // These hooks don't exist in alova v3.3.4
+import { alovaInstance } from '../services/graphql/apollo-client';
 import { useCallback, useMemo, useState } from 'react';
 import type { 
   DocumentNode, 
@@ -27,7 +27,7 @@ export interface GraphQLHookOptions<TData = any, TVariables = any> {
   onError?: (error: any) => void;
 }
 
-export interface GraphQLMutationOptions<TData = any, _TVariables = any> {
+export interface GraphQLMutationOptions<TData = any, TVariables = any> {
   onCompleted?: (data: TData) => void;
   onError?: (error: any) => void;
   refetchQueries?: string[] | DocumentNode[];
@@ -157,9 +157,9 @@ export function useGraphQLSubscription<TData = any, TVariables = any>(
  * AlovaJS REST API Hook for non-GraphQL endpoints
  * DISABLED: useRequest hook not available in alova v3.3.4
  */
-export function useAlovaRequest<_TData = any>(
+export function useAlovaRequest<TData = any>(
   url: string,
-  _options: AlovaRequestOptions = {}
+  options: AlovaRequestOptions = {}
 ) {
   // const method = alovaInstance.Get(url);
   
@@ -188,10 +188,10 @@ export function useAlovaRequest<_TData = any>(
  * AlovaJS Watcher Hook for reactive requests
  * DISABLED: useWatcher hook not available in alova v3.3.4
  */
-export function useAlovaWatcher<_TData = any>(
+export function useAlovaWatcher<TData = any>(
   url: string,
   watchedStates: any[],
-  _options: AlovaRequestOptions = {}
+  options: AlovaRequestOptions = {}
 ) {
   // const method = alovaInstance.Get(url);
   

@@ -3,7 +3,7 @@
  * Compound components, render props, and advanced patterns for reusable UI
  */
 
-import React, { createContext, useContext, useState, useCallback, ReactNode } from 'react';
+import React, { createContext, useContext, useState, useCallback, ReactNode, ReactElement } from 'react';
 import { ErrorBoundary } from '../ErrorBoundary';
 
 // Compound Component Pattern - Modal

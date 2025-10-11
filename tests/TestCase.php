@@ -18,8 +18,8 @@ abstract class TestCase extends BaseTestCase
         // Set up test environment
         $this->withoutVite();
         
-        // Disable broadcasting for tests by setting null driver
-        config(['broadcasting.default' => 'null']);
+        // Disable broadcasting for tests
+        $this->withoutBroadcasting();
         
         // Set up default test configuration
         config(['app.env' => 'testing']);

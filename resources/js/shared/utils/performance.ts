@@ -94,7 +94,7 @@ export function deepEqual(a: any, b: any): boolean {
   
   if (a.prototype !== b.prototype) return false;
   
-  const keys = Object.keys(a);
+  let keys = Object.keys(a);
   if (keys.length !== Object.keys(b).length) {
     return false;
   }
@@ -222,7 +222,7 @@ export class PerformanceMonitor {
   }
 
   /**
-   * Initialize performance observers including Core Web Vitals
+   * Initialize performance observers
    */
   private initializeObservers(): void {
     if (typeof window === 'undefined') return;
@@ -232,7 +232,6 @@ export class PerformanceMonitor {
       try {
         const navigationObserver = new PerformanceObserver((list) => {
           list.getEntries().forEach((entry) => {
-            const navEntry = entry as PerformanceNavigationTiming;
             this.recordMetric({
               name: 'navigation',
               value: entry.duration,
@@ -240,108 +239,12 @@ export class PerformanceMonitor {
               type: 'timing',
               tags: { type: entry.entryType },
             });
-            
-            // Record TTFB (Time to First Byte)
-            const ttfb = navEntry.responseStart - navEntry.requestStart;
-            this.recordMetric({
-              name: 'TTFB',
-              value: ttfb,
-              timestamp: Date.now(),
-              type: 'timing',
-              tags: { type: 'core_web_vital' },
-            });
           });
         });
         navigationObserver.observe({ entryTypes: ['navigation'] });
         this.observers.push(navigationObserver);
       } catch (error) {
         console.warn('Navigation observer not supported:', error);
-      }
-
-      // Core Web Vitals - Largest Contentful Paint (LCP)
-      try {
-        const lcpObserver = new PerformanceObserver((list) => {
-          const entries = list.getEntries();
-          const lastEntry = entries[entries.length - 1];
-          this.recordMetric({
-            name: 'LCP',
-            value: lastEntry.startTime,
-            timestamp: Date.now(),
-            type: 'timing',
-            tags: { type: 'core_web_vital' },
-          });
-        });
-        lcpObserver.observe({ entryTypes: ['largest-contentful-paint'] });
-        this.observers.push(lcpObserver);
-      } catch (error) {
-        console.warn('LCP observer not supported:', error);
-      }
-
-      // Core Web Vitals - First Input Delay (FID)
-      try {
-        const fidObserver = new PerformanceObserver((list) => {
-          list.getEntries().forEach((entry) => {
-            const fidEntry = entry as any;
-            const fid = fidEntry.processingStart - fidEntry.startTime;
-            this.recordMetric({
-              name: 'FID',
-              value: fid,
-              timestamp: Date.now(),
-              type: 'timing',
-              tags: { type: 'core_web_vital' },
-            });
-          });
-        });
-        fidObserver.observe({ entryTypes: ['first-input'] });
-        this.observers.push(fidObserver);
-      } catch (error) {
-        console.warn('FID observer not supported:', error);
-      }
-
-      // Core Web Vitals - Cumulative Layout Shift (CLS)
-      try {
-        let clsValue = 0;
-        const clsObserver = new PerformanceObserver((list) => {
-          list.getEntries().forEach((entry) => {
-            const clsEntry = entry as any;
-            if (!clsEntry.hadRecentInput) {
-              clsValue += clsEntry.value;
-            }
-          });
-          
-          this.recordMetric({
-            name: 'CLS',
-            value: clsValue,
-            timestamp: Date.now(),
-            type: 'timing',
-            tags: { type: 'core_web_vital' },
-          });
-        });
-        clsObserver.observe({ entryTypes: ['layout-shift'] });
-        this.observers.push(clsObserver);
-      } catch (error) {
-        console.warn('CLS observer not supported:', error);
-      }
-
-      // Core Web Vitals - First Contentful Paint (FCP)
-      try {
-        const fcpObserver = new PerformanceObserver((list) => {
-          list.getEntries().forEach((entry) => {
-            if (entry.name === 'first-contentful-paint') {
-              this.recordMetric({
-                name: 'FCP',
-                value: entry.startTime,
-                timestamp: Date.now(),
-                type: 'timing',
-                tags: { type: 'core_web_vital' },
-              });
-            }
-          });
-        });
-        fcpObserver.observe({ entryTypes: ['paint'] });
-        this.observers.push(fcpObserver);
-      } catch (error) {
-        console.warn('FCP observer not supported:', error);
       }
 
       // Long task observer

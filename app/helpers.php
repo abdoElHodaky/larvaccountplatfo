@@ -18,7 +18,7 @@ if (!function_exists('current_organization')) {
     /**
      * Get the current organization from the application context
      */
-    function current_organization(): ?\App\Shared\Models\Organization
+    function current_organization(): ?\Modules\Shared\Models\Organization
     {
         return app('current_organization');
     }
@@ -99,7 +99,7 @@ if (!function_exists('generate_journal_entry_number')) {
         $prefix = $organization ? strtoupper(substr($organization->name, 0, 3)) : 'JE';
         
         return $prefix . '-' . now()->format('Y') . '-' . str_pad(
-            \App\Features\Accounting\Models\JournalEntry::whereYear('created_at', now()->year)->count() + 1,
+            \Modules\Accounting\Models\JournalEntry::whereYear('created_at', now()->year)->count() + 1,
             6,
             '0',
             STR_PAD_LEFT
@@ -117,7 +117,7 @@ if (!function_exists('generate_purchase_order_number')) {
         $prefix = $organization ? strtoupper(substr($organization->name, 0, 3)) : 'PO';
         
         return $prefix . '-' . now()->format('Y') . '-' . str_pad(
-            \App\Features\Purchase\Models\PurchaseOrder::whereYear('created_at', now()->year)->count() + 1,
+            \Modules\Inventory\Models\PurchaseOrder::whereYear('created_at', now()->year)->count() + 1,
             6,
             '0',
             STR_PAD_LEFT
@@ -170,8 +170,8 @@ if (!function_exists('audit_log')) {
         string $riskLevel = 'low',
         array $metadata = []
     ): void {
-        if (class_exists(\App\Features\Security\Models\AuditLog::class)) {
-            \App\Features\Security\Models\AuditLog::logEvent(
+        if (class_exists(\Modules\Security\Models\AuditLog::class)) {
+            \Modules\Security\Models\AuditLog::logEvent(
                 $event,
                 $auditable,
                 $oldValues,
@@ -189,8 +189,8 @@ if (!function_exists('broadcast_inventory_update')) {
      */
     function broadcast_inventory_update(string $event, array $data): void
     {
-        if (class_exists(\App\Features\Inventory\Events\StockLevelUpdated::class)) {
-            broadcast(new \App\Features\Inventory\Events\StockLevelUpdated($data));
+        if (class_exists(\Modules\Inventory\Events\StockLevelUpdated::class)) {
+            broadcast(new \Modules\Inventory\Events\StockLevelUpdated($data));
         }
     }
 }
@@ -276,7 +276,7 @@ if (!function_exists('get_module_service')) {
             throw new \Exception("Module {$module} is not enabled");
         }
         
-        $serviceClass = "App\\Features\\{$module}\\Services\\{$service}";
+        $serviceClass = "Modules\\{$module}\\Services\\{$service}";
         
         if (!class_exists($serviceClass)) {
             throw new \Exception("Service {$service} not found in module {$module}");
@@ -311,3 +311,4 @@ if (!function_exists('organization_cache_key')) {
         return "org_{$orgId}_{$key}";
     }
 }
+

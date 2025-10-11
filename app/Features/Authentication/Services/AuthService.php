@@ -2,7 +2,7 @@
 
 namespace App\Features\Authentication\Services;
 
-use App\Features\Authentication\Auth\TenantAwareAuthManager;
+use App\Auth\TenantAwareAuthManager;
 use App\Models\GlobalUser;
 use App\Models\Tenant;
 use Modules\Shared\Models\User;

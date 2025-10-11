@@ -176,11 +176,6 @@ return [
         App\Features\Inventory\Providers\InventoryServiceProvider::class,
         App\Features\Sales\Providers\SalesServiceProvider::class,
         App\Features\Organization\Providers\OrganizationServiceProvider::class,
-
-        /*
-         * GraphQL Service Provider...
-         */
-        App\Providers\GraphQLServiceProvider::class,
     ])->toArray(),
 
     /*

@@ -254,7 +254,7 @@ export function useReportBuilder(
       setError(null);
 
       switch (format) {
-        case 'json': {
+        case 'json':
           // Export as JSON
           const jsonData = JSON.stringify(report, null, 2);
           const blob = new Blob([jsonData], { type: 'application/json' });
@@ -265,7 +265,6 @@ export function useReportBuilder(
           a.click();
           URL.revokeObjectURL(url);
           break;
-        }
           
         case 'pdf':
         case 'png':
