@@ -9,6 +9,14 @@ export { ErrorFallback } from './ErrorFallback';
 export { LoadingSpinner } from './LoadingSpinner';
 export { NotificationContainer } from './NotificationContainer';
 
+// HeadlessUI Components
+export * from './HeadlessUIComponents';
+export * from './AdvancedComponents';
+
+// Layout & Navigation Components
+export * from './LayoutComponents';
+export * from './NavigationComponents';
+
 // Re-export optimized components for unified access
 export * from '../optimized';
 
