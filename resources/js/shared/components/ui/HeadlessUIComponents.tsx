@@ -5,9 +5,9 @@
  */
 
 import React, { forwardRef, ReactNode, ButtonHTMLAttributes, InputHTMLAttributes } from 'react';
-import { Dialog, Transition, Switch, Listbox, Combobox } from '@headlessui/react';
-import { Fragment, useState } from 'react';
-import { ChevronUpDownIcon, CheckIcon, XMarkIcon } from '@heroicons/react/20/solid';
+import { Dialog, Transition } from '@headlessui/react';
+import { Fragment } from 'react';
+import { XMarkIcon } from '@heroicons/react/20/solid';
 import { clsx } from 'clsx';
 
 // =============================================================================
@@ -453,8 +453,4 @@ export {
 export {
   Dialog,
   Transition,
-  Switch,
-  Listbox,
-  Combobox,
 } from '@headlessui/react';
-

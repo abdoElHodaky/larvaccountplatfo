@@ -166,7 +166,7 @@ export const graphqlClient = createAlova({
   
   // GraphQL response handling
   responded: {
-    onSuccess: async (response, method) => {
+    onSuccess: async (response, _method) => {
       const data = await response.json();
       
       // Handle GraphQL errors
@@ -194,7 +194,7 @@ export const graphqlClient = createAlova({
       
       return data;
     },
-    onError: async (error, method) => {
+    onError: async (error, _method) => {
       console.error('❌ GraphQL Request Error:', error);
       
       // Handle authentication errors
