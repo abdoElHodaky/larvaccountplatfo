@@ -163,7 +163,7 @@ export const AnimatedButton = forwardRef<HTMLButtonElement, AnimatedButtonProps>
   return (
     <button
       ref={(node) => {
-        // @ts-ignore - Assigning to ref.current
+        // @ts-expect-error - Assigning to ref.current
         buttonRef.current = node;
         if (typeof ref === 'function') {
           ref(node);
