@@ -4,8 +4,8 @@ import './bootstrap';
 import { createRoot } from 'react-dom/client';
 import { createInertiaApp } from '@inertiajs/react';
 import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
-import { AppProviders } from './app/providers/AppProviders';
-import { routePreloader } from './shared/utils/routeBasedLazyLoading';
+import AppProviders from './app/providers/AppProviders';
+import { routePreloader as _routePreloader } from './shared/utils/routeBasedLazyLoading';
 import { MobileOptimizationManager } from './shared/utils/mobileOptimization';
 import { PWAEnhancementManager } from './shared/utils/pwaEnhancements';
 import { PerformanceAnalyticsDashboard } from './shared/utils/performanceAnalytics';
@@ -19,8 +19,8 @@ const resolvePageWithEnhancements = async (name: string) => {
   
   try {
     // Get page component from enhanced registry
-    const pageComponent = getPageComponent(name as any);
-    const metadata = getPageMetadata(name as any);
+    const pageComponent = getPageComponent(name);
+    const metadata = getPageMetadata(name);
     
     // Load the component
     const component = await pageComponent();
@@ -30,10 +30,10 @@ const resolvePageWithEnhancements = async (name: string) => {
       setTimeout(() => {
         metadata.preload?.forEach(async (preloadPage) => {
           try {
-            const preloadComponent = getPageComponent(preloadPage as any);
+            const preloadComponent = getPageComponent(preloadPage);
             preloadComponent(); // Start loading but don't await
           } catch (error) {
-            console.warn(`Failed to preload page: ${preloadPage}`, error);
+            // Failed to preload page - silently continue
           }
         });
       }, 100);
@@ -42,8 +42,8 @@ const resolvePageWithEnhancements = async (name: string) => {
     return component;
   } catch (error) {
     // Fallback to original resolver
-    console.warn(`Enhanced resolver failed for ${name}, falling back to original`, error);
-    const pages = (import.meta as any).glob('./features/**/*.tsx');
+    // Enhanced resolver failed, falling back to original
+    const pages = import.meta.glob('./features/**/*.tsx');
     return await resolvePageComponent(`./features/${name}.tsx`, pages);
   }
 };
@@ -58,8 +58,7 @@ const performanceObserver = {
         const endTime = performance.now();
         const loadTime = endTime - startTime;
         
-        // Log performance metrics
-        console.log(`Page load time for ${pageName}: ${loadTime.toFixed(2)}ms`);
+        // Track performance metrics
         
         // Send to analytics if available
         if (window.gtag) {
@@ -118,11 +117,11 @@ createInertiaApp({
 if ('serviceWorker' in navigator && process.env.NODE_ENV === 'production') {
   window.addEventListener('load', () => {
     navigator.serviceWorker.register('/sw.js')
-      .then((registration) => {
-        console.log('SW registered: ', registration);
+      .then((_registration) => {
+        // Service worker registered successfully
       })
-      .catch((registrationError) => {
-        console.log('SW registration failed: ', registrationError);
+      .catch((_registrationError) => {
+        // Service worker registration failed
       });
   });
 }
@@ -159,8 +158,7 @@ if (typeof window !== 'undefined') {
   // Initialize resource hints
   addResourceHints();
   
-  // Initialize route preloading
-  routePreloader.initialize();
+  // Route preloader is ready to use (no initialization needed)
 }
 
 /**
@@ -179,9 +177,8 @@ function initializePhase3Enhancements(): void {
     // Initialize performance analytics dashboard
     PerformanceAnalyticsDashboard.getInstance().initialize();
     
-    // Log Phase 3 initialization
-    console.log('🚀 Phase 3: Feature Enhancements initialized');
-    console.log('📱 Mobile optimization active');
-    console.log('🎯 PWA features enabled');
-    console.log('📊 Performance analytics running');
+    // Phase 3 initialization complete
+    // - Mobile optimization active
+    // - PWA features enabled
+    // - Performance analytics running
 }

@@ -6,6 +6,7 @@ import { CardContainer } from '@/shared/components/molecules/Container';
 import { useAccountTypes, useCreateAccount, useUpdateAccount, type Account, type CreateAccountData } from '../hooks/useAccountData';
 import { AnimatedFormField, StaggeredChildren } from '@/shared/components/animations/AnimatedFragment';
 
+
 interface AccountFormProps {
     account?: Account;
     accounts: Account[];
@@ -50,9 +51,9 @@ export default function AccountForm({ account, accounts, onSubmit, onCancel }: A
             }
             
             onSubmit(formData);
-        } catch (error: any) {
-            console.error('Account form error:', error);
-            setErrors({ general: error.message || 'An error occurred' });
+        } catch (error: unknown) {
+            const errorMessage = error instanceof Error ? error.message : 'An error occurred';
+            setErrors({ general: errorMessage });
         }
     };
 
