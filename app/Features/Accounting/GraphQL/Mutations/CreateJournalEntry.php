@@ -25,7 +25,7 @@ class CreateJournalEntry
 
         if ($totalDebits !== $totalCredits) {
             throw ValidationException::withMessages([
-                'entries' => ['Total debits must equal total credits']
+                'entries' => ['Total debits must equal total credits'],
             ]);
         }
 
@@ -33,7 +33,7 @@ class CreateJournalEntry
             'date' => $args['date'],
             'reference' => $args['reference'],
             'description' => $args['description'] ?? null,
-            'entries' => $args['entries']
+            'entries' => $args['entries'],
         ]);
     }
 }

@@ -2,22 +2,21 @@
 
 namespace Tests\Feature\GraphQL;
 
-use Tests\TestCase;
 use App\Features\Accounting\Models\Account;
 use App\Features\Accounting\Models\Transaction;
-use App\Features\Accounting\Models\JournalEntry;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Nuwave\Lighthouse\Testing\MakesGraphQLRequests;
+use Tests\TestCase;
 
 class AccountingGraphQLTest extends TestCase
 {
-    use RefreshDatabase, WithFaker, MakesGraphQLRequests;
+    use MakesGraphQLRequests, RefreshDatabase, WithFaker;
 
     protected function setUp(): void
     {
         parent::setUp();
-        
+
         // Create test user and authenticate
         $user = \App\Models\User::factory()->create();
         $this->actingAs($user, 'sanctum');
@@ -29,7 +28,7 @@ class AccountingGraphQLTest extends TestCase
         // Create test accounts
         $revenueAccount = Account::factory()->create(['type' => 'revenue']);
         $expenseAccount = Account::factory()->create(['type' => 'expense']);
-        
+
         // Create test transactions
         Transaction::factory()->count(3)->create(['account_id' => $revenueAccount->id]);
         Transaction::factory()->count(2)->create(['account_id' => $expenseAccount->id]);
@@ -76,22 +75,22 @@ class AccountingGraphQLTest extends TestCase
                             'amount',
                             'type',
                             'description',
-                            'date'
-                        ]
+                            'date',
+                        ],
                     ],
                     'account_balances' => [
                         '*' => [
                             'account' => [
                                 'id',
                                 'name',
-                                'type'
+                                'type',
                             ],
                             'balance',
-                            'as_of_date'
-                        ]
-                    ]
-                ]
-            ]
+                            'as_of_date',
+                        ],
+                    ],
+                ],
+            ],
         ]);
     }
 
@@ -135,21 +134,21 @@ class AccountingGraphQLTest extends TestCase
                             'code',
                             'type',
                             'balance',
-                            'status'
-                        ]
+                            'status',
+                        ],
                     ],
                     'paginatorInfo' => [
                         'count',
                         'currentPage',
-                        'hasMorePages'
-                    ]
-                ]
-            ]
+                        'hasMorePages',
+                    ],
+                ],
+            ],
         ]);
 
         // Should only return asset accounts
         $this->assertEquals(3, count($response->json('data.accounts.data')));
-        
+
         foreach ($response->json('data.accounts.data') as $account) {
             $this->assertEquals('ASSET', $account['type']);
         }
@@ -177,8 +176,8 @@ class AccountingGraphQLTest extends TestCase
                 'code' => '1001',
                 'type' => 'ASSET',
                 'description' => 'Main cash account for testing',
-                'status' => 'ACTIVE'
-            ]
+                'status' => 'ACTIVE',
+            ],
         ];
 
         $response = $this->graphQL($mutation, $variables);
@@ -191,9 +190,9 @@ class AccountingGraphQLTest extends TestCase
                     'code',
                     'type',
                     'description',
-                    'status'
-                ]
-            ]
+                    'status',
+                ],
+            ],
         ]);
 
         $this->assertEquals('Test Cash Account', $response->json('data.createAccount.name'));
@@ -204,7 +203,7 @@ class AccountingGraphQLTest extends TestCase
         $this->assertDatabaseHas('accounts', [
             'name' => 'Test Cash Account',
             'code' => '1001',
-            'type' => 'asset'
+            'type' => 'asset',
         ]);
     }
 
@@ -250,16 +249,16 @@ class AccountingGraphQLTest extends TestCase
                         'account_id' => $cashAccount->id,
                         'debit' => 1000.00,
                         'credit' => 0.00,
-                        'description' => 'Cash received'
+                        'description' => 'Cash received',
                     ],
                     [
                         'account_id' => $revenueAccount->id,
                         'debit' => 0.00,
                         'credit' => 1000.00,
-                        'description' => 'Revenue earned'
-                    ]
-                ]
-            ]
+                        'description' => 'Revenue earned',
+                    ],
+                ],
+            ],
         ];
 
         $response = $this->graphQL($mutation, $variables);
@@ -280,15 +279,15 @@ class AccountingGraphQLTest extends TestCase
                             'account' => [
                                 'id',
                                 'name',
-                                'code'
+                                'code',
                             ],
                             'debit',
                             'credit',
-                            'description'
-                        ]
-                    ]
-                ]
-            ]
+                            'description',
+                        ],
+                    ],
+                ],
+            ],
         ]);
 
         $this->assertEquals('JE-001', $response->json('data.createJournalEntry.reference'));
@@ -300,7 +299,7 @@ class AccountingGraphQLTest extends TestCase
         $this->assertDatabaseHas('journal_entries', [
             'reference' => 'JE-001',
             'total_debit' => 1000.00,
-            'total_credit' => 1000.00
+            'total_credit' => 1000.00,
         ]);
     }
 
@@ -329,16 +328,16 @@ class AccountingGraphQLTest extends TestCase
                         'account_id' => $cashAccount->id,
                         'debit' => 1000.00,
                         'credit' => 0.00,
-                        'description' => 'Cash received'
+                        'description' => 'Cash received',
                     ],
                     [
                         'account_id' => $revenueAccount->id,
                         'debit' => 0.00,
                         'credit' => 500.00, // Unbalanced - should be 1000.00
-                        'description' => 'Revenue earned'
-                    ]
-                ]
-            ]
+                        'description' => 'Revenue earned',
+                    ],
+                ],
+            ],
         ];
 
         $response = $this->graphQL($mutation, $variables);
@@ -400,36 +399,36 @@ class AccountingGraphQLTest extends TestCase
                             'account' => [
                                 'id',
                                 'name',
-                                'code'
+                                'code',
                             ],
-                            'balance'
-                        ]
+                            'balance',
+                        ],
                     ],
                     'liabilities' => [
                         '*' => [
                             'account' => [
                                 'id',
                                 'name',
-                                'code'
+                                'code',
                             ],
-                            'balance'
-                        ]
+                            'balance',
+                        ],
                     ],
                     'equity' => [
                         '*' => [
                             'account' => [
                                 'id',
                                 'name',
-                                'code'
+                                'code',
                             ],
-                            'balance'
-                        ]
+                            'balance',
+                        ],
                     ],
                     'total_assets',
                     'total_liabilities',
-                    'total_equity'
-                ]
-            ]
+                    'total_equity',
+                ],
+            ],
         ]);
 
         $this->assertEquals(10000, $response->json('data.balanceSheet.total_assets'));
@@ -488,27 +487,27 @@ class AccountingGraphQLTest extends TestCase
                             'account' => [
                                 'id',
                                 'name',
-                                'code'
+                                'code',
                             ],
-                            'balance'
-                        ]
+                            'balance',
+                        ],
                     ],
                     'expenses' => [
                         '*' => [
                             'account' => [
                                 'id',
                                 'name',
-                                'code'
+                                'code',
                             ],
-                            'balance'
-                        ]
+                            'balance',
+                        ],
                     ],
                     'total_revenue',
                     'total_expenses',
                     'gross_profit',
-                    'net_income'
-                ]
-            ]
+                    'net_income',
+                ],
+            ],
         ]);
 
         $this->assertEquals(15000, $response->json('data.profitLoss.total_revenue'));
@@ -520,26 +519,26 @@ class AccountingGraphQLTest extends TestCase
     public function it_can_query_transactions_with_filtering()
     {
         $account = Account::factory()->create();
-        
+
         // Create transactions with different dates and amounts
         Transaction::factory()->create([
             'account_id' => $account->id,
             'amount' => 1000,
             'date' => '2024-01-15',
-            'type' => 'debit'
+            'type' => 'debit',
         ]);
-        
+
         Transaction::factory()->create([
             'account_id' => $account->id,
             'amount' => 500,
             'date' => '2024-02-15',
-            'type' => 'credit'
+            'type' => 'credit',
         ]);
 
         $query = '
             query {
                 transactions(
-                    account_id: ' . $account->id . '
+                    account_id: '.$account->id.'
                     date_from: "2024-01-01 00:00:00"
                     date_to: "2024-01-31 23:59:59"
                     first: 10
@@ -576,17 +575,17 @@ class AccountingGraphQLTest extends TestCase
                             'date',
                             'account' => [
                                 'id',
-                                'name'
-                            ]
-                        ]
+                                'name',
+                            ],
+                        ],
                     ],
                     'paginatorInfo' => [
                         'count',
                         'currentPage',
-                        'hasMorePages'
-                    ]
-                ]
-            ]
+                        'hasMorePages',
+                    ],
+                ],
+            ],
         ]);
 
         // Should only return January transaction

@@ -2,13 +2,12 @@
 
 namespace App\Features\Dashboard\Controllers;
 
-use Illuminate\Http\Request;
+use App\Features\Dashboard\Services\DashboardService;
+use App\Http\Controllers\Controller;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 use Inertia\Response;
-use App\Features\Dashboard\Services\DashboardService;
-use App\Http\Controllers\Controller;
 
 class DashboardController extends Controller
 {
@@ -27,7 +26,7 @@ class DashboardController extends Controller
         $tenant = app('tenant');
         $user = Auth::user();
 
-        if (!$tenant) {
+        if (! $tenant) {
             return redirect()->route('tenant.select');
         }
 
@@ -62,6 +61,7 @@ class DashboardController extends Controller
     {
         $tenant = app('tenant');
         $stats = $this->dashboardService->getDashboardStats($tenant->id);
+
         return response()->json($stats);
     }
 
@@ -72,6 +72,7 @@ class DashboardController extends Controller
     {
         $tenant = app('tenant');
         $activity = $this->dashboardService->getRecentActivity($tenant->id);
+
         return response()->json($activity);
     }
 }

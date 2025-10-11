@@ -2,8 +2,8 @@
 
 namespace App\Features\TenantManagement\Providers;
 
-use Illuminate\Support\ServiceProvider;
 use App\Features\TenantManagement\Services\TenantService;
+use Illuminate\Support\ServiceProvider;
 
 class TenantManagementServiceProvider extends ServiceProvider
 {
@@ -13,7 +13,7 @@ class TenantManagementServiceProvider extends ServiceProvider
     public function register(): void
     {
         $this->app->singleton(TenantService::class, function ($app) {
-            return new TenantService();
+            return new TenantService;
         });
     }
 

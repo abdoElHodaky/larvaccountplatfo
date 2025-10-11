@@ -2,15 +2,15 @@
 
 namespace App\Features\Accounting\Services;
 
+use App\Features\Accounting\Models\Account;
 use App\Features\Accounting\Models\FinancialForecast;
 use App\Features\Accounting\Models\ForecastLineItem;
-use App\Features\Accounting\Models\Account;
-use App\Features\Accounting\Models\Transaction;
 use App\Features\Accounting\Models\JournalEntry;
-use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Cache;
+use App\Features\Accounting\Models\Transaction;
 use Carbon\Carbon;
+use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\DB;
 
 class ForecastingService
 {
@@ -38,12 +38,12 @@ class ForecastingService
             ]);
 
             // Create line items if provided
-            if (!empty($data['line_items'])) {
+            if (! empty($data['line_items'])) {
                 $this->createForecastLineItems($forecast, $data['line_items']);
             }
 
             $this->clearForecastCache($organizationId);
-            
+
             return $forecast->load('lineItems.account');
         });
     }
@@ -74,7 +74,7 @@ class ForecastingService
             }
 
             $this->clearForecastCache($forecast->organization_id);
-            
+
             return $forecast->load('lineItems.account');
         });
     }
@@ -90,26 +90,26 @@ class ForecastingService
         int $historicalYears = 3
     ): array {
         $forecastData = [];
-        
+
         foreach ($accountIds as $accountId) {
             $account = Account::find($accountId);
-            if (!$account || $account->organization_id !== $organizationId) {
+            if (! $account || $account->organization_id !== $organizationId) {
                 continue;
             }
 
             // Get historical data
             $historicalData = $this->getHistoricalData($organizationId, $accountId, $historicalYears);
-            
+
             // Calculate trend
             $trend = $this->calculateTrend($historicalData);
-            
+
             // Generate forecast periods
             $periods = $this->generateForecastPeriods($startDate, $endDate, FinancialForecast::PERIOD_MONTHLY);
-            
+
             foreach ($periods as $period) {
                 $baseAmount = $this->getBaseAmountForPeriod($historicalData, $period);
                 $forecastedAmount = $this->applyTrend($baseAmount, $trend, $period);
-                
+
                 $forecastData[] = [
                     'account_id' => $accountId,
                     'account_name' => $account->name,
@@ -142,29 +142,29 @@ class ForecastingService
         int $historicalYears = 3
     ): array {
         $forecastData = [];
-        
+
         foreach ($accountIds as $accountId) {
             $account = Account::find($accountId);
-            if (!$account || $account->organization_id !== $organizationId) {
+            if (! $account || $account->organization_id !== $organizationId) {
                 continue;
             }
 
             // Get monthly historical data for seasonality analysis
             $monthlyData = $this->getMonthlyHistoricalData($organizationId, $accountId, $historicalYears);
-            
+
             // Calculate seasonal factors
             $seasonalFactors = $this->calculateSeasonalFactors($monthlyData);
-            
+
             // Generate forecast periods
             $periods = $this->generateForecastPeriods($startDate, $endDate, FinancialForecast::PERIOD_MONTHLY);
-            
+
             foreach ($periods as $period) {
                 $month = $period['start']->month;
                 $seasonalFactor = $seasonalFactors[$month] ?? 1.0;
-                
+
                 $baseAmount = $this->getAverageAmountForMonth($monthlyData, $month);
                 $forecastedAmount = $baseAmount * $seasonalFactor;
-                
+
                 $forecastData[] = [
                     'account_id' => $accountId,
                     'account_name' => $account->name,
@@ -197,26 +197,26 @@ class ForecastingService
         array $independentVariables = []
     ): array {
         $forecastData = [];
-        
+
         foreach ($accountIds as $accountId) {
             $account = Account::find($accountId);
-            if (!$account || $account->organization_id !== $organizationId) {
+            if (! $account || $account->organization_id !== $organizationId) {
                 continue;
             }
 
             // Get historical data with time series
             $historicalData = $this->getTimeSeriesData($organizationId, $accountId, 36); // 3 years monthly
-            
+
             // Perform linear regression
             $regression = $this->performLinearRegression($historicalData);
-            
+
             // Generate forecast periods
             $periods = $this->generateForecastPeriods($startDate, $endDate, FinancialForecast::PERIOD_MONTHLY);
-            
+
             foreach ($periods as $index => $period) {
                 $timeIndex = count($historicalData) + $index + 1;
                 $forecastedAmount = $regression['intercept'] + ($regression['slope'] * $timeIndex);
-                
+
                 $forecastData[] = [
                     'account_id' => $accountId,
                     'account_name' => $account->name,
@@ -280,7 +280,7 @@ class ForecastingService
         $forecast->lineItems()->whereNotIn('id', $providedIds)->delete();
 
         foreach ($lineItems as $itemData) {
-            if (!empty($itemData['id'])) {
+            if (! empty($itemData['id'])) {
                 // Update existing line item
                 $lineItem = ForecastLineItem::find($itemData['id']);
                 if ($lineItem && $lineItem->financial_forecast_id === $forecast->id) {
@@ -323,23 +323,23 @@ class ForecastingService
     public function getForecastDashboard(int $organizationId): array
     {
         $cacheKey = "forecast_dashboard_{$organizationId}";
-        
+
         return Cache::remember($cacheKey, 600, function () use ($organizationId) {
             $activeForecasts = FinancialForecast::where('organization_id', $organizationId)
-                                              ->active()
-                                              ->with('lineItems')
-                                              ->get();
+                ->active()
+                ->with('lineItems')
+                ->get();
 
             $forecastSummary = $activeForecasts->map(function ($forecast) {
                 $summary = $forecast->getSummary();
                 $accuracy = $forecast->calculateAccuracy();
-                
+
                 return [
                     'id' => $forecast->id,
                     'name' => $forecast->name,
                     'type' => $forecast->forecast_type,
                     'methodology' => $forecast->methodology,
-                    'period' => $forecast->start_date->format('M Y') . ' - ' . $forecast->end_date->format('M Y'),
+                    'period' => $forecast->start_date->format('M Y').' - '.$forecast->end_date->format('M Y'),
                     'total_amount' => $summary['total_amount'],
                     'confidence_level' => $forecast->confidence_level,
                     'accuracy' => $accuracy['overall_accuracy'] ?? null,
@@ -358,7 +358,9 @@ class ForecastingService
                 'by_type' => $activeForecasts->groupBy('forecast_type')->map(function ($forecasts, $type) {
                     return [
                         'count' => $forecasts->count(),
-                        'total_amount' => $forecasts->sum(function ($f) { return $f->getSummary()['total_amount']; }),
+                        'total_amount' => $forecasts->sum(function ($f) {
+                            return $f->getSummary()['total_amount'];
+                        }),
                     ];
                 }),
             ];
@@ -372,19 +374,19 @@ class ForecastingService
     {
         $data = [];
         $endDate = now();
-        
+
         for ($i = 1; $i <= $years; $i++) {
             $yearStart = $endDate->copy()->subYears($i)->startOfYear();
             $yearEnd = $endDate->copy()->subYears($i)->endOfYear();
-            
+
             $amount = JournalEntry::where('account_id', $accountId)
-                                 ->whereHas('transaction', function ($query) use ($organizationId, $yearStart, $yearEnd) {
-                                     $query->where('organization_id', $organizationId)
-                                          ->whereBetween('transaction_date', [$yearStart, $yearEnd])
-                                          ->where('status', Transaction::STATUS_POSTED);
-                                 })
-                                 ->sum('amount');
-            
+                ->whereHas('transaction', function ($query) use ($organizationId, $yearStart, $yearEnd) {
+                    $query->where('organization_id', $organizationId)
+                        ->whereBetween('transaction_date', [$yearStart, $yearEnd])
+                        ->where('status', Transaction::STATUS_POSTED);
+                })
+                ->sum('amount');
+
             $data[] = [
                 'year' => $yearStart->year,
                 'amount' => $amount,
@@ -392,7 +394,7 @@ class ForecastingService
                 'end_date' => $yearEnd,
             ];
         }
-        
+
         return array_reverse($data); // Oldest first
     }
 
@@ -403,19 +405,19 @@ class ForecastingService
     {
         $data = [];
         $endDate = now();
-        
+
         for ($i = 1; $i <= $years * 12; $i++) {
             $monthStart = $endDate->copy()->subMonths($i)->startOfMonth();
             $monthEnd = $endDate->copy()->subMonths($i)->endOfMonth();
-            
+
             $amount = JournalEntry::where('account_id', $accountId)
-                                 ->whereHas('transaction', function ($query) use ($organizationId, $monthStart, $monthEnd) {
-                                     $query->where('organization_id', $organizationId)
-                                          ->whereBetween('transaction_date', [$monthStart, $monthEnd])
-                                          ->where('status', Transaction::STATUS_POSTED);
-                                 })
-                                 ->sum('amount');
-            
+                ->whereHas('transaction', function ($query) use ($organizationId, $monthStart, $monthEnd) {
+                    $query->where('organization_id', $organizationId)
+                        ->whereBetween('transaction_date', [$monthStart, $monthEnd])
+                        ->where('status', Transaction::STATUS_POSTED);
+                })
+                ->sum('amount');
+
             $data[] = [
                 'year' => $monthStart->year,
                 'month' => $monthStart->month,
@@ -424,7 +426,7 @@ class ForecastingService
                 'end_date' => $monthEnd,
             ];
         }
-        
+
         return array_reverse($data); // Oldest first
     }
 
@@ -450,7 +452,7 @@ class ForecastingService
         }
 
         $averageGrowth = $validPeriods > 0 ? $totalGrowth / $validPeriods : 0;
-        
+
         return [
             'growth_rate' => $averageGrowth,
             'direction' => $averageGrowth > 1 ? 'increasing' : ($averageGrowth < -1 ? 'decreasing' : 'stable'),
@@ -465,16 +467,16 @@ class ForecastingService
     {
         $monthlyTotals = array_fill(1, 12, 0);
         $monthlyCounts = array_fill(1, 12, 0);
-        
+
         foreach ($monthlyData as $data) {
             $monthlyTotals[$data['month']] += $data['amount'];
             $monthlyCounts[$data['month']]++;
         }
-        
+
         $monthlyAverages = [];
         $overallAverage = 0;
         $totalMonths = 0;
-        
+
         for ($month = 1; $month <= 12; $month++) {
             if ($monthlyCounts[$month] > 0) {
                 $monthlyAverages[$month] = $monthlyTotals[$month] / $monthlyCounts[$month];
@@ -484,14 +486,14 @@ class ForecastingService
                 $monthlyAverages[$month] = 0;
             }
         }
-        
+
         $overallAverage = $totalMonths > 0 ? $overallAverage / $totalMonths : 0;
-        
+
         $seasonalFactors = [];
         for ($month = 1; $month <= 12; $month++) {
             $seasonalFactors[$month] = $overallAverage > 0 ? $monthlyAverages[$month] / $overallAverage : 1.0;
         }
-        
+
         return $seasonalFactors;
     }
 
@@ -502,7 +504,7 @@ class ForecastingService
     {
         $periods = [];
         $current = $startDate->copy();
-        
+
         while ($current->lte($endDate)) {
             $periodEnd = match ($periodType) {
                 FinancialForecast::PERIOD_MONTHLY => $current->copy()->endOfMonth(),
@@ -510,16 +512,16 @@ class ForecastingService
                 FinancialForecast::PERIOD_YEARLY => $current->copy()->endOfYear(),
                 default => $current->copy()->endOfMonth(),
             };
-            
+
             if ($periodEnd->gt($endDate)) {
                 $periodEnd = $endDate->copy();
             }
-            
+
             $periods[] = [
                 'start' => $current->copy(),
                 'end' => $periodEnd->copy(),
             ];
-            
+
             $current = match ($periodType) {
                 FinancialForecast::PERIOD_MONTHLY => $current->addMonth()->startOfMonth(),
                 FinancialForecast::PERIOD_QUARTERLY => $current->addQuarter()->startOfQuarter(),
@@ -527,7 +529,7 @@ class ForecastingService
                 default => $current->addMonth()->startOfMonth(),
             };
         }
-        
+
         return $periods;
     }
 
@@ -550,7 +552,7 @@ class ForecastingService
         foreach ($data as $i => $point) {
             $x = $i + 1; // Time index
             $y = $point['amount'];
-            
+
             $sumX += $x;
             $sumY += $y;
             $sumXY += $x * $y;
@@ -560,21 +562,21 @@ class ForecastingService
 
         $slope = ($n * $sumXY - $sumX * $sumY) / ($n * $sumXX - $sumX * $sumX);
         $intercept = ($sumY - $slope * $sumX) / $n;
-        
+
         // Calculate R-squared
         $meanY = $sumY / $n;
         $ssRes = 0;
         $ssTot = 0;
-        
+
         foreach ($data as $i => $point) {
             $x = $i + 1;
             $y = $point['amount'];
             $predicted = $intercept + $slope * $x;
-            
+
             $ssRes += pow($y - $predicted, 2);
             $ssTot += pow($y - $meanY, 2);
         }
-        
+
         $rSquared = $ssTot > 0 ? 1 - ($ssRes / $ssTot) : 0;
 
         return [
