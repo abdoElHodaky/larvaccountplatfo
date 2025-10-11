@@ -4,7 +4,7 @@
  */
 
 import React, { useState } from 'react';
-import { AnimatedButton } from '../../../shared/components/AnimatedButton';
+import AnimatedButton from '../../../shared/components/AnimatedButton';
 
 interface Transaction {
   id: string;
