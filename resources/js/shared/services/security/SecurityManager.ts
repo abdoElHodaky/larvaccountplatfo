@@ -662,11 +662,4 @@ class SecurityManager {
 // Export singleton instance
 export const securityManager = new SecurityManager();
 
-// Export types
-export type {
-  SecurityEvent,
-  SecurityPolicy,
-  SecurityMetrics,
-  RateLimitConfig,
-  SessionConfig,
-};
+// Types are already exported at the top of the file

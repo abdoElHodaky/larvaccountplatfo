@@ -106,6 +106,7 @@ export const BalanceSheet: React.FC<BalanceSheetProps> = memo(({
   const negativeColor = useColorModeValue('red.500', 'red.400');
   // const balancedColor = useColorModeValue('green.500', 'green.400');
   const unbalancedColor = useColorModeValue('red.500', 'red.400');
+  const hoverBg = useColorModeValue('gray.50', 'gray.700');
 
   // Group items by type
   const groupedItems = useMemo(() => {
@@ -211,7 +212,7 @@ export const BalanceSheet: React.FC<BalanceSheetProps> = memo(({
   const renderItemRow = useMemoizedCallback((item: BalanceSheetItem, _index: number) => (
     <Tr
       key={item.id}
-      _hover={{ bg: useColorModeValue('gray.50', 'gray.700') }}
+      _hover={{ bg: hoverBg }}
       cursor={onItemClick ? 'pointer' : 'default'}
       onClick={() => handleItemClick(item)}
     >

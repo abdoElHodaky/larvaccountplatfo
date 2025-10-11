@@ -112,11 +112,16 @@ global.WebSocket = MockWebSocket as any;
 
 // Mock IntersectionObserver
 global.IntersectionObserver = class IntersectionObserver {
+  root = null;
+  rootMargin = '';
+  thresholds = [];
+  
   constructor() {}
   observe() {}
   unobserve() {}
   disconnect() {}
-};
+  takeRecords() { return []; }
+} as any;
 
 // Mock ResizeObserver
 global.ResizeObserver = class ResizeObserver {
@@ -128,10 +133,12 @@ global.ResizeObserver = class ResizeObserver {
 
 // Mock PerformanceObserver
 global.PerformanceObserver = class PerformanceObserver {
+  static supportedEntryTypes = ['measure', 'navigation', 'resource'];
+  
   constructor() {}
   observe() {}
   disconnect() {}
-};
+} as any;
 
 // Mock performance.memory
 Object.defineProperty(performance, 'memory', {
