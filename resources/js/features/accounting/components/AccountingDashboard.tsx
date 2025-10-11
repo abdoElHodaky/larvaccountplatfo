@@ -84,7 +84,7 @@ export const AccountingDashboard: React.FC<AccountingDashboardProps> = ({
     refetch: refetchAccounts,
   } = useAccounts(
     {
-      organizationId: orgId,
+      organizationId: orgId as number,
       accountType: state.selectedAccountTypes,
       isActive: true,
       searchTerm: state.filterOptions.searchTerm,
@@ -99,7 +99,7 @@ export const AccountingDashboard: React.FC<AccountingDashboardProps> = ({
     refetch: refetchTransactions,
   } = useTransactions(
     {
-      organizationId: orgId,
+      organizationId: orgId as number,
       dateRange: state.selectedDateRange,
       accountId: state.filterOptions.accountId,
       reconciled: state.filterOptions.reconciled,
@@ -194,7 +194,7 @@ export const AccountingDashboard: React.FC<AccountingDashboardProps> = ({
       action: 'render',
       renderTime,
       componentProps: {
-        organizationId: orgId,
+        organizationId: orgId as number,
         viewMode: state.viewMode,
         accountCount: combinedAccounts.length,
         transactionCount: combinedTransactions.length,
@@ -211,7 +211,7 @@ export const AccountingDashboard: React.FC<AccountingDashboardProps> = ({
       severity: 'high',
       context: {
         component: 'AccountingDashboard',
-        organizationId: orgId,
+        organizationId: orgId as number,
         viewMode: state.viewMode,
         errorInfo,
       },

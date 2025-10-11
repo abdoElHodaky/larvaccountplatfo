@@ -3,6 +3,7 @@
  * Bundle splitting, preloading strategies, and performance optimization tools
  */
 
+import React from 'react';
 import { performanceMonitor } from './performanceMonitor';
 
 // Bundle splitting utilities
