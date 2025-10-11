@@ -3,8 +3,8 @@
 namespace App\Features\Purchase\Models;
 
 use App\Shared\Models\HybridModel;
-use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Supplier extends HybridModel
 {
@@ -47,13 +47,19 @@ class Supplier extends HybridModel
     ];
 
     const TYPE_MANUFACTURER = 'manufacturer';
+
     const TYPE_DISTRIBUTOR = 'distributor';
+
     const TYPE_WHOLESALER = 'wholesaler';
+
     const TYPE_SERVICE_PROVIDER = 'service_provider';
 
     const PAYMENT_TERMS_CASH = 'cash';
+
     const PAYMENT_TERMS_NET_15 = 'net_15';
+
     const PAYMENT_TERMS_NET_30 = 'net_30';
+
     const PAYMENT_TERMS_NET_60 = 'net_60';
 
     public function purchaseOrders(): HasMany
@@ -78,7 +84,7 @@ class Supplier extends HybridModel
 
     public function getFormattedCodeAttribute(): string
     {
-        return $this->supplier_code ?: 'SUP-' . str_pad($this->id, 6, '0', STR_PAD_LEFT);
+        return $this->supplier_code ?: 'SUP-'.str_pad($this->id, 6, '0', STR_PAD_LEFT);
     }
 
     public function getTotalPurchaseAmount(): float

@@ -37,7 +37,7 @@ class AuthServiceProvider extends ServiceProvider
 
         Gate::define('access-module', function ($user, $module) {
             $tenant = app('tenant');
-            if (!$tenant) {
+            if (! $tenant) {
                 return false;
             }
 

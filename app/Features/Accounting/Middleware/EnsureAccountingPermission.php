@@ -15,12 +15,12 @@ class EnsureAccountingPermission
     {
         $user = $request->user();
 
-        if (!$user) {
+        if (! $user) {
             return response()->json(['message' => 'Unauthenticated.'], 401);
         }
 
         // Check if user has any of the required permissions
-        if (!$user->hasAnyAccountingPermission($permissions)) {
+        if (! $user->hasAnyAccountingPermission($permissions)) {
             return response()->json([
                 'message' => 'Insufficient permissions.',
                 'required_permissions' => $permissions,

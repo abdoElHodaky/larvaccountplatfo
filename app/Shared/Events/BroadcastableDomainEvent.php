@@ -21,11 +21,11 @@ abstract class BroadcastableDomainEvent extends DomainEvent implements ShouldBro
     {
         $channels = [];
         $tenantId = $this->getTenantId();
-        
+
         // Add tenant-specific channels
         foreach ($this->getChannelNames() as $channelName) {
             $fullChannelName = $this->formatChannelName($channelName, $tenantId);
-            
+
             if ($this->isPrivateChannel($channelName)) {
                 $channels[] = new PrivateChannel($fullChannelName);
             } elseif ($this->isPresenceChannel($channelName)) {
@@ -34,7 +34,7 @@ abstract class BroadcastableDomainEvent extends DomainEvent implements ShouldBro
                 $channels[] = new Channel($fullChannelName);
             }
         }
-        
+
         return $channels;
     }
 
@@ -116,7 +116,7 @@ abstract class BroadcastableDomainEvent extends DomainEvent implements ShouldBro
     protected function formatChannelName(string $channelName, string $tenantId): string
     {
         $prefix = config('reverb.multi_tenant.channel_prefix', 'tenant');
-        
+
         // Handle different channel types
         if ($this->isPrivateChannel($channelName)) {
             return "private-{$prefix}.{$tenantId}.{$channelName}";
@@ -132,7 +132,7 @@ abstract class BroadcastableDomainEvent extends DomainEvent implements ShouldBro
      */
     protected function isPrivateChannel(string $channelName): bool
     {
-        return str_starts_with($channelName, 'private-') || 
+        return str_starts_with($channelName, 'private-') ||
                in_array($channelName, $this->getPrivateChannels());
     }
 
@@ -141,7 +141,7 @@ abstract class BroadcastableDomainEvent extends DomainEvent implements ShouldBro
      */
     protected function isPresenceChannel(string $channelName): bool
     {
-        return str_starts_with($channelName, 'presence-') || 
+        return str_starts_with($channelName, 'presence-') ||
                in_array($channelName, $this->getPresenceChannels());
     }
 
@@ -187,9 +187,9 @@ abstract class BroadcastableDomainEvent extends DomainEvent implements ShouldBro
         return [
             'broadcast',
             'domain-event',
-            'tenant:' . $this->getTenantId(),
-            'event-type:' . $this->getEventType(),
-            'aggregate-type:' . $this->getAggregateType(),
+            'tenant:'.$this->getTenantId(),
+            'event-type:'.$this->getEventType(),
+            'aggregate-type:'.$this->getAggregateType(),
         ];
     }
 }

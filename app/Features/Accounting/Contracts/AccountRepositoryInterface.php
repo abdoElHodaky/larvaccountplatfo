@@ -18,7 +18,7 @@ interface AccountRepositoryInterface extends RepositoryInterface
     /**
      * Find accounts by type
      */
-    public function findByType(string $accountType, int $organizationId = null): Collection;
+    public function findByType(string $accountType, ?int $organizationId = null): Collection;
 
     /**
      * Get account balance

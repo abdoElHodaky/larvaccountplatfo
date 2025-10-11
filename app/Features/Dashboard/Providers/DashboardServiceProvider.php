@@ -2,8 +2,8 @@
 
 namespace App\Features\Dashboard\Providers;
 
-use Illuminate\Support\ServiceProvider;
 use App\Features\Dashboard\Services\DashboardService;
+use Illuminate\Support\ServiceProvider;
 
 class DashboardServiceProvider extends ServiceProvider
 {

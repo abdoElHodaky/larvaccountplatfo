@@ -20,7 +20,7 @@ class HybridUserProvider extends EloquentUserProvider
     public function __construct(Hasher $hasher, $model, $globalModel = null)
     {
         parent::__construct($hasher, $model);
-        
+
         $this->globalModel = $globalModel;
     }
 
@@ -32,8 +32,8 @@ class HybridUserProvider extends EloquentUserProvider
         $model = $this->createModel();
 
         return $this->newModelQuery($model)
-                    ->where($model->getAuthIdentifierName(), $identifier)
-                    ->first();
+            ->where($model->getAuthIdentifierName(), $identifier)
+            ->first();
     }
 
     /**
@@ -44,11 +44,11 @@ class HybridUserProvider extends EloquentUserProvider
         $model = $this->createModel();
 
         $retrievedModel = $this->newModelQuery($model)
-                               ->where($model->getAuthIdentifierName(), $identifier)
-                               ->first();
+            ->where($model->getAuthIdentifierName(), $identifier)
+            ->first();
 
-        if (!$retrievedModel) {
-            return null;
+        if (! $retrievedModel) {
+            return;
         }
 
         $rememberToken = $retrievedModel->getRememberToken();
@@ -127,8 +127,8 @@ class HybridUserProvider extends EloquentUserProvider
      */
     public function createGlobalModel()
     {
-        if (!$this->globalModel) {
-            return null;
+        if (! $this->globalModel) {
+            return;
         }
 
         $class = '\\'.ltrim($this->globalModel, '\\');
@@ -191,12 +191,13 @@ class HybridUserProvider extends EloquentUserProvider
     protected function ensureCorrectDatabaseConnection($model): void
     {
         $tenant = app('tenant', null);
-        
-        if (!$tenant) {
+
+        if (! $tenant) {
             // No tenant context, ensure we're using the landlord connection for global users
             if ($this->isGlobalUserModel($model)) {
                 $model->setConnection('landlord');
             }
+
             return;
         }
 
@@ -218,7 +219,7 @@ class HybridUserProvider extends EloquentUserProvider
      */
     public function supportsModel($model): bool
     {
-        return $model instanceof $this->model || 
+        return $model instanceof $this->model ||
                ($this->globalModel && $model instanceof $this->globalModel);
     }
 
@@ -248,21 +249,21 @@ class HybridUserProvider extends EloquentUserProvider
     {
         // First try to find in current context
         $user = $this->retrieveByCredentials(['email' => $email]);
-        
+
         if ($user) {
             return $user;
         }
 
         // If not found and we have a global model, try global context
-        if ($this->globalModel && !app('tenant', null)) {
+        if ($this->globalModel && ! app('tenant', null)) {
             $globalModel = $this->createGlobalModel();
             if ($globalModel) {
                 $globalModel->setConnection('landlord');
+
                 return $globalModel->where('email', $email)->first();
             }
         }
 
-        return null;
     }
 
     /**
@@ -271,8 +272,8 @@ class HybridUserProvider extends EloquentUserProvider
     public function userExistsInTenant(string $email, $tenantId = null): bool
     {
         $tenant = $tenantId ? app(\App\Models\Tenant::class)->find($tenantId) : app('tenant', null);
-        
-        if (!$tenant) {
+
+        if (! $tenant) {
             return false;
         }
 

@@ -270,7 +270,7 @@ return [
             ],
             'pusher' => [
                 'driver' => 'pusher',
-                'routes' => \Nuwave\Lighthouse\Subscriptions\Subscriber\AuthorizeSubscriber::class . '@authorize',
+                'routes' => \Nuwave\Lighthouse\Subscriptions\Subscriber\AuthorizeSubscriber::class.'@authorize',
                 'connection' => 'pusher',
             ],
             'redis' => [

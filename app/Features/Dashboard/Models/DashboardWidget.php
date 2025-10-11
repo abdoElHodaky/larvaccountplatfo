@@ -51,30 +51,50 @@ class DashboardWidget extends HybridModel
      * Widget types
      */
     const TYPE_FINANCIAL_SUMMARY = 'financial_summary';
+
     const TYPE_REVENUE_CHART = 'revenue_chart';
+
     const TYPE_EXPENSE_CHART = 'expense_chart';
+
     const TYPE_CASH_FLOW = 'cash_flow';
+
     const TYPE_BUDGET_OVERVIEW = 'budget_overview';
+
     const TYPE_FORECAST_CHART = 'forecast_chart';
+
     const TYPE_TAX_SUMMARY = 'tax_summary';
+
     const TYPE_KPI_METRICS = 'kpi_metrics';
+
     const TYPE_RECENT_ACTIVITY = 'recent_activity';
+
     const TYPE_ALERTS = 'alerts';
+
     const TYPE_QUICK_STATS = 'quick_stats';
+
     const TYPE_BALANCE_SHEET = 'balance_sheet';
+
     const TYPE_PROFIT_LOSS = 'profit_loss';
+
     const TYPE_ACCOUNTS_AGING = 'accounts_aging';
+
     const TYPE_INVENTORY_STATUS = 'inventory_status';
 
     /**
      * Data sources
      */
     const SOURCE_ACCOUNTING = 'accounting';
+
     const SOURCE_BUDGET = 'budget';
+
     const SOURCE_FORECAST = 'forecast';
+
     const SOURCE_TAX = 'tax';
+
     const SOURCE_INVENTORY = 'inventory';
+
     const SOURCE_SALES = 'sales';
+
     const SOURCE_PURCHASE = 'purchase';
 
     /**
@@ -123,6 +143,7 @@ class DashboardWidget extends HybridModel
     public function getConfigurationWithDefaults(): array
     {
         $defaults = $this->getDefaultConfiguration();
+
         return array_merge($defaults, $this->configuration ?? []);
     }
 
@@ -211,22 +232,22 @@ class DashboardWidget extends HybridModel
 
         // Check permissions
         $permissions = $this->permissions ?? [];
-        
+
         if (empty($permissions)) {
             return true; // No restrictions
         }
 
         // Check role-based permissions
-        if (isset($permissions['roles']) && !empty($permissions['roles'])) {
+        if (isset($permissions['roles']) && ! empty($permissions['roles'])) {
             $userRoles = $user->roles->pluck('name')->toArray();
-            if (!array_intersect($userRoles, $permissions['roles'])) {
+            if (! array_intersect($userRoles, $permissions['roles'])) {
                 return false;
             }
         }
 
         // Check user-specific permissions
-        if (isset($permissions['users']) && !empty($permissions['users'])) {
-            if (!in_array($user->id, $permissions['users'])) {
+        if (isset($permissions['users']) && ! empty($permissions['users'])) {
+            if (! in_array($user->id, $permissions['users'])) {
                 return false;
             }
         }
@@ -250,6 +271,7 @@ class DashboardWidget extends HybridModel
     {
         $this->position_x = $x;
         $this->position_y = $y;
+
         return $this->save();
     }
 
@@ -260,6 +282,7 @@ class DashboardWidget extends HybridModel
     {
         $this->width = $width;
         $this->height = $height;
+
         return $this->save();
     }
 
@@ -268,7 +291,8 @@ class DashboardWidget extends HybridModel
      */
     public function toggleActive(): bool
     {
-        $this->is_active = !$this->is_active;
+        $this->is_active = ! $this->is_active;
+
         return $this->save();
     }
 
@@ -278,6 +302,7 @@ class DashboardWidget extends HybridModel
     public function updateConfiguration(array $configuration): bool
     {
         $this->configuration = array_merge($this->configuration ?? [], $configuration);
+
         return $this->save();
     }
 

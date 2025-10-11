@@ -24,10 +24,10 @@ return new class extends Migration
             $table->timestamp('last_login_at')->nullable();
             $table->string('remember_token')->nullable();
             $table->timestamps();
-            
+
             // Composite unique constraint for organization + email
             $table->unique(['organization_id', 'email']);
-            
+
             // Indexes for performance
             $table->index(['organization_id']);
             $table->index(['email']);
@@ -45,4 +45,3 @@ return new class extends Migration
         Schema::dropIfExists('users');
     }
 };
-

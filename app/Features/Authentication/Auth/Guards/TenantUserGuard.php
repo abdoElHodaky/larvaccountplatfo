@@ -13,7 +13,7 @@ class TenantUserGuard extends SessionGuard
     /**
      * Create a new authentication guard.
      */
-    public function __construct(UserProvider $provider, Session $session, Request $request = null)
+    public function __construct(UserProvider $provider, Session $session, ?Request $request = null)
     {
         parent::__construct('tenant_user', $provider, $session, $request);
     }
@@ -24,7 +24,7 @@ class TenantUserGuard extends SessionGuard
     public function attempt(array $credentials = [], $remember = false)
     {
         // Ensure we have a tenant context
-        if (!$this->hasTenantContext()) {
+        if (! $this->hasTenantContext()) {
             return false;
         }
 
@@ -55,7 +55,7 @@ class TenantUserGuard extends SessionGuard
     public function login(Authenticatable $user, $remember = false)
     {
         // Verify user belongs to current tenant
-        if (!$this->userBelongsToCurrentTenant($user)) {
+        if (! $this->userBelongsToCurrentTenant($user)) {
             throw new \Illuminate\Auth\AuthenticationException('User does not belong to current tenant.');
         }
 
@@ -112,8 +112,8 @@ class TenantUserGuard extends SessionGuard
     {
         $tenant = $this->getCurrentTenant();
         $tenantId = $tenant ? $tenant->id : 'unknown';
-        
-        return 'login_tenant_user_' . $tenantId . '_' . sha1(static::class);
+
+        return 'login_tenant_user_'.$tenantId.'_'.sha1(static::class);
     }
 
     /**
@@ -123,8 +123,8 @@ class TenantUserGuard extends SessionGuard
     {
         $tenant = $this->getCurrentTenant();
         $tenantId = $tenant ? $tenant->id : 'unknown';
-        
-        return 'remember_tenant_user_' . $tenantId . '_' . sha1(static::class);
+
+        return 'remember_tenant_user_'.$tenantId.'_'.sha1(static::class);
     }
 
     /**
@@ -137,14 +137,14 @@ class TenantUserGuard extends SessionGuard
         }
 
         // Ensure we have a tenant context
-        if (!$this->hasTenantContext()) {
-            return null;
+        if (! $this->hasTenantContext()) {
+            return;
         }
 
         // If we've already retrieved the user for the current request we can just
         // return it back immediately. We do not want to fetch the user data on
         // every call to this method because that would be tremendously slow.
-        if (!is_null($this->user)) {
+        if (! is_null($this->user)) {
             return $this->user;
         }
 
@@ -153,7 +153,7 @@ class TenantUserGuard extends SessionGuard
         // First we will try to load the user using the identifier in the session if
         // one exists. Otherwise we will check for a "remember me" cookie in this
         // request, and if one exists, attempt to retrieve the user using that.
-        if (!is_null($id) && $this->user = $this->provider->retrieveById($id)) {
+        if (! is_null($id) && $this->user = $this->provider->retrieveById($id)) {
             // Verify user still belongs to current tenant
             if ($this->userBelongsToCurrentTenant($this->user)) {
                 $this->fireAuthenticatedEvent($this->user);
@@ -166,7 +166,7 @@ class TenantUserGuard extends SessionGuard
 
         // If the user is null, but we decrypt a "remember me" cookie we can attempt
         // to retrieve the user using that. Once we have the user we can return it.
-        if (is_null($this->user) && !is_null($recaller = $this->recaller())) {
+        if (is_null($this->user) && ! is_null($recaller = $this->recaller())) {
             $this->user = $this->userFromRecaller($recaller);
 
             if ($this->user && $this->userBelongsToCurrentTenant($this->user)) {
@@ -186,13 +186,13 @@ class TenantUserGuard extends SessionGuard
      */
     public function validate(array $credentials = [])
     {
-        if (!$this->hasTenantContext()) {
+        if (! $this->hasTenantContext()) {
             return false;
         }
 
         $this->lastAttempted = $user = $this->provider->retrieveByCredentials($credentials);
 
-        return $this->hasValidCredentials($user, $credentials) && 
+        return $this->hasValidCredentials($user, $credentials) &&
                $this->userBelongsToCurrentTenant($user);
     }
 
@@ -201,7 +201,7 @@ class TenantUserGuard extends SessionGuard
      */
     protected function hasValidCredentials($user, $credentials)
     {
-        $validated = !is_null($user) && $this->provider->validateCredentials($user, $credentials);
+        $validated = ! is_null($user) && $this->provider->validateCredentials($user, $credentials);
 
         if ($validated) {
             $this->fireValidatedEvent($user);
@@ -231,12 +231,12 @@ class TenantUserGuard extends SessionGuard
      */
     protected function userBelongsToCurrentTenant($user): bool
     {
-        if (!$user) {
+        if (! $user) {
             return false;
         }
 
         $tenant = $this->getCurrentTenant();
-        if (!$tenant) {
+        if (! $tenant) {
             return false;
         }
 

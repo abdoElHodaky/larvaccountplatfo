@@ -2,12 +2,12 @@
 
 namespace Tests\Feature\Accounting;
 
-use Tests\TestCase;
 use App\Features\Accounting\Models\Account;
-use App\Features\Accounting\Models\Transaction;
 use App\Features\Accounting\Models\JournalEntry;
+use App\Features\Accounting\Models\Transaction;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
+use Tests\TestCase;
 
 class AccountingApiTest extends TestCase
 {
@@ -16,7 +16,7 @@ class AccountingApiTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        
+
         // Create test user and authenticate
         $this->actingAs($this->createTestUser());
     }
@@ -31,17 +31,17 @@ class AccountingApiTest extends TestCase
         $response = $this->getJson('/api/accounting/dashboard');
 
         $response->assertStatus(200)
-                ->assertJsonStructure([
-                    'success',
-                    'data' => [
-                        'total_revenue',
-                        'total_expenses',
-                        'net_income',
-                        'cash_flow',
-                        'recent_transactions',
-                        'account_balances'
-                    ]
-                ]);
+            ->assertJsonStructure([
+                'success',
+                'data' => [
+                    'total_revenue',
+                    'total_expenses',
+                    'net_income',
+                    'cash_flow',
+                    'recent_transactions',
+                    'account_balances',
+                ],
+            ]);
     }
 
     /** @test */
@@ -52,20 +52,20 @@ class AccountingApiTest extends TestCase
         $response = $this->getJson('/api/accounting/accounts');
 
         $response->assertStatus(200)
-                ->assertJsonStructure([
-                    'success',
-                    'data' => [
-                        '*' => [
-                            'id',
-                            'name',
-                            'code',
-                            'type',
-                            'balance',
-                            'status',
-                            'description'
-                        ]
-                    ]
-                ]);
+            ->assertJsonStructure([
+                'success',
+                'data' => [
+                    '*' => [
+                        'id',
+                        'name',
+                        'code',
+                        'type',
+                        'balance',
+                        'status',
+                        'description',
+                    ],
+                ],
+            ]);
     }
 
     /** @test */
@@ -77,19 +77,19 @@ class AccountingApiTest extends TestCase
         $response = $this->getJson("/api/accounting/accounts/{$account->id}");
 
         $response->assertStatus(200)
-                ->assertJsonStructure([
-                    'success',
-                    'data' => [
-                        'id',
-                        'name',
-                        'code',
-                        'type',
-                        'balance',
-                        'status',
-                        'description',
-                        'transactions'
-                    ]
-                ]);
+            ->assertJsonStructure([
+                'success',
+                'data' => [
+                    'id',
+                    'name',
+                    'code',
+                    'type',
+                    'balance',
+                    'status',
+                    'description',
+                    'transactions',
+                ],
+            ]);
     }
 
     /** @test */
@@ -100,27 +100,27 @@ class AccountingApiTest extends TestCase
             'code' => 'TEST-001',
             'type' => 'asset',
             'description' => 'Test account description',
-            'status' => 'active'
+            'status' => 'active',
         ];
 
         $response = $this->postJson('/api/accounting/accounts', $accountData);
 
         $response->assertStatus(201)
-                ->assertJsonStructure([
-                    'success',
-                    'data' => [
-                        'id',
-                        'name',
-                        'code',
-                        'type',
-                        'description',
-                        'status'
-                    ]
-                ]);
+            ->assertJsonStructure([
+                'success',
+                'data' => [
+                    'id',
+                    'name',
+                    'code',
+                    'type',
+                    'description',
+                    'status',
+                ],
+            ]);
 
         $this->assertDatabaseHas('accounts', [
             'name' => 'Test Account',
-            'code' => 'TEST-001'
+            'code' => 'TEST-001',
         ]);
     }
 
@@ -131,24 +131,24 @@ class AccountingApiTest extends TestCase
 
         $updateData = [
             'name' => 'Updated Account Name',
-            'description' => 'Updated description'
+            'description' => 'Updated description',
         ];
 
         $response = $this->putJson("/api/accounting/accounts/{$account->id}", $updateData);
 
         $response->assertStatus(200)
-                ->assertJsonStructure([
-                    'success',
-                    'data' => [
-                        'id',
-                        'name',
-                        'description'
-                    ]
-                ]);
+            ->assertJsonStructure([
+                'success',
+                'data' => [
+                    'id',
+                    'name',
+                    'description',
+                ],
+            ]);
 
         $this->assertDatabaseHas('accounts', [
             'id' => $account->id,
-            'name' => 'Updated Account Name'
+            'name' => 'Updated Account Name',
         ]);
     }
 
@@ -161,57 +161,57 @@ class AccountingApiTest extends TestCase
         $response = $this->getJson('/api/accounting/transactions');
 
         $response->assertStatus(200)
-                ->assertJsonStructure([
-                    'success',
-                    'data' => [
-                        '*' => [
-                            'id',
-                            'account_id',
-                            'amount',
-                            'type',
-                            'description',
-                            'reference',
-                            'date',
-                            'status'
-                        ]
-                    ]
-                ]);
-    }
-
-    /** @test */
-    public function it_can_create_new_transaction()
-    {
-        $account = Account::factory()->create();
-        
-        $transactionData = [
-            'account_id' => $account->id,
-            'amount' => 1000.00,
-            'type' => 'credit',
-            'description' => 'Test transaction',
-            'reference' => 'REF-001',
-            'date' => now()->format('Y-m-d')
-        ];
-
-        $response = $this->postJson('/api/accounting/transactions', $transactionData);
-
-        $response->assertStatus(201)
-                ->assertJsonStructure([
-                    'success',
-                    'data' => [
+            ->assertJsonStructure([
+                'success',
+                'data' => [
+                    '*' => [
                         'id',
                         'account_id',
                         'amount',
                         'type',
                         'description',
                         'reference',
-                        'date'
-                    ]
-                ]);
+                        'date',
+                        'status',
+                    ],
+                ],
+            ]);
+    }
+
+    /** @test */
+    public function it_can_create_new_transaction()
+    {
+        $account = Account::factory()->create();
+
+        $transactionData = [
+            'account_id' => $account->id,
+            'amount' => 1000.00,
+            'type' => 'credit',
+            'description' => 'Test transaction',
+            'reference' => 'REF-001',
+            'date' => now()->format('Y-m-d'),
+        ];
+
+        $response = $this->postJson('/api/accounting/transactions', $transactionData);
+
+        $response->assertStatus(201)
+            ->assertJsonStructure([
+                'success',
+                'data' => [
+                    'id',
+                    'account_id',
+                    'amount',
+                    'type',
+                    'description',
+                    'reference',
+                    'date',
+                ],
+            ]);
 
         $this->assertDatabaseHas('transactions', [
             'account_id' => $account->id,
             'amount' => 1000.00,
-            'reference' => 'REF-001'
+            'reference' => 'REF-001',
         ]);
     }
 
@@ -223,20 +223,20 @@ class AccountingApiTest extends TestCase
         $response = $this->getJson('/api/accounting/journal-entries');
 
         $response->assertStatus(200)
-                ->assertJsonStructure([
-                    'success',
-                    'data' => [
-                        '*' => [
-                            'id',
-                            'date',
-                            'reference',
-                            'description',
-                            'total_debit',
-                            'total_credit',
-                            'status'
-                        ]
-                    ]
-                ]);
+            ->assertJsonStructure([
+                'success',
+                'data' => [
+                    '*' => [
+                        'id',
+                        'date',
+                        'reference',
+                        'description',
+                        'total_debit',
+                        'total_credit',
+                        'status',
+                    ],
+                ],
+            ]);
     }
 
     /** @test */
@@ -244,7 +244,7 @@ class AccountingApiTest extends TestCase
     {
         $debitAccount = Account::factory()->create(['type' => 'asset']);
         $creditAccount = Account::factory()->create(['type' => 'liability']);
-        
+
         $journalEntryData = [
             'date' => now()->format('Y-m-d'),
             'reference' => 'JE-001',
@@ -254,36 +254,36 @@ class AccountingApiTest extends TestCase
                     'account_id' => $debitAccount->id,
                     'debit' => 1000.00,
                     'credit' => 0,
-                    'description' => 'Debit entry'
+                    'description' => 'Debit entry',
                 ],
                 [
                     'account_id' => $creditAccount->id,
                     'debit' => 0,
                     'credit' => 1000.00,
-                    'description' => 'Credit entry'
-                ]
-            ]
+                    'description' => 'Credit entry',
+                ],
+            ],
         ];
 
         $response = $this->postJson('/api/accounting/journal-entries', $journalEntryData);
 
         $response->assertStatus(201)
-                ->assertJsonStructure([
-                    'success',
-                    'data' => [
-                        'id',
-                        'date',
-                        'reference',
-                        'description',
-                        'total_debit',
-                        'total_credit',
-                        'entries'
-                    ]
-                ]);
+            ->assertJsonStructure([
+                'success',
+                'data' => [
+                    'id',
+                    'date',
+                    'reference',
+                    'description',
+                    'total_debit',
+                    'total_credit',
+                    'entries',
+                ],
+            ]);
 
         $this->assertDatabaseHas('journal_entries', [
             'reference' => 'JE-001',
-            'description' => 'Test journal entry'
+            'description' => 'Test journal entry',
         ]);
     }
 
@@ -299,27 +299,27 @@ class AccountingApiTest extends TestCase
         Transaction::factory()->create([
             'account_id' => $assetAccount->id,
             'amount' => 5000,
-            'type' => 'debit'
+            'type' => 'debit',
         ]);
         Transaction::factory()->create([
             'account_id' => $revenueAccount->id,
             'amount' => 3000,
-            'type' => 'credit'
+            'type' => 'credit',
         ]);
 
         $response = $this->getJson('/api/accounting/reports/balance-sheet');
 
         $response->assertStatus(200)
-                ->assertJsonStructure([
-                    'success',
-                    'data' => [
-                        'assets',
-                        'liabilities',
-                        'equity',
-                        'total_assets',
-                        'total_liabilities_equity'
-                    ]
-                ]);
+            ->assertJsonStructure([
+                'success',
+                'data' => [
+                    'assets',
+                    'liabilities',
+                    'equity',
+                    'total_assets',
+                    'total_liabilities_equity',
+                ],
+            ]);
     }
 
     /** @test */
@@ -331,27 +331,27 @@ class AccountingApiTest extends TestCase
         Transaction::factory()->create([
             'account_id' => $revenueAccount->id,
             'amount' => 5000,
-            'type' => 'credit'
+            'type' => 'credit',
         ]);
         Transaction::factory()->create([
             'account_id' => $expenseAccount->id,
             'amount' => 2000,
-            'type' => 'debit'
+            'type' => 'debit',
         ]);
 
         $response = $this->getJson('/api/accounting/reports/profit-loss');
 
         $response->assertStatus(200)
-                ->assertJsonStructure([
-                    'success',
-                    'data' => [
-                        'revenue',
-                        'expenses',
-                        'gross_profit',
-                        'net_income',
-                        'period'
-                    ]
-                ]);
+            ->assertJsonStructure([
+                'success',
+                'data' => [
+                    'revenue',
+                    'expenses',
+                    'gross_profit',
+                    'net_income',
+                    'period',
+                ],
+            ]);
     }
 
     /** @test */
@@ -360,7 +360,7 @@ class AccountingApiTest extends TestCase
         $response = $this->postJson('/api/accounting/accounts', []);
 
         $response->assertStatus(422)
-                ->assertJsonValidationErrors(['name', 'code', 'type']);
+            ->assertJsonValidationErrors(['name', 'code', 'type']);
     }
 
     /** @test */
@@ -371,20 +371,20 @@ class AccountingApiTest extends TestCase
         $accountData = [
             'name' => 'New Account',
             'code' => 'DUPLICATE-CODE',
-            'type' => 'asset'
+            'type' => 'asset',
         ];
 
         $response = $this->postJson('/api/accounting/accounts', $accountData);
 
         $response->assertStatus(422)
-                ->assertJsonValidationErrors(['code']);
+            ->assertJsonValidationErrors(['code']);
     }
 
     /** @test */
     public function it_validates_journal_entry_balance()
     {
         $account = Account::factory()->create();
-        
+
         $journalEntryData = [
             'date' => now()->format('Y-m-d'),
             'reference' => 'JE-UNBALANCED',
@@ -394,41 +394,41 @@ class AccountingApiTest extends TestCase
                     'account_id' => $account->id,
                     'debit' => 1000.00,
                     'credit' => 0,
-                    'description' => 'Debit entry'
+                    'description' => 'Debit entry',
                 ],
                 [
                     'account_id' => $account->id,
                     'debit' => 0,
                     'credit' => 500.00, // Unbalanced
-                    'description' => 'Credit entry'
-                ]
-            ]
+                    'description' => 'Credit entry',
+                ],
+            ],
         ];
 
         $response = $this->postJson('/api/accounting/journal-entries', $journalEntryData);
 
         $response->assertStatus(422)
-                ->assertJsonValidationErrors(['entries']);
+            ->assertJsonValidationErrors(['entries']);
     }
 
     /** @test */
     public function it_can_filter_transactions_by_date_range()
     {
         $account = Account::factory()->create();
-        
+
         $oldTransaction = Transaction::factory()->create([
             'account_id' => $account->id,
-            'date' => now()->subDays(30)
+            'date' => now()->subDays(30),
         ]);
         $recentTransaction = Transaction::factory()->create([
             'account_id' => $account->id,
-            'date' => now()->subDays(5)
+            'date' => now()->subDays(5),
         ]);
 
-        $response = $this->getJson('/api/accounting/transactions?from=' . now()->subDays(10)->format('Y-m-d') . '&to=' . now()->format('Y-m-d'));
+        $response = $this->getJson('/api/accounting/transactions?from='.now()->subDays(10)->format('Y-m-d').'&to='.now()->format('Y-m-d'));
 
         $response->assertStatus(200)
-                ->assertJsonCount(1, 'data');
+            ->assertJsonCount(1, 'data');
     }
 
     /** @test */
@@ -436,14 +436,14 @@ class AccountingApiTest extends TestCase
     {
         $account1 = Account::factory()->create();
         $account2 = Account::factory()->create();
-        
+
         $transaction1 = Transaction::factory()->create(['account_id' => $account1->id]);
         $transaction2 = Transaction::factory()->create(['account_id' => $account2->id]);
 
         $response = $this->getJson("/api/accounting/transactions?account_id={$account1->id}");
 
         $response->assertStatus(200)
-                ->assertJsonCount(1, 'data');
+            ->assertJsonCount(1, 'data');
     }
 
     /**

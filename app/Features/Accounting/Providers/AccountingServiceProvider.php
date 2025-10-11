@@ -2,8 +2,8 @@
 
 namespace App\Features\Accounting\Providers;
 
-use Illuminate\Support\ServiceProvider;
 use App\Features\Accounting\Services\AccountingService;
+use Illuminate\Support\ServiceProvider;
 
 class AccountingServiceProvider extends ServiceProvider
 {
@@ -13,7 +13,7 @@ class AccountingServiceProvider extends ServiceProvider
     public function register(): void
     {
         $this->app->singleton(AccountingService::class, function ($app) {
-            return new AccountingService();
+            return new AccountingService;
         });
     }
 
@@ -23,14 +23,14 @@ class AccountingServiceProvider extends ServiceProvider
     public function boot(): void
     {
         // Load routes
-        $this->loadRoutesFrom(__DIR__ . '/../Routes/accounting.php');
-        
+        $this->loadRoutesFrom(__DIR__.'/../Routes/accounting.php');
+
         // Load migrations if needed
         // $this->loadMigrationsFrom(__DIR__ . '/../Database/Migrations');
-        
+
         // Load views if needed
         // $this->loadViewsFrom(__DIR__ . '/../Resources/views', 'accounting');
-        
+
         // Publish config if needed
         // $this->publishes([
         //     __DIR__ . '/../Config/accounting.php' => config_path('accounting.php'),
