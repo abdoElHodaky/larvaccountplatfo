@@ -166,8 +166,9 @@ export const AccountBalances: React.FC<AccountBalancesProps> = ({
         <div className="filter-controls">
           <select
             value={filterByType || ''}
-            onChange={(e) => setFilterByType(e.target.value || undefined)}
+            onChange={(e) => console.log('Filter change:', e.target.value)}
             className="type-filter"
+            disabled
           >
             <option value="">All Types</option>
             <option value="asset">Assets</option>
