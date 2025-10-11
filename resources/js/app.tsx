@@ -5,7 +5,7 @@ import { createRoot } from 'react-dom/client';
 import { createInertiaApp } from '@inertiajs/react';
 import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
 import AppProviders from './app/providers/AppProviders';
-import { routePreloader } from './shared/utils/routeBasedLazyLoading';
+import { routePreloader } from './shared/utils/lazyLoading';
 import { MobileOptimizationManager } from './shared/utils/mobileOptimization';
 import { PWAEnhancementManager } from './shared/utils/pwaEnhancements';
 import { PerformanceAnalyticsDashboard } from './shared/utils/performanceAnalytics';
