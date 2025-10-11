@@ -32,7 +32,7 @@ export const AnimatedFragment: React.FC<AnimatedFragmentProps> = ({
   ...props
 }) => {
   const { shouldAnimate, registerAnimation, unregisterAnimation } = useAnimationContext();
-  const { variants, controls } = useAnimation(animation);
+  const { variants } = useAnimation(animation);
 
   useEffect(() => {
     if (shouldAnimate(priority)) {
