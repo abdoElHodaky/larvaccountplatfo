@@ -56,15 +56,12 @@ const createRestClient = () => {
     
     // Global response interceptor
     responded: {
-      onSuccess: async (response, method) => {
-        console.log(`✅ API Success: ${method.type} ${method.url}`, {
-          status: response.status,
-          statusText: response.statusText
-        });
+      onSuccess: async (response, _method) => {
+        // API request successful
         return response.json();
       },
-      onError: async (error, method) => {
-        console.error(`❌ API Error: ${method.type} ${method.url}`, error);
+      onError: async (error, _method) => {
+        // API request error occurred
         
         // Handle authentication errors
         if (error.response?.status === 401) {
@@ -112,31 +109,23 @@ const createGraphQLClient = () => {
         method.config.headers['X-Organization-ID'] = organizationId;
       }
       
-      console.log(`🔄 GraphQL Request:`, {
-        query: method.data?.query?.substring(0, 100) + '...',
-        variables: method.data?.variables
-      });
+      // GraphQL request initiated
     },
     
     // GraphQL response handling
     responded: {
-      onSuccess: async (response, method) => {
+      onSuccess: async (response, _method) => {
         const data = await response.json();
         
         // Handle GraphQL errors
         if (data.errors) {
-          console.error('❌ GraphQL Errors:', data.errors);
           throw new Error(data.errors[0]?.message || 'GraphQL Error');
         }
         
-        console.log('✅ GraphQL Success:', {
-          data: data.data ? Object.keys(data.data) : 'No data'
-        });
-        
         return data;
       },
-      onError: async (error, method) => {
-        console.error('❌ GraphQL Request Error:', error);
+      onError: async (error, _method) => {
+        // GraphQL request error occurred
         
         // Handle authentication errors
         if (error.response?.status === 401) {

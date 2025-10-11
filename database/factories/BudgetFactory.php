@@ -3,8 +3,8 @@
 namespace Database\Factories;
 
 use App\Features\Accounting\Models\Budget;
-use Illuminate\Database\Eloquent\Factories\Factory;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Features\Accounting\Models\Budget>
@@ -30,7 +30,7 @@ class BudgetFactory extends Factory
 
         return [
             'organization_id' => 1,
-            'name' => $this->faker->words(3, true) . ' Budget',
+            'name' => $this->faker->words(3, true).' Budget',
             'description' => $this->faker->sentence(),
             'budget_type' => $this->faker->randomElement(['operational', 'capital', 'project', 'department']),
             'period_type' => $this->faker->randomElement(['monthly', 'quarterly', 'yearly', 'custom']),
@@ -80,7 +80,7 @@ class BudgetFactory extends Factory
     {
         return $this->state(fn (array $attributes) => [
             'budget_type' => 'operational',
-            'name' => 'Operational Budget ' . $this->faker->year(),
+            'name' => 'Operational Budget '.$this->faker->year(),
         ]);
     }
 
@@ -92,7 +92,7 @@ class BudgetFactory extends Factory
         return $this->state(fn (array $attributes) => [
             'start_date' => Carbon::create($year, 1, 1),
             'end_date' => Carbon::create($year, 12, 31),
-            'name' => $year . ' ' . $this->faker->words(2, true) . ' Budget',
+            'name' => $year.' '.$this->faker->words(2, true).' Budget',
         ]);
     }
 }

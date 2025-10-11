@@ -43,13 +43,21 @@ class TaxRate extends HybridModel
      * Tax types
      */
     const TYPE_SALES_TAX = 'sales_tax';
+
     const TYPE_VAT = 'vat';
+
     const TYPE_GST = 'gst';
+
     const TYPE_INCOME_TAX = 'income_tax';
+
     const TYPE_PAYROLL_TAX = 'payroll_tax';
+
     const TYPE_PROPERTY_TAX = 'property_tax';
+
     const TYPE_EXCISE_TAX = 'excise_tax';
+
     const TYPE_CUSTOM_DUTY = 'custom_duty';
+
     const TYPE_OTHER = 'other';
 
     /**
@@ -66,14 +74,14 @@ class TaxRate extends HybridModel
     public function scopeActive($query)
     {
         return $query->where('is_active', true)
-                    ->where(function ($q) {
-                        $q->whereNull('effective_from')
-                          ->orWhere('effective_from', '<=', now());
-                    })
-                    ->where(function ($q) {
-                        $q->whereNull('effective_to')
-                          ->orWhere('effective_to', '>=', now());
-                    });
+            ->where(function ($q) {
+                $q->whereNull('effective_from')
+                    ->orWhere('effective_from', '<=', now());
+            })
+            ->where(function ($q) {
+                $q->whereNull('effective_to')
+                    ->orWhere('effective_to', '>=', now());
+            });
     }
 
     /**
@@ -99,10 +107,10 @@ class TaxRate extends HybridModel
     {
         return $query->where(function ($q) use ($date) {
             $q->whereNull('effective_from')
-              ->orWhere('effective_from', '<=', $date);
+                ->orWhere('effective_from', '<=', $date);
         })->where(function ($q) use ($date) {
             $q->whereNull('effective_to')
-              ->orWhere('effective_to', '>=', $date);
+                ->orWhere('effective_to', '>=', $date);
         });
     }
 
@@ -136,13 +144,13 @@ class TaxRate extends HybridModel
     public function isCurrentlyEffective(): bool
     {
         $now = now()->toDateString();
-        
+
         $effectiveFrom = $this->effective_from ? $this->effective_from->toDateString() : null;
         $effectiveTo = $this->effective_to ? $this->effective_to->toDateString() : null;
-        
+
         return $this->is_active &&
-               (!$effectiveFrom || $effectiveFrom <= $now) &&
-               (!$effectiveTo || $effectiveTo >= $now);
+               (! $effectiveFrom || $effectiveFrom <= $now) &&
+               (! $effectiveTo || $effectiveTo >= $now);
     }
 
     /**
@@ -169,7 +177,7 @@ class TaxRate extends HybridModel
      */
     public function getFormattedRateAttribute(): string
     {
-        return number_format($this->rate, 2) . '%';
+        return number_format($this->rate, 2).'%';
     }
 
     /**
@@ -177,7 +185,7 @@ class TaxRate extends HybridModel
      */
     public function getDisplayNameAttribute(): string
     {
-        return $this->name . ' (' . $this->formatted_rate . ')';
+        return $this->name.' ('.$this->formatted_rate.')';
     }
 
     /**
@@ -186,6 +194,7 @@ class TaxRate extends HybridModel
     public function activate(): bool
     {
         $this->is_active = true;
+
         return $this->save();
     }
 
@@ -195,6 +204,7 @@ class TaxRate extends HybridModel
     public function deactivate(): bool
     {
         $this->is_active = false;
+
         return $this->save();
     }
 
@@ -205,6 +215,7 @@ class TaxRate extends HybridModel
     {
         $this->effective_from = $from;
         $this->effective_to = $to;
+
         return $this->save();
     }
 

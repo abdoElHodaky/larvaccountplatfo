@@ -2,13 +2,12 @@
 
 namespace Tests\Unit\Inventory;
 
-use Tests\TestCase;
-use App\Features\Inventory\Services\InventoryService;
 use App\Features\Inventory\Models\Product;
 use App\Features\Inventory\Models\ProductCategory;
 use App\Features\Inventory\Models\StockLevel;
+use App\Features\Inventory\Services\InventoryService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Mockery;
+use Tests\TestCase;
 
 class InventoryServiceTest extends TestCase
 {
@@ -19,7 +18,7 @@ class InventoryServiceTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->inventoryService = new InventoryService();
+        $this->inventoryService = new InventoryService;
     }
 
     /** @test */
@@ -28,19 +27,19 @@ class InventoryServiceTest extends TestCase
         // Create test data
         $category = ProductCategory::factory()->create();
         $products = Product::factory()->count(5)->create(['category_id' => $category->id]);
-        
+
         // Create stock levels with different quantities
         StockLevel::factory()->create([
             'product_id' => $products[0]->id,
-            'quantity' => 0 // Out of stock
+            'quantity' => 0, // Out of stock
         ]);
         StockLevel::factory()->create([
             'product_id' => $products[1]->id,
-            'quantity' => 5 // Low stock (assuming min_stock_level is 10)
+            'quantity' => 5, // Low stock (assuming min_stock_level is 10)
         ]);
         StockLevel::factory()->create([
             'product_id' => $products[2]->id,
-            'quantity' => 50 // Normal stock
+            'quantity' => 50, // Normal stock
         ]);
 
         $dashboardData = $this->inventoryService->getDashboardData();
@@ -51,7 +50,7 @@ class InventoryServiceTest extends TestCase
         $this->assertArrayHasKey('out_of_stock_items', $dashboardData);
         $this->assertArrayHasKey('total_value', $dashboardData);
         $this->assertArrayHasKey('recent_movements', $dashboardData);
-        
+
         $this->assertEquals(5, $dashboardData['total_products']);
     }
 
@@ -59,7 +58,7 @@ class InventoryServiceTest extends TestCase
     public function it_can_create_product()
     {
         $category = ProductCategory::factory()->create();
-        
+
         $productData = [
             'name' => 'Test Product',
             'sku' => 'TEST-001',
@@ -70,7 +69,7 @@ class InventoryServiceTest extends TestCase
             'min_stock_level' => 10,
             'max_stock_level' => 100,
             'reorder_point' => 20,
-            'status' => 'active'
+            'status' => 'active',
         ];
 
         $product = $this->inventoryService->createProduct($productData);
@@ -80,7 +79,7 @@ class InventoryServiceTest extends TestCase
         $this->assertEquals('TEST-001', $product->sku);
         $this->assertDatabaseHas('products', [
             'name' => 'Test Product',
-            'sku' => 'TEST-001'
+            'sku' => 'TEST-001',
         ]);
     }
 
@@ -93,7 +92,7 @@ class InventoryServiceTest extends TestCase
         $updateData = [
             'name' => 'Updated Product Name',
             'price' => 149.99,
-            'description' => 'Updated description'
+            'description' => 'Updated description',
         ];
 
         $updatedProduct = $this->inventoryService->updateProduct($product->id, $updateData);
@@ -104,7 +103,7 @@ class InventoryServiceTest extends TestCase
         $this->assertDatabaseHas('products', [
             'id' => $product->id,
             'name' => 'Updated Product Name',
-            'price' => 149.99
+            'price' => 149.99,
         ]);
     }
 
@@ -125,21 +124,21 @@ class InventoryServiceTest extends TestCase
     {
         $category1 = ProductCategory::factory()->create(['name' => 'Electronics']);
         $category2 = ProductCategory::factory()->create(['name' => 'Clothing']);
-        
+
         $product1 = Product::factory()->create([
             'category_id' => $category1->id,
             'name' => 'iPhone',
-            'status' => 'active'
+            'status' => 'active',
         ]);
         $product2 = Product::factory()->create([
             'category_id' => $category2->id,
             'name' => 'T-Shirt',
-            'status' => 'active'
+            'status' => 'active',
         ]);
         $product3 = Product::factory()->create([
             'category_id' => $category1->id,
             'name' => 'iPad',
-            'status' => 'inactive'
+            'status' => 'inactive',
         ]);
 
         // Test category filter
@@ -163,7 +162,7 @@ class InventoryServiceTest extends TestCase
         $product = Product::factory()->create(['category_id' => $category->id]);
         $stockLevel = StockLevel::factory()->create([
             'product_id' => $product->id,
-            'quantity' => 50
+            'quantity' => 50,
         ]);
 
         $result = $this->inventoryService->updateStock($product->id, 100, 'Stock adjustment', 'adjustment');
@@ -174,7 +173,7 @@ class InventoryServiceTest extends TestCase
         $this->assertArrayHasKey('previous_quantity', $result);
         $this->assertArrayHasKey('movement_type', $result);
         $this->assertArrayHasKey('reason', $result);
-        
+
         $this->assertEquals($product->id, $result['product_id']);
         $this->assertEquals(100, $result['quantity']);
         $this->assertEquals(50, $result['previous_quantity']);
@@ -185,26 +184,26 @@ class InventoryServiceTest extends TestCase
     public function it_can_get_low_stock_products()
     {
         $category = ProductCategory::factory()->create();
-        
+
         $product1 = Product::factory()->create([
             'category_id' => $category->id,
-            'min_stock_level' => 20
+            'min_stock_level' => 20,
         ]);
         $product2 = Product::factory()->create([
             'category_id' => $category->id,
-            'min_stock_level' => 10
+            'min_stock_level' => 10,
         ]);
-        
+
         // Product 1 - low stock
         StockLevel::factory()->create([
             'product_id' => $product1->id,
-            'quantity' => 5
+            'quantity' => 5,
         ]);
-        
+
         // Product 2 - adequate stock
         StockLevel::factory()->create([
             'product_id' => $product2->id,
-            'quantity' => 50
+            'quantity' => 50,
         ]);
 
         $lowStockProducts = $this->inventoryService->getLowStockProducts();
@@ -217,20 +216,20 @@ class InventoryServiceTest extends TestCase
     public function it_can_get_out_of_stock_products()
     {
         $category = ProductCategory::factory()->create();
-        
+
         $product1 = Product::factory()->create(['category_id' => $category->id]);
         $product2 = Product::factory()->create(['category_id' => $category->id]);
-        
+
         // Product 1 - out of stock
         StockLevel::factory()->create([
             'product_id' => $product1->id,
-            'quantity' => 0
+            'quantity' => 0,
         ]);
-        
+
         // Product 2 - in stock
         StockLevel::factory()->create([
             'product_id' => $product2->id,
-            'quantity' => 10
+            'quantity' => 10,
         ]);
 
         $outOfStockProducts = $this->inventoryService->getOutOfStockProducts();
@@ -243,23 +242,23 @@ class InventoryServiceTest extends TestCase
     public function it_can_calculate_total_inventory_value()
     {
         $category = ProductCategory::factory()->create();
-        
+
         $product1 = Product::factory()->create([
             'category_id' => $category->id,
-            'price' => 100.00
+            'price' => 100.00,
         ]);
         $product2 = Product::factory()->create([
             'category_id' => $category->id,
-            'price' => 50.00
+            'price' => 50.00,
         ]);
-        
+
         StockLevel::factory()->create([
             'product_id' => $product1->id,
-            'quantity' => 10
+            'quantity' => 10,
         ]);
         StockLevel::factory()->create([
             'product_id' => $product2->id,
-            'quantity' => 20
+            'quantity' => 20,
         ]);
 
         $totalValue = $this->inventoryService->getTotalInventoryValue();
@@ -272,26 +271,26 @@ class InventoryServiceTest extends TestCase
     public function it_can_get_products_needing_reorder()
     {
         $category = ProductCategory::factory()->create();
-        
+
         $product1 = Product::factory()->create([
             'category_id' => $category->id,
-            'reorder_point' => 15
+            'reorder_point' => 15,
         ]);
         $product2 = Product::factory()->create([
             'category_id' => $category->id,
-            'reorder_point' => 10
+            'reorder_point' => 10,
         ]);
-        
+
         // Product 1 - needs reorder
         StockLevel::factory()->create([
             'product_id' => $product1->id,
-            'quantity' => 10
+            'quantity' => 10,
         ]);
-        
+
         // Product 2 - doesn't need reorder
         StockLevel::factory()->create([
             'product_id' => $product2->id,
-            'quantity' => 20
+            'quantity' => 20,
         ]);
 
         $reorderProducts = $this->inventoryService->getProductsNeedingReorder();
@@ -317,7 +316,7 @@ class InventoryServiceTest extends TestCase
         $categoryData = [
             'name' => 'Test Category',
             'description' => 'Test category description',
-            'status' => 'active'
+            'status' => 'active',
         ];
 
         $category = $this->inventoryService->createCategory($categoryData);
@@ -325,7 +324,7 @@ class InventoryServiceTest extends TestCase
         $this->assertInstanceOf(ProductCategory::class, $category);
         $this->assertEquals('Test Category', $category->name);
         $this->assertDatabaseHas('product_categories', [
-            'name' => 'Test Category'
+            'name' => 'Test Category',
         ]);
     }
 
@@ -333,7 +332,7 @@ class InventoryServiceTest extends TestCase
     public function it_handles_product_not_found_exception()
     {
         $this->expectException(\Illuminate\Database\Eloquent\ModelNotFoundException::class);
-        
+
         $this->inventoryService->updateProduct(999, ['name' => 'Updated Name']);
     }
 
@@ -344,7 +343,7 @@ class InventoryServiceTest extends TestCase
         $product = Product::factory()->create(['category_id' => $category->id]);
 
         $this->expectException(\InvalidArgumentException::class);
-        
+
         $this->inventoryService->updateStock($product->id, -10, 'Invalid quantity', 'adjustment');
     }
 
@@ -353,7 +352,7 @@ class InventoryServiceTest extends TestCase
     {
         $category = ProductCategory::factory()->create();
         $product = Product::factory()->create(['category_id' => $category->id]);
-        
+
         // Create some stock movements
         $this->inventoryService->updateStock($product->id, 100, 'Initial stock', 'in');
         $this->inventoryService->updateStock($product->id, 90, 'Sale', 'out');

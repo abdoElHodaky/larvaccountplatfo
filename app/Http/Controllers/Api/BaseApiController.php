@@ -21,7 +21,7 @@ abstract class BaseApiController extends Controller
             'timestamp' => now()->toISOString(),
         ];
 
-        if (!is_null($data)) {
+        if (! is_null($data)) {
             $response['data'] = $data;
         }
 
@@ -43,14 +43,14 @@ abstract class BaseApiController extends Controller
                 'from' => $paginator->firstItem(),
                 'to' => $paginator->lastItem(),
                 'has_more_pages' => $paginator->hasMorePages(),
-            ]
+            ],
         ], $message);
     }
 
     /**
      * Return an error response
      */
-    protected function error(string $message, int $statusCode = 400, $details = null, string $code = null): JsonResponse
+    protected function error(string $message, int $statusCode = 400, $details = null, ?string $code = null): JsonResponse
     {
         $response = [
             'success' => false,
@@ -59,10 +59,10 @@ abstract class BaseApiController extends Controller
             'error' => [
                 'message' => $message,
                 'code' => $code ?? $statusCode,
-            ]
+            ],
         ];
 
-        if (!is_null($details)) {
+        if (! is_null($details)) {
             $response['error']['details'] = $details;
         }
 
@@ -136,9 +136,9 @@ abstract class BaseApiController extends Controller
     protected function applyFilters($query, Request $request, array $allowedFilters = []): mixed
     {
         foreach ($allowedFilters as $filter => $column) {
-            if ($request->has($filter) && !is_null($request->get($filter))) {
+            if ($request->has($filter) && ! is_null($request->get($filter))) {
                 $value = $request->get($filter);
-                
+
                 if (is_string($column)) {
                     // Simple column filter
                     $query->where($column, $value);
@@ -157,9 +157,9 @@ abstract class BaseApiController extends Controller
      */
     protected function applySearch($query, Request $request, array $searchableColumns = []): mixed
     {
-        if ($request->has('search') && !empty($request->get('search'))) {
+        if ($request->has('search') && ! empty($request->get('search'))) {
             $searchTerm = $request->get('search');
-            
+
             $query->where(function ($q) use ($searchableColumns, $searchTerm) {
                 foreach ($searchableColumns as $column) {
                     $q->orWhere($column, 'LIKE', "%{$searchTerm}%");
@@ -179,12 +179,12 @@ abstract class BaseApiController extends Controller
         $sortDirection = $request->get('sort_direction', $defaultDirection);
 
         // Validate sort direction
-        if (!in_array(strtolower($sortDirection), ['asc', 'desc'])) {
+        if (! in_array(strtolower($sortDirection), ['asc', 'desc'])) {
             $sortDirection = $defaultDirection;
         }
 
         // Validate sort column
-        if (!empty($allowedSortColumns) && !in_array($sortBy, $allowedSortColumns)) {
+        if (! empty($allowedSortColumns) && ! in_array($sortBy, $allowedSortColumns)) {
             $sortBy = $defaultSort;
         }
 
@@ -248,9 +248,9 @@ abstract class BaseApiController extends Controller
         }
 
         // Log the exception for debugging
-        \Log::error('API Exception: ' . $e->getMessage(), [
+        \Log::error('API Exception: '.$e->getMessage(), [
             'exception' => $e,
-            'trace' => $e->getTraceAsString()
+            'trace' => $e->getTraceAsString(),
         ]);
 
         return $this->serverError('An unexpected error occurred');

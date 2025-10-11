@@ -2,8 +2,8 @@
 
 namespace App\Services;
 
-use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Config;
 
 class FeatureFlag
 {
@@ -20,7 +20,7 @@ class FeatureFlag
      */
     public static function disabled(string $feature): bool
     {
-        return !static::enabled($feature);
+        return ! static::enabled($feature);
     }
 
     /**
@@ -30,7 +30,7 @@ class FeatureFlag
     {
         $features = Config::get('features', []);
         unset($features['profiles']); // Remove profiles from the list
-        
+
         return array_filter($features, function ($value) {
             return $value === true;
         });
@@ -43,7 +43,7 @@ class FeatureFlag
     {
         $features = Config::get('features', []);
         unset($features['profiles']); // Remove profiles from the list
-        
+
         return array_filter($features, function ($value) {
             return $value === false;
         });
@@ -55,8 +55,8 @@ class FeatureFlag
     public static function applyProfile(string $profile): void
     {
         $profileConfig = Config::get("features.profiles.{$profile}");
-        
-        if (!$profileConfig) {
+
+        if (! $profileConfig) {
             throw new \InvalidArgumentException("Profile '{$profile}' not found");
         }
 
@@ -74,20 +74,20 @@ class FeatureFlag
     public static function getCurrentProfile(): string
     {
         $env = config('app.env');
-        
+
         // Detect deployment type based on URL or environment variables
         if (str_contains(config('app.url'), 'laravel.cloud')) {
             return 'cloud';
         }
-        
+
         if (env('FORGE_DEPLOYMENT', false)) {
             return 'forge';
         }
-        
+
         if ($env === 'production') {
             return 'enterprise';
         }
-        
+
         return 'enterprise'; // Default to full features for development
     }
 

@@ -26,14 +26,14 @@ return new class extends Migration
             $table->text('processing_error')->nullable();
             $table->integer('retry_count')->default(0);
             $table->timestamps();
-            
+
             // Indexes for efficient querying
             $table->index(['event_type']);
             $table->index(['aggregate_id', 'aggregate_type']);
             $table->index(['occurred_at']);
             $table->index(['is_processed']);
             $table->index(['aggregate_id', 'version']);
-            
+
             // Composite index for event sourcing
             $table->index(['aggregate_id', 'aggregate_type', 'version']);
         });

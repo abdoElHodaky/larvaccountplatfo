@@ -41,7 +41,7 @@ class TenantPolicy
      */
     public function update(User $user, Tenant $tenant): bool
     {
-        if (!$user->hasAccessToTenant($tenant)) {
+        if (! $user->hasAccessToTenant($tenant)) {
             return false;
         }
 
@@ -64,7 +64,7 @@ class TenantPolicy
      */
     public function delete(User $user, Tenant $tenant): bool
     {
-        if (!$user->hasAccessToTenant($tenant)) {
+        if (! $user->hasAccessToTenant($tenant)) {
             return false;
         }
 
@@ -97,7 +97,7 @@ class TenantPolicy
      */
     public function manageUsers(User $user, Tenant $tenant): bool
     {
-        if (!$user->hasAccessToTenant($tenant)) {
+        if (! $user->hasAccessToTenant($tenant)) {
             return false;
         }
 
@@ -136,7 +136,7 @@ class TenantPolicy
      */
     public function manageModules(User $user, Tenant $tenant): bool
     {
-        if (!$user->hasAccessToTenant($tenant)) {
+        if (! $user->hasAccessToTenant($tenant)) {
             return false;
         }
 
@@ -153,13 +153,13 @@ class TenantPolicy
      */
     public function accessModule(User $user, Tenant $tenant, string $module): bool
     {
-        if (!$user->hasAccessToTenant($tenant)) {
+        if (! $user->hasAccessToTenant($tenant)) {
             return false;
         }
 
         // Check if module is enabled for the tenant
         $enabledModules = $tenant->enabled_modules ?? [];
-        if (!in_array($module, $enabledModules)) {
+        if (! in_array($module, $enabledModules)) {
             return false;
         }
 
@@ -176,7 +176,7 @@ class TenantPolicy
      */
     public function manageModule(User $user, Tenant $tenant, string $module): bool
     {
-        if (!$this->accessModule($user, $tenant, $module)) {
+        if (! $this->accessModule($user, $tenant, $module)) {
             return false;
         }
 

@@ -2,12 +2,11 @@
 
 namespace App\Features\Sales\Controllers\Api;
 
-use App\Features\Sales\Models\Customer;
 use App\Features\Sales\Models\SalesOrder;
 use App\Features\Sales\Services\SalesService;
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
 class SalesApiController extends Controller
@@ -30,13 +29,13 @@ class SalesApiController extends Controller
             return response()->json([
                 'success' => true,
                 'data' => $overview,
-                'message' => 'Sales dashboard data retrieved successfully'
+                'message' => 'Sales dashboard data retrieved successfully',
             ]);
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
                 'message' => 'Failed to retrieve sales dashboard data',
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
             ], 500);
         }
     }
@@ -51,13 +50,13 @@ class SalesApiController extends Controller
             return response()->json([
                 'success' => true,
                 'data' => $customers,
-                'message' => 'Customers retrieved successfully'
+                'message' => 'Customers retrieved successfully',
             ]);
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
                 'message' => 'Failed to retrieve customers',
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
             ], 500);
         }
     }
@@ -78,7 +77,7 @@ class SalesApiController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => 'Validation failed',
-                'errors' => $validator->errors()
+                'errors' => $validator->errors(),
             ], 422);
         }
 
@@ -89,13 +88,13 @@ class SalesApiController extends Controller
             return response()->json([
                 'success' => true,
                 'data' => $customer,
-                'message' => 'Customer created successfully'
+                'message' => 'Customer created successfully',
             ], 201);
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
                 'message' => 'Failed to create customer',
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
             ], 500);
         }
     }
@@ -110,13 +109,13 @@ class SalesApiController extends Controller
             return response()->json([
                 'success' => true,
                 'data' => $orders,
-                'message' => 'Sales orders retrieved successfully'
+                'message' => 'Sales orders retrieved successfully',
             ]);
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
                 'message' => 'Failed to retrieve sales orders',
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
             ], 500);
         }
     }
@@ -137,7 +136,7 @@ class SalesApiController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => 'Validation failed',
-                'errors' => $validator->errors()
+                'errors' => $validator->errors(),
             ], 422);
         }
 
@@ -148,13 +147,13 @@ class SalesApiController extends Controller
             return response()->json([
                 'success' => true,
                 'data' => $order,
-                'message' => 'Sales order created successfully'
+                'message' => 'Sales order created successfully',
             ], 201);
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
                 'message' => 'Failed to create sales order',
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
             ], 500);
         }
     }
@@ -167,13 +166,13 @@ class SalesApiController extends Controller
             return response()->json([
                 'success' => true,
                 'data' => $salesOrder,
-                'message' => 'Sales order retrieved successfully'
+                'message' => 'Sales order retrieved successfully',
             ]);
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
                 'message' => 'Failed to retrieve sales order',
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
             ], 500);
         }
     }
@@ -181,10 +180,10 @@ class SalesApiController extends Controller
     public function confirmSalesOrder(SalesOrder $salesOrder): JsonResponse
     {
         try {
-            if (!$salesOrder->canBeConfirmed()) {
+            if (! $salesOrder->canBeConfirmed()) {
                 return response()->json([
                     'success' => false,
-                    'message' => 'Sales order cannot be confirmed in its current state'
+                    'message' => 'Sales order cannot be confirmed in its current state',
                 ], 400);
             }
 
@@ -193,13 +192,13 @@ class SalesApiController extends Controller
             return response()->json([
                 'success' => true,
                 'data' => $salesOrder->fresh(),
-                'message' => 'Sales order confirmed successfully'
+                'message' => 'Sales order confirmed successfully',
             ]);
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
                 'message' => 'Failed to confirm sales order',
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
             ], 500);
         }
     }
