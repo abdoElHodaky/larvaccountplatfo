@@ -219,51 +219,6 @@ export const AccountingDashboard: React.FC<AccountingDashboardProps> = ({
   }, [orgId, state.viewMode]);
 
   // Event handlers
-  const handleDateRangeChange = useCallback((dateRange: { start: string; end: string }) => {
-    setState(prev => ({ ...prev, selectedDateRange: dateRange }));
-    
-    performanceMonitor.recordInteraction({
-      type: 'input',
-      element: 'accounting-date-range',
-      page: '/accounting',
-      metadata: { dateRange },
-    });
-  }, []);
-
-  const handleAccountTypesChange = useCallback((accountTypes: string[]) => {
-    setState(prev => ({ ...prev, selectedAccountTypes: accountTypes }));
-    
-    performanceMonitor.recordInteraction({
-      type: 'input',
-      element: 'account-type-filter',
-      page: '/accounting',
-      metadata: { accountTypes },
-    });
-  }, []);
-
-  const handleViewModeChange = useCallback((viewMode: AccountingState['viewMode']) => {
-    setState(prev => ({ ...prev, viewMode }));
-    
-    performanceMonitor.recordInteraction({
-      type: 'click',
-      element: `view-mode-${viewMode}`,
-      page: '/accounting',
-    });
-  }, []);
-
-  const handleFilterChange = useCallback((filterOptions: Partial<AccountingState['filterOptions']>) => {
-    setState(prev => ({
-      ...prev,
-      filterOptions: { ...prev.filterOptions, ...filterOptions },
-    }));
-    
-    performanceMonitor.recordInteraction({
-      type: 'input',
-      element: 'accounting-filter',
-      page: '/accounting',
-      metadata: { filterOptions },
-    });
-  }, []);
 
   const handleAccountSelect = useCallback((accountId: string) => {
     setState(prev => ({
