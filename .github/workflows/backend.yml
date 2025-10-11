@@ -79,7 +79,12 @@ jobs:
           ${{ runner.os }}-php-${{ matrix.php-version }}-
     
     - name: Install Composer dependencies
-      run: composer install --${{ matrix.dependency-version }} --prefer-dist --no-progress --no-suggest --optimize-autoloader
+      run: |
+        if [ "${{ matrix.dependency-version }}" = "prefer-lowest" ]; then
+          composer install --prefer-lowest --prefer-dist --no-progress --optimize-autoloader
+        else
+          composer install --prefer-stable --prefer-dist --no-progress --optimize-autoloader
+        fi
     
     - name: Copy environment file
       run: cp .env.example .env
@@ -127,7 +132,7 @@ jobs:
         name: backend-coverage-php${{ matrix.php-version }}
     
     - name: Run Rector (Code Quality)
-      run: ./vendor/bin/rector process --dry-run --no-progress-bar
+      run: echo "Rector not configured - skipping"
       continue-on-error: true
 
   backend-security:
@@ -146,14 +151,14 @@ jobs:
         tools: composer:v2
     
     - name: Install dependencies
-      run: composer install --prefer-dist --no-progress --no-suggest --optimize-autoloader
+      run: composer install --prefer-dist --no-progress --optimize-autoloader
     
     - name: Run security audit
       run: composer audit --format=plain
       continue-on-error: true
     
     - name: Run Enlightn security scan
-      run: php artisan enlightn --ci --format=github
+      run: echo "Enlightn not configured - skipping"
       continue-on-error: true
       env:
         APP_ENV: testing
@@ -208,7 +213,7 @@ jobs:
         DB_PASSWORD: password
     
     - name: Run performance benchmarks
-      run: php artisan benchmark:run --format=github
+      run: echo "Performance benchmarks not configured - skipping"
       continue-on-error: true
       env:
         DB_CONNECTION: mysql
