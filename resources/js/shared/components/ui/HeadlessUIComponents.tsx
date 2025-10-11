@@ -446,14 +446,10 @@ Text.displayName = 'Text';
 
 export {
   cn,
-  useColorModeValue,
 };
 
 // Re-export Headless UI components for convenience
 export {
   Dialog,
   Transition,
-  Switch,
-  Listbox,
-  Combobox,
 } from '@headlessui/react';

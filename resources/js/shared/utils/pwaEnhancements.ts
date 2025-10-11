@@ -4,6 +4,11 @@
  * app shortcuts, and offline capabilities
  */
 
+// Global gtag function declaration
+declare global {
+  function gtag(command: string, targetId: string, config?: any): void;
+}
+
 // PWA Installation and Management
 export interface PWAInstallPrompt {
     prompt(): Promise<void>;

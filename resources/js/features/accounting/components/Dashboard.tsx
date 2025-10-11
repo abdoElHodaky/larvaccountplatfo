@@ -84,7 +84,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
     refetch: refetchAccounts,
   } = useAccounts(
     {
-      organizationId: orgId ?? undefined,
+      organizationId: orgId || undefined,
       accountType: state.selectedAccountTypes,
       isActive: true,
       searchTerm: state.filterOptions.searchTerm,
@@ -99,7 +99,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
     refetch: refetchTransactions,
   } = useTransactions(
     {
-      organizationId: orgId ?? undefined,
+      organizationId: orgId || undefined,
       dateRange: state.selectedDateRange,
       accountId: state.filterOptions.accountId,
       reconciled: state.filterOptions.reconciled,
@@ -114,7 +114,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
     error: balancesError,
     refetch: refetchBalances,
   } = useAccountBalances(
-    orgId ?? 0,
+    orgId || undefined,
     state.selectedDateRange.end,
     { enabled: !!orgId }
   );
@@ -125,7 +125,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
     error: trialBalanceError,
     refetch: refetchTrialBalance,
   } = useTrialBalance(
-    orgId ?? 0,
+    orgId || undefined,
     state.selectedDateRange.end,
     { enabled: !!orgId && state.viewMode === 'reports' }
   );
@@ -136,7 +136,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
     accounts: realtimeAccounts,
     lastUpdate: realtimeLastUpdate,
     isConnected: socketConnected,
-  } = useRealtimeAccounting(orgId ?? undefined);
+  } = useRealtimeAccounting(orgId || undefined);
 
   // Collaboration hooks for selected account
   const {
@@ -152,9 +152,9 @@ export const Dashboard: React.FC<DashboardProps> = ({
     if (!enableRealtime) return transactions;
     
     // Merge static transactions with real-time updates
-    const transactionsMap = new Map(transactions.map((t: any) => [t.id, t]));
+    const transactionsMap = new Map(transactions.map(t => [t.id, t]));
     
-    realtimeTransactions.forEach((rtTransaction: any) => {
+    realtimeTransactions.forEach(rtTransaction => {
       transactionsMap.set(rtTransaction.id, {
         ...transactionsMap.get(rtTransaction.id),
         ...rtTransaction,
@@ -163,14 +163,14 @@ export const Dashboard: React.FC<DashboardProps> = ({
     });
     
     return Array.from(transactionsMap.values())
-      .sort((a: any, b: any) => new Date(b.date).getTime() - new Date(a.date).getTime());
+      .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
   }, [transactions, realtimeTransactions, enableRealtime]);
 
   const combinedAccounts = useMemo(() => {
     if (!enableRealtime) return accounts;
     
     // Merge static accounts with real-time balance updates
-    const accountsMap = new Map(accounts.map((a: any) => [a.id, a]));
+    const accountsMap = new Map(accounts.map(a => [a.id, a]));
     
     realtimeAccounts.forEach(rtAccount => {
       const existingAccount = accountsMap.get(rtAccount.id);

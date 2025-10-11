@@ -404,7 +404,7 @@ export const usePerformanceOptimization = () => {
   };
 };
 
-// Classes are already exported above with 'export class'
+// Note: Classes are already exported above with their declarations
 
 // Initialize chunk registry with common chunks
 if (typeof window !== 'undefined') {

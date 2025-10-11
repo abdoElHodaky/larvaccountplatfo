@@ -3,7 +3,8 @@
  * Optimized lazy loading strategy that avoids static/dynamic import conflicts
  */
 
-import React, { lazy, ComponentType } from 'react';
+import * as React from 'react';
+import { lazy, ComponentType } from 'react';
 
 // Retry mechanism for failed dynamic imports
 const retry = (fn: () => Promise<any>, retriesLeft = 5, interval = 1000): Promise<any> => {

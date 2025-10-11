@@ -5,7 +5,6 @@
 
 import React, { ReactNode } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { usePageTransition } from '../../hooks/useAnimation';
 import { useAnimationContext } from './AnimationProvider';
 
 interface PageTransitionProps {
@@ -27,7 +26,6 @@ export const PageTransition: React.FC<PageTransitionProps> = ({
   mode = 'wait'
 }) => {
   const { shouldAnimate } = useAnimationContext();
-  const { variants: _variants } = usePageTransition();
 
   if (!shouldAnimate('high')) {
     return <div className={className}>{children}</div>;

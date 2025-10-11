@@ -5,7 +5,6 @@
 
 import React, { ReactNode } from 'react';
 import { motion } from 'framer-motion';
-import { useListAnimation } from '../../hooks/useAnimation';
 import { useAnimationContext } from './AnimationProvider';
 
 interface AnimatedGridProps {
@@ -27,7 +26,6 @@ export const AnimatedGrid: React.FC<AnimatedGridProps> = ({
   stagger = 0.1
 }) => {
   const { shouldAnimate } = useAnimationContext();
-  const { variants: _variants } = useListAnimation(stagger);
 
   const gridClasses = `
     grid grid-cols-1 md:grid-cols-${columns} gap-${gap} ${className}
