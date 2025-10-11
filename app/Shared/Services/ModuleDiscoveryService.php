@@ -29,7 +29,7 @@ class ModuleDiscoveryService
     public function registerModule(array $moduleConfig): void
     {
         $this->modules[$moduleConfig['name']] = $moduleConfig;
-        
+
         // Clear cache when new module is registered
         Cache::forget($this->cacheKey);
     }
@@ -64,16 +64,16 @@ class ModuleDiscoveryService
     public function getModulesForCurrentTenant(): Collection
     {
         $tenant = app('tenant', null);
-        
-        if (!$tenant) {
+
+        if (! $tenant) {
             // No tenant context, return non-tenant-aware modules
             return $this->getModules()->filter(function ($module) {
-                return !$module['tenant_aware'];
+                return ! $module['tenant_aware'];
             });
         }
-        
+
         $strategy = $tenant->database_strategy;
-        
+
         return $this->getModules()->filter(function ($module) use ($strategy) {
             return in_array($strategy, $module['database_strategies']);
         });
@@ -95,35 +95,35 @@ class ModuleDiscoveryService
     public function getGlobalModules(): Collection
     {
         return $this->getModules()->filter(function ($module) {
-            return !$module['tenant_aware'];
+            return ! $module['tenant_aware'];
         });
     }
 
     /**
      * Discover modules from filesystem.
      */
-    public function discoverModules(string $modulesPath = null): Collection
+    public function discoverModules(?string $modulesPath = null): Collection
     {
         $modulesPath = $modulesPath ?: base_path('Modules');
-        
-        if (!File::exists($modulesPath)) {
+
+        if (! File::exists($modulesPath)) {
             return collect();
         }
-        
+
         $discoveredModules = collect();
-        
+
         $directories = File::directories($modulesPath);
-        
+
         foreach ($directories as $directory) {
             $moduleName = basename($directory);
-            $providerPath = $directory . '/Providers/' . $moduleName . 'ServiceProvider.php';
-            
+            $providerPath = $directory.'/Providers/'.$moduleName.'ServiceProvider.php';
+
             if (File::exists($providerPath)) {
                 $moduleConfig = $this->extractModuleConfig($directory, $moduleName);
                 $discoveredModules->put($moduleName, $moduleConfig);
             }
         }
-        
+
         return $discoveredModules;
     }
 
@@ -132,13 +132,13 @@ class ModuleDiscoveryService
      */
     protected function extractModuleConfig(string $modulePath, string $moduleName): array
     {
-        $configPath = $modulePath . '/module.json';
+        $configPath = $modulePath.'/module.json';
         $config = [];
-        
+
         if (File::exists($configPath)) {
             $config = json_decode(File::get($configPath), true) ?? [];
         }
-        
+
         return array_merge([
             'name' => $moduleName,
             'path' => $modulePath,
@@ -179,7 +179,7 @@ class ModuleDiscoveryService
     public function getModuleStats(): array
     {
         $modules = $this->getModules();
-        
+
         return [
             'total' => $modules->count(),
             'tenant_aware' => $modules->where('tenant_aware', true)->count(),
@@ -206,7 +206,7 @@ class ModuleDiscoveryService
     public function validateModule(array $moduleConfig): array
     {
         $errors = [];
-        
+
         // Required fields
         $required = ['name', 'path', 'namespace', 'provider'];
         foreach ($required as $field) {
@@ -214,27 +214,27 @@ class ModuleDiscoveryService
                 $errors[] = "Missing required field: {$field}";
             }
         }
-        
+
         // Validate path exists
-        if (!empty($moduleConfig['path']) && !File::exists($moduleConfig['path'])) {
+        if (! empty($moduleConfig['path']) && ! File::exists($moduleConfig['path'])) {
             $errors[] = "Module path does not exist: {$moduleConfig['path']}";
         }
-        
+
         // Validate provider class exists
-        if (!empty($moduleConfig['provider']) && !class_exists($moduleConfig['provider'])) {
+        if (! empty($moduleConfig['provider']) && ! class_exists($moduleConfig['provider'])) {
             $errors[] = "Provider class does not exist: {$moduleConfig['provider']}";
         }
-        
+
         // Validate database strategies
         $validStrategies = ['shared', 'dedicated', 'clustered'];
-        if (!empty($moduleConfig['database_strategies'])) {
+        if (! empty($moduleConfig['database_strategies'])) {
             foreach ($moduleConfig['database_strategies'] as $strategy) {
-                if (!in_array($strategy, $validStrategies)) {
+                if (! in_array($strategy, $validStrategies)) {
                     $errors[] = "Invalid database strategy: {$strategy}";
                 }
             }
         }
-        
+
         return $errors;
     }
 
@@ -244,20 +244,20 @@ class ModuleDiscoveryService
     public function checkDependencies(string $moduleName): array
     {
         $module = $this->getModule($moduleName);
-        
-        if (!$module) {
+
+        if (! $module) {
             return ['Module not found'];
         }
-        
+
         $missing = [];
         $dependencies = $module['dependencies'] ?? [];
-        
+
         foreach ($dependencies as $dependency) {
-            if (!$this->isModuleRegistered($dependency)) {
+            if (! $this->isModuleRegistered($dependency)) {
                 $missing[] = $dependency;
             }
         }
-        
+
         return $missing;
     }
 
@@ -268,9 +268,9 @@ class ModuleDiscoveryService
     {
         $tree = [];
         $visited = [];
-        
+
         $this->buildDependencyTree($moduleName, $tree, $visited);
-        
+
         return $tree;
     }
 
@@ -282,21 +282,21 @@ class ModuleDiscoveryService
         if (in_array($moduleName, $visited)) {
             return; // Avoid circular dependencies
         }
-        
+
         $visited[] = $moduleName;
         $module = $this->getModule($moduleName);
-        
-        if (!$module) {
+
+        if (! $module) {
             return;
         }
-        
+
         $tree[$moduleName] = [
             'module' => $module,
             'dependencies' => [],
         ];
-        
+
         $dependencies = $module['dependencies'] ?? [];
-        
+
         foreach ($dependencies as $dependency) {
             $this->buildDependencyTree($dependency, $tree[$moduleName]['dependencies'], $visited);
         }
@@ -310,11 +310,11 @@ class ModuleDiscoveryService
         $modules = $this->getModules();
         $sorted = [];
         $visited = [];
-        
+
         foreach ($modules as $name => $module) {
             $this->sortModulesByDependencies($name, $modules->toArray(), $sorted, $visited);
         }
-        
+
         return collect($sorted);
     }
 
@@ -326,21 +326,21 @@ class ModuleDiscoveryService
         if (in_array($moduleName, $visited)) {
             return;
         }
-        
+
         $visited[] = $moduleName;
-        
-        if (!isset($modules[$moduleName])) {
+
+        if (! isset($modules[$moduleName])) {
             return;
         }
-        
+
         $module = $modules[$moduleName];
         $dependencies = $module['dependencies'] ?? [];
-        
+
         foreach ($dependencies as $dependency) {
             $this->sortModulesByDependencies($dependency, $modules, $sorted, $visited);
         }
-        
-        if (!in_array($module, $sorted)) {
+
+        if (! in_array($module, $sorted)) {
             $sorted[] = $module;
         }
     }
@@ -350,13 +350,13 @@ class ModuleDiscoveryService
      */
     public function enableModule(string $moduleName): bool
     {
-        if (!$this->isModuleRegistered($moduleName)) {
+        if (! $this->isModuleRegistered($moduleName)) {
             return false;
         }
-        
+
         $this->modules[$moduleName]['enabled'] = true;
         $this->refreshCache();
-        
+
         return true;
     }
 
@@ -365,13 +365,13 @@ class ModuleDiscoveryService
      */
     public function disableModule(string $moduleName): bool
     {
-        if (!$this->isModuleRegistered($moduleName)) {
+        if (! $this->isModuleRegistered($moduleName)) {
             return false;
         }
-        
+
         $this->modules[$moduleName]['enabled'] = false;
         $this->refreshCache();
-        
+
         return true;
     }
 
@@ -391,8 +391,7 @@ class ModuleDiscoveryService
     public function getDisabledModules(): Collection
     {
         return $this->getModules()->filter(function ($module) {
-            return !($module['enabled'] ?? true);
+            return ! ($module['enabled'] ?? true);
         });
     }
 }
-

@@ -3,11 +3,9 @@
 namespace App\Features\Organization\Services;
 
 use App\Shared\Models\Organization;
-use App\Shared\Models\User;
-use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Pagination\LengthAwarePaginator;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
 class OrganizationService
@@ -20,22 +18,22 @@ class OrganizationService
         $query = Organization::query();
 
         // Apply search filter
-        if (!empty($filters['search'])) {
+        if (! empty($filters['search'])) {
             $search = $filters['search'];
             $query->where(function ($q) use ($search) {
                 $q->where('name', 'like', "%{$search}%")
-                  ->orWhere('email', 'like', "%{$search}%")
-                  ->orWhere('slug', 'like', "%{$search}%");
+                    ->orWhere('email', 'like', "%{$search}%")
+                    ->orWhere('slug', 'like', "%{$search}%");
             });
         }
 
         // Apply country filter
-        if (!empty($filters['country'])) {
+        if (! empty($filters['country'])) {
             $query->where('country', $filters['country']);
         }
 
         // Apply currency filter
-        if (!empty($filters['currency'])) {
+        if (! empty($filters['currency'])) {
             $query->where('currency', $filters['currency']);
         }
 
@@ -51,6 +49,7 @@ class OrganizationService
 
         // Paginate results
         $perPage = $filters['per_page'] ?? 15;
+
         return $query->paginate($perPage);
     }
 
@@ -78,10 +77,10 @@ class OrganizationService
             $organization = Organization::create($data);
 
             DB::commit();
-            
+
             // Clear cache
             $this->clearOrganizationCache();
-            
+
             return $organization;
         } catch (\Exception $e) {
             DB::rollBack();
@@ -111,10 +110,10 @@ class OrganizationService
             $organization->update($data);
 
             DB::commit();
-            
+
             // Clear cache
             $this->clearOrganizationCache();
-            
+
             return $organization->fresh();
         } catch (\Exception $e) {
             DB::rollBack();
@@ -137,10 +136,10 @@ class OrganizationService
             $organization->delete();
 
             DB::commit();
-            
+
             // Clear cache
             $this->clearOrganizationCache();
-            
+
             return true;
         } catch (\Exception $e) {
             DB::rollBack();
@@ -154,7 +153,7 @@ class OrganizationService
     public function getOrganizationDashboard(Organization $organization): array
     {
         $cacheKey = "org_dashboard_{$organization->id}";
-        
+
         return Cache::remember($cacheKey, 300, function () use ($organization) {
             return [
                 'organization' => $organization,
@@ -177,13 +176,13 @@ class OrganizationService
     {
         $currentSettings = $organization->settings ?? [];
         $newSettings = array_merge($currentSettings, $settings);
-        
+
         $organization->update(['settings' => $newSettings]);
-        
+
         // Clear cache
         $this->clearOrganizationCache();
         Cache::forget("org_dashboard_{$organization->id}");
-        
+
         return $organization->fresh();
     }
 
@@ -220,7 +219,7 @@ class OrganizationService
         app()->instance('tenant_id', $organization->id);
         app()->instance('tenant', $organization);
         app()->instance('tenant_strategy', $organization->getTenantStrategy());
-        
+
         // Set database connection if using dedicated database
         if ($organization->usesDedicatedDatabase()) {
             config(['database.default' => $organization->getDatabaseConnectionName()]);
@@ -237,7 +236,7 @@ class OrganizationService
         $counter = 1;
 
         while ($this->slugExists($slug, $excludeId)) {
-            $slug = $baseSlug . '-' . $counter;
+            $slug = $baseSlug.'-'.$counter;
             $counter++;
         }
 
@@ -250,11 +249,11 @@ class OrganizationService
     private function slugExists(string $slug, ?int $excludeId = null): bool
     {
         $query = Organization::where('slug', $slug);
-        
+
         if ($excludeId) {
             $query->where('id', '!=', $excludeId);
         }
-        
+
         return $query->exists();
     }
 
@@ -285,20 +284,20 @@ class OrganizationService
     private function getTenantStrategyStats(): array
     {
         $organizations = Organization::all();
-        
+
         $stats = [
             'shared' => 0,
             'dedicated' => 0,
             'clustered' => 0,
         ];
-        
+
         foreach ($organizations as $org) {
             $strategy = $org->getTenantStrategy();
             if (isset($stats[$strategy])) {
                 $stats[$strategy]++;
             }
         }
-        
+
         return $stats;
     }
 

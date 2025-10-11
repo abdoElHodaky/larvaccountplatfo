@@ -3,20 +3,17 @@
 namespace App\Features\Reporting\Services;
 
 use App\Features\Inventory\Models\Product;
-use App\Features\Accounting\Models\Account;
+use App\Features\Purchase\Models\PurchaseOrder;
 use App\Features\Sales\Models\Customer;
 use App\Features\Sales\Models\SalesOrder;
-use App\Features\Purchase\Models\PurchaseOrder;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Cache;
-use Carbon\Carbon;
 
 class ReportingService
 {
     public function getExecutiveDashboard(int $organizationId): array
     {
         $cacheKey = "executive_dashboard_{$organizationId}";
-        
+
         return Cache::remember($cacheKey, 300, function () use ($organizationId) {
             return [
                 'financial_overview' => $this->getFinancialOverview($organizationId),
@@ -35,9 +32,9 @@ class ReportingService
         $endDate = $filters['end_date'] ?? now()->endOfMonth();
 
         $salesData = SalesOrder::where('organization_id', $organizationId)
-                              ->whereBetween('order_date', [$startDate, $endDate])
-                              ->with(['customer', 'items.product'])
-                              ->get();
+            ->whereBetween('order_date', [$startDate, $endDate])
+            ->with(['customer', 'items.product'])
+            ->get();
 
         return [
             'period' => [
@@ -60,8 +57,8 @@ class ReportingService
     public function getInventoryReport(int $organizationId, array $filters = []): array
     {
         $products = Product::where('organization_id', $organizationId)
-                          ->with(['category', 'stockLevels'])
-                          ->get();
+            ->with(['category', 'stockLevels'])
+            ->get();
 
         $lowStockProducts = $products->filter(function ($product) {
             return $product->current_stock <= $product->minimum_stock_level;
@@ -112,49 +109,49 @@ class ReportingService
         $lastMonth = now()->subMonth()->startOfMonth();
 
         $currentRevenue = SalesOrder::where('organization_id', $organizationId)
-                                   ->whereMonth('order_date', $currentMonth->month)
-                                   ->whereYear('order_date', $currentMonth->year)
-                                   ->sum('total_amount');
+            ->whereMonth('order_date', $currentMonth->month)
+            ->whereYear('order_date', $currentMonth->year)
+            ->sum('total_amount');
 
         $lastMonthRevenue = SalesOrder::where('organization_id', $organizationId)
-                                     ->whereMonth('order_date', $lastMonth->month)
-                                     ->whereYear('order_date', $lastMonth->year)
-                                     ->sum('total_amount');
+            ->whereMonth('order_date', $lastMonth->month)
+            ->whereYear('order_date', $lastMonth->year)
+            ->sum('total_amount');
 
         return [
             'current_month_revenue' => $currentRevenue,
             'last_month_revenue' => $lastMonthRevenue,
             'revenue_growth' => $lastMonthRevenue > 0 ? (($currentRevenue - $lastMonthRevenue) / $lastMonthRevenue) * 100 : 0,
             'ytd_revenue' => SalesOrder::where('organization_id', $organizationId)
-                                      ->whereYear('order_date', now()->year)
-                                      ->sum('total_amount'),
+                ->whereYear('order_date', now()->year)
+                ->sum('total_amount'),
         ];
     }
 
     private function getSalesPerformance(int $organizationId): array
     {
         $currentMonth = now()->startOfMonth();
-        
+
         return [
             'monthly_orders' => SalesOrder::where('organization_id', $organizationId)
-                                         ->whereMonth('order_date', $currentMonth->month)
-                                         ->count(),
+                ->whereMonth('order_date', $currentMonth->month)
+                ->count(),
             'conversion_rate' => 85.5, // This would be calculated based on leads/quotes
             'average_deal_size' => SalesOrder::where('organization_id', $organizationId)
-                                            ->whereMonth('order_date', $currentMonth->month)
-                                            ->avg('total_amount'),
+                ->whereMonth('order_date', $currentMonth->month)
+                ->avg('total_amount'),
             'top_customers' => Customer::where('organization_id', $organizationId)
-                                     ->withSum('salesOrders', 'total_amount')
-                                     ->orderBy('sales_orders_sum_total_amount', 'desc')
-                                     ->limit(5)
-                                     ->get(),
+                ->withSum('salesOrders', 'total_amount')
+                ->orderBy('sales_orders_sum_total_amount', 'desc')
+                ->limit(5)
+                ->get(),
         ];
     }
 
     private function getInventoryStatus(int $organizationId): array
     {
         $products = Product::where('organization_id', $organizationId)->get();
-        
+
         return [
             'total_products' => $products->count(),
             'total_stock_value' => $products->sum(function ($product) {
@@ -170,14 +167,14 @@ class ReportingService
     private function getPurchaseAnalytics(int $organizationId): array
     {
         $currentMonth = now()->startOfMonth();
-        
+
         return [
             'monthly_purchases' => PurchaseOrder::where('organization_id', $organizationId)
-                                               ->whereMonth('order_date', $currentMonth->month)
-                                               ->sum('total_amount'),
+                ->whereMonth('order_date', $currentMonth->month)
+                ->sum('total_amount'),
             'pending_orders' => PurchaseOrder::where('organization_id', $organizationId)
-                                            ->where('status', 'pending')
-                                            ->count(),
+                ->where('status', 'pending')
+                ->count(),
             'supplier_performance' => 92.3, // This would be calculated based on delivery times
             'cost_savings' => 15.7, // This would be calculated based on negotiated discounts
         ];
@@ -200,17 +197,17 @@ class ReportingService
         $trends = [];
         for ($i = 11; $i >= 0; $i--) {
             $date = now()->subMonths($i);
-            
+
             $revenue = SalesOrder::where('organization_id', $organizationId)
-                                ->whereMonth('order_date', $date->month)
-                                ->whereYear('order_date', $date->year)
-                                ->sum('total_amount');
-            
+                ->whereMonth('order_date', $date->month)
+                ->whereYear('order_date', $date->year)
+                ->sum('total_amount');
+
             $expenses = PurchaseOrder::where('organization_id', $organizationId)
-                                   ->whereMonth('order_date', $date->month)
-                                   ->whereYear('order_date', $date->year)
-                                   ->sum('total_amount');
-            
+                ->whereMonth('order_date', $date->month)
+                ->whereYear('order_date', $date->year)
+                ->sum('total_amount');
+
             $trends[] = [
                 'month' => $date->format('M Y'),
                 'revenue' => (float) $revenue,
@@ -218,7 +215,7 @@ class ReportingService
                 'profit' => (float) ($revenue - $expenses),
             ];
         }
-        
+
         return $trends;
     }
 
@@ -237,6 +234,7 @@ class ReportingService
     {
         return $salesData->groupBy('customer.id')->map(function ($orders, $customerId) {
             $customer = $orders->first()->customer;
+
             return [
                 'customer_id' => $customerId,
                 'customer_name' => $customer->display_name,
@@ -249,11 +247,11 @@ class ReportingService
     private function groupSalesByProduct($salesData): array
     {
         $productSales = [];
-        
+
         foreach ($salesData as $order) {
             foreach ($order->items as $item) {
                 $productId = $item->product_id;
-                if (!isset($productSales[$productId])) {
+                if (! isset($productSales[$productId])) {
                     $productSales[$productId] = [
                         'product_id' => $productId,
                         'product_name' => $item->product->name,
@@ -261,24 +259,24 @@ class ReportingService
                         'total_revenue' => 0,
                     ];
                 }
-                
+
                 $productSales[$productId]['quantity_sold'] += $item->quantity;
                 $productSales[$productId]['total_revenue'] += $item->line_total;
             }
         }
-        
+
         return collect($productSales)->sortByDesc('total_revenue')->take(10)->values()->toArray();
     }
 
     private function getDailySalesTrends(int $organizationId, $startDate, $endDate): array
     {
         return SalesOrder::where('organization_id', $organizationId)
-                        ->whereBetween('order_date', [$startDate, $endDate])
-                        ->selectRaw('DATE(order_date) as date, COUNT(*) as orders, SUM(total_amount) as revenue')
-                        ->groupBy('date')
-                        ->orderBy('date')
-                        ->get()
-                        ->toArray();
+            ->whereBetween('order_date', [$startDate, $endDate])
+            ->selectRaw('DATE(order_date) as date, COUNT(*) as orders, SUM(total_amount) as revenue')
+            ->groupBy('date')
+            ->orderBy('date')
+            ->get()
+            ->toArray();
     }
 
     private function groupInventoryByCategory($products): array

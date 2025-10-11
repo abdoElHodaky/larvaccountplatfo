@@ -4,7 +4,7 @@ import './bootstrap';
 import { createRoot } from 'react-dom/client';
 import { createInertiaApp } from '@inertiajs/react';
 import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
-import { AppProviders } from './app/providers/AppProviders';
+import AppProviders from './app/providers/AppProviders';
 import { routePreloader } from './shared/utils/routeBasedLazyLoading';
 import { MobileOptimizationManager } from './shared/utils/mobileOptimization';
 import { PWAEnhancementManager } from './shared/utils/pwaEnhancements';

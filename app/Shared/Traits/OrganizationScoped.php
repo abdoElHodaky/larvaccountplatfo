@@ -21,15 +21,15 @@ trait OrganizationScoped
                 $organizationId = static::getCurrentOrganizationId();
                 if ($organizationId) {
                     $builder->where(
-                        $builder->getModel()->getTable() . '.organization_id',
+                        $builder->getModel()->getTable().'.organization_id',
                         $organizationId
                     );
                 }
             }
         });
-        
+
         static::creating(function (Model $model) {
-            if (static::shouldApplyOrganizationScope() && !$model->organization_id) {
+            if (static::shouldApplyOrganizationScope() && ! $model->organization_id) {
                 $organizationId = static::getCurrentOrganizationId();
                 if ($organizationId) {
                     $model->organization_id = $organizationId;
@@ -51,6 +51,7 @@ trait OrganizationScoped
         // Try to get from current tenant
         if (app()->bound('current.tenant')) {
             $tenant = app('current.tenant');
+
             return $tenant?->organization_id;
         }
 
@@ -68,7 +69,7 @@ trait OrganizationScoped
     protected static function shouldApplyOrganizationScope(): bool
     {
         // Skip scoping in console commands unless explicitly enabled
-        if (app()->runningInConsole() && !config('tenant.scope_in_console', false)) {
+        if (app()->runningInConsole() && ! config('tenant.scope_in_console', false)) {
             return false;
         }
 
@@ -90,7 +91,7 @@ trait OrganizationScoped
      */
     public function scopeForOrganization(Builder $query, int $organizationId): Builder
     {
-        return $query->where($this->getTable() . '.organization_id', $organizationId);
+        return $query->where($this->getTable().'.organization_id', $organizationId);
     }
 
     /**
@@ -99,8 +100,8 @@ trait OrganizationScoped
     public function scopeForCurrentOrganization(Builder $query): Builder
     {
         $organizationId = static::getCurrentOrganizationId();
-        
-        if (!$organizationId) {
+
+        if (! $organizationId) {
             // Return empty result if no organization context
             return $query->whereRaw('1 = 0');
         }
@@ -114,7 +115,7 @@ trait OrganizationScoped
     public static function withoutOrganizationScope(callable $callback)
     {
         app()->instance('organization.scope.disabled', true);
-        
+
         try {
             return $callback();
         } finally {
@@ -128,13 +129,13 @@ trait OrganizationScoped
     public static function forOrganizationContext(int $organizationId, callable $callback)
     {
         $previousOrgId = static::getCurrentOrganizationId();
-        
+
         // Temporarily set organization context
         if (auth()->check()) {
             $originalOrgId = auth()->user()->current_organization_id;
             auth()->user()->current_organization_id = $organizationId;
         }
-        
+
         try {
             return $callback();
         } finally {
@@ -164,6 +165,7 @@ trait OrganizationScoped
     public function belongsToCurrentOrganization(): bool
     {
         $currentOrgId = static::getCurrentOrganizationId();
+
         return $currentOrgId && $this->organization_id === $currentOrgId;
     }
 
@@ -188,7 +190,7 @@ trait OrganizationScoped
      */
     public function initializeOrganizationScoped(): void
     {
-        if (!in_array('organization_id', $this->fillable)) {
+        if (! in_array('organization_id', $this->fillable)) {
             $this->fillable[] = 'organization_id';
         }
     }

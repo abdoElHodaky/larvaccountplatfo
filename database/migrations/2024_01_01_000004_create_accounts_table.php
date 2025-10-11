@@ -14,22 +14,22 @@ return new class extends Migration
         Schema::create('accounts', function (Blueprint $table) {
             $table->id();
             $table->foreignId('tenant_id')->constrained()->onDelete('cascade');
-            
+
             // Account hierarchy
             $table->string('code', 20)->index(); // Account code (e.g., 1000, 1100, 1110)
             $table->string('name');
             $table->text('description')->nullable();
             $table->foreignId('parent_id')->nullable()->constrained('accounts')->onDelete('cascade');
-            
+
             // Account classification
             $table->enum('type', [
                 'asset',
-                'liability', 
+                'liability',
                 'equity',
                 'revenue',
-                'expense'
+                'expense',
             ])->index();
-            
+
             $table->enum('subtype', [
                 // Assets
                 'current_asset',
@@ -48,28 +48,28 @@ return new class extends Migration
                 // Expenses
                 'operating_expense',
                 'other_expense',
-                'cost_of_goods_sold'
+                'cost_of_goods_sold',
             ])->index();
-            
+
             // Account properties
             $table->enum('normal_balance', ['debit', 'credit'])->index();
             $table->boolean('is_active')->default(true)->index();
             $table->boolean('is_system')->default(false); // System accounts cannot be deleted
             $table->boolean('allow_manual_entries')->default(true);
-            
+
             // Financial properties
             $table->string('currency', 3)->default('USD');
             $table->decimal('opening_balance', 15, 2)->default(0);
             $table->decimal('current_balance', 15, 2)->default(0);
-            
+
             // Tax and reporting
             $table->string('tax_code')->nullable();
             $table->json('reporting_categories')->nullable(); // For financial statement categorization
-            
+
             // Metadata
             $table->json('metadata')->nullable(); // Additional properties
             $table->timestamps();
-            
+
             // Indexes for performance
             $table->index(['tenant_id', 'type']);
             $table->index(['tenant_id', 'subtype']);

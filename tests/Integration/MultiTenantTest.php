@@ -2,11 +2,11 @@
 
 namespace Tests\Integration;
 
-use Tests\Shared\TenantTestCase;
 use App\Models\Tenant;
 use App\Models\User;
-use Modules\Accounting\Models\Account;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Modules\Accounting\Models\Account;
+use Tests\Shared\TenantTestCase;
 
 class MultiTenantTest extends TenantTestCase
 {
@@ -36,7 +36,7 @@ class MultiTenantTest extends TenantTestCase
 
         // Switch to tenant1 context
         $this->switchTenant($tenant1);
-        
+
         // Verify only tenant1's user is visible
         $visibleUsers = User::all();
         $this->assertCount(1, $visibleUsers);
@@ -44,7 +44,7 @@ class MultiTenantTest extends TenantTestCase
 
         // Switch to tenant2 context
         $this->switchTenant($tenant2);
-        
+
         // Verify only tenant2's user is visible
         $visibleUsers = User::all();
         $this->assertCount(1, $visibleUsers);
@@ -57,7 +57,7 @@ class MultiTenantTest extends TenantTestCase
     public function test_module_data_isolation(): void
     {
         // Skip if Account model doesn't exist yet
-        if (!class_exists(Account::class)) {
+        if (! class_exists(Account::class)) {
             $this->markTestSkipped('Account model not available yet');
         }
 
@@ -122,9 +122,9 @@ class MultiTenantTest extends TenantTestCase
     public function test_tenant_user_authentication(): void
     {
         $user = $this->createTestUser();
-        
+
         $this->actingAsTenantUser($user);
-        
+
         $this->assertAuthenticated();
         $this->assertEquals($user->id, auth()->id());
         $this->assertEquals($this->tenant->id, auth()->user()->tenant_id);
@@ -136,9 +136,9 @@ class MultiTenantTest extends TenantTestCase
     public function test_global_user_authentication(): void
     {
         $globalUser = $this->createTestGlobalUser(['is_super_admin' => true]);
-        
+
         $this->actingAsGlobalUser($globalUser);
-        
+
         $this->assertAuthenticated('global');
         $this->assertEquals($globalUser->id, auth('global')->id());
         $this->assertTrue(auth('global')->user()->is_super_admin);
