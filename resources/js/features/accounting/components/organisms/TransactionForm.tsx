@@ -81,7 +81,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
       newErrors.account = 'Account is required';
     }
 
-    if (formData.amount <= 0) {
+    if (Number(formData.amount) <= 0) {
       newErrors.amount = 'Amount must be greater than 0';
     }
 

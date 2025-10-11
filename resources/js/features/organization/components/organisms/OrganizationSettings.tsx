@@ -5,7 +5,7 @@
 
 import React, { useState } from 'react';
 
-interface OrganizationSettings {
+interface OrganizationSettingsData {
   name: string;
   description: string;
   website: string;
@@ -37,8 +37,8 @@ interface OrganizationSettings {
 }
 
 interface OrganizationSettingsProps {
-  settings?: OrganizationSettings;
-  onSave?: (settings: OrganizationSettings) => void;
+  settings?: OrganizationSettingsData;
+  onSave?: (settings: OrganizationSettingsData) => void;
   className?: string;
 }
 
@@ -49,7 +49,7 @@ export const OrganizationSettings: React.FC<OrganizationSettingsProps> = ({
 }) => {
   const [activeTab, setActiveTab] = useState<'general' | 'branding' | 'features' | 'advanced'>('general');
   
-  const [formData, setFormData] = useState<OrganizationSettings>({
+  const [formData, setFormData] = useState<OrganizationSettingsData>({
     name: settings?.name || '',
     description: settings?.description || '',
     website: settings?.website || '',
@@ -119,7 +119,7 @@ export const OrganizationSettings: React.FC<OrganizationSettingsProps> = ({
       setFormData(prev => ({
         ...prev,
         [parent]: {
-          ...prev[parent as keyof OrganizationSettings],
+          ...prev[parent as keyof OrganizationSettingsData],
           [child]: value
         }
       }));

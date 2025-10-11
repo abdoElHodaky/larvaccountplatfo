@@ -59,7 +59,7 @@ export function useChartOfAccounts(accountType?: string) {
 
   // Organize accounts by type
   const accountsByType = useMemo(() => {
-    const organized = {
+    const organized: Record<string, any[]> = {
       assets: [],
       liabilities: [],
       equity: [],
@@ -69,8 +69,8 @@ export function useChartOfAccounts(accountType?: string) {
 
     accounts.forEach((account: any) => {
       const type = account.type.toLowerCase();
-      if (organized[type as keyof typeof organized]) {
-        organized[type as keyof typeof organized].push(account);
+      if (organized[type]) {
+        organized[type].push(account);
       }
     });
 

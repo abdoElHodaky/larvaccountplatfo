@@ -120,7 +120,7 @@ const initialState: AccountingState = {
   error: null,
 };
 
-export const accountingModel = createModel<RootModel>()({
+export const accountingModel = createModel()({
   state: initialState,
   
   reducers: {
@@ -301,7 +301,7 @@ export const accountingModel = createModel<RootModel>()({
       }
     },
     
-    async updateAccountData(payload: { id: string; data: Partial<Account> }) {
+    async updateAccountData(payload: { id: string; data: Partial<Account> }, rootState) {
       dispatch.accounting.clearError();
       
       try {
@@ -310,8 +310,7 @@ export const accountingModel = createModel<RootModel>()({
         // dispatch.accounting.updateAccount(response.data);
         
         // Mock implementation
-        const state = this.getState();
-        const existingAccount = state.accounting.accounts.find(a => a.id === payload.id);
+        const existingAccount = rootState.accounting.accounts.find((a: any) => a.id === payload.id);
         if (existingAccount) {
           const updatedAccount = {
             ...existingAccount,
