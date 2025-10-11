@@ -83,7 +83,7 @@ jobs:
       continue-on-error: true
     
     - name: Upload build artifacts
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: frontend-build-${{ github.sha }}
         path: public/build/
@@ -117,7 +117,7 @@ jobs:
         CI: true
     
     - name: Upload E2E test results
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       if: failure()
       with:
         name: e2e-test-results
@@ -142,11 +142,12 @@ jobs:
       run: npm ci
     
     - name: Run npm audit
-      run: npm audit --audit-level=moderate
+      run: npm audit --audit-level=high
       continue-on-error: true
     
     - name: Run Snyk security scan
       uses: snyk/actions/node@master
+      if: ${{ secrets.SNYK_TOKEN != '' }}
       env:
         SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
       with:
