@@ -116,7 +116,7 @@ global.IntersectionObserver = class IntersectionObserver {
   rootMargin: string = '0px';
   thresholds: ReadonlyArray<number> = [0];
   
-  constructor(callback: IntersectionObserverCallback, options?: IntersectionObserverInit) {}
+  constructor(_callback: IntersectionObserverCallback, _options?: IntersectionObserverInit) {}
   observe() {}
   unobserve() {}
   disconnect() {}
@@ -135,7 +135,7 @@ global.ResizeObserver = class ResizeObserver {
 global.PerformanceObserver = class PerformanceObserver {
   static supportedEntryTypes: readonly string[] = ['measure', 'navigation', 'resource'];
   
-  constructor(callback: PerformanceObserverCallback) {}
+  constructor(_callback: PerformanceObserverCallback) {}
   observe() {}
   disconnect() {}
 } as any;
