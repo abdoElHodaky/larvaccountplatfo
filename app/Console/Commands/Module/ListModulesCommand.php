@@ -10,7 +10,7 @@ class ListModulesCommand extends Command
     /**
      * The name and signature of the console command.
      */
-    protected $signature = 'module:list 
+    protected $signature = 'module:list
                             {--enabled : Show only enabled modules}
                             {--disabled : Show only disabled modules}
                             {--detailed : Show detailed module information}';

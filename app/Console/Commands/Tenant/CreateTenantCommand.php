@@ -11,7 +11,7 @@ class CreateTenantCommand extends Command
     /**
      * The name and signature of the console command.
      */
-    protected $signature = 'tenant:create 
+    protected $signature = 'tenant:create
                             {name : The tenant name}
                             {--subdomain= : Custom subdomain (optional)}
                             {--domain= : Custom domain (optional)}

@@ -11,7 +11,7 @@ class HealthCheckCommand extends Command
     /**
      * The name and signature of the console command.
      */
-    protected $signature = 'system:health-check 
+    protected $signature = 'system:health-check
                             {--detailed : Show detailed health information}
                             {--json : Output results in JSON format}';
 
