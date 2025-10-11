@@ -114,7 +114,7 @@ export const AccountingDashboard: React.FC<AccountingDashboardProps> = ({
     error: balancesError,
     refetch: refetchBalances,
   } = useAccountBalances(
-    orgId,
+    orgId as number,
     state.selectedDateRange.end,
     { enabled: !!orgId }
   );
@@ -125,7 +125,7 @@ export const AccountingDashboard: React.FC<AccountingDashboardProps> = ({
     error: trialBalanceError,
     refetch: refetchTrialBalance,
   } = useTrialBalance(
-    orgId,
+    orgId as number,
     state.selectedDateRange.end,
     { enabled: !!orgId && state.viewMode === 'reports' }
   );
@@ -136,7 +136,7 @@ export const AccountingDashboard: React.FC<AccountingDashboardProps> = ({
     accounts: realtimeAccounts,
     lastUpdate: realtimeLastUpdate,
     isConnected: socketConnected,
-  } = useRealtimeAccounting(orgId);
+  } = useRealtimeAccounting(orgId as number);
 
   // Collaboration hooks for selected account
   const {
@@ -152,25 +152,25 @@ export const AccountingDashboard: React.FC<AccountingDashboardProps> = ({
     if (!enableRealtime) return transactions;
     
     // Merge static transactions with real-time updates
-    const transactionsMap = new Map(transactions.map(t => [t.id, t]));
+    const transactionsMap = new Map(transactions.map((t: any) => [t.id, t]));
     
     realtimeTransactions.forEach(rtTransaction => {
       transactionsMap.set(rtTransaction.id, {
-        ...transactionsMap.get(rtTransaction.id),
+        ...(transactionsMap.get(rtTransaction.id) || {}),
         ...rtTransaction,
         isRealtime: true,
       });
     });
     
     return Array.from(transactionsMap.values())
-      .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+      .sort((a: any, b: any) => new Date(b.date).getTime() - new Date(a.date).getTime());
   }, [transactions, realtimeTransactions, enableRealtime]);
 
   const combinedAccounts = useMemo(() => {
     if (!enableRealtime) return accounts;
     
     // Merge static accounts with real-time balance updates
-    const accountsMap = new Map(accounts.map(a => [a.id, a]));
+    const accountsMap = new Map(accounts.map((a: any) => [a.id, a]));
     
     realtimeAccounts.forEach(rtAccount => {
       const existingAccount = accountsMap.get(rtAccount.id);
@@ -344,7 +344,7 @@ export const AccountingDashboard: React.FC<AccountingDashboardProps> = ({
       <div className="accounting-dashboard">
         <LoadingSpinner 
           message="Loading accounting data..." 
-          size="large"
+          size="lg"
           showProgress={true}
         />
       </div>
@@ -361,14 +361,6 @@ export const AccountingDashboard: React.FC<AccountingDashboardProps> = ({
         {/* Accounting Header */}
         <AccountingHeader
           title="Accounting"
-          dateRange={state.selectedDateRange}
-          onDateRangeChange={handleDateRangeChange}
-          accountTypes={state.selectedAccountTypes}
-          onAccountTypesChange={handleAccountTypesChange}
-          viewMode={state.viewMode}
-          onViewModeChange={handleViewModeChange}
-          filterOptions={state.filterOptions}
-          onFilterChange={handleFilterChange}
           onRefresh={handleRefresh}
           socketConnected={socketConnected}
           lastUpdate={realtimeLastUpdate}
