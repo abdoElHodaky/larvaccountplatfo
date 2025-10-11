@@ -176,7 +176,7 @@ export const BarChart: React.FC<BarChartProps> = memo(({
   }, [formatTooltip]);
 
   // Memoized export handler
-  const handleExport = useMemoizedCallback((format: 'png' | 'pdf' | 'csv' | 'excel') => {
+  const handleExport = useMemoizedCallback(async (format: 'png' | 'pdf' | 'csv' | 'excel') => {
     if (format === 'csv' || format === 'excel') {
       // Export data as CSV/Excel
       const csvData = processedData.map(item => {
