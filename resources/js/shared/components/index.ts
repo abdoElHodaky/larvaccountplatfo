@@ -17,6 +17,6 @@ export { InputError } from './atoms/InputError';
 export { InputLabel } from './atoms/InputLabel';
 
 // Animation Components
-// export { default as AnimatedFormInput } from './AnimatedFormInput';
-// export { default as AnimatedModal } from './AnimatedModal';
-// export { default as AnimatedSidebar } from './AnimatedSidebar';
+export { AnimatedFormInput } from './AnimatedFormInput';
+export { AnimatedModal, AnimatedConfirmationModal, useAnimatedModal } from './AnimatedModal';
+export { AnimatedSidebar, useAnimatedSidebar } from './AnimatedSidebar';

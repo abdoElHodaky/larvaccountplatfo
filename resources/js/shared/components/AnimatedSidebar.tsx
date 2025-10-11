@@ -324,11 +324,13 @@ export const AnimatedSidebar = forwardRef<HTMLDivElement, AnimatedSidebarProps>(
       {/* Sidebar */}
       <div
         ref={(node) => {
-          sidebarRef.current = node;
+          if (sidebarRef.current !== node) {
+            (sidebarRef as React.MutableRefObject<HTMLDivElement | null>).current = node;
+          }
           if (typeof ref === 'function') {
             ref(node);
-          } else if (ref) {
-            ref.current = node;
+          } else if (ref && 'current' in ref) {
+            (ref as React.MutableRefObject<HTMLDivElement | null>).current = node;
           }
         }}
         className={`
@@ -437,7 +439,7 @@ const AnimatedNavigationItem: React.FC<AnimatedNavigationItemProps> = ({
           await animate(element, [
             { transform: 'translateX(0px)' },
             { transform: 'translateX(4px)' }
-          ], { ...presets.fast, fillMode: 'forwards' });
+          ], { ...presets.fast, fill: 'forwards' });
         } catch (error) {
           console.warn('Navigation item hover animation failed:', error);
         }
@@ -455,7 +457,7 @@ const AnimatedNavigationItem: React.FC<AnimatedNavigationItemProps> = ({
           await animate(element, [
             { transform: 'translateX(4px)' },
             { transform: 'translateX(0px)' }
-          ], { ...presets.fast, fillMode: 'forwards' });
+          ], { ...presets.fast, fill: 'forwards' });
         } catch (error) {
           console.warn('Navigation item leave animation failed:', error);
         }
@@ -555,3 +557,29 @@ const AnimatedSubNavigationItem: React.FC<AnimatedSubNavigationItemProps> = ({
     </Link>
   );
 };
+
+/**
+ * Hook for managing animated sidebar state
+ */
+export function useAnimatedSidebar() {
+  const [isOpen, setIsOpen] = useState(false);
+
+  const openSidebar = useCallback(() => {
+    setIsOpen(true);
+  }, []);
+
+  const closeSidebar = useCallback(() => {
+    setIsOpen(false);
+  }, []);
+
+  const toggleSidebar = useCallback(() => {
+    setIsOpen(prev => !prev);
+  }, []);
+
+  return {
+    isOpen,
+    openSidebar,
+    closeSidebar,
+    toggleSidebar,
+  };
+}

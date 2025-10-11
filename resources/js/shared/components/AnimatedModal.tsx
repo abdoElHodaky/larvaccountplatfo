@@ -260,11 +260,13 @@ export const AnimatedModal = forwardRef<HTMLDivElement, AnimatedModalProps>(({
       <div className="flex min-h-full items-center justify-center p-4 text-center sm:p-0">
         <div
           ref={(node) => {
-            modalRef.current = node;
+            if (modalRef.current !== node) {
+              (modalRef as React.MutableRefObject<HTMLDivElement | null>).current = node;
+            }
             if (typeof ref === 'function') {
               ref(node);
-            } else if (ref) {
-              ref.current = node;
+            } else if (ref && 'current' in ref) {
+              (ref as React.MutableRefObject<HTMLDivElement | null>).current = node;
             }
           }}
           className={`

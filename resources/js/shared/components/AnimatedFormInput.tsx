@@ -4,7 +4,7 @@
  */
 
 import React, { useRef, useCallback, forwardRef, InputHTMLAttributes, useState, useEffect } from 'react';
-// import { useAnimation } from '../providers/AnimationProvider';
+import { useAnimation } from '../providers/AnimationProvider';
 
 interface AnimatedFormInputProps extends InputHTMLAttributes<HTMLInputElement> {
   label?: string;
@@ -34,10 +34,7 @@ const AnimatedFormInput = forwardRef<HTMLInputElement, AnimatedFormInputProps>((
   const labelRef = useRef<HTMLLabelElement>(null);
   const [isFocused, setIsFocused] = useState(false);
   const [hasValue, setHasValue] = useState(false);
-  // const { animate, presets, isReducedMotion } = useAnimation();
-  const animate = () => Promise.resolve();
-  const presets = { fast: { duration: 200 }, normal: { duration: 300 } };
-  const isReducedMotion = false;
+  const { animate, presets, isReducedMotion } = useAnimation();
 
   // Check if input has value
   useEffect(() => {
@@ -210,11 +207,13 @@ const AnimatedFormInput = forwardRef<HTMLInputElement, AnimatedFormInputProps>((
         
         <input
           ref={(node) => {
-            inputRef.current = node;
+            if (inputRef.current !== node) {
+              (inputRef as React.MutableRefObject<HTMLInputElement | null>).current = node;
+            }
             if (typeof ref === 'function') {
               ref(node);
-            } else if (ref) {
-              ref.current = node;
+            } else if (ref && 'current' in ref) {
+              (ref as React.MutableRefObject<HTMLInputElement | null>).current = node;
             }
           }}
           className={inputClasses}
@@ -268,4 +267,5 @@ const AnimatedFormInput = forwardRef<HTMLInputElement, AnimatedFormInputProps>((
 
 AnimatedFormInput.displayName = 'AnimatedFormInput';
 
+export { AnimatedFormInput };
 export default AnimatedFormInput;
