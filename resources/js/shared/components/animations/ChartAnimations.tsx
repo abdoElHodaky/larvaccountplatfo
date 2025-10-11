@@ -4,7 +4,7 @@
  */
 
 import React, { ReactNode, useEffect, useState } from 'react';
-import { motion, useAnimation } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { useAnimationContext } from './AnimationProvider';
 
 interface AnimatedCounterProps {
