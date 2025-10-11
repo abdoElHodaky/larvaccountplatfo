@@ -52,6 +52,11 @@ declare global {
   
   // Make route available as a global variable
   const route: (name: string, params?: any) => string;
+  
+  // Google Analytics gtag function
+  interface Window {
+    gtag?: (command: string, ...args: any[]) => void;
+  }
 }
 
 export {};

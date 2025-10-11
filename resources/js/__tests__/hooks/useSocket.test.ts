@@ -174,7 +174,7 @@ describe('useRealtimeDashboard Hook', () => {
 
   it('should update metrics on real-time events', async () => {
     let metricsUpdateCallback: (data: any) => void;
-    mockSocketManager.on.mockImplementation((event, callback) => {
+    mockSocketManager.on.mockImplementation((event: string, callback: (data: any) => void) => {
       if (event === 'dashboard:metrics_updated') {
         metricsUpdateCallback = callback;
       }
@@ -204,7 +204,7 @@ describe('useRealtimeDashboard Hook', () => {
 
   it('should update widgets on real-time events', async () => {
     let widgetUpdateCallback: (data: any) => void;
-    mockSocketManager.on.mockImplementation((event, callback) => {
+    mockSocketManager.on.mockImplementation((event: string, callback: (data: any) => void) => {
       if (event === 'dashboard:widget_updated') {
         widgetUpdateCallback = callback;
       }
@@ -233,7 +233,7 @@ describe('useRealtimeDashboard Hook', () => {
 
   it('should handle widget position updates', async () => {
     let positionUpdateCallback: (data: any) => void;
-    mockSocketManager.on.mockImplementation((event, callback) => {
+    mockSocketManager.on.mockImplementation((event: string, callback: (data: any) => void) => {
       if (event === 'dashboard:widget_position_updated') {
         positionUpdateCallback = callback;
       }
@@ -303,7 +303,7 @@ describe('useRealtimeAccounting Hook', () => {
 
   it('should update transactions on real-time events', async () => {
     let transactionCallback: (data: any) => void;
-    mockSocketManager.on.mockImplementation((event, callback) => {
+    mockSocketManager.on.mockImplementation((event: string, callback: (data: any) => void) => {
       if (event === 'accounting:transaction_created') {
         transactionCallback = callback;
       }
@@ -333,7 +333,7 @@ describe('useRealtimeAccounting Hook', () => {
 
   it('should update account balances on real-time events', async () => {
     let balanceCallback: (data: any) => void;
-    mockSocketManager.on.mockImplementation((event, callback) => {
+    mockSocketManager.on.mockImplementation((event: string, callback: (data: any) => void) => {
       if (event === 'accounting:account_balance_updated') {
         balanceCallback = callback;
       }
@@ -369,7 +369,7 @@ describe('useRealtimeAccounting Hook', () => {
 
   it('should handle transaction updates', async () => {
     let updateCallback: (data: any) => void;
-    mockSocketManager.on.mockImplementation((event, callback) => {
+    mockSocketManager.on.mockImplementation((event: string, callback: (data: any) => void) => {
       if (event === 'accounting:transaction_updated') {
         updateCallback = callback;
       }
@@ -454,7 +454,7 @@ describe('Socket Hook Error Handling', () => {
 
   it('should handle event listener errors', () => {
     const errorCallback = vi.fn();
-    mockSocketManager.on.mockImplementation((event, callback) => {
+    mockSocketManager.on.mockImplementation((event: string, callback: (data: any) => void) => {
       if (event === 'dashboard:metrics_updated') {
         // Simulate callback error
         setTimeout(() => {

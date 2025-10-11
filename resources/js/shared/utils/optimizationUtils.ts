@@ -3,10 +3,11 @@
  * Bundle splitting, preloading strategies, and performance optimization tools
  */
 
+import React from 'react';
 import { performanceMonitor } from './performanceMonitor';
 
 // Bundle splitting utilities
-export class BundleSplitter {
+class BundleSplitter {
   private static loadedChunks = new Set<string>();
   private static loadingChunks = new Map<string, Promise<any>>();
   private static chunkRegistry = new Map<string, () => Promise<any>>();
@@ -78,7 +79,7 @@ export class BundleSplitter {
 }
 
 // Preloading strategies
-export class PreloadingStrategy {
+class PreloadingStrategy {
   private static preloadQueue: Array<{ name: string; priority: number }> = [];
   private static isProcessing = false;
 
@@ -173,7 +174,7 @@ export class PreloadingStrategy {
 }
 
 // Resource optimization
-export class ResourceOptimizer {
+class ResourceOptimizer {
   private static imageCache = new Map<string, HTMLImageElement>();
   private static fontCache = new Set<string>();
 
@@ -241,7 +242,7 @@ export class ResourceOptimizer {
 }
 
 // Performance optimization utilities
-export class PerformanceOptimizer {
+class PerformanceOptimizer {
   private static rafCallbacks = new Set<() => void>();
   private static isRafScheduled = false;
 
