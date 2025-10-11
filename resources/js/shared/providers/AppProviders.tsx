@@ -17,6 +17,7 @@ import { store } from '../stores';
 import { apolloClient } from '../services/graphql/apollo-client';
 import { useAuth, useApp, useAppActions } from '../hooks/useRematchStore';
 import { SocketProvider } from './SocketProvider';
+import { AnimationProvider } from './AnimationProvider';
 import { pwaManager } from '../utils/pwa';
 import { PWAInstallPrompt } from '../components/pwa/PWAInstallPrompt';
 
@@ -212,7 +213,8 @@ export const AppProviders: React.FC<AppProvidersProps> = ({ children }) => {
       <Provider store={store}>
         <ApolloProvider client={apolloClient}>
             <ThemeProvider>
-              <DndProvider backend={HTML5Backend}>
+              <AnimationProvider>
+                <DndProvider backend={HTML5Backend}>
                 <SocketProvider>
                   <PerformanceMonitor>
                     <ConnectionMonitor>
@@ -228,7 +230,8 @@ export const AppProviders: React.FC<AppProvidersProps> = ({ children }) => {
                     </ConnectionMonitor>
                   </PerformanceMonitor>
                 </SocketProvider>
-              </DndProvider>
+                </DndProvider>
+              </AnimationProvider>
             </ThemeProvider>
         </ApolloProvider>
       </Provider>
