@@ -177,7 +177,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
       const existingAccount = accountsMap.get(rtAccount.id);
       if (existingAccount) {
         accountsMap.set(rtAccount.id, {
-          ...existingAccount,
+          ...(existingAccount as any),
           balance: rtAccount.balance,
           isRealtime: true,
         });
