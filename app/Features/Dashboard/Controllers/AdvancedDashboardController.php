@@ -2,17 +2,18 @@
 
 namespace App\Features\Dashboard\Controllers;
 
+use App\Features\Dashboard\Models\DashboardWidget;
 use App\Features\Dashboard\Services\AdvancedDashboardService;
 use App\Features\Dashboard\Services\WidgetService;
-use App\Features\Dashboard\Models\DashboardWidget;
-use Illuminate\Http\Request;
-use Illuminate\Http\JsonResponse;
 use App\Http\Controllers\Controller;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 
 class AdvancedDashboardController extends Controller
 {
     protected AdvancedDashboardService $advancedDashboardService;
+
     protected WidgetService $widgetService;
 
     public function __construct(
@@ -30,7 +31,7 @@ class AdvancedDashboardController extends Controller
     {
         try {
             $organizationId = $request->user()->organization_id ?? 1;
-            
+
             $dashboardData = $this->advancedDashboardService->getDashboardOverview($organizationId);
 
             return response()->json([
@@ -54,11 +55,11 @@ class AdvancedDashboardController extends Controller
     {
         try {
             $user = $request->user();
-            
+
             $widgets = DashboardWidget::where('organization_id', $user->organization_id)
                 ->where(function ($query) use ($user) {
                     $query->where('user_id', $user->id)
-                          ->orWhereNull('user_id'); // Global widgets
+                        ->orWhereNull('user_id'); // Global widgets
                 })
                 ->active()
                 ->orderBy('position_y')
@@ -90,12 +91,12 @@ class AdvancedDashboardController extends Controller
     {
         try {
             $user = $request->user();
-            
+
             $widget = DashboardWidget::where('id', $widgetId)
                 ->where('organization_id', $user->organization_id)
                 ->firstOrFail();
 
-            if (!$widget->canView($user)) {
+            if (! $widget->canView($user)) {
                 return response()->json([
                     'success' => false,
                     'message' => 'Access denied to this widget',
@@ -202,12 +203,12 @@ class AdvancedDashboardController extends Controller
     {
         try {
             $user = $request->user();
-            
+
             $widget = DashboardWidget::where('id', $widgetId)
                 ->where('organization_id', $user->organization_id)
                 ->firstOrFail();
 
-            if (!$widget->canEdit($user)) {
+            if (! $widget->canEdit($user)) {
                 return response()->json([
                     'success' => false,
                     'message' => 'Access denied to edit this widget',
@@ -250,12 +251,12 @@ class AdvancedDashboardController extends Controller
     {
         try {
             $user = $request->user();
-            
+
             $widget = DashboardWidget::where('id', $widgetId)
                 ->where('organization_id', $user->organization_id)
                 ->firstOrFail();
 
-            if (!$widget->canEdit($user)) {
+            if (! $widget->canEdit($user)) {
                 return response()->json([
                     'success' => false,
                     'message' => 'Access denied to delete this widget',
@@ -499,12 +500,12 @@ class AdvancedDashboardController extends Controller
             DashboardWidget::TYPE_BALANCE_SHEET,
             DashboardWidget::TYPE_PROFIT_LOSS,
             DashboardWidget::TYPE_ACCOUNTS_AGING => DashboardWidget::SOURCE_ACCOUNTING,
-            
+
             DashboardWidget::TYPE_BUDGET_OVERVIEW => DashboardWidget::SOURCE_BUDGET,
             DashboardWidget::TYPE_FORECAST_CHART => DashboardWidget::SOURCE_FORECAST,
             DashboardWidget::TYPE_TAX_SUMMARY => DashboardWidget::SOURCE_TAX,
             DashboardWidget::TYPE_INVENTORY_STATUS => DashboardWidget::SOURCE_INVENTORY,
-            
+
             default => DashboardWidget::SOURCE_ACCOUNTING,
         };
     }

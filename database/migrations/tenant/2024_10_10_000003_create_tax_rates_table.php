@@ -18,9 +18,9 @@ return new class extends Migration
             $table->string('code', 50)->nullable();
             $table->text('description')->nullable();
             $table->enum('tax_type', [
-                'sales_tax', 'vat', 'gst', 'income_tax', 
-                'payroll_tax', 'property_tax', 'excise_tax', 
-                'custom_duty', 'other'
+                'sales_tax', 'vat', 'gst', 'income_tax',
+                'payroll_tax', 'property_tax', 'excise_tax',
+                'custom_duty', 'other',
             ]);
             $table->decimal('rate', 8, 4); // Supports up to 9999.9999%
             $table->boolean('is_compound')->default(false);

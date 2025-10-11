@@ -3,9 +3,8 @@
 namespace App\Features\Accounting\Models;
 
 use App\Shared\Models\HybridModel;
-use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class JournalEntry extends HybridModel
 {
@@ -58,21 +57,32 @@ class JournalEntry extends HybridModel
      * Entry types
      */
     const TYPE_REGULAR = 'regular';
+
     const TYPE_ADJUSTING = 'adjusting';
+
     const TYPE_CLOSING = 'closing';
+
     const TYPE_OPENING = 'opening';
+
     const TYPE_REVERSING = 'reversing';
 
     /**
      * Source types
      */
     const SOURCE_MANUAL = 'manual';
+
     const SOURCE_INVOICE = 'invoice';
+
     const SOURCE_PAYMENT = 'payment';
+
     const SOURCE_PURCHASE = 'purchase';
+
     const SOURCE_PAYROLL = 'payroll';
+
     const SOURCE_INVENTORY = 'inventory';
+
     const SOURCE_DEPRECIATION = 'depreciation';
+
     const SOURCE_BANK_RECONCILIATION = 'bank_reconciliation';
 
     /**
@@ -161,7 +171,7 @@ class JournalEntry extends HybridModel
     public function scopeRegular($query)
     {
         return $query->where('is_adjusting', false)
-                    ->where('is_closing', false);
+            ->where('is_closing', false);
     }
 
     /**
@@ -201,7 +211,7 @@ class JournalEntry extends HybridModel
      */
     public function getFormattedReference(): string
     {
-        return $this->reference_number ?: 'JE-' . str_pad($this->id, 6, '0', STR_PAD_LEFT);
+        return $this->reference_number ?: 'JE-'.str_pad($this->id, 6, '0', STR_PAD_LEFT);
     }
 
     /**
@@ -210,7 +220,7 @@ class JournalEntry extends HybridModel
     public function updateAccountBalance(): void
     {
         $account = $this->account;
-        
+
         if ($account) {
             if ($this->isDebit()) {
                 $account->updateBalance($this->debit_amount, 'debit');
@@ -223,12 +233,12 @@ class JournalEntry extends HybridModel
     /**
      * Reverse this journal entry
      */
-    public function reverse(string $reason = null): JournalEntry
+    public function reverse(?string $reason = null): JournalEntry
     {
         $reversalEntry = $this->replicate();
         $reversalEntry->debit_amount = $this->credit_amount;
         $reversalEntry->credit_amount = $this->debit_amount;
-        $reversalEntry->description = 'Reversal: ' . $this->description;
+        $reversalEntry->description = 'Reversal: '.$this->description;
         $reversalEntry->entry_type = self::TYPE_REVERSING;
         $reversalEntry->metadata = array_merge($this->metadata ?? [], [
             'original_entry_id' => $this->id,

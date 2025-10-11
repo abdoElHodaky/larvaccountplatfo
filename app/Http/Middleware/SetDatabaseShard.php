@@ -26,14 +26,14 @@ class SetDatabaseShard
         try {
             // Resolve tenant from request context
             $tenant = $this->tenantResolver->resolveTenantFromRequest();
-            
+
             if ($tenant) {
                 // Set the appropriate database connection
                 $this->tenantResolver->setTenantConnection($tenant);
-                
+
                 // Store tenant in application context for later use
                 app()->instance('current.tenant', $tenant);
-                
+
                 // Log database connection switch for debugging
                 if (config('app.debug')) {
                     $connectionName = $this->tenantResolver->getConnectionName($tenant);
@@ -42,19 +42,19 @@ class SetDatabaseShard
             } else {
                 // No tenant found, use landlord database
                 config(['database.default' => 'landlord']);
-                
+
                 if (config('app.debug')) {
-                    Log::debug("No tenant found, using landlord database");
+                    Log::debug('No tenant found, using landlord database');
                 }
             }
         } catch (\Exception $e) {
             // Log error but don't break the request
-            Log::error("Failed to set database shard: " . $e->getMessage(), [
+            Log::error('Failed to set database shard: '.$e->getMessage(), [
                 'exception' => $e,
                 'request_url' => $request->url(),
                 'user_id' => auth()->id(),
             ]);
-            
+
             // Fallback to landlord database
             config(['database.default' => 'landlord']);
         }
@@ -71,7 +71,7 @@ class SetDatabaseShard
         if (app()->bound('current.tenant')) {
             app()->forgetInstance('current.tenant');
         }
-        
+
         // Log performance metrics if enabled
         if (config('app.debug') && config('tenant.log_performance', false)) {
             $this->logPerformanceMetrics($request, $response);
@@ -85,11 +85,11 @@ class SetDatabaseShard
     {
         $executionTime = microtime(true) - LARAVEL_START;
         $memoryUsage = memory_get_peak_usage(true);
-        
-        Log::info("Request performance metrics", [
+
+        Log::info('Request performance metrics', [
             'url' => $request->url(),
             'method' => $request->method(),
-            'execution_time' => round($executionTime * 1000, 2) . 'ms',
+            'execution_time' => round($executionTime * 1000, 2).'ms',
             'memory_usage' => $this->formatBytes($memoryUsage),
             'response_status' => $response->getStatusCode(),
             'tenant_id' => app()->bound('current.tenant') ? app('current.tenant')->id : null,
@@ -103,11 +103,11 @@ class SetDatabaseShard
     private function formatBytes(int $bytes, int $precision = 2): string
     {
         $units = ['B', 'KB', 'MB', 'GB', 'TB'];
-        
+
         for ($i = 0; $bytes > 1024 && $i < count($units) - 1; $i++) {
             $bytes /= 1024;
         }
-        
-        return round($bytes, $precision) . ' ' . $units[$i];
+
+        return round($bytes, $precision).' '.$units[$i];
     }
 }

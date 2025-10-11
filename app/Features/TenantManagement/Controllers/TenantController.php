@@ -2,13 +2,13 @@
 
 namespace App\Features\TenantManagement\Controllers;
 
-use Illuminate\Http\Request;
+use App\Features\TenantManagement\Services\TenantService;
+use App\Http\Controllers\Controller;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 use Inertia\Response;
-use App\Http\Controllers\Controller;
-use App\Features\TenantManagement\Services\TenantService;
 
 class TenantController extends Controller
 {
@@ -18,6 +18,7 @@ class TenantController extends Controller
     {
         $this->tenantService = $tenantService;
     }
+
     /**
      * Show tenant selection page
      */
@@ -45,7 +46,7 @@ class TenantController extends Controller
 
         $result = $this->tenantService->switchTenant($user, $tenantId);
 
-        if (!$result['success']) {
+        if (! $result['success']) {
             return back()->withErrors([
                 'tenant_id' => $result['message'],
             ]);
@@ -60,8 +61,8 @@ class TenantController extends Controller
     public function settings(): Response
     {
         $tenant = app('tenant');
-        
-        if (!$tenant) {
+
+        if (! $tenant) {
             return redirect()->route('tenant.select');
         }
 
@@ -78,8 +79,8 @@ class TenantController extends Controller
     public function updateSettings(Request $request): RedirectResponse
     {
         $tenant = app('tenant');
-        
-        if (!$tenant) {
+
+        if (! $tenant) {
             return redirect()->route('tenant.select');
         }
 
@@ -94,7 +95,7 @@ class TenantController extends Controller
 
         $result = $this->tenantService->updateTenantSettings($tenant, $request);
 
-        if (!$result['success']) {
+        if (! $result['success']) {
             return back()->withErrors(['error' => $result['message']]);
         }
 
@@ -107,8 +108,8 @@ class TenantController extends Controller
     public function users(): Response
     {
         $tenant = app('tenant');
-        
-        if (!$tenant) {
+
+        if (! $tenant) {
             return redirect()->route('tenant.select');
         }
 
@@ -125,8 +126,8 @@ class TenantController extends Controller
     public function inviteUser(Request $request): RedirectResponse
     {
         $tenant = app('tenant');
-        
-        if (!$tenant) {
+
+        if (! $tenant) {
             return redirect()->route('tenant.select');
         }
 
@@ -138,7 +139,7 @@ class TenantController extends Controller
 
         $result = $this->tenantService->inviteUser($tenant, $request);
 
-        if (!$result['success']) {
+        if (! $result['success']) {
             return back()->withErrors(['error' => $result['message']]);
         }
 

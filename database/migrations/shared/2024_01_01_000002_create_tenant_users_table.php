@@ -24,7 +24,7 @@ return new class extends Migration
 
             // Unique constraint to prevent duplicate user-tenant relationships
             $table->unique(['tenant_id', 'user_id']);
-            
+
             // Indexes for performance
             $table->index(['tenant_id', 'is_active']);
             $table->index(['user_id', 'is_active']);

@@ -2,11 +2,9 @@
 
 namespace App\Shared\Providers;
 
-use Illuminate\Support\ServiceProvider;
-use Illuminate\Support\Facades\App;
-use App\Shared\Contracts\ServiceInterface;
-use App\Shared\Services\ServiceRegistry;
 use App\Shared\Services\ServiceManager;
+use App\Shared\Services\ServiceRegistry;
+use Illuminate\Support\ServiceProvider;
 
 /**
  * Service provider for the service layer architecture
@@ -20,7 +18,7 @@ class ServiceLayerProvider extends ServiceProvider
     {
         // Register service registry as singleton
         $this->app->singleton(ServiceRegistry::class, function ($app) {
-            return new ServiceRegistry();
+            return new ServiceRegistry;
         });
 
         // Register service manager as singleton

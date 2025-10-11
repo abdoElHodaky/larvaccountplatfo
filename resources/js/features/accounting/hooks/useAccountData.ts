@@ -4,7 +4,7 @@
  */
 
 import { useRequest, usePagination } from 'alova/client';
-import { restClient, createGraphQLQuery } from '@/api/client';
+import { restClient, createGraphQLQuery } from '@/shared/services/api/client';
 
 // Types
 export interface Account {

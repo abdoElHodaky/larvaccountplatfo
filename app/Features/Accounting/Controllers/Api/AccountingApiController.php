@@ -5,8 +5,8 @@ namespace App\Features\Accounting\Controllers\Api;
 use App\Features\Accounting\Controllers\AccountingController;
 use App\Features\Accounting\Models\Account;
 use App\Features\Accounting\Models\Transaction;
-use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 
 class AccountingApiController extends AccountingController
 {
@@ -41,25 +41,24 @@ class AccountingApiController extends AccountingController
     {
         try {
             $organizationId = $this->getCurrentOrganizationId();
-            
+
             $accounts = Account::where('organization_id', $organizationId)
-                             ->where('type', $type)
-                             ->active()
-                             ->orderBy('code')
-                             ->orderBy('name')
-                             ->get(['id', 'code', 'name', 'type', 'normal_balance']);
+                ->where('type', $type)
+                ->active()
+                ->orderBy('code')
+                ->orderBy('name')
+                ->get(['id', 'code', 'name', 'type', 'normal_balance']);
 
             return response()->json([
                 'success' => true,
                 'data' => $accounts,
-                'message' => 'Accounts retrieved successfully'
+                'message' => 'Accounts retrieved successfully',
             ]);
-
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
                 'message' => 'Failed to retrieve accounts',
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
             ], 500);
         }
     }
@@ -182,39 +181,38 @@ class AccountingApiController extends AccountingController
                     'value' => number_format($overview['financial_summary']['total_assets'], 2),
                     'label' => 'Total Assets',
                     'icon' => 'trending-up',
-                    'color' => 'green'
+                    'color' => 'green',
                 ],
                 'total_liabilities' => [
                     'value' => number_format($overview['financial_summary']['total_liabilities'], 2),
                     'label' => 'Total Liabilities',
                     'icon' => 'trending-down',
-                    'color' => 'red'
+                    'color' => 'red',
                 ],
                 'net_worth' => [
                     'value' => number_format($overview['financial_summary']['net_worth'], 2),
                     'label' => 'Net Worth',
                     'icon' => 'dollar-sign',
-                    'color' => 'blue'
+                    'color' => 'blue',
                 ],
                 'net_income' => [
                     'value' => number_format($overview['financial_summary']['net_income'], 2),
                     'label' => 'Net Income',
                     'icon' => 'bar-chart',
-                    'color' => $overview['financial_summary']['net_income'] >= 0 ? 'green' : 'red'
-                ]
+                    'color' => $overview['financial_summary']['net_income'] >= 0 ? 'green' : 'red',
+                ],
             ];
 
             return response()->json([
                 'success' => true,
                 'data' => $summary,
-                'message' => 'Financial summary retrieved successfully'
+                'message' => 'Financial summary retrieved successfully',
             ]);
-
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
                 'message' => 'Failed to retrieve financial summary',
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
             ], 500);
         }
     }
@@ -231,11 +229,11 @@ class AccountingApiController extends AccountingController
             $limit = $request->get('limit', 10);
 
             $accountsQuery = Account::where('organization_id', $organizationId)
-                                  ->active()
-                                  ->where(function ($q) use ($query) {
-                                      $q->where('name', 'like', "%{$query}%")
-                                        ->orWhere('code', 'like', "%{$query}%");
-                                  });
+                ->active()
+                ->where(function ($q) use ($query) {
+                    $q->where('name', 'like', "%{$query}%")
+                        ->orWhere('code', 'like', "%{$query}%");
+                });
 
             if ($type) {
                 $accountsQuery->where('type', $type);
@@ -248,7 +246,7 @@ class AccountingApiController extends AccountingController
                     'id' => $account->id,
                     'code' => $account->code,
                     'name' => $account->name,
-                    'display_name' => $account->code . ' - ' . $account->name,
+                    'display_name' => $account->code.' - '.$account->name,
                     'type' => $account->type,
                     'normal_balance' => $account->normal_balance,
                 ];
@@ -257,14 +255,13 @@ class AccountingApiController extends AccountingController
             return response()->json([
                 'success' => true,
                 'data' => $formattedAccounts,
-                'message' => 'Accounts found'
+                'message' => 'Accounts found',
             ]);
-
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
                 'message' => 'Search failed',
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
             ], 500);
         }
     }
@@ -279,7 +276,7 @@ class AccountingApiController extends AccountingController
                 'id' => $account['id'],
                 'code' => $account['code'],
                 'name' => $account['name'],
-                'display_name' => $account['code'] . ' - ' . $account['name'],
+                'display_name' => $account['code'].' - '.$account['name'],
                 'description' => $account['description'],
                 'type' => $account['type'],
                 'subtype' => $account['subtype'],
@@ -309,7 +306,7 @@ class AccountingApiController extends AccountingController
             'id' => $account->id,
             'code' => $account->code,
             'name' => $account->name,
-            'display_name' => $account->code . ' - ' . $account->name,
+            'display_name' => $account->code.' - '.$account->name,
             'description' => $account->description,
             'type' => $account->type,
             'subtype' => $account->subtype,
@@ -379,7 +376,7 @@ class AccountingApiController extends AccountingController
                         'id' => $entry->account->id,
                         'code' => $entry->account->code,
                         'name' => $entry->account->name,
-                        'display_name' => $entry->account->code . ' - ' . $entry->account->name,
+                        'display_name' => $entry->account->code.' - '.$entry->account->name,
                     ],
                     'description' => $entry->description,
                     'debit_amount' => (float) $entry->debit_amount,
@@ -411,7 +408,7 @@ class AccountingApiController extends AccountingController
                     'account_type' => $account['account_type'],
                     'debit_balance' => (float) $account['debit_balance'],
                     'credit_balance' => (float) $account['credit_balance'],
-                    'display_name' => $account['account_code'] . ' - ' . $account['account_name'],
+                    'display_name' => $account['account_code'].' - '.$account['account_name'],
                 ];
             })->toArray(),
         ];
@@ -427,7 +424,7 @@ class AccountingApiController extends AccountingController
                 'id' => $ledger['account']->id,
                 'code' => $ledger['account']->code,
                 'name' => $ledger['account']->name,
-                'display_name' => $ledger['account']->code . ' - ' . $ledger['account']->name,
+                'display_name' => $ledger['account']->code.' - '.$ledger['account']->name,
                 'type' => $ledger['account']->type,
                 'normal_balance' => $ledger['account']->normal_balance,
             ],

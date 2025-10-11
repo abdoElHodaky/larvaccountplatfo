@@ -13,7 +13,7 @@ class GlobalUserGuard extends SessionGuard
     /**
      * Create a new authentication guard.
      */
-    public function __construct(UserProvider $provider, Session $session, Request $request = null)
+    public function __construct(UserProvider $provider, Session $session, ?Request $request = null)
     {
         parent::__construct('global_user', $provider, $session, $request);
     }
@@ -100,7 +100,7 @@ class GlobalUserGuard extends SessionGuard
      */
     public function getName()
     {
-        return 'login_global_user_' . sha1(static::class);
+        return 'login_global_user_'.sha1(static::class);
     }
 
     /**
@@ -108,7 +108,7 @@ class GlobalUserGuard extends SessionGuard
      */
     public function getRecallerName()
     {
-        return 'remember_global_user_' . sha1(static::class);
+        return 'remember_global_user_'.sha1(static::class);
     }
 
     /**
@@ -131,7 +131,7 @@ class GlobalUserGuard extends SessionGuard
         // If we've already retrieved the user for the current request we can just
         // return it back immediately. We do not want to fetch the user data on
         // every call to this method because that would be tremendously slow.
-        if (!is_null($this->user)) {
+        if (! is_null($this->user)) {
             return $this->user;
         }
 
@@ -140,13 +140,13 @@ class GlobalUserGuard extends SessionGuard
         // First we will try to load the user using the identifier in the session if
         // one exists. Otherwise we will check for a "remember me" cookie in this
         // request, and if one exists, attempt to retrieve the user using that.
-        if (!is_null($id) && $this->user = $this->provider->retrieveById($id)) {
+        if (! is_null($id) && $this->user = $this->provider->retrieveById($id)) {
             $this->fireAuthenticatedEvent($this->user);
         }
 
         // If the user is null, but we decrypt a "remember me" cookie we can attempt
         // to retrieve the user using that. Once we have the user we can return it.
-        if (is_null($this->user) && !is_null($recaller = $this->recaller())) {
+        if (is_null($this->user) && ! is_null($recaller = $this->recaller())) {
             $this->user = $this->userFromRecaller($recaller);
 
             if ($this->user) {
@@ -174,7 +174,7 @@ class GlobalUserGuard extends SessionGuard
      */
     protected function hasValidCredentials($user, $credentials)
     {
-        $validated = !is_null($user) && $this->provider->validateCredentials($user, $credentials);
+        $validated = ! is_null($user) && $this->provider->validateCredentials($user, $credentials);
 
         if ($validated) {
             $this->fireValidatedEvent($user);

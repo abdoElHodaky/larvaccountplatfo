@@ -288,11 +288,4 @@ export const createRESTMethod = <TData = any>(
 // EXPORTS
 // =============================================================================
 
-export {
-  restClient as default,
-  restClient,
-  graphqlClient,
-  createGraphQLQuery,
-  createGraphQLMutation,
-  createRESTMethod,
-};
+export default restClient;

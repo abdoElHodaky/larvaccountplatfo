@@ -1,7 +1,7 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
 use App\Features\Dashboard\Controllers\DashboardController;
+use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
@@ -15,7 +15,7 @@ use App\Features\Dashboard\Controllers\DashboardController;
 Route::middleware(['auth', 'verified', 'tenant'])->group(function () {
     // Dashboard main page
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
-    
+
     // Dashboard API endpoints
     Route::prefix('api')->name('api.')->group(function () {
         Route::get('/dashboard/stats', [DashboardController::class, 'stats'])->name('dashboard.stats');

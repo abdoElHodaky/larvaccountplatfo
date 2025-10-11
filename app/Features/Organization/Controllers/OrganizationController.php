@@ -2,10 +2,10 @@
 
 namespace App\Features\Organization\Controllers;
 
-use App\Http\Controllers\Controller;
 use App\Features\Organization\Services\OrganizationService;
-use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -23,7 +23,7 @@ class OrganizationController extends Controller
         $organization = auth()->user()->organization;
         $stats = $this->organizationService->getDashboardStats();
         $recentActivity = $this->organizationService->getRecentActivity($organization->id);
-        
+
         return Inertia::render('Organization/Index', [
             'organization' => $organization,
             'stats' => $stats,
@@ -37,7 +37,7 @@ class OrganizationController extends Controller
     public function dashboard(): Response
     {
         $stats = $this->organizationService->getDashboardStats();
-        
+
         return Inertia::render('Organization/Dashboard', [
             'stats' => $stats,
             'organization' => auth()->user()->organization,
@@ -51,7 +51,7 @@ class OrganizationController extends Controller
     {
         $organization = auth()->user()->organization;
         $settings = $this->organizationService->getSettings($organization->id);
-        
+
         return Inertia::render('Organization/Settings', [
             'organization' => $organization,
             'settings' => $settings,
@@ -88,7 +88,7 @@ class OrganizationController extends Controller
     public function profile(): Response
     {
         $organization = auth()->user()->organization;
-        
+
         return Inertia::render('Organization/Profile', [
             'organization' => $organization,
         ]);
@@ -127,7 +127,7 @@ class OrganizationController extends Controller
     {
         $organization = auth()->user()->organization;
         $teams = $this->organizationService->getTeams($organization->id);
-        
+
         return Inertia::render('Organization/Teams', [
             'teams' => $teams,
             'organization' => $organization,
@@ -199,7 +199,7 @@ class OrganizationController extends Controller
     {
         $organization = auth()->user()->organization;
         $users = $this->organizationService->getUsers($organization->id);
-        
+
         return Inertia::render('Organization/Users', [
             'users' => $users,
             'organization' => $organization,

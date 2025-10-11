@@ -37,26 +37,26 @@ class AuthenticatedSessionController extends Controller
 
         /** @var User $user */
         $user = Auth::user();
-        
+
         // Update last login timestamp
         $user->updateLastLogin();
 
         // Get user's active tenant
         $activeTenant = $user->getActiveTenant();
-        
+
         if ($activeTenant) {
             // Set tenant in session
             session(['active_tenant_id' => $activeTenant->id]);
-            
+
             // Bind tenant to container for this request
             app()->instance('tenant', $activeTenant);
-            
+
             return redirect()->intended(route('dashboard'));
         }
 
         // If user has no tenants, redirect to tenant selection or creation
         $userTenants = $user->tenants()->wherePivot('is_active', true)->get();
-        
+
         if ($userTenants->isEmpty()) {
             return redirect()->route('tenant.create')
                 ->with('message', 'Welcome! Please create or join an organization to get started.');
@@ -71,7 +71,7 @@ class AuthenticatedSessionController extends Controller
         // Single tenant - set it as active
         $tenant = $userTenants->first();
         $user->setActiveTenant($tenant);
-        
+
         return redirect()->intended(route('dashboard'));
     }
 
@@ -102,12 +102,12 @@ class AuthenticatedSessionController extends Controller
         $user = Auth::user();
         $tenant = \App\Models\Tenant::findOrFail($request->tenant_id);
 
-        if (!$user->hasAccessToTenant($tenant)) {
+        if (! $user->hasAccessToTenant($tenant)) {
             abort(403, 'You do not have access to this organization.');
         }
 
         $user->setActiveTenant($tenant);
-        
+
         return redirect()->route('dashboard')
             ->with('success', "Switched to {$tenant->name}");
     }
@@ -119,14 +119,14 @@ class AuthenticatedSessionController extends Controller
     {
         /** @var User $user */
         $user = Auth::user();
-        
+
         $tenants = $user->tenants()
             ->wherePivot('is_active', true)
             ->with(['users' => function ($query) {
                 $query->wherePivot('is_active', true)->limit(5);
             }])
             ->get()
-            ->map(function ($tenant) use ($user) {
+            ->map(function ($tenant) {
                 return [
                     'id' => $tenant->id,
                     'name' => $tenant->name,

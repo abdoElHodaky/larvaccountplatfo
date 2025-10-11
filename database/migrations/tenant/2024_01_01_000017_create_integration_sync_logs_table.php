@@ -49,4 +49,3 @@ return new class extends Migration
         Schema::dropIfExists('integration_sync_logs');
     }
 };
-

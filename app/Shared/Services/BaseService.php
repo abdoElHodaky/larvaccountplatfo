@@ -2,21 +2,25 @@
 
 namespace App\Shared\Services;
 
-use App\Shared\Contracts\ServiceInterface;
 use App\Shared\Contracts\CacheableInterface;
+use App\Shared\Contracts\ServiceInterface;
+use Exception;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
-use Exception;
 
 /**
  * Base service class that provides common functionality for all services
  */
-abstract class BaseService implements ServiceInterface, CacheableInterface
+abstract class BaseService implements CacheableInterface, ServiceInterface
 {
     protected string $serviceName;
+
     protected string $serviceVersion = '1.0.0';
+
     protected array $dependencies = [];
+
     protected bool $initialized = false;
+
     protected array $cacheConfig = [];
 
     public function __construct()
@@ -66,13 +70,13 @@ abstract class BaseService implements ServiceInterface, CacheableInterface
     {
         try {
             // Check if service is initialized
-            if (!$this->initialized) {
+            if (! $this->initialized) {
                 return false;
             }
 
             // Check dependencies
             foreach ($this->dependencies as $dependency) {
-                if (!$this->checkDependency($dependency)) {
+                if (! $this->checkDependency($dependency)) {
                     return false;
                 }
             }
@@ -80,7 +84,8 @@ abstract class BaseService implements ServiceInterface, CacheableInterface
             // Perform service-specific health checks
             return $this->performHealthCheck();
         } catch (Exception $e) {
-            Log::error("Health check failed for service {$this->serviceName}: " . $e->getMessage());
+            Log::error("Health check failed for service {$this->serviceName}: ".$e->getMessage());
+
             return false;
         }
     }
@@ -107,7 +112,7 @@ abstract class BaseService implements ServiceInterface, CacheableInterface
             $this->initialized = true;
             Log::info("Service {$this->serviceName} initialized successfully");
         } catch (Exception $e) {
-            Log::error("Failed to initialize service {$this->serviceName}: " . $e->getMessage());
+            Log::error("Failed to initialize service {$this->serviceName}: ".$e->getMessage());
             throw $e;
         }
     }
@@ -122,7 +127,7 @@ abstract class BaseService implements ServiceInterface, CacheableInterface
             $this->initialized = false;
             Log::info("Service {$this->serviceName} cleaned up successfully");
         } catch (Exception $e) {
-            Log::error("Failed to cleanup service {$this->serviceName}: " . $e->getMessage());
+            Log::error("Failed to cleanup service {$this->serviceName}: ".$e->getMessage());
             throw $e;
         }
     }
@@ -133,6 +138,7 @@ abstract class BaseService implements ServiceInterface, CacheableInterface
     public function getCacheKey(string $method, array $parameters = []): string
     {
         $parameterHash = md5(serialize($parameters));
+
         return "{$this->cacheConfig['prefix']}:{$method}:{$parameterHash}";
     }
 
@@ -151,7 +157,7 @@ abstract class BaseService implements ServiceInterface, CacheableInterface
     {
         $baseTags = $this->cacheConfig['tags'];
         $methodTags = $this->cacheConfig['method_tags'][$method] ?? [];
-        
+
         return array_merge($baseTags, $methodTags);
     }
 
@@ -169,11 +175,11 @@ abstract class BaseService implements ServiceInterface, CacheableInterface
     public function invalidateCache(array $tags = []): void
     {
         $tagsToInvalidate = empty($tags) ? $this->cacheConfig['tags'] : $tags;
-        
+
         foreach ($tagsToInvalidate as $tag) {
             Cache::tags($tag)->flush();
         }
-        
+
         Log::info("Cache invalidated for service {$this->serviceName}", ['tags' => $tagsToInvalidate]);
     }
 
@@ -200,7 +206,7 @@ abstract class BaseService implements ServiceInterface, CacheableInterface
      */
     protected function cached(string $method, array $parameters, callable $callback)
     {
-        if (!$this->shouldCache($method)) {
+        if (! $this->shouldCache($method)) {
             return $callback();
         }
 
@@ -222,10 +228,10 @@ abstract class BaseService implements ServiceInterface, CacheableInterface
     /**
      * Log service error
      */
-    protected function logError(string $message, Exception $exception = null, array $context = []): void
+    protected function logError(string $message, ?Exception $exception = null, array $context = []): void
     {
         $context['service'] = $this->serviceName;
-        
+
         if ($exception) {
             $context['exception'] = [
                 'message' => $exception->getMessage(),
@@ -288,15 +294,15 @@ abstract class BaseService implements ServiceInterface, CacheableInterface
     /**
      * Add cacheable method
      */
-    protected function addCacheableMethod(string $method, int $ttl = null, array $tags = []): void
+    protected function addCacheableMethod(string $method, ?int $ttl = null, array $tags = []): void
     {
         $this->cacheConfig['cacheable_methods'][] = $method;
-        
+
         if ($ttl !== null) {
             $this->cacheConfig['method_ttl'][$method] = $ttl;
         }
-        
-        if (!empty($tags)) {
+
+        if (! empty($tags)) {
             $this->cacheConfig['method_tags'][$method] = $tags;
         }
     }
