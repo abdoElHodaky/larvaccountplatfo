@@ -358,8 +358,8 @@ export class PerformanceAnalyticsDashboard {
         
         this.addMetric({
           name: 'pageLoadTime',
-          value: navigation.loadEventEnd - navigation.navigationStart,
-          rating: this.getRating(navigation.loadEventEnd - navigation.navigationStart, PERFORMANCE_THRESHOLDS.pageLoadTime),
+          value: navigation.loadEventEnd - navigation.fetchStart,
+          rating: this.getRating(navigation.loadEventEnd - navigation.fetchStart, PERFORMANCE_THRESHOLDS.pageLoadTime),
           timestamp: Date.now(),
           url: window.location.href,
         });

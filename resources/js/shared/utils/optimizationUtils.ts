@@ -3,6 +3,7 @@
  * Bundle splitting, preloading strategies, and performance optimization tools
  */
 
+import React from 'react';
 import { performanceMonitor } from './performanceMonitor';
 
 // Bundle splitting utilities
@@ -403,13 +404,7 @@ export const usePerformanceOptimization = () => {
   };
 };
 
-// Export all utilities
-export {
-  BundleSplitter,
-  PreloadingStrategy,
-  ResourceOptimizer,
-  PerformanceOptimizer,
-};
+// Note: Classes are already exported above with their declarations
 
 // Initialize chunk registry with common chunks
 if (typeof window !== 'undefined') {

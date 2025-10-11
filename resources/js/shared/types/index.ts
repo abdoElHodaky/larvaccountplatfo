@@ -3,17 +3,36 @@
  * Centralized exports for all shared types
  */
 
-// Common types
-export * from './common';
+// Common types - explicit exports to avoid conflicts
+export type { 
+  PaginatedData, 
+  FormErrors, 
+  NavigationItem, 
+  BreadcrumbItem, 
+  BaseEntity 
+} from './common';
+
+export type { SelectOption } from './common';
 
 // Authentication types
 export * from './auth';
 
-// Laravel/Inertia types
-export * from './laravel';
+// Laravel/Inertia types - explicit exports to avoid conflicts with accounting types
+export type { 
+  User, 
+  Tenant, 
+  Organization, 
+  PageProps 
+} from './laravel';
 
-// Re-export accounting types for backward compatibility
-export * from '@/features/accounting/types';
+// Use accounting types as the primary source for these interfaces
+export type { 
+  Account, 
+  Transaction, 
+  JournalEntry, 
+  AccountBalance, 
+  DashboardStats 
+} from '@/features/accounting/types';
 
 // Legacy compatibility - keep existing types
 export interface BaseEntity {

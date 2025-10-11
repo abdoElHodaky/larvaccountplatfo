@@ -293,7 +293,7 @@ class PerformanceMonitor {
       warnings.push(`Average lazy load time is high: ${stats.lazyLoad.averageTime.toFixed(2)}ms`);
     }
 
-    if (stats.lazyLoad.retryRate > 10) {
+    if (stats.lazyLoad.retryRate && stats.lazyLoad.retryRate > 10) {
       warnings.push(`High retry rate for lazy loading: ${stats.lazyLoad.retryRate.toFixed(2)}%`);
     }
 

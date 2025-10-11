@@ -100,7 +100,6 @@ const lazyUtils = {
     devLogger.log('Lazy', 'Preloading all components...');
     
     const componentImports = [
-      () => import('../../features/accounting/components/organisms/ChartOfAccounts'),
       () => import('../../features/accounting/pages/Accounts'),
       () => import('../../features/dashboard/pages/Dashboard'),
       () => import('../../features/auth/pages/Login'),

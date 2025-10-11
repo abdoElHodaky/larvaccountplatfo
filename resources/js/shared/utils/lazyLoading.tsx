@@ -1,9 +1,49 @@
-import React, { Suspense, ComponentType, LazyExoticComponent } from 'react';
+import React, { Suspense, ComponentType, LazyExoticComponent, Component, ErrorInfo, ReactNode } from 'react';
 import { Box, Spinner, VStack, Text, useColorModeValue } from '@chakra-ui/react';
 
 /**
  * Enhanced lazy loading utility with loading states and error boundaries
  */
+
+interface ErrorBoundaryState {
+  hasError: boolean;
+  error?: Error;
+}
+
+interface ErrorBoundaryProps {
+  fallback: React.ComponentType<{ error: Error; retry: () => void }>;
+  onError?: (error: Error) => void;
+  children: ReactNode;
+}
+
+class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
+  constructor(props: ErrorBoundaryProps) {
+    super(props);
+    this.state = { hasError: false };
+  }
+
+  static getDerivedStateFromError(error: Error): ErrorBoundaryState {
+    return { hasError: true, error };
+  }
+
+  componentDidCatch(error: Error, errorInfo: ErrorInfo) {
+    console.error('ErrorBoundary caught an error:', error, errorInfo);
+    this.props.onError?.(error);
+  }
+
+  retry = () => {
+    this.setState({ hasError: false, error: undefined });
+  };
+
+  render() {
+    if (this.state.hasError && this.state.error) {
+      const FallbackComponent = this.props.fallback;
+      return <FallbackComponent error={this.state.error} retry={this.retry} />;
+    }
+
+    return this.props.children;
+  }
+}
 
 interface LazyLoadOptions {
   fallback?: React.ComponentType;
@@ -159,19 +199,19 @@ export function createLazyComponent<T extends ComponentType<any>>(
     }
 
     return (
-      <React.ErrorBoundary
-        fallback={<errorFallback error={new Error('Component error')} retry={retry} />}
+      <ErrorBoundary
+        fallback={errorFallback}
         onError={setError}
         key={retryKey}
       >
         <Suspense fallback={React.createElement(fallback)}>
           <LazyComponent {...props} ref={ref} />
         </Suspense>
-      </React.ErrorBoundary>
+      </ErrorBoundary>
     );
   });
 
-  WrappedComponent.displayName = `LazyLoaded(${LazyComponent.displayName || 'Component'})`;
+  WrappedComponent.displayName = `LazyLoaded(${(LazyComponent as any).displayName || 'Component'})`;
 
   return WrappedComponent as LazyExoticComponent<T>;
 }
