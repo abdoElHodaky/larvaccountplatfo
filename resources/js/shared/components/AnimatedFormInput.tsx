@@ -111,7 +111,7 @@ const AnimatedFormInput = forwardRef<HTMLInputElement, AnimatedFormInputProps>((
               break;
           }
         } catch (error) {
-          console.warn('Input focus animation failed:', error);
+          // Animation failed silently
         }
       }
     }
@@ -152,7 +152,7 @@ const AnimatedFormInput = forwardRef<HTMLInputElement, AnimatedFormInputProps>((
               break;
           }
         } catch (error) {
-          console.warn('Input blur animation failed:', error);
+          // Animation failed silently
         }
       }
     }

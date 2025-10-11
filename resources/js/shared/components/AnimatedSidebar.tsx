@@ -214,7 +214,7 @@ export const AnimatedSidebar = forwardRef<HTMLDivElement, AnimatedSidebarProps>(
             break;
         }
       } catch (error) {
-        console.warn('Sidebar open animation failed:', error);
+        // Animation failed silently
       } finally {
         setIsAnimating(false);
       }
@@ -286,7 +286,7 @@ export const AnimatedSidebar = forwardRef<HTMLDivElement, AnimatedSidebarProps>(
               break;
           }
         } catch (error) {
-          console.warn('Sidebar close animation failed:', error);
+          // Animation failed silently
         } finally {
           setIsAnimating(false);
         }
@@ -441,7 +441,7 @@ const AnimatedNavigationItem: React.FC<AnimatedNavigationItemProps> = ({
             { transform: 'translateX(4px)' }
           ], { ...presets.fast, fill: 'forwards' });
         } catch (error) {
-          console.warn('Navigation item hover animation failed:', error);
+          // Animation failed silently
         }
       }
     }
@@ -459,7 +459,7 @@ const AnimatedNavigationItem: React.FC<AnimatedNavigationItemProps> = ({
             { transform: 'translateX(0px)' }
           ], { ...presets.fast, fill: 'forwards' });
         } catch (error) {
-          console.warn('Navigation item leave animation failed:', error);
+          // Animation failed silently
         }
       }
     }
@@ -533,7 +533,7 @@ const AnimatedSubNavigationItem: React.FC<AnimatedSubNavigationItemProps> = ({
             { transform: 'scale(1)' }
           ], { ...presets.fast });
         } catch (error) {
-          console.warn('Sub-navigation item click animation failed:', error);
+          // Animation failed silently
         }
       }
     }

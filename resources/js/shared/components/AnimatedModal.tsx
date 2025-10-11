@@ -144,7 +144,7 @@ export const AnimatedModal = forwardRef<HTMLDivElement, AnimatedModalProps>(({
             break;
         }
       } catch (error) {
-        console.warn('Modal open animation failed:', error);
+        // Animation failed silently
       } finally {
         setIsAnimating(false);
       }
@@ -216,7 +216,7 @@ export const AnimatedModal = forwardRef<HTMLDivElement, AnimatedModalProps>(({
               break;
           }
         } catch (error) {
-          console.warn('Modal close animation failed:', error);
+          // Animation failed silently
         } finally {
           setIsAnimating(false);
         }

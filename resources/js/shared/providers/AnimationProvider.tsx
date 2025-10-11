@@ -83,7 +83,7 @@ export const AnimationProvider: React.FC<AnimationProviderProps> = ({ children }
       const animation = element.animate(keyframes, animationOptions);
       await animation.finished;
     } catch (error) {
-      console.warn('Animation failed:', error);
+      // Animation failed silently
     }
   }, [isReducedMotion, presets]);
 
