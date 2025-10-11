@@ -4,7 +4,7 @@
  */
 
 import React, { useEffect } from 'react';
-import { useAccounts, useAccountingFilters } from '../../hooks/useAccounting';
+import { useAccounts, useFilters } from '../../hooks/useAccounting';
 import type { Account } from '../../stores/accountingModel';
 
 interface ChartOfAccountsProps {
@@ -17,7 +17,7 @@ export const ChartOfAccounts: React.FC<ChartOfAccountsProps> = ({
   onAccountSelect,
 }) => {
   const { accounts, loading, error, fetch, delete: deleteAccount, select } = useAccounts();
-  const { filters, setSearchTerm, setAccountTypes } = useAccountingFilters();
+  const { filters, setSearchTerm, setAccountTypes } = useFilters();
   // const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   // const [editingAccount, setEditingAccount] = useState<Account | null>(null);
 

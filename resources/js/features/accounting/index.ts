@@ -11,7 +11,7 @@ export type {
   Account, 
   Transaction, 
   JournalEntry, 
-  AccountingFilters 
+  Filters 
 } from './stores/accountingModel';
 
 // API exports
@@ -24,7 +24,7 @@ export {
   useAccounts,
   useTransactions,
   useJournalEntries,
-  useAccountingFilters,
+  useFilters,
   useAccountingStats,
   useAccountingLoading,
   useAccountingError,
