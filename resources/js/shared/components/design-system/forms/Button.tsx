@@ -7,7 +7,6 @@
 
 import React from 'react';
 import { cn } from '@/shared/utils/cn';
-import { designTokens } from '../tokens';
 
 export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
     /** Button variant */

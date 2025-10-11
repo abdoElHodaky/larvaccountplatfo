@@ -1,0 +1,1113 @@
+
+> laravel-modular-accounting-platform@1.0.0 lint
+> eslint resources/js/**/*.{js,jsx,ts,tsx}
+
+
+/tmp/abdoElHodaky/larvaccountplatfo/resources/js/__tests__/features/dashboard/Dashboard.test.tsx
+  14:98  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/tmp/abdoElHodaky/larvaccountplatfo/resources/js/__tests__/hooks/useSocket.test.ts
+   37:44  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   43:55  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  176:39  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  206:38  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  235:40  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  305:37  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  335:33  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  371:32  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/tmp/abdoElHodaky/larvaccountplatfo/resources/js/__tests__/setup.ts
+  19:26  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  19:41  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  28:18  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/tmp/abdoElHodaky/larvaccountplatfo/resources/js/__tests__/setup/mocks/server.ts
+  28:45  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/tmp/abdoElHodaky/larvaccountplatfo/resources/js/__tests__/setup/testSetup.ts
+   97:52  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   98:54  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   99:58  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  100:54  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  111:37  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  179:30  warning  Unexpected console statement              no-console
+  180:29  warning  Unexpected console statement              no-console
+  183:3   warning  Unexpected console statement              no-console
+  184:3   warning  Unexpected console statement              no-console
+  188:3   warning  Unexpected console statement              no-console
+  189:3   warning  Unexpected console statement              no-console
+  231:31  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  231:45  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  240:21  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/tmp/abdoElHodaky/larvaccountplatfo/resources/js/__tests__/utils/testUtils.tsx
+   43:48  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   45:23  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   47:37  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   55:18  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   81:20  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   98:63  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   99:42  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  257:67  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/tmp/abdoElHodaky/larvaccountplatfo/resources/js/app.tsx
+   13:33  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   22:52  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   23:46  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   33:70  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   36:13  warning  Unexpected console statement              no-console
+   45:5   warning  Unexpected console statement              no-console
+   46:35  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   62:9   warning  Unexpected console statement              no-console
+  122:9   warning  Unexpected console statement              no-console
+  125:9   warning  Unexpected console statement              no-console
+  183:5   warning  Unexpected console statement              no-console
+  184:5   warning  Unexpected console statement              no-console
+  185:5   warning  Unexpected console statement              no-console
+  186:5   warning  Unexpected console statement              no-console
+
+/tmp/abdoElHodaky/larvaccountplatfo/resources/js/app/providers/AuthProvider.tsx
+  124:9   warning  Unexpected console statement              no-console
+  148:21  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  159:47  warning  Unexpected console statement              no-console
+  161:7   warning  Unexpected console statement              no-console
+  181:7   warning  Unexpected console statement              no-console
+
+/tmp/abdoElHodaky/larvaccountplatfo/resources/js/app/providers/DataProvider.tsx
+   60:9   warning  Unexpected console statement  no-console
+   67:9   warning  Unexpected console statement  no-console
+  115:7   warning  Unexpected console statement  no-console
+  128:11  warning  Unexpected console statement  no-console
+  132:9   warning  Unexpected console statement  no-console
+  139:9   warning  Unexpected console statement  no-console
+
+/tmp/abdoElHodaky/larvaccountplatfo/resources/js/bootstrap.ts
+  13:5  warning  Unexpected console statement  no-console
+
+/tmp/abdoElHodaky/larvaccountplatfo/resources/js/features/accounting/components/AccountForm.tsx
+  53:25  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  54:13  warning  Unexpected console statement              no-console
+
+/tmp/abdoElHodaky/larvaccountplatfo/resources/js/features/accounting/components/Dashboard.tsx
+  206:61  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  282:71  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  285:7   warning  Unexpected console statement              no-console
+  298:7   warning  Unexpected console statement              no-console
+  302:78  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  380:34  warning  Unexpected console statement              no-console
+  381:39  warning  Unexpected console statement              no-console
+  382:31  warning  Unexpected console statement              no-console
+  422:50  warning  Unexpected console statement              no-console
+  454:46  warning  Unexpected console statement              no-console
+  455:55  warning  Unexpected console statement              no-console
+
+/tmp/abdoElHodaky/larvaccountplatfo/resources/js/features/accounting/components/organisms/AccountBalances.tsx
+  65:19  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  65:32  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/tmp/abdoElHodaky/larvaccountplatfo/resources/js/features/accounting/components/organisms/TrialBalance.tsx
+  119:17  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  119:28  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/tmp/abdoElHodaky/larvaccountplatfo/resources/js/features/accounting/hooks/useAccountData.ts
+  196:59  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/tmp/abdoElHodaky/larvaccountplatfo/resources/js/features/accounting/hooks/useChartData.ts
+   13:26  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   13:36  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   14:23  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   14:33  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   15:21  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   15:31  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   18:41  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   28:34  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  142:7   warning  Unexpected console statement              no-console
+  229:32  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  255:18  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  266:32  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/tmp/abdoElHodaky/larvaccountplatfo/resources/js/features/accounting/hooks/useFinancialData.ts
+   70:32  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  128:42  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  159:65  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  235:30  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  240:30  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  367:38  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  378:57  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/tmp/abdoElHodaky/larvaccountplatfo/resources/js/features/accounting/hooks/useReportBuilder.ts
+   13:11  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  150:37  warning  Unexpected console statement              no-console
+  209:7   warning  Unexpected console statement              no-console
+  239:7   warning  Unexpected console statement              no-console
+  273:11  warning  Unexpected console statement              no-console
+  279:7   warning  Unexpected console statement              no-console
+
+/tmp/abdoElHodaky/larvaccountplatfo/resources/js/features/accounting/index.ts
+  99:3  warning  Unexpected console statement  no-console
+
+/tmp/abdoElHodaky/larvaccountplatfo/resources/js/features/accounting/pages/Accounts.tsx
+  24:5  warning  Unexpected console statement  no-console
+
+/tmp/abdoElHodaky/larvaccountplatfo/resources/js/features/accounting/pages/JournalEntries.tsx
+  10:36  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  11:5   warning  Unexpected console statement              no-console
+  14:30  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  15:5   warning  Unexpected console statement              no-console
+  19:5   warning  Unexpected console statement              no-console
+
+/tmp/abdoElHodaky/larvaccountplatfo/resources/js/features/accounting/services/accountingApi.ts
+  195:21  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  196:7   warning  Unexpected console statement              no-console
+  213:52  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  225:21  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  226:7   warning  Unexpected console statement              no-console
+  252:21  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  253:7   warning  Unexpected console statement              no-console
+  275:21  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  276:7   warning  Unexpected console statement              no-console
+  294:21  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  295:7   warning  Unexpected console statement              no-console
+  313:21  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  314:7   warning  Unexpected console statement              no-console
+  331:57  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  343:21  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  344:7   warning  Unexpected console statement              no-console
+  364:21  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  365:7   warning  Unexpected console statement              no-console
+  395:9   warning  Unexpected console statement              no-console
+  403:21  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  404:7   warning  Unexpected console statement              no-console
+
+/tmp/abdoElHodaky/larvaccountplatfo/resources/js/features/accounting/services/accountingApiAlova.ts
+  400:57  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  601:69  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/tmp/abdoElHodaky/larvaccountplatfo/resources/js/features/accounting/stores/accountingModel.ts
+  284:23  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  297:23  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  327:23  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  344:23  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  363:23  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  381:23  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/tmp/abdoElHodaky/larvaccountplatfo/resources/js/features/accounting/types/index.ts
+   25:31  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   57:31  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   87:33  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   88:31  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  115:31  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/tmp/abdoElHodaky/larvaccountplatfo/resources/js/features/dashboard/components/DashboardContainer.tsx
+  163:61  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  222:70  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  248:9   warning  Unexpected console statement              no-console
+
+/tmp/abdoElHodaky/larvaccountplatfo/resources/js/features/dashboard/components/DashboardGrid.tsx
+  13:34  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  14:26  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/tmp/abdoElHodaky/larvaccountplatfo/resources/js/features/dashboard/pages/Dashboard.tsx
+  19:30  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/tmp/abdoElHodaky/larvaccountplatfo/resources/js/features/dashboard/services/dashboardApi.ts
+  211:21   warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  212:7    warning  Unexpected console statement              no-console
+  229:59   warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  241:21   warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  242:7    warning  Unexpected console statement              no-console
+  268:21   warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  269:7    warning  Unexpected console statement              no-console
+  291:21   warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  292:7    warning  Unexpected console statement              no-console
+  310:21   warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  311:7    warning  Unexpected console statement              no-console
+  328:21   warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  329:7    warning  Unexpected console statement              no-console
+  346:21   warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  347:7    warning  Unexpected console statement              no-console
+  352:99   warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  364:21   warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  365:7    warning  Unexpected console statement              no-console
+  383:21   warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  384:7    warning  Unexpected console statement              no-console
+  401:21   warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  402:7    warning  Unexpected console statement              no-console
+  439:21   warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  440:7    warning  Unexpected console statement              no-console
+  445:113  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  472:21   warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  473:7    warning  Unexpected console statement              no-console
+  479:69   warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  486:9    warning  Unexpected console statement              no-console
+
+/tmp/abdoElHodaky/larvaccountplatfo/resources/js/features/dashboard/services/dashboardApiAlova.ts
+   34:26  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   66:27  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   78:27  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  275:62  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  327:37  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  407:74  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/tmp/abdoElHodaky/larvaccountplatfo/resources/js/features/dashboard/stores/dashboardModel.ts
+   22:26  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   23:10  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   65:28  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   76:33  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  207:66  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  306:23  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  318:23  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  332:23  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  346:23  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  361:23  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  375:23  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  389:23  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  406:23  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  434:23  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  446:23  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/tmp/abdoElHodaky/larvaccountplatfo/resources/js/features/inventory/services/inventoryApi.ts
+  223:21  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  224:7   warning  Unexpected console statement              no-console
+  241:55  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  253:21  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  254:7   warning  Unexpected console statement              no-console
+  280:21  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  281:7   warning  Unexpected console statement              no-console
+  303:21  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  304:7   warning  Unexpected console statement              no-console
+  322:21  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  323:7   warning  Unexpected console statement              no-console
+  340:93  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  365:21  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  366:7   warning  Unexpected console statement              no-console
+  380:84  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  392:21  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  393:7   warning  Unexpected console statement              no-console
+  406:47  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  413:21  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  414:7   warning  Unexpected console statement              no-console
+  424:21  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  425:7   warning  Unexpected console statement              no-console
+  434:21  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  435:7   warning  Unexpected console statement              no-console
+  452:21  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  453:7   warning  Unexpected console statement              no-console
+
+/tmp/abdoElHodaky/larvaccountplatfo/resources/js/features/inventory/stores/inventoryModel.ts
+  234:23  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  246:23  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  260:23  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  274:23  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  289:23  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  307:23  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  319:23  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  320:9   warning  Unexpected console statement              no-console
+  328:23  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  329:9   warning  Unexpected console statement              no-console
+
+/tmp/abdoElHodaky/larvaccountplatfo/resources/js/features/inventory/types/index.ts
+  21:31  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/tmp/abdoElHodaky/larvaccountplatfo/resources/js/features/organization/components/organisms/BillingSettings.tsx
+  44:43  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/tmp/abdoElHodaky/larvaccountplatfo/resources/js/features/organization/components/organisms/IntegrationSettings.tsx
+  60:26  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/tmp/abdoElHodaky/larvaccountplatfo/resources/js/features/organization/components/organisms/OrganizationSettings.tsx
+  116:52  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/tmp/abdoElHodaky/larvaccountplatfo/resources/js/features/reporting/components/organisms/BarChart.tsx
+   24:18  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   42:26  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   43:26  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   44:28  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  138:54  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  148:54  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  162:56  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  183:20  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  251:9   warning  Unexpected console statement              no-console
+  261:41  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  277:32  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/tmp/abdoElHodaky/larvaccountplatfo/resources/js/features/reporting/components/organisms/CustomReportBuilder.tsx
+  377:102  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/tmp/abdoElHodaky/larvaccountplatfo/resources/js/features/reporting/components/organisms/LineChart.tsx
+   23:18  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   43:25  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   44:25  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   45:27  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  110:54  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  130:54  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  144:56  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  165:20  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  190:7   warning  Unexpected console statement              no-console
+  198:41  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  214:32  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/tmp/abdoElHodaky/larvaccountplatfo/resources/js/features/reporting/components/organisms/PieChart.tsx
+   21:18  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   31:25  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   32:27  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  116:54  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  158:7   warning  Unexpected console statement              no-console
+  166:34  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  198:51  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/tmp/abdoElHodaky/larvaccountplatfo/resources/js/features/reporting/components/organisms/ReportBuilder.tsx
+  30:21  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  31:42  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  32:23  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/tmp/abdoElHodaky/larvaccountplatfo/resources/js/features/reporting/components/organisms/ReportCanvas.tsx
+   28:11  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   76:32  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   96:59  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   96:76  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  137:18  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  141:37  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/tmp/abdoElHodaky/larvaccountplatfo/resources/js/features/reporting/components/organisms/WidgetPalette.tsx
+  29:11  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  35:13  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/tmp/abdoElHodaky/larvaccountplatfo/resources/js/features/reporting/hooks/useReportingData.ts
+  24:29  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  57:35  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/tmp/abdoElHodaky/larvaccountplatfo/resources/js/shared/components/ErrorBoundary.tsx
+   66:7  warning  Unexpected console statement  no-console
+  236:5  warning  Unexpected console statement  no-console
+
+/tmp/abdoElHodaky/larvaccountplatfo/resources/js/shared/components/animations/AnimatedFragment.tsx
+  18:18  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  50:64  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/tmp/abdoElHodaky/larvaccountplatfo/resources/js/shared/components/molecules/DataTable.tsx
+   26:34  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   37:20  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   39:22  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   43:18  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  213:12  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/tmp/abdoElHodaky/larvaccountplatfo/resources/js/shared/components/molecules/FormField.tsx
+  26:31  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/tmp/abdoElHodaky/larvaccountplatfo/resources/js/shared/components/molecules/FormField/FormField.tsx
+  18:31  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  19:35  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/tmp/abdoElHodaky/larvaccountplatfo/resources/js/shared/components/molecules/FormInput.tsx
+   46:31  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  221:31  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/tmp/abdoElHodaky/larvaccountplatfo/resources/js/shared/components/organisms/CollaborativeEditor.tsx
+  45:16  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/tmp/abdoElHodaky/larvaccountplatfo/resources/js/shared/components/organisms/LiveDataSync.tsx
+   35:9   warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   44:16  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  281:7   warning  Unexpected console statement              no-console
+  459:29  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/tmp/abdoElHodaky/larvaccountplatfo/resources/js/shared/components/organisms/NotificationCenter.tsx
+  36:14  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/tmp/abdoElHodaky/larvaccountplatfo/resources/js/shared/components/organisms/SwipeableCards.tsx
+   24:18  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   30:10  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  308:19  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  309:21  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  310:22  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  311:23  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/tmp/abdoElHodaky/larvaccountplatfo/resources/js/shared/components/organisms/TouchOptimizedTable.tsx
+   32:22  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   38:22  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  242:54  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/tmp/abdoElHodaky/larvaccountplatfo/resources/js/shared/components/patterns/CompoundComponents.tsx
+   59:20  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  128:20  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  183:19  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/tmp/abdoElHodaky/larvaccountplatfo/resources/js/shared/components/realtime/WebSocketProvider.tsx
+   22:12   warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   42:26   warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   43:47   warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   73:79   warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   83:100  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  131:9    warning  Unexpected console statement              no-console
+  181:9    warning  Unexpected console statement              no-console
+  213:9    warning  Unexpected console statement              no-console
+  244:17   warning  Unexpected console statement              no-console
+  249:11   warning  Unexpected console statement              no-console
+  255:7    warning  Unexpected console statement              no-console
+  277:51   warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  328:66   warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/tmp/abdoElHodaky/larvaccountplatfo/resources/js/shared/hooks/useAnimation.ts
+  16:30  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  17:30  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  18:27  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  29:29  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  30:29  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  31:26  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/tmp/abdoElHodaky/larvaccountplatfo/resources/js/shared/hooks/useChartData.ts
+   13:26  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   13:36  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   14:23  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   14:33  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   15:21  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   15:31  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   18:41  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   28:34  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  143:7   warning  Unexpected console statement              no-console
+  230:32  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  256:18  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  267:32  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/tmp/abdoElHodaky/larvaccountplatfo/resources/js/shared/hooks/useCollaboration.ts
+   43:14  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   44:14  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  217:9   warning  Unexpected console statement              no-console
+  296:7   warning  Unexpected console statement              no-console
+  298:7   warning  Unexpected console statement              no-console
+  496:36  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  496:64  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  496:70  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  506:36  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  506:64  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  506:70  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  523:36  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  523:58  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  541:34  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  541:75  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/tmp/abdoElHodaky/larvaccountplatfo/resources/js/shared/hooks/useDebounce.ts
+  27:58  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  27:68  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/tmp/abdoElHodaky/larvaccountplatfo/resources/js/shared/hooks/useFormValidation.ts
+   20:20  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   49:45  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   58:26  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   79:12  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  174:12  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/tmp/abdoElHodaky/larvaccountplatfo/resources/js/shared/hooks/useGraphQL.ts
+   19:45  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   19:63  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   27:21  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   30:49  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   30:68  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   32:21  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   36:20  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   36:33  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   41:17  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   42:16  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   49:41  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   49:59  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   81:45  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   81:63  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  102:44  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  102:62  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  143:48  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  143:66  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  160:42  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  191:42  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  193:18  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  220:47  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  220:64  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  226:63  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  258:50  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  258:68  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  279:33  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/tmp/abdoElHodaky/larvaccountplatfo/resources/js/shared/hooks/useInertiaForm.ts
+    6:27  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   18:48  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   35:38  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   42:57  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   48:67  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   51:27  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   95:9   warning  Unexpected console statement              no-console
+  174:63  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/tmp/abdoElHodaky/larvaccountplatfo/resources/js/shared/hooks/useMemoizedCallback.ts
+    8:57  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+    8:67  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   28:55  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   28:65  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   47:58  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   47:68  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   74:58  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   74:68  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  119:45  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  120:49  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  122:30  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  123:56  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  133:45  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  147:54  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  147:72  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/tmp/abdoElHodaky/larvaccountplatfo/resources/js/shared/hooks/useRealTime.ts
+   57:7   warning  Unexpected console statement              no-console
+   72:7   warning  Unexpected console statement              no-console
+   93:5   warning  Unexpected console statement              no-console
+  116:9   warning  Unexpected console statement              no-console
+  130:9   warning  Unexpected console statement              no-console
+  144:9   warning  Unexpected console statement              no-console
+  184:9   warning  Unexpected console statement              no-console
+  225:48  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  227:9   warning  Unexpected console statement              no-console
+  240:9   warning  Unexpected console statement              no-console
+  254:9   warning  Unexpected console statement              no-console
+  335:7   warning  Unexpected console statement              no-console
+  344:7   warning  Unexpected console statement              no-console
+
+/tmp/abdoElHodaky/larvaccountplatfo/resources/js/shared/hooks/useRealTimeNotifications.ts
+   19:29  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   73:28  warning  Unexpected console statement              no-console
+   75:9   warning  Unexpected console statement              no-console
+  183:7   warning  Unexpected console statement              no-console
+  206:44  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  233:45  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  240:50  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  247:48  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  254:48  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  255:80  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  273:66  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  293:70  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  310:63  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  327:40  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/tmp/abdoElHodaky/larvaccountplatfo/resources/js/shared/hooks/useRematchStore.ts
+  151:44  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/tmp/abdoElHodaky/larvaccountplatfo/resources/js/shared/hooks/useReportBuilder.ts
+   13:11  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  150:37  warning  Unexpected console statement              no-console
+  209:7   warning  Unexpected console statement              no-console
+  239:7   warning  Unexpected console statement              no-console
+  273:11  warning  Unexpected console statement              no-console
+  279:7   warning  Unexpected console statement              no-console
+
+/tmp/abdoElHodaky/larvaccountplatfo/resources/js/shared/hooks/useSocket.ts
+   16:7   warning  Unexpected console statement              no-console
+   25:7   warning  Unexpected console statement              no-console
+   50:51  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   70:71  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   74:70  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   78:73  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  102:42  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  103:42  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  116:7   warning  Unexpected console statement              no-console
+  134:7   warning  Unexpected console statement              no-console
+  152:7   warning  Unexpected console statement              no-console
+  164:7   warning  Unexpected console statement              no-console
+  171:7   warning  Unexpected console statement              no-console
+  201:52  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  202:44  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  215:7   warning  Unexpected console statement              no-console
+  222:7   warning  Unexpected console statement              no-console
+  233:7   warning  Unexpected console statement              no-console
+  265:44  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  266:56  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  279:7   warning  Unexpected console statement              no-console
+  292:7   warning  Unexpected console statement              no-console
+  299:7   warning  Unexpected console statement              no-console
+  325:54  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  336:7   warning  Unexpected console statement              no-console
+  343:7   warning  Unexpected console statement              no-console
+
+/tmp/abdoElHodaky/larvaccountplatfo/resources/js/shared/providers/AppProviders.tsx
+   48:11  warning  Unexpected console statement              no-console
+   57:42  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   58:7   warning  Unexpected console statement              no-console
+   64:7   warning  Unexpected console statement              no-console
+   96:7   warning  Unexpected console statement              no-console
+  162:7   warning  Unexpected console statement              no-console
+  173:3   warning  Unexpected console statement              no-console
+  174:3   warning  Unexpected console statement              no-console
+  179:5   warning  Unexpected console statement              no-console
+
+/tmp/abdoElHodaky/larvaccountplatfo/resources/js/shared/providers/SocketProvider.tsx
+   79:7  warning  Unexpected console statement  no-console
+   83:5  warning  Unexpected console statement  no-console
+   88:7  warning  Unexpected console statement  no-console
+   99:7  warning  Unexpected console statement  no-console
+  109:7  warning  Unexpected console statement  no-console
+  119:7  warning  Unexpected console statement  no-console
+  131:7  warning  Unexpected console statement  no-console
+  139:7  warning  Unexpected console statement  no-console
+  159:7  warning  Unexpected console statement  no-console
+  189:7  warning  Unexpected console statement  no-console
+  218:7  warning  Unexpected console statement  no-console
+  222:5  warning  Unexpected console statement  no-console
+  231:5  warning  Unexpected console statement  no-console
+  245:7  warning  Unexpected console statement  no-console
+  249:5  warning  Unexpected console statement  no-console
+  259:7  warning  Unexpected console statement  no-console
+  263:5  warning  Unexpected console statement  no-console
+
+/tmp/abdoElHodaky/larvaccountplatfo/resources/js/shared/providers/ThemeProvider.tsx
+  7:42  error  'cssVariables' is defined but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+
+/tmp/abdoElHodaky/larvaccountplatfo/resources/js/shared/services/alova/alova.config.ts
+   38:5   warning  Unexpected console statement              no-console
+   47:7   warning  Unexpected console statement              no-console
+   65:7   warning  Unexpected console statement              no-console
+   74:9   warning  Unexpected console statement              no-console
+   77:9   warning  Unexpected console statement              no-console
+   80:9   warning  Unexpected console statement              no-console
+  133:5   warning  Unexpected console statement              no-console
+  144:7   warning  Unexpected console statement              no-console
+  151:9   warning  Unexpected console statement              no-console
+  154:54  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  172:7   warning  Unexpected console statement              no-console
+  194:63  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  204:68  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  238:3   warning  Unexpected console statement              no-console
+  246:3   warning  Unexpected console statement              no-console
+
+/tmp/abdoElHodaky/larvaccountplatfo/resources/js/shared/services/analytics/PerformanceMonitor.ts
+   34:35  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   71:29  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   87:28  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  169:5   warning  Unexpected console statement              no-console
+  194:11  warning  Unexpected console statement              no-console
+  198:7   warning  Unexpected console statement              no-console
+  458:30  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  479:37  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  507:38  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  668:7   warning  Unexpected console statement              no-console
+  670:7   warning  Unexpected console statement              no-console
+  774:5   warning  Unexpected console statement              no-console
+
+/tmp/abdoElHodaky/larvaccountplatfo/resources/js/shared/services/api/client.ts
+   11:34  warning  Unexpected any. Specify a different type                                  @typescript-eslint/no-explicit-any
+   17:38  warning  Unexpected any. Specify a different type                                  @typescript-eslint/no-explicit-any
+   26:40  warning  Unexpected any. Specify a different type                                  @typescript-eslint/no-explicit-any
+   81:5   warning  Unexpected console statement                                              no-console
+   90:7   warning  Unexpected console statement                                              no-console
+   99:7   warning  Unexpected console statement                                              no-console
+  161:5   warning  Unexpected console statement                                              no-console
+  169:33  error    'method' is defined but never used. Allowed unused args must match /^_/u  @typescript-eslint/no-unused-vars
+  174:9   warning  Unexpected console statement                                              no-console
+  177:52  warning  Unexpected any. Specify a different type                                  @typescript-eslint/no-explicit-any
+  191:7   warning  Unexpected console statement                                              no-console
+  197:28  error    'method' is defined but never used. Allowed unused args must match /^_/u  @typescript-eslint/no-unused-vars
+  198:7   warning  Unexpected console statement                                              no-console
+  227:44  warning  Unexpected any. Specify a different type                                  @typescript-eslint/no-explicit-any
+  227:62  warning  Unexpected any. Specify a different type                                  @typescript-eslint/no-explicit-any
+  232:24  warning  Unexpected any. Specify a different type                                  @typescript-eslint/no-explicit-any
+  249:47  warning  Unexpected any. Specify a different type                                  @typescript-eslint/no-explicit-any
+  249:65  warning  Unexpected any. Specify a different type                                  @typescript-eslint/no-explicit-any
+  253:24  warning  Unexpected any. Specify a different type                                  @typescript-eslint/no-explicit-any
+  270:42  warning  Unexpected any. Specify a different type                                  @typescript-eslint/no-explicit-any
+  273:10  warning  Unexpected any. Specify a different type                                  @typescript-eslint/no-explicit-any
+  276:24  warning  Unexpected any. Specify a different type                                  @typescript-eslint/no-explicit-any
+
+/tmp/abdoElHodaky/larvaccountplatfo/resources/js/shared/services/dataSync/DataSyncService.ts
+   10:9   warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   13:27  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   30:54  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  119:7   warning  Unexpected console statement              no-console
+  132:13  warning  Unexpected console statement              no-console
+  137:7   warning  Unexpected console statement              no-console
+  140:7   warning  Unexpected console statement              no-console
+  151:33  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  152:7   warning  Unexpected console statement              no-console
+  159:5   warning  Unexpected console statement              no-console
+  170:7   warning  Unexpected console statement              no-console
+  177:34  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  188:11  warning  Unexpected console statement              no-console
+  205:11  warning  Unexpected console statement              no-console
+  214:7   warning  Unexpected console statement              no-console
+  233:7   warning  Unexpected console statement              no-console
+  235:7   warning  Unexpected console statement              no-console
+  244:28  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  247:5   warning  Unexpected console statement              no-console
+  253:9   warning  Unexpected console statement              no-console
+  258:5   warning  Unexpected console statement              no-console
+  284:9   warning  Unexpected console statement              no-console
+  290:7   warning  Unexpected console statement              no-console
+  300:9   warning  Unexpected console statement              no-console
+  311:7   warning  Unexpected console statement              no-console
+  366:5   warning  Unexpected console statement              no-console
+  374:5   warning  Unexpected console statement              no-console
+
+/tmp/abdoElHodaky/larvaccountplatfo/resources/js/shared/services/graphql/apollo-client.ts
+  108:9   warning  Unexpected console statement  no-console
+  121:11  warning  Unexpected console statement  no-console
+  128:7   warning  Unexpected console statement  no-console
+  271:9   warning  Unexpected console statement  no-console
+  282:11  warning  Unexpected console statement  no-console
+  297:9   warning  Unexpected console statement  no-console
+  309:11  warning  Unexpected console statement  no-console
+  316:11  warning  Unexpected console statement  no-console
+  321:11  warning  Unexpected console statement  no-console
+  333:9   warning  Unexpected console statement  no-console
+
+/tmp/abdoElHodaky/larvaccountplatfo/resources/js/shared/services/security/SecurityManager.ts
+   21:27  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   31:26  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   52:24  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   69:37  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   70:39  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   94:5   warning  Unexpected console statement              no-console
+  156:53  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  166:54  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  176:54  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  187:54  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  199:62  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  240:5   warning  Unexpected console statement              no-console
+  314:5   warning  Unexpected console statement              no-console
+  322:5   warning  Unexpected console statement              no-console
+  358:5   warning  Unexpected console statement              no-console
+  512:7   warning  Unexpected console statement              no-console
+  533:7   warning  Unexpected console statement              no-console
+
+/tmp/abdoElHodaky/larvaccountplatfo/resources/js/shared/services/socket/socket-client.ts
+  18:40  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  19:42  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  20:32  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  31:42  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  35:5   warning  Unexpected console statement              no-console
+  40:5   warning  Unexpected console statement              no-console
+  47:38  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  54:40  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  68:30  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  69:5   warning  Unexpected console statement              no-console
+  73:5   warning  Unexpected console statement              no-console
+  77:5   warning  Unexpected console statement              no-console
+
+/tmp/abdoElHodaky/larvaccountplatfo/resources/js/shared/services/socket/socketManager.ts
+   12:58  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   67:7   warning  Unexpected console statement              no-console
+   79:7   warning  Unexpected console statement              no-console
+   90:7   warning  Unexpected console statement              no-console
+  100:7   warning  Unexpected console statement              no-console
+  105:7   warning  Unexpected console statement              no-console
+  111:7   warning  Unexpected console statement              no-console
+  118:7   warning  Unexpected console statement              no-console
+  127:7   warning  Unexpected console statement              no-console
+  139:30  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  141:7   warning  Unexpected console statement              no-console
+  144:7   warning  Unexpected console statement              no-console
+  151:41  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  170:43  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  199:7   warning  Unexpected console statement              no-console
+  203:7   warning  Unexpected console statement              no-console
+  214:7   warning  Unexpected console statement              no-console
+  225:7   warning  Unexpected console statement              no-console
+  258:50  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  269:49  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  279:52  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  312:13  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  318:10  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  324:10  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  332:7   warning  Unexpected console statement              no-console
+
+/tmp/abdoElHodaky/larvaccountplatfo/resources/js/shared/stores/models/appModel.ts
+  262:44  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/tmp/abdoElHodaky/larvaccountplatfo/resources/js/shared/stores/models/authModel.ts
+  189:23  warning  Unexpected any. Specify a different type                                         @typescript-eslint/no-explicit-any
+  208:9   warning  Unexpected console statement                                                     no-console
+  249:23  warning  Unexpected any. Specify a different type                                         @typescript-eslint/no-explicit-any
+  288:23  warning  Unexpected any. Specify a different type                                         @typescript-eslint/no-explicit-any
+  314:23  warning  Unexpected any. Specify a different type                                         @typescript-eslint/no-explicit-any
+  315:9   warning  Unexpected console statement                                                     no-console
+  349:17  error    'data' is assigned a value but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+  355:23  warning  Unexpected any. Specify a different type                                         @typescript-eslint/no-explicit-any
+  357:9   warning  Unexpected console statement                                                     no-console
+  388:17  warning  Unexpected console statement                                                     no-console
+  398:11  warning  Unexpected console statement                                                     no-console
+
+/tmp/abdoElHodaky/larvaccountplatfo/resources/js/shared/stores/persistence.ts
+   16:7   warning  Unexpected console statement              no-console
+   26:7   warning  Unexpected console statement              no-console
+   36:7   warning  Unexpected console statement              no-console
+   58:26  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   70:28  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   91:26  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   99:28  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  114:29  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  116:7   warning  Unexpected console statement              no-console
+  156:28  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  161:30  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  189:28  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  193:30  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  220:7   warning  Unexpected console statement              no-console
+  222:7   warning  Unexpected console statement              no-console
+  230:7   warning  Unexpected console statement              no-console
+  232:7   warning  Unexpected console statement              no-console
+  255:7   warning  Unexpected console statement              no-console
+  275:34  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  291:7   warning  Unexpected console statement              no-console
+  305:7   warning  Unexpected console statement              no-console
+  307:7   warning  Unexpected console statement              no-console
+  328:14  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  333:5   warning  Unexpected console statement              no-console
+
+/tmp/abdoElHodaky/larvaccountplatfo/resources/js/shared/theme/headlessTheme.ts
+  285:16  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/tmp/abdoElHodaky/larvaccountplatfo/resources/js/shared/theme/index.ts
+  172:19  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/tmp/abdoElHodaky/larvaccountplatfo/resources/js/shared/types/auth.ts
+  24:31  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  39:31  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  58:20  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/tmp/abdoElHodaky/larvaccountplatfo/resources/js/shared/types/common.ts
+  38:32  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/tmp/abdoElHodaky/larvaccountplatfo/resources/js/shared/types/global.d.ts
+  19:12  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  51:49  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  54:40  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/tmp/abdoElHodaky/larvaccountplatfo/resources/js/shared/types/laravel.ts
+   20:31  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   35:31  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   58:31  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   88:31  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  112:33  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  113:31  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  140:31  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  160:20  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  213:32  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/tmp/abdoElHodaky/larvaccountplatfo/resources/js/shared/utils/devTools.ts
+   16:15  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   26:25  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   38:18  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   44:55  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   48:51  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   50:7   warning  Unexpected console statement              no-console
+   54:52  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   55:5   warning  Unexpected console statement              no-console
+   58:53  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   59:5   warning  Unexpected console statement              no-console
+   69:21  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   81:21  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  134:68  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  166:7   warning  Unexpected console statement              no-console
+  184:29  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  184:55  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  187:5   warning  Unexpected console statement              no-console
+  189:23  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  194:21  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  253:14  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  256:3   warning  Unexpected console statement              no-console
+  262:3   warning  Unexpected console statement              no-console
+  296:7   warning  Unexpected console statement              no-console
+  322:65  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  340:41  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/tmp/abdoElHodaky/larvaccountplatfo/resources/js/shared/utils/graphql.ts
+   10:30  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   14:38  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   20:33  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   22:31  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   39:33  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   48:20  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   49:19  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   91:26  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   93:32  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  129:27  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  131:32  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  159:31  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  162:34  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  176:24  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  178:33  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  181:25  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  487:41  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  489:7   warning  Unexpected console statement              no-console
+  510:46  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  512:32  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  518:47  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  520:32  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  526:44  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  528:32  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  531:25  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/tmp/abdoElHodaky/larvaccountplatfo/resources/js/shared/utils/lazyComponents.tsx
+    9:34  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+    9:83  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   26:75  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  293:3   warning  Unexpected console statement              no-console
+
+/tmp/abdoElHodaky/larvaccountplatfo/resources/js/shared/utils/lazyLoading.tsx
+  114:61  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  147:45  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  147:50  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  182:58  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  182:73  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  191:66  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  191:82  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  200:27  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  233:59  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  240:84  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/tmp/abdoElHodaky/larvaccountplatfo/resources/js/shared/utils/mobileOptimization.ts
+  102:38   warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  102:71   warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  102:107  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  107:34   warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  398:21   warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/tmp/abdoElHodaky/larvaccountplatfo/resources/js/shared/utils/optimizationUtils.ts
+   11:58  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   12:64  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   15:62  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   20:49  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  106:9   warning  Unexpected console statement              no-console
+  263:39  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  263:49  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  285:39  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  285:49  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  306:5   warning  Unexpected console statement              no-console
+  313:38  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  326:38  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  356:19  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/tmp/abdoElHodaky/larvaccountplatfo/resources/js/shared/utils/performance.ts
+   12:46  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   12:56  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   38:46  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   38:56  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   57:45  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   57:55  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   80:30  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   80:38  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  109:33  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  109:41  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  192:7   warning  Unexpected console statement              no-console
+  200:7   warning  Unexpected console statement              no-console
+  258:9   warning  Unexpected console statement              no-console
+  277:9   warning  Unexpected console statement              no-console
+  284:39  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  298:9   warning  Unexpected console statement              no-console
+  306:39  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  323:9   warning  Unexpected console statement              no-console
+  344:9   warning  Unexpected console statement              no-console
+  363:9   warning  Unexpected console statement              no-console
+  379:40  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  524:7   warning  Unexpected console statement              no-console
+  528:7   warning  Unexpected console statement              no-console
+  532:7   warning  Unexpected console statement              no-console
+  637:43  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  637:53  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/tmp/abdoElHodaky/larvaccountplatfo/resources/js/shared/utils/performanceAnalytics.ts
+   94:40   warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  102:43   warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  141:7    warning  Unexpected console statement              no-console
+  169:7    warning  Unexpected console statement              no-console
+  180:38   warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  180:71   warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  180:107  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  221:35   warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  314:32   warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  388:7    warning  Unexpected console statement              no-console
+  394:40   warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  433:7    warning  Unexpected console statement              no-console
+  447:7    warning  Unexpected console statement              no-console
+
+/tmp/abdoElHodaky/larvaccountplatfo/resources/js/shared/utils/performanceMonitor.tsx
+   13:29  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   36:55  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   47:63  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   50:7   warning  Unexpected console statement              no-console
+  306:33  warning  Unexpected console statement              no-console
+
+/tmp/abdoElHodaky/larvaccountplatfo/resources/js/shared/utils/performanceMonitoring.ts
+   64:9   warning  Unexpected console statement              no-console
+   71:35  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   74:13  warning  Unexpected console statement              no-console
+   80:9   warning  Unexpected console statement              no-console
+  167:38  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/tmp/abdoElHodaky/larvaccountplatfo/resources/js/shared/utils/pwa.ts
+   53:33  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   78:7   warning  Unexpected console statement              no-console
+   84:7   warning  Unexpected console statement              no-console
+   87:7   warning  Unexpected console statement              no-console
+  118:7   warning  Unexpected console statement              no-console
+  129:33  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  194:7   warning  Unexpected console statement              no-console
+  215:7   warning  Unexpected console statement              no-console
+  233:7   warning  Unexpected console statement              no-console
+  255:7   warning  Unexpected console statement              no-console
+
+/tmp/abdoElHodaky/larvaccountplatfo/resources/js/shared/utils/pwaEnhancements.ts
+   45:33  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   83:7   warning  Unexpected console statement              no-console
+  156:9   warning  Unexpected console statement              no-console
+  176:9   warning  Unexpected console statement              no-console
+  206:36  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  211:40  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  291:7   warning  Unexpected console statement              no-console
+  312:7   warning  Unexpected console statement              no-console
+  567:39  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  576:7   warning  Unexpected console statement              no-console
+  583:33  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  594:7   warning  Unexpected console statement              no-console
+  646:9   warning  Unexpected console statement              no-console
+  716:33  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/tmp/abdoElHodaky/larvaccountplatfo/resources/js/shared/utils/routeBasedLazyLoading.tsx
+   9:34  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   9:83  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  26:75  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/tmp/abdoElHodaky/larvaccountplatfo/resources/js/shared/utils/serviceWorker.ts
+   36:11  warning  Unexpected console statement              no-console
+   48:5   warning  Unexpected console statement              no-console
+   53:5   warning  Unexpected console statement              no-console
+   70:15  warning  Unexpected console statement              no-console
+   75:15  warning  Unexpected console statement              no-console
+   83:7   warning  Unexpected console statement              no-console
+  107:7   warning  Unexpected console statement              no-console
+  119:9   warning  Unexpected console statement              no-console
+  148:26  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  159:27  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  174:7   warning  Unexpected console statement              no-console
+  199:7   warning  Unexpected console statement              no-console
+  203:7   warning  Unexpected console statement              no-console
+  253:9   warning  Unexpected console statement              no-console
+  277:12  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  278:15  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  292:9   warning  Unexpected console statement              no-console
+  302:57  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  302:72  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  344:9   warning  Unexpected console statement              no-console
+
+/tmp/abdoElHodaky/larvaccountplatfo/resources/js/shared/utils/websocket.ts
+   10:12  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  160:38  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  331:41  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  333:7   warning  Unexpected console statement              no-console
+  379:58  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  439:81  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  443:76  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/tmp/abdoElHodaky/larvaccountplatfo/resources/js/ssr.tsx
+   14:33  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   75:38  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   97:9   warning  Unexpected console statement              no-console
+  117:9   warning  Unexpected console statement              no-console
+
+/tmp/abdoElHodaky/larvaccountplatfo/resources/js/utils/featureFlags.tsx
+  166:7  warning  Unexpected console statement  no-console
+
+✖ 890 problems (4 errors, 886 warnings)
+

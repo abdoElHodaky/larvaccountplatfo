@@ -1,192 +1,181 @@
 /**
  * MSW (Mock Service Worker) Request Handlers
- * Phase 9: Testing Infrastructure - Updated for MSW 2.x
+ * Phase 9: Testing Infrastructure
  */
 
-import { http, graphql, HttpResponse } from 'msw';
+import { http, graphql } from 'msw';
 
 // REST API Handlers
 export const restHandlers = [
-    // Authentication endpoints
-    http.post('/api/auth/login', () => {
-        return HttpResponse.json({
-            user: {
-                id: 1,
-                email: 'test@example.com',
-                name: 'Test User',
-                role: 'admin',
-            },
-            token: 'mock-jwt-token',
-        });
-    }),
+  // Authentication endpoints
+  http.post('/api/auth/login', () => {
+    return Response.json({
+        user: {
+          id: 1,
+          email: 'test@example.com',
+          name: 'Test User',
+          role: 'admin',
+        },
+        token: 'mock-jwt-token',
+      });
+  }),
 
-    http.post('/api/auth/logout', () => {
-        return HttpResponse.json({ message: 'Logged out successfully' });
-    }),
+  http.post('/api/auth/logout', () => {
+    return Response.json({ success: true });
+  }),
 
-    http.post('/api/auth/register', () => {
-        return HttpResponse.json({
-            user: {
-                id: 2,
-                email: 'newuser@example.com',
-                name: 'New User',
-                role: 'user',
-            },
-            token: 'mock-jwt-token-new',
-        });
-    }),
+  // Accounting endpoints
+  http.get('/api/accounting/accounts', () => {
+    return Response.json({
+      data: [
+        {
+          id: '1',
+          name: 'Cash',
+          type: 'asset',
+          balance: 10000,
+          code: '1000',
+        },
+        {
+          id: '2',
+          name: 'Accounts Receivable',
+          type: 'asset',
+          balance: 5000,
+          code: '1200',
+        },
+      ],
+    });
+  }),
 
-    http.get('/api/auth/user', () => {
-        return HttpResponse.json({
-            id: 1,
-            email: 'test@example.com',
-            name: 'Test User',
-            role: 'admin',
-        });
-    }),
+  http.get('/api/accounting/transactions', () => {
+    return Response.json({
+      data: [
+        {
+          id: '1',
+          date: '2024-01-01',
+          description: 'Test Transaction',
+          amount: 100,
+          type: 'debit',
+          accountId: '1',
+        },
+      ],
+    });
+  }),
 
-    // Accounting endpoints
-    http.get('/api/accounts', () => {
-        return HttpResponse.json({
-            data: [
-                {
-                    id: 1,
-                    code: '1000',
-                    name: 'Cash',
-                    type: 'asset',
-                    balance: 10000,
-                    isActive: true,
-                },
-                {
-                    id: 2,
-                    code: '2000',
-                    name: 'Accounts Payable',
-                    type: 'liability',
-                    balance: 5000,
-                    isActive: true,
-                },
-            ],
-            meta: {
-                total: 2,
-                per_page: 10,
-                current_page: 1,
-            },
-        });
-    }),
-
-    http.post('/api/accounts', () => {
-        return HttpResponse.json(
-            {
-                id: 3,
-                code: '3000',
-                name: 'New Account',
-                type: 'asset',
-                balance: 0,
-                isActive: true,
-            },
-            { status: 201 }
-        );
-    }),
-
-    http.get('/api/transactions', () => {
-        return HttpResponse.json({
-            data: [
-                {
-                    id: 1,
-                    date: '2023-01-01',
-                    description: 'Test Transaction',
-                    amount: 100,
-                    type: 'debit',
-                    account_id: 1,
-                },
-            ],
-            meta: {
-                total: 1,
-                per_page: 10,
-                current_page: 1,
-            },
-        });
-    }),
-
-    http.post('/api/transactions', () => {
-        return HttpResponse.json(
-            {
-                id: 2,
-                date: '2023-01-02',
-                description: 'New Transaction',
-                amount: 200,
-                type: 'credit',
-                account_id: 1,
-            },
-            { status: 201 }
-        );
-    }),
-
-    // Reports endpoints
-    http.get('/api/reports/balance-sheet', () => {
-        return HttpResponse.json({
-            assets: {
-                current: 15000,
-                fixed: 25000,
-                total: 40000,
-            },
-            liabilities: {
-                current: 8000,
-                longTerm: 12000,
-                total: 20000,
-            },
-            equity: {
-                total: 20000,
-            },
-        });
-    }),
-
-    http.get('/api/reports/income-statement', () => {
-        return HttpResponse.json({
-            revenue: 50000,
-            expenses: 30000,
-            netIncome: 20000,
-            period: '2023-01-01 to 2023-12-31',
-        });
-    }),
-
-    // Error handling
-    http.get('/api/error-test', () => {
-        return HttpResponse.json({ error: 'Test error' }, { status: 500 });
-    }),
+  // Reporting endpoints
+  http.get('/api/reports/financial', () => {
+    return Response.json({
+      data: {
+        revenue: 50000,
+        expenses: 30000,
+        profit: 20000,
+        chartData: [
+          { month: 'Jan', revenue: 4000, expenses: 2400 },
+          { month: 'Feb', revenue: 3000, expenses: 1398 },
+          { month: 'Mar', revenue: 2000, expenses: 9800 },
+        ],
+      },
+    });
+  }),
 ];
 
 // GraphQL Handlers
 export const graphqlHandlers = [
-    graphql.query('GetAccounts', () => {
-        return HttpResponse.json({
-            data: {
-                accounts: [
-                    {
-                        id: '1',
-                        code: '1000',
-                        name: 'Cash',
-                        type: 'ASSET',
-                        balance: 10000,
-                    },
-                ],
-            },
-        });
-    }),
+  // User queries
+  graphql.query('GetCurrentUser', (req, res, ctx) => {
+    return res(
+      ctx.data({
+        currentUser: {
+          id: '1',
+          email: 'test@example.com',
+          name: 'Test User',
+          role: 'admin',
+          preferences: {
+            theme: 'light',
+            language: 'en',
+            notifications: true,
+          },
+        },
+      })
+    );
+  }),
 
-    graphql.mutation('CreateAccount', () => {
-        return HttpResponse.json({
-            data: {
-                createAccount: {
-                    id: '2',
-                    code: '2000',
-                    name: 'New Account',
-                    type: 'ASSET',
-                    balance: 0,
+  // Accounting queries
+  graphql.query('GetChartOfAccounts', (req, res, ctx) => {
+    return res(
+      ctx.data({
+        chartOfAccounts: [
+          {
+            id: '1',
+            name: 'Cash',
+            type: 'ASSET',
+            balance: 10000,
+            code: '1000',
+            parentId: null,
+          },
+          {
+            id: '2',
+            name: 'Accounts Receivable',
+            type: 'ASSET',
+            balance: 5000,
+            code: '1200',
+            parentId: null,
+          },
+        ],
+      })
+    );
+  }),
+
+  graphql.query('GetTransactions', (req, res, ctx) => {
+    return res(
+      ctx.data({
+        transactions: {
+          edges: [
+            {
+              node: {
+                id: '1',
+                date: '2024-01-01',
+                description: 'Test Transaction',
+                amount: 100,
+                type: 'DEBIT',
+                account: {
+                  id: '1',
+                  name: 'Cash',
                 },
+              },
             },
-        });
-    }),
+          ],
+          pageInfo: {
+            hasNextPage: false,
+            hasPreviousPage: false,
+          },
+        },
+      })
+    );
+  }),
+
+  // Mutations
+  graphql.mutation('UpdateUserPreferences', (req, res, ctx) => {
+    return res(
+      ctx.data({
+        updateUserPreferences: {
+          id: '1',
+          preferences: req.variables.preferences,
+        },
+      })
+    );
+  }),
+
+  graphql.mutation('ReconcileTransactions', (req, res, ctx) => {
+    return res(
+      ctx.data({
+        reconcileTransactions: {
+          success: true,
+          reconciledCount: req.variables.transactionIds.length,
+          errors: [],
+        },
+      })
+    );
+  }),
 ];
 
 // Combined handlers
