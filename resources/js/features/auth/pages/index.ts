@@ -1,6 +1,6 @@
 /**
  * Auth Feature Pages
- * 
+ *
  * This module exports all authentication-related page components.
  * These pages handle user authentication flows including login, registration, and tenant selection.
  */

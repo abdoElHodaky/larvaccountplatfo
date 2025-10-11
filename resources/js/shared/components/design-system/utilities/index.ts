@@ -1,6 +1,6 @@
 /**
  * Utility Components - Phase 6 Unified Design System
- * 
+ *
  * Utility components for advanced functionality including
  * portals, transitions, and accessibility features.
  */

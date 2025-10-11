@@ -8,133 +8,135 @@ import { useRequest } from 'alova/client';
 
 // TypeScript interfaces
 export interface Account {
-  id: string;
-  code: string;
-  name: string;
-  type: 'asset' | 'liability' | 'equity' | 'revenue' | 'expense';
-  subtype?: string;
-  parentId?: string;
-  balance: number;
-  isActive: boolean;
-  description?: string;
-  taxCode?: string;
-  organizationId: number;
-  createdAt: string;
-  updatedAt: string;
-  children?: Account[];
-  parent?: Account;
+    id: string;
+    code: string;
+    name: string;
+    type: 'asset' | 'liability' | 'equity' | 'revenue' | 'expense';
+    subtype?: string;
+    parentId?: string;
+    balance: number;
+    isActive: boolean;
+    description?: string;
+    taxCode?: string;
+    organizationId: number;
+    createdAt: string;
+    updatedAt: string;
+    children?: Account[];
+    parent?: Account;
 }
 
 export interface Transaction {
-  id: string;
-  date: string;
-  reference: string;
-  description: string;
-  amount: number;
-  type: 'debit' | 'credit';
-  accountId: string;
-  account: Account;
-  journalEntryId?: string;
-  reconciled: boolean;
-  tags?: string[];
-  attachments?: string[];
-  organizationId: number;
-  createdAt: string;
-  updatedAt: string;
+    id: string;
+    date: string;
+    reference: string;
+    description: string;
+    amount: number;
+    type: 'debit' | 'credit';
+    accountId: string;
+    account: Account;
+    journalEntryId?: string;
+    reconciled: boolean;
+    tags?: string[];
+    attachments?: string[];
+    organizationId: number;
+    createdAt: string;
+    updatedAt: string;
 }
 
 export interface JournalEntry {
-  id: string;
-  date: string;
-  reference: string;
-  description: string;
-  totalAmount: number;
-  status: 'draft' | 'posted' | 'reversed';
-  transactions: Transaction[];
-  organizationId: number;
-  createdAt: string;
-  updatedAt: string;
+    id: string;
+    date: string;
+    reference: string;
+    description: string;
+    totalAmount: number;
+    status: 'draft' | 'posted' | 'reversed';
+    transactions: Transaction[];
+    organizationId: number;
+    createdAt: string;
+    updatedAt: string;
 }
 
 export interface Filters {
-  organizationId?: number;
-  accountType?: string[];
-  dateRange?: {
-    start: string;
-    end: string;
-  };
-  isActive?: boolean;
-  searchTerm?: string;
-  parentId?: string;
+    organizationId?: number;
+    accountType?: string[];
+    dateRange?: {
+        start: string;
+        end: string;
+    };
+    isActive?: boolean;
+    searchTerm?: string;
+    parentId?: string;
 }
 
 export interface TransactionFilters {
-  organizationId?: number;
-  accountId?: string;
-  dateRange?: {
-    start: string;
-    end: string;
-  };
-  type?: 'debit' | 'credit';
-  reconciled?: boolean;
-  searchTerm?: string;
-  tags?: string[];
+    organizationId?: number;
+    accountId?: string;
+    dateRange?: {
+        start: string;
+        end: string;
+    };
+    type?: 'debit' | 'credit';
+    reconciled?: boolean;
+    searchTerm?: string;
+    tags?: string[];
 }
 
 export interface CreateAccountInput {
-  code: string;
-  name: string;
-  type: 'asset' | 'liability' | 'equity' | 'revenue' | 'expense';
-  subtype?: string;
-  parentId?: string;
-  description?: string;
-  taxCode?: string;
-  organizationId: number;
+    code: string;
+    name: string;
+    type: 'asset' | 'liability' | 'equity' | 'revenue' | 'expense';
+    subtype?: string;
+    parentId?: string;
+    description?: string;
+    taxCode?: string;
+    organizationId: number;
 }
 
 export interface UpdateAccountInput {
-  id: string;
-  code?: string;
-  name?: string;
-  type?: 'asset' | 'liability' | 'equity' | 'revenue' | 'expense';
-  subtype?: string;
-  parentId?: string;
-  description?: string;
-  taxCode?: string;
-  isActive?: boolean;
+    id: string;
+    code?: string;
+    name?: string;
+    type?: 'asset' | 'liability' | 'equity' | 'revenue' | 'expense';
+    subtype?: string;
+    parentId?: string;
+    description?: string;
+    taxCode?: string;
+    isActive?: boolean;
 }
 
 export interface CreateTransactionInput {
-  date: string;
-  reference: string;
-  description: string;
-  amount: number;
-  type: 'debit' | 'credit';
-  accountId: string;
-  journalEntryId?: string;
-  tags?: string[];
-  organizationId: number;
+    date: string;
+    reference: string;
+    description: string;
+    amount: number;
+    type: 'debit' | 'credit';
+    accountId: string;
+    journalEntryId?: string;
+    tags?: string[];
+    organizationId: number;
 }
 
 export interface CreateJournalEntryInput {
-  date: string;
-  reference: string;
-  description: string;
-  transactions: Array<{
-    accountId: string;
-    amount: number;
-    type: 'debit' | 'credit';
-    description?: string;
-  }>;
-  organizationId: number;
+    date: string;
+    reference: string;
+    description: string;
+    transactions: Array<{
+        accountId: string;
+        amount: number;
+        type: 'debit' | 'credit';
+        description?: string;
+    }>;
+    organizationId: number;
 }
 
 /**
  * Accounting API methods using Alova.js GraphQL client
  */
 export const accountingApi = {
-  // Get accounts with hierarchy
-  getAccounts: (filters?: Filters) => gql(`
+    // Get accounts with hierarchy
+    getAccounts: (filters?: Filters) =>
+        gql(
+            `
     query GetAccounts($filters: AccountFiltersInput) {
       accounts(filters: $filters) {
         id
@@ -166,10 +168,14 @@ export const accountingApi = {
         }
       }
     }
-  `, { filters }),
+  `,
+            { filters }
+        ),
 
-  // Get account by ID
-  getAccount: (accountId: string) => gql(`
+    // Get account by ID
+    getAccount: (accountId: string) =>
+        gql(
+            `
     query GetAccount($accountId: ID!) {
       account(id: $accountId) {
         id
@@ -201,10 +207,14 @@ export const accountingApi = {
         }
       }
     }
-  `, { accountId }),
+  `,
+            { accountId }
+        ),
 
-  // Get chart of accounts
-  getChartOfAccounts: (organizationId: number) => gql(`
+    // Get chart of accounts
+    getChartOfAccounts: (organizationId: number) =>
+        gql(
+            `
     query GetChartOfAccounts($organizationId: Int!) {
       chartOfAccounts(organizationId: $organizationId) {
         id
@@ -233,10 +243,14 @@ export const accountingApi = {
         }
       }
     }
-  `, { organizationId }),
+  `,
+            { organizationId }
+        ),
 
-  // Create account
-  createAccount: (input: CreateAccountInput) => mutation(`
+    // Create account
+    createAccount: (input: CreateAccountInput) =>
+        mutation(
+            `
     mutation CreateAccount($input: CreateAccountInput!) {
       createAccount(input: $input) {
         id
@@ -254,10 +268,14 @@ export const accountingApi = {
         updatedAt
       }
     }
-  `, { input }),
+  `,
+            { input }
+        ),
 
-  // Update account
-  updateAccount: (input: UpdateAccountInput) => mutation(`
+    // Update account
+    updateAccount: (input: UpdateAccountInput) =>
+        mutation(
+            `
     mutation UpdateAccount($input: UpdateAccountInput!) {
       updateAccount(input: $input) {
         id
@@ -273,20 +291,28 @@ export const accountingApi = {
         updatedAt
       }
     }
-  `, { input }),
+  `,
+            { input }
+        ),
 
-  // Delete account
-  deleteAccount: (accountId: string) => mutation(`
+    // Delete account
+    deleteAccount: (accountId: string) =>
+        mutation(
+            `
     mutation DeleteAccount($accountId: ID!) {
       deleteAccount(accountId: $accountId) {
         success
         message
       }
     }
-  `, { accountId }),
+  `,
+            { accountId }
+        ),
 
-  // Get transactions
-  getTransactions: (filters?: TransactionFilters) => gql(`
+    // Get transactions
+    getTransactions: (filters?: TransactionFilters) =>
+        gql(
+            `
     query GetTransactions($filters: TransactionFiltersInput) {
       transactions(filters: $filters) {
         id
@@ -311,10 +337,14 @@ export const accountingApi = {
         updatedAt
       }
     }
-  `, { filters }),
+  `,
+            { filters }
+        ),
 
-  // Get transaction by ID
-  getTransaction: (transactionId: string) => gql(`
+    // Get transaction by ID
+    getTransaction: (transactionId: string) =>
+        gql(
+            `
     query GetTransaction($transactionId: ID!) {
       transaction(id: $transactionId) {
         id
@@ -339,10 +369,14 @@ export const accountingApi = {
         updatedAt
       }
     }
-  `, { transactionId }),
+  `,
+            { transactionId }
+        ),
 
-  // Create transaction
-  createTransaction: (input: CreateTransactionInput) => mutation(`
+    // Create transaction
+    createTransaction: (input: CreateTransactionInput) =>
+        mutation(
+            `
     mutation CreateTransaction($input: CreateTransactionInput!) {
       createTransaction(input: $input) {
         id
@@ -366,10 +400,14 @@ export const accountingApi = {
         updatedAt
       }
     }
-  `, { input }),
+  `,
+            { input }
+        ),
 
-  // Update transaction
-  updateTransaction: (transactionId: string, input: Partial<CreateTransactionInput>) => mutation(`
+    // Update transaction
+    updateTransaction: (transactionId: string, input: Partial<CreateTransactionInput>) =>
+        mutation(
+            `
     mutation UpdateTransaction($transactionId: ID!, $input: UpdateTransactionInput!) {
       updateTransaction(transactionId: $transactionId, input: $input) {
         id
@@ -384,20 +422,28 @@ export const accountingApi = {
         updatedAt
       }
     }
-  `, { transactionId, input }),
+  `,
+            { transactionId, input }
+        ),
 
-  // Delete transaction
-  deleteTransaction: (transactionId: string) => mutation(`
+    // Delete transaction
+    deleteTransaction: (transactionId: string) =>
+        mutation(
+            `
     mutation DeleteTransaction($transactionId: ID!) {
       deleteTransaction(transactionId: $transactionId) {
         success
         message
       }
     }
-  `, { transactionId }),
+  `,
+            { transactionId }
+        ),
 
-  // Get journal entries
-  getJournalEntries: (organizationId: number, filters?: any) => gql(`
+    // Get journal entries
+    getJournalEntries: (organizationId: number, filters?: any) =>
+        gql(
+            `
     query GetJournalEntries($organizationId: Int!, $filters: JournalEntryFiltersInput) {
       journalEntries(organizationId: $organizationId, filters: $filters) {
         id
@@ -422,10 +468,14 @@ export const accountingApi = {
         }
       }
     }
-  `, { organizationId, filters }),
+  `,
+            { organizationId, filters }
+        ),
 
-  // Create journal entry
-  createJournalEntry: (input: CreateJournalEntryInput) => mutation(`
+    // Create journal entry
+    createJournalEntry: (input: CreateJournalEntryInput) =>
+        mutation(
+            `
     mutation CreateJournalEntry($input: CreateJournalEntryInput!) {
       createJournalEntry(input: $input) {
         id
@@ -450,10 +500,14 @@ export const accountingApi = {
         }
       }
     }
-  `, { input }),
+  `,
+            { input }
+        ),
 
-  // Post journal entry
-  postJournalEntry: (journalEntryId: string) => mutation(`
+    // Post journal entry
+    postJournalEntry: (journalEntryId: string) =>
+        mutation(
+            `
     mutation PostJournalEntry($journalEntryId: ID!) {
       postJournalEntry(journalEntryId: $journalEntryId) {
         id
@@ -461,10 +515,14 @@ export const accountingApi = {
         updatedAt
       }
     }
-  `, { journalEntryId }),
+  `,
+            { journalEntryId }
+        ),
 
-  // Get account balances
-  getAccountBalances: (organizationId: number, asOfDate?: string) => gql(`
+    // Get account balances
+    getAccountBalances: (organizationId: number, asOfDate?: string) =>
+        gql(
+            `
     query GetAccountBalances($organizationId: Int!, $asOfDate: String) {
       accountBalances(organizationId: $organizationId, asOfDate: $asOfDate) {
         accountId
@@ -480,10 +538,14 @@ export const accountingApi = {
         asOfDate
       }
     }
-  `, { organizationId, asOfDate }),
+  `,
+            { organizationId, asOfDate }
+        ),
 
-  // Get trial balance
-  getTrialBalance: (organizationId: number, asOfDate?: string) => gql(`
+    // Get trial balance
+    getTrialBalance: (organizationId: number, asOfDate?: string) =>
+        gql(
+            `
     query GetTrialBalance($organizationId: Int!, $asOfDate: String) {
       trialBalance(organizationId: $organizationId, asOfDate: $asOfDate) {
         accountId
@@ -498,10 +560,14 @@ export const accountingApi = {
         asOfDate
       }
     }
-  `, { organizationId, asOfDate }),
+  `,
+            { organizationId, asOfDate }
+        ),
 
-  // Get account activity
-  getAccountActivity: (accountId: string, dateRange?: { start: string; end: string }) => gql(`
+    // Get account activity
+    getAccountActivity: (accountId: string, dateRange?: { start: string; end: string }) =>
+        gql(
+            `
     query GetAccountActivity($accountId: ID!, $dateRange: DateRangeInput) {
       accountActivity(accountId: $accountId, dateRange: $dateRange) {
         openingBalance
@@ -519,10 +585,14 @@ export const accountingApi = {
         }
       }
     }
-  `, { accountId, dateRange }),
+  `,
+            { accountId, dateRange }
+        ),
 
-  // Reconcile transactions
-  reconcileTransactions: (transactionIds: string[]) => mutation(`
+    // Reconcile transactions
+    reconcileTransactions: (transactionIds: string[]) =>
+        mutation(
+            `
     mutation ReconcileTransactions($transactionIds: [ID!]!) {
       reconcileTransactions(transactionIds: $transactionIds) {
         success
@@ -530,7 +600,9 @@ export const accountingApi = {
         message
       }
     }
-  `, { transactionIds })
+  `,
+            { transactionIds }
+        ),
 };
 
 /**
@@ -538,185 +610,203 @@ export const accountingApi = {
  */
 
 // Hook for accounts with real-time updates
-export function useAccounts(filters?: Filters, options?: {
-  enabled?: boolean;
-}) {
-  const { data, loading, error, send } = useRequest(
-    () => accountingApi.getAccounts(filters),
-    {
-      immediate: options?.enabled !== false,
-      initialData: { data: { accounts: [] } },
+export function useAccounts(
+    filters?: Filters,
+    options?: {
+        enabled?: boolean;
     }
-  );
+) {
+    const { data, loading, error, send } = useRequest(() => accountingApi.getAccounts(filters), {
+        immediate: options?.enabled !== false,
+        initialData: { data: { accounts: [] } },
+    });
 
-  return {
-    accounts: data?.data?.accounts || [],
-    loading,
-    error,
-    refetch: send,
-  };
+    return {
+        accounts: data?.data?.accounts || [],
+        loading,
+        error,
+        refetch: send,
+    };
 }
 
 // Hook for chart of accounts
-export function useChartOfAccounts(organizationId: number, options?: {
-  enabled?: boolean;
-}) {
-  const { data, loading, error, send } = useRequest(
-    () => accountingApi.getChartOfAccounts(organizationId),
-    {
-      immediate: options?.enabled !== false && !!organizationId,
-      initialData: { data: { chartOfAccounts: [] } },
+export function useChartOfAccounts(
+    organizationId: number,
+    options?: {
+        enabled?: boolean;
     }
-  );
+) {
+    const { data, loading, error, send } = useRequest(
+        () => accountingApi.getChartOfAccounts(organizationId),
+        {
+            immediate: options?.enabled !== false && !!organizationId,
+            initialData: { data: { chartOfAccounts: [] } },
+        }
+    );
 
-  return {
-    chartOfAccounts: data?.data?.chartOfAccounts || [],
-    loading,
-    error,
-    refetch: send,
-  };
+    return {
+        chartOfAccounts: data?.data?.chartOfAccounts || [],
+        loading,
+        error,
+        refetch: send,
+    };
 }
 
 // Hook for transactions
-export function useTransactions(filters?: TransactionFilters, options?: {
-  enabled?: boolean;
-}) {
-  const { data, loading, error, send } = useRequest(
-    () => accountingApi.getTransactions(filters),
-    {
-      immediate: options?.enabled !== false,
-      initialData: { data: { transactions: [] } },
+export function useTransactions(
+    filters?: TransactionFilters,
+    options?: {
+        enabled?: boolean;
     }
-  );
+) {
+    const { data, loading, error, send } = useRequest(
+        () => accountingApi.getTransactions(filters),
+        {
+            immediate: options?.enabled !== false,
+            initialData: { data: { transactions: [] } },
+        }
+    );
 
-  return {
-    transactions: data?.data?.transactions || [],
-    loading,
-    error,
-    refetch: send,
-  };
+    return {
+        transactions: data?.data?.transactions || [],
+        loading,
+        error,
+        refetch: send,
+    };
 }
 
 // Hook for journal entries
-export function useJournalEntries(organizationId: number, filters?: any, options?: {
-  enabled?: boolean;
-}) {
-  const { data, loading, error, send } = useRequest(
-    () => accountingApi.getJournalEntries(organizationId, filters),
-    {
-      immediate: options?.enabled !== false && !!organizationId,
-      initialData: { data: { journalEntries: [] } },
+export function useJournalEntries(
+    organizationId: number,
+    filters?: any,
+    options?: {
+        enabled?: boolean;
     }
-  );
+) {
+    const { data, loading, error, send } = useRequest(
+        () => accountingApi.getJournalEntries(organizationId, filters),
+        {
+            immediate: options?.enabled !== false && !!organizationId,
+            initialData: { data: { journalEntries: [] } },
+        }
+    );
 
-  return {
-    journalEntries: data?.data?.journalEntries || [],
-    loading,
-    error,
-    refetch: send,
-  };
+    return {
+        journalEntries: data?.data?.journalEntries || [],
+        loading,
+        error,
+        refetch: send,
+    };
 }
 
 // Hook for account balances
-export function useAccountBalances(organizationId: number, asOfDate?: string, options?: {
-  enabled?: boolean;
-}) {
-  const { data, loading, error, send } = useRequest(
-    () => accountingApi.getAccountBalances(organizationId, asOfDate),
-    {
-      immediate: options?.enabled !== false && !!organizationId,
-      initialData: { data: { accountBalances: [] } },
+export function useAccountBalances(
+    organizationId: number,
+    asOfDate?: string,
+    options?: {
+        enabled?: boolean;
     }
-  );
+) {
+    const { data, loading, error, send } = useRequest(
+        () => accountingApi.getAccountBalances(organizationId, asOfDate),
+        {
+            immediate: options?.enabled !== false && !!organizationId,
+            initialData: { data: { accountBalances: [] } },
+        }
+    );
 
-  return {
-    balances: data?.data?.accountBalances || [],
-    loading,
-    error,
-    refetch: send,
-  };
+    return {
+        balances: data?.data?.accountBalances || [],
+        loading,
+        error,
+        refetch: send,
+    };
 }
 
 // Hook for trial balance
-export function useTrialBalance(organizationId: number, asOfDate?: string, options?: {
-  enabled?: boolean;
-}) {
-  const { data, loading, error, send } = useRequest(
-    () => accountingApi.getTrialBalance(organizationId, asOfDate),
-    {
-      immediate: options?.enabled !== false && !!organizationId,
-      initialData: { data: { trialBalance: [] } },
+export function useTrialBalance(
+    organizationId: number,
+    asOfDate?: string,
+    options?: {
+        enabled?: boolean;
     }
-  );
+) {
+    const { data, loading, error, send } = useRequest(
+        () => accountingApi.getTrialBalance(organizationId, asOfDate),
+        {
+            immediate: options?.enabled !== false && !!organizationId,
+            initialData: { data: { trialBalance: [] } },
+        }
+    );
 
-  return {
-    trialBalance: data?.data?.trialBalance || [],
-    loading,
-    error,
-    refetch: send,
-  };
+    return {
+        trialBalance: data?.data?.trialBalance || [],
+        loading,
+        error,
+        refetch: send,
+    };
 }
 
 // Hook for creating accounts
 export function useCreateAccount() {
-  const { loading, error, send } = useRequest(
-    (input: CreateAccountInput) => accountingApi.createAccount(input),
-    {
-      immediate: false,
-    }
-  );
+    const { loading, error, send } = useRequest(
+        (input: CreateAccountInput) => accountingApi.createAccount(input),
+        {
+            immediate: false,
+        }
+    );
 
-  return {
-    createAccount: send,
-    loading,
-    error,
-  };
+    return {
+        createAccount: send,
+        loading,
+        error,
+    };
 }
 
 // Hook for updating accounts
 export function useUpdateAccount() {
-  const { loading, error, send } = useRequest(
-    (input: UpdateAccountInput) => accountingApi.updateAccount(input),
-    {
-      immediate: false,
-    }
-  );
+    const { loading, error, send } = useRequest(
+        (input: UpdateAccountInput) => accountingApi.updateAccount(input),
+        {
+            immediate: false,
+        }
+    );
 
-  return {
-    updateAccount: send,
-    loading,
-    error,
-  };
+    return {
+        updateAccount: send,
+        loading,
+        error,
+    };
 }
 
 // Hook for creating transactions
 export function useCreateTransaction() {
-  const { loading, error, send } = useRequest(
-    (input: CreateTransactionInput) => accountingApi.createTransaction(input),
-    {
-      immediate: false,
-    }
-  );
+    const { loading, error, send } = useRequest(
+        (input: CreateTransactionInput) => accountingApi.createTransaction(input),
+        {
+            immediate: false,
+        }
+    );
 
-  return {
-    createTransaction: send,
-    loading,
-    error,
-  };
+    return {
+        createTransaction: send,
+        loading,
+        error,
+    };
 }
 
 // Hook for creating journal entries
 export function useCreateJournalEntry() {
-  const { loading, error, send } = useRequest(
-    (input: CreateJournalEntryInput) => accountingApi.createJournalEntry(input),
-    {
-      immediate: false,
-    }
-  );
+    const { loading, error, send } = useRequest(
+        (input: CreateJournalEntryInput) => accountingApi.createJournalEntry(input),
+        {
+            immediate: false,
+        }
+    );
 
-  return {
-    createJournalEntry: send,
-    loading,
-    error,
-  };
+    return {
+        createJournalEntry: send,
+        loading,
+        error,
+    };
 }

@@ -72,34 +72,50 @@ export default function TenantSwitcher() {
     };
 
     return (
-        <div className="relative">
+        <div className='relative'>
             <button
                 onClick={() => setIsOpen(!isOpen)}
-                className="flex items-center space-x-2 px-3 py-2 text-sm bg-white border border-gray-300 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                className='flex items-center space-x-2 px-3 py-2 text-sm bg-white border border-gray-300 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500'
             >
-                <div className="w-6 h-6 bg-gradient-to-br from-blue-500 to-purple-600 rounded flex items-center justify-center">
-                    <span className="text-white font-bold text-xs">
+                <div className='w-6 h-6 bg-gradient-to-br from-blue-500 to-purple-600 rounded flex items-center justify-center'>
+                    <span className='text-white font-bold text-xs'>
                         {currentTenant.name.charAt(0).toUpperCase()}
                     </span>
                 </div>
-                <div className="hidden sm:block text-left">
-                    <div className="font-medium text-gray-900">{currentTenant.name}</div>
-                    <div className="text-xs text-gray-500">{currentTenant.subdomain}.yourapp.com</div>
+                <div className='hidden sm:block text-left'>
+                    <div className='font-medium text-gray-900'>{currentTenant.name}</div>
+                    <div className='text-xs text-gray-500'>
+                        {currentTenant.subdomain}.yourapp.com
+                    </div>
                 </div>
-                <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 9l4-4 4 4m0 6l-4 4-4-4" />
+                <svg
+                    className='w-4 h-4 text-gray-400'
+                    fill='none'
+                    stroke='currentColor'
+                    viewBox='0 0 24 24'
+                >
+                    <path
+                        strokeLinecap='round'
+                        strokeLinejoin='round'
+                        strokeWidth={2}
+                        d='M8 9l4-4 4 4m0 6l-4 4-4-4'
+                    />
                 </svg>
             </button>
 
             {isOpen && (
-                <div className="absolute right-0 mt-2 w-80 bg-white rounded-md shadow-lg ring-1 ring-black ring-opacity-5 z-50">
-                    <div className="py-1">
-                        <div className="px-4 py-3 border-b border-gray-200">
-                            <h3 className="text-sm font-medium text-gray-900">Switch Organization</h3>
-                            <p className="text-xs text-gray-500">Select an organization to work with</p>
+                <div className='absolute right-0 mt-2 w-80 bg-white rounded-md shadow-lg ring-1 ring-black ring-opacity-5 z-50'>
+                    <div className='py-1'>
+                        <div className='px-4 py-3 border-b border-gray-200'>
+                            <h3 className='text-sm font-medium text-gray-900'>
+                                Switch Organization
+                            </h3>
+                            <p className='text-xs text-gray-500'>
+                                Select an organization to work with
+                            </p>
                         </div>
-                        
-                        <div className="max-h-64 overflow-y-auto">
+
+                        <div className='max-h-64 overflow-y-auto'>
                             {availableTenants.map((tenant) => (
                                 <button
                                     key={tenant.id}
@@ -108,46 +124,58 @@ export default function TenantSwitcher() {
                                         tenant.id === currentTenant.id ? 'bg-blue-50' : ''
                                     }`}
                                 >
-                                    <div className="flex items-center space-x-3">
-                                        <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-purple-600 rounded flex items-center justify-center flex-shrink-0">
-                                            <span className="text-white font-bold text-sm">
+                                    <div className='flex items-center space-x-3'>
+                                        <div className='w-8 h-8 bg-gradient-to-br from-blue-500 to-purple-600 rounded flex items-center justify-center flex-shrink-0'>
+                                            <span className='text-white font-bold text-sm'>
                                                 {tenant.name.charAt(0).toUpperCase()}
                                             </span>
                                         </div>
-                                        
-                                        <div className="flex-1 min-w-0">
-                                            <div className="flex items-center space-x-2">
-                                                <p className="text-sm font-medium text-gray-900 truncate">
+
+                                        <div className='flex-1 min-w-0'>
+                                            <div className='flex items-center space-x-2'>
+                                                <p className='text-sm font-medium text-gray-900 truncate'>
                                                     {tenant.name}
                                                 </p>
                                                 {tenant.id === currentTenant.id && (
-                                                    <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-blue-100 text-blue-800">
+                                                    <span className='inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-blue-100 text-blue-800'>
                                                         Current
                                                     </span>
                                                 )}
                                             </div>
-                                            
-                                            <div className="flex items-center space-x-2 mt-1">
-                                                <p className="text-xs text-gray-500 truncate">
+
+                                            <div className='flex items-center space-x-2 mt-1'>
+                                                <p className='text-xs text-gray-500 truncate'>
                                                     {tenant.subdomain}.yourapp.com
                                                 </p>
-                                                <span className="text-xs">{getPlanIcon(tenant.plan)}</span>
+                                                <span className='text-xs'>
+                                                    {getPlanIcon(tenant.plan)}
+                                                </span>
                                             </div>
-                                            
-                                            <div className="flex items-center space-x-2 mt-1">
-                                                <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium ${getRoleColor(tenant.role)}`}>
+
+                                            <div className='flex items-center space-x-2 mt-1'>
+                                                <span
+                                                    className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium ${getRoleColor(tenant.role)}`}
+                                                >
                                                     {tenant.role}
                                                 </span>
-                                                <span className="text-xs text-gray-500 capitalize">
+                                                <span className='text-xs text-gray-500 capitalize'>
                                                     {tenant.plan} plan
                                                 </span>
                                             </div>
                                         </div>
-                                        
+
                                         {tenant.id === currentTenant.id && (
-                                            <div className="flex-shrink-0">
-                                                <svg className="w-5 h-5 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
-                                                    <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                                            <div className='flex-shrink-0'>
+                                                <svg
+                                                    className='w-5 h-5 text-blue-600'
+                                                    fill='currentColor'
+                                                    viewBox='0 0 20 20'
+                                                >
+                                                    <path
+                                                        fillRule='evenodd'
+                                                        d='M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z'
+                                                        clipRule='evenodd'
+                                                    />
                                                 </svg>
                                             </div>
                                         )}
@@ -155,11 +183,11 @@ export default function TenantSwitcher() {
                                 </button>
                             ))}
                         </div>
-                        
-                        <div className="border-t border-gray-200 px-4 py-3">
+
+                        <div className='border-t border-gray-200 px-4 py-3'>
                             <Link
-                                href="/tenant/select"
-                                className="text-sm text-blue-600 hover:text-blue-500 font-medium"
+                                href='/tenant/select'
+                                className='text-sm text-blue-600 hover:text-blue-500 font-medium'
                                 onClick={() => setIsOpen(false)}
                             >
                                 View all organizations →

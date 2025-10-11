@@ -1,6 +1,6 @@
 /**
  * Enhanced Inertia.js Integration - Phase 6
- * 
+ *
  * Advanced Inertia.js utilities and optimizations for better performance,
  * caching, and developer experience.
  */

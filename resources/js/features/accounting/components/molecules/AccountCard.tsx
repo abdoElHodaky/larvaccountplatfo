@@ -1,17 +1,17 @@
 import React, { Fragment, memo, useMemo } from 'react';
 import {
-  Box,
-  Text,
-  Heading,
-  Badge,
-  Stat,
-  StatLabel,
-  StatNumber,
-  StatHelpText,
-  StatArrow,
-  HStack,
-  VStack,
-  useColorModeValue,
+    Box,
+    Text,
+    Heading,
+    Badge,
+    Stat,
+    StatLabel,
+    StatNumber,
+    StatHelpText,
+    StatArrow,
+    HStack,
+    VStack,
+    useColorModeValue,
 } from '@chakra-ui/react';
 import { CardContainer } from '@/shared/components/molecules/Container';
 import { FinancialPerformanceUtils } from '@/shared/utils/performance';
@@ -22,119 +22,121 @@ import { FinancialPerformanceUtils } from '@/shared/utils/performance';
  */
 
 interface Account {
-  id: string;
-  name: string;
-  type: 'asset' | 'liability' | 'equity' | 'revenue' | 'expense';
-  balance: number;
-  currency: string;
-  change: number;
-  changePercent: number;
-  lastUpdated: string;
+    id: string;
+    name: string;
+    type: 'asset' | 'liability' | 'equity' | 'revenue' | 'expense';
+    balance: number;
+    currency: string;
+    change: number;
+    changePercent: number;
+    lastUpdated: string;
 }
 
 interface AccountCardProps {
-  account: Account;
-  onClick?: (account: Account) => void;
-  className?: string;
+    account: Account;
+    onClick?: (account: Account) => void;
+    className?: string;
 }
 
-export const AccountCard: React.FC<AccountCardProps> = memo(({
-  account,
-  onClick,
-  className,
-}) => {
-  // Memoized color values for performance
-  const hoverBg = useColorModeValue('gray.50', 'gray.700');
-  
-  // Memoized formatted values to prevent recalculation
-  const formattedBalance = useMemo(() => 
-    FinancialPerformanceUtils.formatCurrency(account.balance, account.currency),
-    [account.balance, account.currency]
-  );
+export const AccountCard: React.FC<AccountCardProps> = memo(({ account, onClick, className }) => {
+    // Memoized color values for performance
+    const hoverBg = useColorModeValue('gray.50', 'gray.700');
 
-  const formattedChange = useMemo(() => 
-    FinancialPerformanceUtils.formatCurrency(Math.abs(account.change), account.currency),
-    [account.change, account.currency]
-  );
+    // Memoized formatted values to prevent recalculation
+    const formattedBalance = useMemo(
+        () => FinancialPerformanceUtils.formatCurrency(account.balance, account.currency),
+        [account.balance, account.currency]
+    );
 
-  const formattedChangePercent = useMemo(() => 
-    FinancialPerformanceUtils.formatPercentage(Math.abs(account.changePercent)),
-    [account.changePercent]
-  );
+    const formattedChange = useMemo(
+        () => FinancialPerformanceUtils.formatCurrency(Math.abs(account.change), account.currency),
+        [account.change, account.currency]
+    );
 
-  // Memoized click handler
-  const handleClick = useMemo(() => 
-    onClick ? () => onClick(account) : undefined,
-    [onClick, account]
-  );
+    const formattedChangePercent = useMemo(
+        () => FinancialPerformanceUtils.formatPercentage(Math.abs(account.changePercent)),
+        [account.changePercent]
+    );
 
-  // Memoized card content to prevent unnecessary re-renders
-  const cardHeader = useMemo(() => (
-    <Fragment>
-      <HStack justify="space-between" align="flex-start">
-        <VStack align="flex-start" spacing={1} flex={1}>
-          <Heading size="sm" color="text-default" noOfLines={1}>
-            {account.name}
-          </Heading>
-          <Badge variant={account.type} size="sm">
-            {account.type.toUpperCase()}
-          </Badge>
-        </VStack>
-      </HStack>
-    </Fragment>
-  ), [account.name, account.type]);
+    // Memoized click handler
+    const handleClick = useMemo(
+        () => (onClick ? () => onClick(account) : undefined),
+        [onClick, account]
+    );
 
-  const cardBody = useMemo(() => (
-    <Fragment>
-      <VStack align="stretch" spacing={4}>
-        {/* Balance Display */}
-        <Stat>
-          <StatLabel fontSize="sm" color="text-muted">
-            Current Balance
-          </StatLabel>
-          <StatNumber 
-            fontSize="2xl" 
-            fontWeight="bold"
-            color={`${account.type}.600`}
-            style={{ fontVariantNumeric: "lining-nums tabular-nums" }}
-          >
-            {formattedBalance}
-          </StatNumber>
-          <StatHelpText mb={0}>
-            <StatArrow type={account.change >= 0 ? 'increase' : 'decrease'} />
-            {formattedChange} ({formattedChangePercent})
-          </StatHelpText>
-        </Stat>
+    // Memoized card content to prevent unnecessary re-renders
+    const cardHeader = useMemo(
+        () => (
+            <Fragment>
+                <HStack justify='space-between' align='flex-start'>
+                    <VStack align='flex-start' spacing={1} flex={1}>
+                        <Heading size='sm' color='text-default' noOfLines={1}>
+                            {account.name}
+                        </Heading>
+                        <Badge variant={account.type} size='sm'>
+                            {account.type.toUpperCase()}
+                        </Badge>
+                    </VStack>
+                </HStack>
+            </Fragment>
+        ),
+        [account.name, account.type]
+    );
 
-        {/* Additional Info */}
-        <Box>
-          <Text fontSize="xs" color="text-subtle">
-            Last updated: {new Date(account.lastUpdated).toLocaleDateString()}
-          </Text>
-        </Box>
-      </VStack>
-    </Fragment>
-  ), [
-    account.type,
-    account.change,
-    account.lastUpdated,
-    formattedBalance,
-    formattedChange,
-    formattedChangePercent,
-  ]);
+    const cardBody = useMemo(
+        () => (
+            <Fragment>
+                <VStack align='stretch' spacing={4}>
+                    {/* Balance Display */}
+                    <Stat>
+                        <StatLabel fontSize='sm' color='text-muted'>
+                            Current Balance
+                        </StatLabel>
+                        <StatNumber
+                            fontSize='2xl'
+                            fontWeight='bold'
+                            color={`${account.type}.600`}
+                            style={{ fontVariantNumeric: 'lining-nums tabular-nums' }}
+                        >
+                            {formattedBalance}
+                        </StatNumber>
+                        <StatHelpText mb={0}>
+                            <StatArrow type={account.change >= 0 ? 'increase' : 'decrease'} />
+                            {formattedChange} ({formattedChangePercent})
+                        </StatHelpText>
+                    </Stat>
 
-  return (
-    <CardContainer
-      header={cardHeader}
-      className={className}
-      cursor={onClick ? 'pointer' : 'default'}
-      transition="all 0.2s ease-in-out"
-      _hover={onClick ? { bg: hoverBg, transform: 'translateY(-2px)' } : undefined}
-      onClick={handleClick}
-    >
-      {cardBody}
-    </CardContainer>
-  );
+                    {/* Additional Info */}
+                    <Box>
+                        <Text fontSize='xs' color='text-subtle'>
+                            Last updated: {new Date(account.lastUpdated).toLocaleDateString()}
+                        </Text>
+                    </Box>
+                </VStack>
+            </Fragment>
+        ),
+        [
+            account.type,
+            account.change,
+            account.lastUpdated,
+            formattedBalance,
+            formattedChange,
+            formattedChangePercent,
+        ]
+    );
+
+    return (
+        <CardContainer
+            header={cardHeader}
+            className={className}
+            cursor={onClick ? 'pointer' : 'default'}
+            transition='all 0.2s ease-in-out'
+            _hover={onClick ? { bg: hoverBg, transform: 'translateY(-2px)' } : undefined}
+            onClick={handleClick}
+        >
+            {cardBody}
+        </CardContainer>
+    );
 });
 
 AccountCard.displayName = 'AccountCard';
@@ -144,34 +146,29 @@ AccountCard.displayName = 'AccountCard';
  * Optimized for rendering multiple account cards with virtualization support
  */
 interface AccountCardListProps {
-  accounts: Account[];
-  onAccountClick?: (account: Account) => void;
-  className?: string;
+    accounts: Account[];
+    onAccountClick?: (account: Account) => void;
+    className?: string;
 }
 
-export const AccountCardList: React.FC<AccountCardListProps> = memo(({
-  accounts,
-  onAccountClick,
-  className,
-}) => {
-  // Memoized account cards to prevent unnecessary re-renders
-  const accountCards = useMemo(() => 
-    accounts.map((account) => (
-      <AccountCard
-        key={account.id}
-        account={account}
-        onClick={onAccountClick}
-      />
-    )),
-    [accounts, onAccountClick]
-  );
+export const AccountCardList: React.FC<AccountCardListProps> = memo(
+    ({ accounts, onAccountClick, className }) => {
+        // Memoized account cards to prevent unnecessary re-renders
+        const accountCards = useMemo(
+            () =>
+                accounts.map((account) => (
+                    <AccountCard key={account.id} account={account} onClick={onAccountClick} />
+                )),
+            [accounts, onAccountClick]
+        );
 
-  return (
-    <VStack spacing={4} align="stretch" className={className}>
-      {accountCards}
-    </VStack>
-  );
-});
+        return (
+            <VStack spacing={4} align='stretch' className={className}>
+                {accountCards}
+            </VStack>
+        );
+    }
+);
 
 AccountCardList.displayName = 'AccountCardList';
 

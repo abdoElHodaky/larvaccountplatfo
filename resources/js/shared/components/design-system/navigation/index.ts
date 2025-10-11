@@ -1,6 +1,6 @@
 /**
  * Navigation Components - Phase 6 Unified Design System
- * 
+ *
  * Navigation components for consistent user experience
  * across all application areas.
  */

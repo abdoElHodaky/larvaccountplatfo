@@ -67,7 +67,15 @@ export interface Transaction {
     tenant_id: number;
     transaction_number: string;
     reference?: string;
-    type: 'journal_entry' | 'invoice' | 'payment' | 'receipt' | 'transfer' | 'adjustment' | 'opening_balance' | 'closing_entry';
+    type:
+        | 'journal_entry'
+        | 'invoice'
+        | 'payment'
+        | 'receipt'
+        | 'transfer'
+        | 'adjustment'
+        | 'opening_balance'
+        | 'closing_entry';
     transaction_date: string;
     description: string;
     notes?: string;
