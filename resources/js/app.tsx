@@ -15,7 +15,7 @@ const appName = (import.meta as any).env?.VITE_APP_NAME || 'Laravel Accounting P
 // Enhanced page resolver with Phase 6 optimizations
 const resolvePageWithEnhancements = async (name: string) => {
   // Import enhanced page registry
-  const { enhancedPageRegistry, getPageComponent, getPageMetadata } = await import('@/shared/services/inertia/PageRegistry');
+  const { getPageComponent, getPageMetadata } = await import('@/shared/services/inertia/PageRegistry');
   
   try {
     // Get page component from enhanced registry

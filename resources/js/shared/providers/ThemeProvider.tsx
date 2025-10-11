@@ -4,7 +4,7 @@
  */
 
 import React, { createContext, useContext, useEffect, useState, ReactNode } from 'react';
-import { ThemeContextType, designTokens, cssVariables, themeUtils } from '../theme/headlessTheme';
+import { ThemeContextType, designTokens, themeUtils } from '../theme/headlessTheme';
 
 // Theme Context
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
@@ -179,4 +179,3 @@ export const ColorModeToggle: React.FC<ColorModeToggleProps> = ({ className }) =
 };
 
 export default ThemeProvider;
-

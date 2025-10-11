@@ -10,7 +10,7 @@ import {
 import { ChartContainer, ChartContainerProps } from './ChartContainer';
 import { useMemoizedCallback } from '@/shared/hooks';
 import { FinancialPerformanceUtils } from '@/shared/utils/performance';
-import { useChartFormatters, useChartData } from '../../hooks/useReportingData';
+import { useChartFormatters } from '../../hooks/useReportingData';
 
 /**
  * Performance-Optimized Pie Chart Component
@@ -67,7 +67,7 @@ export const PieChart: React.FC<PieChartProps> = memo(({
   const chartRef = useRef<SVGSVGElement>(null);
   
   // Get chart formatters from hook
-  const { formatCurrency, formatPercentage, generateColors } = useChartFormatters();
+  const { formatCurrency } = useChartFormatters();
 
   // Theme-aware colors (replace Chakra UI)
   const textColor = '#4a5568';
