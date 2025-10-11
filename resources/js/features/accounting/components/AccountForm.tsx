@@ -4,6 +4,8 @@ import { FormInput } from '@/shared/components/molecules/FormInput';
 import { FormSelect } from '@/shared/components/molecules/FormSelect';
 import { CardContainer } from '@/shared/components/molecules/Container';
 import { useAccountTypes, useCreateAccount, useUpdateAccount, type Account, type CreateAccountData } from '../hooks/useAccountData';
+import { AnimatedFormField, StaggeredChildren } from '@/shared/components/animations/AnimatedFragment';
+import { useFormAnimation } from '@/shared/hooks/useAnimation';
 
 interface AccountFormProps {
     account?: Account;
@@ -88,92 +90,96 @@ export default function AccountForm({ account, accounts, onSubmit, onCancel }: A
             )}
             
             <form onSubmit={handleSubmit} className="space-y-6">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
+                <StaggeredChildren stagger={0.1} className="space-y-6">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <AnimatedFormField error={!!errors.code}>
+                            <FormInput
+                                label="Account Code"
+                                value={formData.code}
+                                onChange={(value) => setFormData({ ...formData, code: value as string })}
+                                error={errors.code}
+                                isRequired
+                                placeholder="e.g., 1000"
+                            />
+                        </AnimatedFormField>
+                        <AnimatedFormField error={!!errors.name}>
+                            <FormInput
+                                label="Account Name"
+                                value={formData.name}
+                                onChange={(value) => setFormData({ ...formData, name: value as string })}
+                                error={errors.name}
+                                isRequired
+                                placeholder="e.g., Cash"
+                            />
+                        </AnimatedFormField>
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <AnimatedFormField error={!!errors.type}>
+                            <FormSelect
+                                label="Account Type"
+                                value={formData.type}
+                                onChange={(value) => handleTypeChange(value)}
+                                options={accountTypes}
+                                error={errors.type}
+                                isRequired
+                            />
+                        </AnimatedFormField>
+                        <AnimatedFormField error={!!errors.subtype}>
+                            <FormSelect
+                                label="Account Subtype"
+                                value={formData.subtype}
+                                onChange={(value) => setFormData({ ...formData, subtype: value })}
+                                options={accountSubtypes[selectedType as keyof typeof accountSubtypes] || []}
+                                error={errors.subtype}
+                                isRequired
+                            />
+                        </AnimatedFormField>
+                    </div>
+
+                    {parentAccountOptions.length > 0 && (
+                        <AnimatedFormField error={!!errors.parent_id}>
+                            <FormSelect
+                                label="Parent Account (Optional)"
+                                value={formData.parent_id?.toString() || ''}
+                                onChange={(value) => setFormData({ 
+                                    ...formData, 
+                                    parent_id: value ? value : undefined 
+                                })}
+                                options={[
+                                    { value: '', label: 'No Parent Account' },
+                                    ...parentAccountOptions,
+                                ]}
+                                error={errors.parent_id}
+                            />
+                        </AnimatedFormField>
+                    )}
+
+                    <AnimatedFormField error={!!errors.description}>
                         <FormInput
-                            label="Account Code"
-                            value={formData.code}
-                            onChange={(value) => setFormData({ ...formData, code: value as string })}
-                            error={errors.code}
-                            isRequired
-                            placeholder="e.g., 1000"
+                            label="Description (Optional)"
+                            value={formData.description}
+                            onChange={(value) => setFormData({ ...formData, description: value as string })}
+                            error={errors.description}
+                            placeholder="Brief description of the account"
                         />
-                    </div>
-                    <div>
-                        <FormInput
-                            label="Account Name"
-                            value={formData.name}
-                            onChange={(value) => setFormData({ ...formData, name: value as string })}
-                            error={errors.name}
-                            isRequired
-                            placeholder="e.g., Cash"
-                        />
-                    </div>
-                </div>
+                    </AnimatedFormField>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                        <FormSelect
-                            label="Account Type"
-                            value={formData.type}
-                            onChange={(value) => handleTypeChange(value)}
-                            options={accountTypes}
-                            error={errors.type}
-                            isRequired
-                        />
-                    </div>
-                    <div>
-                        <FormSelect
-                            label="Account Subtype"
-                            value={formData.subtype}
-                            onChange={(value) => setFormData({ ...formData, subtype: value })}
-                            options={accountSubtypes[selectedType as keyof typeof accountSubtypes] || []}
-                            error={errors.subtype}
-                            isRequired
-                        />
-                    </div>
-                </div>
-
-                {parentAccountOptions.length > 0 && (
-                    <div>
-                        <FormSelect
-                            label="Parent Account (Optional)"
-                            value={formData.parent_id?.toString() || ''}
-                            onChange={(value) => setFormData({ 
-                                ...formData, 
-                                parent_id: value ? value : undefined 
-                            })}
-                            options={[
-                                { value: '', label: 'No Parent Account' },
-                                ...parentAccountOptions,
-                            ]}
-                            error={errors.parent_id}
-                        />
-                    </div>
-                )}
-
-                <div>
-                    <FormInput
-                        label="Description (Optional)"
-                        value={formData.description}
-                        onChange={(value) => setFormData({ ...formData, description: value as string })}
-                        error={errors.description}
-                        placeholder="Brief description of the account"
-                    />
-                </div>
-
-                <div className="flex items-center space-x-2">
-                    <input
-                        type="checkbox"
-                        id="is_active"
-                        checked={formData.is_active}
-                        onChange={(e) => setFormData({ ...formData, is_active: e.target.checked })}
-                        className="rounded border-gray-300 text-blue-600 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
-                    />
-                    <label htmlFor="is_active" className="text-sm font-medium text-gray-700">
-                        Active Account
-                    </label>
-                </div>
+                    <>
+                        <div className="flex items-center space-x-2">
+                            <input
+                                type="checkbox"
+                                id="is_active"
+                                checked={formData.is_active}
+                                onChange={(e) => setFormData({ ...formData, is_active: e.target.checked })}
+                                className="rounded border-gray-300 text-blue-600 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
+                            />
+                            <label htmlFor="is_active" className="text-sm font-medium text-gray-700">
+                                Active Account
+                            </label>
+                        </div>
+                    </>
+                </StaggeredChildren>
 
                 <div className="flex justify-end space-x-3 pt-4">
                     <Button

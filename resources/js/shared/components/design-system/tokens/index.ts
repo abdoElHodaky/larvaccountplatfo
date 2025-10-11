@@ -170,9 +170,16 @@ export const shadows = {
   inner: 'inset 0 2px 4px 0 rgb(0 0 0 / 0.05)',
 } as const;
 
-// Animation System
+// Enhanced Animation System - Phase 10A/10B
 export const animations = {
   duration: {
+    instant: '0ms',
+    fast: '150ms',
+    normal: '300ms',
+    slow: '500ms',
+    slower: '700ms',
+    slowest: '1000ms',
+    // Legacy support
     75: '75ms',
     100: '100ms',
     150: '150ms',
@@ -185,10 +192,62 @@ export const animations = {
   
   easing: {
     linear: 'linear',
+    easeIn: 'cubic-bezier(0.4, 0, 1, 1)',
+    easeOut: 'cubic-bezier(0, 0, 0.2, 1)',
+    easeInOut: 'cubic-bezier(0.4, 0, 0.2, 1)',
+    bounce: 'cubic-bezier(0.68, -0.55, 0.265, 1.55)',
+    elastic: 'cubic-bezier(0.175, 0.885, 0.32, 1.275)',
+    // Legacy support
     in: 'cubic-bezier(0.4, 0, 1, 1)',
     out: 'cubic-bezier(0, 0, 0.2, 1)',
     inOut: 'cubic-bezier(0.4, 0, 0.2, 1)',
   },
+
+  // Animation presets for common use cases
+  presets: {
+    fadeIn: {
+      initial: { opacity: 0 },
+      animate: { opacity: 1 },
+      exit: { opacity: 0 },
+      duration: 'fast',
+      easing: 'easeOut'
+    },
+    slideIn: {
+      initial: { opacity: 0, y: -20 },
+      animate: { opacity: 1, y: 0 },
+      exit: { opacity: 0, y: -20 },
+      duration: 'normal',
+      easing: 'easeOut'
+    },
+    slideUp: {
+      initial: { opacity: 0, y: 20 },
+      animate: { opacity: 1, y: 0 },
+      exit: { opacity: 0, y: 20 },
+      duration: 'fast',
+      easing: 'easeOut'
+    },
+    scaleIn: {
+      initial: { opacity: 0, scale: 0.95 },
+      animate: { opacity: 1, scale: 1 },
+      exit: { opacity: 0, scale: 0.95 },
+      duration: 'fast',
+      easing: 'easeOut'
+    },
+    bounceIn: {
+      initial: { opacity: 0, scale: 0.3 },
+      animate: { opacity: 1, scale: 1 },
+      exit: { opacity: 0, scale: 0.95 },
+      duration: 'normal',
+      easing: 'bounce'
+    }
+  },
+
+  // Stagger configurations for list animations
+  stagger: {
+    fast: 0.05,
+    normal: 0.1,
+    slow: 0.2
+  }
 } as const;
 
 // Breakpoints for Responsive Design
