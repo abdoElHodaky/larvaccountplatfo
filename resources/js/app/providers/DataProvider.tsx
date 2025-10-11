@@ -113,8 +113,8 @@ const createGraphQLClient = () => {
       }
       
       console.log(`🔄 GraphQL Request:`, {
-        query: method.data?.query?.substring(0, 100) + '...',
-        variables: method.data?.variables
+        query: typeof method.data === 'object' && method.data && 'query' in method.data ? (method.data as any).query?.substring(0, 100) + '...' : 'N/A',
+        variables: typeof method.data === 'object' && method.data && 'variables' in method.data ? (method.data as any).variables : undefined
       });
     },
     

@@ -155,15 +155,16 @@ export const Dashboard: React.FC<DashboardProps> = ({
     const transactionsMap = new Map(transactions.map(t => [t.id, t]));
     
     realtimeTransactions.forEach(rtTransaction => {
+      const existingTransaction = transactionsMap.get(rtTransaction.id);
       transactionsMap.set(rtTransaction.id, {
-        ...transactionsMap.get(rtTransaction.id),
-        ...rtTransaction,
+        ...(existingTransaction || {}),
+        ...(rtTransaction as any),
         isRealtime: true,
       });
     });
     
     return Array.from(transactionsMap.values())
-      .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+      .sort((a, b) => new Date((b as any).date || 0).getTime() - new Date((a as any).date || 0).getTime());
   }, [transactions, realtimeTransactions, enableRealtime]);
 
   const combinedAccounts = useMemo(() => {
@@ -344,7 +345,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
       <div className="accounting-dashboard">
         <LoadingSpinner 
           message="Loading accounting data..." 
-          size="large"
+          size="lg"
           showProgress={true}
         />
       </div>
