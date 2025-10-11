@@ -102,6 +102,15 @@ export class RouteBasedPreloader {
   }
 
   /**
+   * Initialize the route preloader
+   */
+  initialize(): void {
+    // Set up route change listeners if needed
+    // This method can be extended with initialization logic
+    console.log('RouteBasedPreloader initialized');
+  }
+
+  /**
    * Preload likely next routes based on current route and user behavior
    */
   preloadLikelyRoutes(currentRoute: string): void {

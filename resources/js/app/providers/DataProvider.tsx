@@ -14,6 +14,11 @@ interface DataContextType {
   graphqlClient: ReturnType<typeof createAlova>;
 }
 
+interface GraphQLRequest {
+  query: string;
+  variables?: Record<string, any>;
+}
+
 interface DataProviderProps {
   children: ReactNode;
 }
@@ -112,9 +117,10 @@ const createGraphQLClient = () => {
         method.config.headers['X-Organization-ID'] = organizationId;
       }
       
+      const graphqlData = method.data as GraphQLRequest;
       console.log(`🔄 GraphQL Request:`, {
-        query: method.data?.query?.substring(0, 100) + '...',
-        variables: method.data?.variables
+        query: graphqlData?.query?.substring(0, 100) + '...',
+        variables: graphqlData?.variables
       });
     },
     
@@ -162,8 +168,8 @@ const DataProvider: React.FC<DataProviderProps> = ({ children }) => {
   const graphqlClient = createGraphQLClient();
   
   const value: DataContextType = {
-    alovaInstance,
-    graphqlClient,
+    alovaInstance: alovaInstance as any,
+    graphqlClient: graphqlClient as any,
   };
   
   return (

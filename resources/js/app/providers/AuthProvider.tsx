@@ -16,6 +16,15 @@ interface User {
   organizationId?: string;
 }
 
+interface AuthResponse {
+  user: User;
+  token: string;
+}
+
+interface MeResponse {
+  user: User;
+}
+
 interface AuthState {
   user: User | null;
   isAuthenticated: boolean;
@@ -117,7 +126,7 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         dispatch({ type: 'AUTH_START' });
         
         // Verify token and get user data
-        const response = await alova.Get('/auth/me').send();
+        const response = await alova.Get('/auth/me').send() as MeResponse;
         
         dispatch({ type: 'AUTH_SUCCESS', payload: response.user });
       } catch (error) {
@@ -138,7 +147,7 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       const response = await alova.Post('/auth/login', {
         email,
         password,
-      }).send();
+      }).send() as AuthResponse;
       
       // Store token
       localStorage.setItem('auth_token', response.token);
@@ -174,7 +183,7 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     try {
       dispatch({ type: 'AUTH_START' });
       
-      const response = await alova.Get('/auth/me').send();
+      const response = await alova.Get('/auth/me').send() as MeResponse;
       
       dispatch({ type: 'AUTH_SUCCESS', payload: response.user });
     } catch (error) {
