@@ -2,7 +2,7 @@
 
 namespace App\Console\Commands;
 
-use App\Shared\Models\Organization;
+use App\Models\Organization;
 use App\Models\User;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Cache;
@@ -12,7 +12,7 @@ class CacheWarmCommand extends Command
     /**
      * The name and signature of the console command.
      */
-    protected $signature = 'cache:warm
+    protected $signature = 'cache:warm 
                             {--tenant= : Warm cache for specific tenant}
                             {--type= : Cache type to warm (all|config|users|organizations)}';
 
