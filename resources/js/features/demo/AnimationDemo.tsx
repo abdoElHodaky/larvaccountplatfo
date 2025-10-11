@@ -3,7 +3,7 @@
  * Demonstrates the animation system capabilities
  */
 
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Head } from '@inertiajs/react';
 import { AnimatedButton } from '../../shared/components/AnimatedButton';
 import { AnimationPerformanceDashboard } from '../../shared/components/AnimationPerformanceDashboard';
