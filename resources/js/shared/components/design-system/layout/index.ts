@@ -1,6 +1,6 @@
 /**
  * Layout Components - Phase 6 Unified Design System
- * 
+ *
  * Standardized layout components that provide consistent structure
  * and spacing across all features and pages.
  */

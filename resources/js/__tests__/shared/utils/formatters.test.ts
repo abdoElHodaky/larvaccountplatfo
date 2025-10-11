@@ -1,6 +1,6 @@
 /**
  * Shared Formatters Tests
- * 
+ *
  * Tests for all shared formatting utility functions
  */
 
@@ -15,7 +15,7 @@ import {
     formatPhoneNumber,
     truncateText,
     capitalizeFirst,
-    slugify
+    slugify,
 } from '../../../shared/utils/formatters';
 
 describe('Shared Formatters', () => {
@@ -71,8 +71,9 @@ describe('Shared Formatters', () => {
 
         it('should handle custom formats', () => {
             const date = new Date('2023-12-25T10:30:00Z');
-            expect(formatDate(date, { year: 'numeric', month: 'long', day: 'numeric' }))
-                .toMatch(/December 25, 2023/);
+            expect(formatDate(date, { year: 'numeric', month: 'long', day: 'numeric' })).toMatch(
+                /December 25, 2023/
+            );
         });
 
         it('should handle different locales', () => {
@@ -87,14 +88,14 @@ describe('Shared Formatters', () => {
         it('should format recent times', () => {
             const now = new Date();
             const fiveMinutesAgo = new Date(now.getTime() - 5 * 60 * 1000);
-            
+
             expect(formatRelativeTime(fiveMinutesAgo)).toMatch(/5 minutes ago/);
         });
 
         it('should format future times', () => {
             const now = new Date();
             const inOneHour = new Date(now.getTime() + 60 * 60 * 1000);
-            
+
             const result = formatRelativeTime(inOneHour);
             // Different environments may format differently, check for "in" and time unit
             expect(result).toMatch(/in.*(?:hour|minutes|seconds)/);

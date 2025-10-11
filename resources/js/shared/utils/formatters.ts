@@ -1,16 +1,20 @@
 /**
  * Formatting Utilities
- * 
+ *
  * Common formatting functions used across the application
  */
 
 /**
  * Format currency values
  */
-export const formatCurrency = (amount: number, currency: string = 'USD', locale: string = 'en-US'): string => {
+export const formatCurrency = (
+    amount: number,
+    currency: string = 'USD',
+    locale: string = 'en-US'
+): string => {
     return new Intl.NumberFormat(locale, {
         style: 'currency',
-        currency: currency
+        currency: currency,
     }).format(amount);
 };
 
@@ -29,7 +33,11 @@ export const formatNumber = (num: number, decimals?: number, locale: string = 'e
 /**
  * Format dates with locale-specific formatting
  */
-export const formatDate = (dateString: string | Date, options?: Intl.DateTimeFormatOptions, locale: string = 'en-US'): string => {
+export const formatDate = (
+    dateString: string | Date,
+    options?: Intl.DateTimeFormatOptions,
+    locale: string = 'en-US'
+): string => {
     const date = typeof dateString === 'string' ? new Date(dateString) : dateString;
     return date.toLocaleDateString(locale, options);
 };
@@ -85,14 +93,14 @@ export const formatFileSize = (bytes: number, decimals: number = 1): string => {
     const i = Math.floor(Math.log(bytes) / Math.log(k));
 
     const value = bytes / Math.pow(k, i);
-    
+
     // For bytes, don't show decimals
     if (i === 0) {
         return `${Math.round(value)} ${sizes[i]}`;
     }
-    
+
     const formatted = decimals === 0 ? Math.round(value) : value.toFixed(decimals);
-    
+
     return `${formatted} ${sizes[i]}`;
 };
 
@@ -110,8 +118,9 @@ export const truncateText = (text: string, maxLength: number, suffix: string = '
  * Capitalize first letter of each word
  */
 export const capitalizeWords = (text: string): string => {
-    return text.replace(/\w\S*/g, (txt) => 
-        txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase()
+    return text.replace(
+        /\w\S*/g,
+        (txt) => txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase()
     );
 };
 
@@ -120,14 +129,14 @@ export const capitalizeWords = (text: string): string => {
  */
 export const formatPhoneNumber = (phoneNumber: string): string => {
     if (!phoneNumber) return phoneNumber;
-    
+
     // If already formatted, return as is
     if (phoneNumber.includes('(') && phoneNumber.includes(')')) {
         return phoneNumber;
     }
-    
+
     const cleaned = phoneNumber.replace(/\D/g, '');
-    
+
     // Handle 11-digit numbers (with country code)
     if (cleaned.length === 11 && cleaned.startsWith('1')) {
         const match = cleaned.match(/^1(\d{3})(\d{3})(\d{4})$/);
@@ -135,7 +144,7 @@ export const formatPhoneNumber = (phoneNumber: string): string => {
             return `+1 (${match[1]}) ${match[2]}-${match[3]}`;
         }
     }
-    
+
     // Handle 10-digit numbers
     if (cleaned.length === 10) {
         const match = cleaned.match(/^(\d{3})(\d{3})(\d{4})$/);
@@ -143,7 +152,7 @@ export const formatPhoneNumber = (phoneNumber: string): string => {
             return `(${match[1]}) ${match[2]}-${match[3]}`;
         }
     }
-    
+
     return phoneNumber;
 };
 
@@ -160,17 +169,19 @@ export const capitalizeFirst = (text: string): string => {
  */
 export const slugify = (text: string): string => {
     if (!text) return '';
-    
-    return text
-        .toString()
-        .toLowerCase()
-        .trim()
-        // Remove accents/diacritics
-        .normalize('NFD')
-        .replace(/[\u0300-\u036f]/g, '')
-        // Replace spaces and special characters with hyphens
-        .replace(/[^a-z0-9\s-]/g, '')
-        .replace(/[\s_-]+/g, '-')
-        // Remove leading/trailing hyphens
-        .replace(/^-+|-+$/g, '');
+
+    return (
+        text
+            .toString()
+            .toLowerCase()
+            .trim()
+            // Remove accents/diacritics
+            .normalize('NFD')
+            .replace(/[\u0300-\u036f]/g, '')
+            // Replace spaces and special characters with hyphens
+            .replace(/[^a-z0-9\s-]/g, '')
+            .replace(/[\s_-]+/g, '-')
+            // Remove leading/trailing hyphens
+            .replace(/^-+|-+$/g, '')
+    );
 };

@@ -1,6 +1,6 @@
 /**
  * Features Index
- * 
+ *
  * This module provides centralized access to all feature modules.
  * Each feature is organized by business domain with its own pages, components, and logic.
  */

@@ -1,6 +1,6 @@
 /**
  * Sales Feature Pages
- * 
+ *
  * This module exports all sales-related page components.
  * These pages handle customer management, order processing, and sales analytics.
  */

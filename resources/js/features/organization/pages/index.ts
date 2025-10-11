@@ -1,6 +1,6 @@
 /**
  * Organization Feature Pages
- * 
+ *
  * This module exports all organization-related page components.
  * These pages handle organization management, settings, and user administration.
  */

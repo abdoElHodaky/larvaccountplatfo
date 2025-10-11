@@ -1,6 +1,6 @@
 /**
  * Data Display Components - Phase 6 Unified Design System
- * 
+ *
  * Components for displaying data in various formats with
  * consistent styling and accessibility features.
  */

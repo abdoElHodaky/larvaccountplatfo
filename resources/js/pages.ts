@@ -1,18 +1,18 @@
 /**
  * Page Registry
- * 
+ *
  * Centralized registry for all Inertia.js pages.
  * This provides a single source of truth for page imports and helps with code splitting.
  */
 
 // Import all page components
-import { 
-    AccountingPages, 
-    InventoryPages, 
-    OrganizationPages, 
+import {
+    AccountingPages,
+    InventoryPages,
+    OrganizationPages,
     SalesPages,
     AuthPages,
-    DashboardPages 
+    DashboardPages,
 } from './features';
 
 // Page registry mapping
@@ -22,10 +22,10 @@ export const pageRegistry = {
     'auth/Register': AuthPages.Register,
     'auth/ForgotPassword': AuthPages.ForgotPassword,
     'auth/ResetPassword': AuthPages.ResetPassword,
-    
+
     // Dashboard pages
     'dashboard/Index': DashboardPages.Index,
-    
+
     // Accounting pages
     'accounting/Dashboard': AccountingPages.Dashboard,
     'accounting/Accounts/Index': AccountingPages.AccountsIndex,
@@ -33,14 +33,14 @@ export const pageRegistry = {
     'accounting/Accounts/Show': AccountingPages.AccountsShow,
     'accounting/Transactions/Index': AccountingPages.TransactionsIndex,
     'accounting/JournalEntries/Index': AccountingPages.JournalEntriesIndex,
-    
+
     // Inventory pages
     'inventory/Dashboard': InventoryPages.Dashboard,
     'inventory/ProductDetail': InventoryPages.ProductDetail,
-    
+
     // Organization pages
     'organization/Index': OrganizationPages.Index,
-    
+
     // Sales pages
     'sales/Dashboard': SalesPages.Dashboard,
 } as const;

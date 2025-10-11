@@ -18,16 +18,16 @@ export default function AccountSelector({
     accounts,
     value,
     onChange,
-    placeholder = "Select an account",
-    className = "",
+    placeholder = 'Select an account',
+    className = '',
     disabled = false,
     error,
     allowEmpty = true,
     filterType,
-    showBalance = false
+    showBalance = false,
 }: Props) {
-    const filteredAccounts = filterType 
-        ? accounts.filter(account => account.type === filterType)
+    const filteredAccounts = filterType
+        ? accounts.filter((account) => account.type === filterType)
         : accounts;
 
     const formatBalance = (balance: number, currency: string = 'USD') => {
@@ -39,14 +39,18 @@ export default function AccountSelector({
 
     const renderAccountOption = (account: Account, level: number = 0) => {
         const indent = '  '.repeat(level);
-        const balanceText = showBalance ? ` (${formatBalance(account.current_balance, account.currency)})` : '';
-        
+        const balanceText = showBalance
+            ? ` (${formatBalance(account.current_balance, account.currency)})`
+            : '';
+
         return (
             <React.Fragment key={account.id}>
                 <option value={account.id}>
-                    {indent}{account.code} - {account.name}{balanceText}
+                    {indent}
+                    {account.code} - {account.name}
+                    {balanceText}
                 </option>
-                {account.children?.map(child => renderAccountOption(child, level + 1))}
+                {account.children?.map((child) => renderAccountOption(child, level + 1))}
             </React.Fragment>
         );
     };
@@ -61,12 +65,10 @@ export default function AccountSelector({
                     error ? 'border-red-300' : ''
                 } ${disabled ? 'bg-gray-100' : ''} ${className}`}
             >
-                {allowEmpty && <option value="">{placeholder}</option>}
-                {filteredAccounts.map(account => renderAccountOption(account))}
+                {allowEmpty && <option value=''>{placeholder}</option>}
+                {filteredAccounts.map((account) => renderAccountOption(account))}
             </select>
-            {error && (
-                <p className="mt-1 text-sm text-red-600">{error}</p>
-            )}
+            {error && <p className='mt-1 text-sm text-red-600'>{error}</p>}
         </div>
     );
 }

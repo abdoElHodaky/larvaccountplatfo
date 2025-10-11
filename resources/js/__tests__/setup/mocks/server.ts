@@ -11,22 +11,22 @@ export const server = setupServer(...handlers);
 
 // Server lifecycle methods
 export const startServer = () => {
-  server.listen({
-    onUnhandledRequest: 'warn',
-  });
+    server.listen({
+        onUnhandledRequest: 'warn',
+    });
 };
 
 export const stopServer = () => {
-  server.close();
+    server.close();
 };
 
 export const resetServer = () => {
-  server.resetHandlers();
+    server.resetHandlers();
 };
 
 // Helper to add runtime handlers
 export const addHandlers = (...newHandlers: any[]) => {
-  server.use(...newHandlers);
+    server.use(...newHandlers);
 };
 
 // Export server instance for direct use
