@@ -263,7 +263,6 @@ class HybridUserProvider extends EloquentUserProvider
                 return $globalModel->where('email', $email)->first();
             }
         }
-
     }
 
     /**

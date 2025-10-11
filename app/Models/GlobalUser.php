@@ -82,6 +82,6 @@ class GlobalUser extends Authenticatable
     {
         // This would return the user record from the tenant's database
         // Implementation depends on how you structure tenant-specific user data
-         // Placeholder
+        // Placeholder
     }
 }

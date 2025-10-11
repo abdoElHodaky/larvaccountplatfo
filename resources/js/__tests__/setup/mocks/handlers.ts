@@ -154,23 +154,23 @@ export const graphqlHandlers = [
   }),
 
   // Mutations
-  graphql.mutation('UpdateUserPreferences', ({ variables }) => {
+  graphql.mutation('UpdateUserPreferences', () => {
     return Response.json({
       data: {
         updateUserPreferences: {
           id: '1',
-          preferences: variables.preferences,
+          preferences: { theme: 'light', language: 'en' },
         },
       }
     });
   }),
 
-  graphql.mutation('ReconcileTransactions', ({ variables }) => {
+  graphql.mutation('ReconcileTransactions', () => {
     return Response.json({
       data: {
         reconcileTransactions: {
           success: true,
-          reconciledCount: variables.transactionIds.length,
+          reconciledCount: 5,
           errors: [],
         },
       }
