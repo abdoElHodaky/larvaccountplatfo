@@ -42,7 +42,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
     notes: initialData.notes || ''
   });
 
-  const [errors, setErrors] = useState<Partial<TransactionFormData>>({});
+  const [errors, setErrors] = useState<Record<string, string>>({});
 
   const accounts = [
     'Cash',
@@ -105,10 +105,11 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
 
     // Clear error when user starts typing
     if (errors[field]) {
-      setErrors(prev => ({
-        ...prev,
-        [field]: undefined
-      }));
+      setErrors(prev => {
+        const newErrors = { ...prev };
+        delete newErrors[field];
+        return newErrors;
+      });
     }
   };
 

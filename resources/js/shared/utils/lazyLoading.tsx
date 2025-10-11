@@ -252,5 +252,11 @@ export const routePreloader = {
         this.preloadRoute(route, routeMap[route]);
       }
     });
+  },
+  
+  initialize() {
+    // Initialize route preloading system
+    // This can be extended with additional initialization logic
+    console.log('Route preloader initialized');
   }
 };

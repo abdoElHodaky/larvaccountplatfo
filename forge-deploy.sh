@@ -2,16 +2,19 @@
 
 # Laravel Forge Deployment Script
 # Laravel Multi-Tenant Accounting Platform
-# Production Deployment with Multi-Tenant Support
+# Optimized for Laravel Forge and Cloud Deployment
 
 set -e
 
 echo "🚀 Starting deployment of Laravel Multi-Tenant Accounting Platform..."
 
 # Configuration
-SITE_PATH="/home/forge/accounting.yourdomain.com"
+SITE_PATH="${FORGE_SITE_PATH:-/home/forge/default}"
 BACKUP_PATH="/home/forge/backups/$(date +%Y%m%d_%H%M%S)"
 LOG_FILE="/home/forge/deployment.log"
+
+# Set deployment environment
+export FORGE_DEPLOYMENT=true
 
 # Logging function
 log() {

@@ -56,7 +56,7 @@ export interface JournalEntry {
   updatedAt: string;
 }
 
-export interface AccountingFilters {
+export interface Filters {
   dateRange: {
     start: string;
     end: string;
@@ -83,7 +83,7 @@ export interface AccountingState {
   selectedJournalEntry: JournalEntry | null;
   
   // Filters and UI
-  filters: AccountingFilters;
+  filters: Filters;
   currentView: 'accounts' | 'transactions' | 'journal-entries' | 'reports';
   
   // Error handling
@@ -91,7 +91,7 @@ export interface AccountingState {
 }
 
 // Initial state
-const initialFilters: AccountingFilters = {
+const initialFilters: Filters = {
   dateRange: {
     start: new Date(new Date().getFullYear(), 0, 1).toISOString().split('T')[0],
     end: new Date().toISOString().split('T')[0],
@@ -245,7 +245,7 @@ export const accountingModel = createModel()({
     }),
     
     // Filters and UI
-    updateFilters: (state, payload: Partial<AccountingFilters>) => ({
+    updateFilters: (state, payload: Partial<Filters>) => ({
       ...state,
       filters: { ...state.filters, ...payload },
     }),
@@ -274,7 +274,7 @@ export const accountingModel = createModel()({
   
   effects: (dispatch) => ({
     // Account effects
-    async fetchAccounts(filters?: Partial<AccountingFilters>) {
+    async fetchAccounts(filters?: Partial<Filters>) {
       dispatch.accounting.setAccountsLoading(true);
       dispatch.accounting.clearError();
       
@@ -348,7 +348,7 @@ export const accountingModel = createModel()({
     },
     
     // Transaction effects
-    async fetchTransactions(_filters?: Partial<AccountingFilters>) {
+    async fetchTransactions(_filters?: Partial<Filters>) {
       dispatch.accounting.setTransactionsLoading(true);
       dispatch.accounting.clearError();
       
@@ -369,7 +369,7 @@ export const accountingModel = createModel()({
     },
     
     // Journal Entry effects
-    async fetchJournalEntries(_filters?: Partial<AccountingFilters>) {
+    async fetchJournalEntries(_filters?: Partial<Filters>) {
       dispatch.accounting.setJournalEntriesLoading(true);
       dispatch.accounting.clearError();
       

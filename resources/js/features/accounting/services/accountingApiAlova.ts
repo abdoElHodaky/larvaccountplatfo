@@ -56,7 +56,7 @@ export interface JournalEntry {
   updatedAt: string;
 }
 
-export interface AccountingFilters {
+export interface Filters {
   organizationId?: number;
   accountType?: string[];
   dateRange?: {
@@ -134,7 +134,7 @@ export interface CreateJournalEntryInput {
  */
 export const accountingApi = {
   // Get accounts with hierarchy
-  getAccounts: (filters?: AccountingFilters) => gql(`
+  getAccounts: (filters?: Filters) => gql(`
     query GetAccounts($filters: AccountFiltersInput) {
       accounts(filters: $filters) {
         id
@@ -538,14 +538,14 @@ export const accountingApi = {
  */
 
 // Hook for accounts with real-time updates
-export function useAccounts(filters?: AccountingFilters, options?: {
+export function useAccounts(filters?: Filters, options?: {
   enabled?: boolean;
 }) {
   const { data, loading, error, send } = useRequest(
     () => accountingApi.getAccounts(filters),
     {
       immediate: options?.enabled !== false,
-      initialData: [],
+      initialData: { data: { accounts: [] } },
     }
   );
 
@@ -565,7 +565,7 @@ export function useChartOfAccounts(organizationId: number, options?: {
     () => accountingApi.getChartOfAccounts(organizationId),
     {
       immediate: options?.enabled !== false && !!organizationId,
-      initialData: [],
+      initialData: { data: { chartOfAccounts: [] } },
     }
   );
 
@@ -585,7 +585,7 @@ export function useTransactions(filters?: TransactionFilters, options?: {
     () => accountingApi.getTransactions(filters),
     {
       immediate: options?.enabled !== false,
-      initialData: [],
+      initialData: { data: { transactions: [] } },
     }
   );
 
@@ -605,7 +605,7 @@ export function useJournalEntries(organizationId: number, filters?: any, options
     () => accountingApi.getJournalEntries(organizationId, filters),
     {
       immediate: options?.enabled !== false && !!organizationId,
-      initialData: [],
+      initialData: { data: { journalEntries: [] } },
     }
   );
 
@@ -625,7 +625,7 @@ export function useAccountBalances(organizationId: number, asOfDate?: string, op
     () => accountingApi.getAccountBalances(organizationId, asOfDate),
     {
       immediate: options?.enabled !== false && !!organizationId,
-      initialData: [],
+      initialData: { data: { accountBalances: [] } },
     }
   );
 
@@ -645,7 +645,7 @@ export function useTrialBalance(organizationId: number, asOfDate?: string, optio
     () => accountingApi.getTrialBalance(organizationId, asOfDate),
     {
       immediate: options?.enabled !== false && !!organizationId,
-      initialData: [],
+      initialData: { data: { trialBalance: [] } },
     }
   );
 

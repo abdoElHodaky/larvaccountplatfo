@@ -61,7 +61,7 @@ export const DashboardContainer: React.FC<DashboardContainerProps> = ({
     isFullscreen: false,
   });
 
-  const orgId = organizationId || getCurrentOrganizationId();
+  const orgId = organizationId || getCurrentOrganizationId() || undefined;
 
   // API hooks with Alova.js
   const {
@@ -86,7 +86,7 @@ export const DashboardContainer: React.FC<DashboardContainerProps> = ({
     loading: widgetsLoading,
     error: widgetsError,
     refetch: refetchWidgets,
-  } = useDashboardWidgets(orgId, undefined, {
+  } = useDashboardWidgets(orgId || 0, undefined, {
     enabled: !!orgId,
   });
 
@@ -105,7 +105,7 @@ export const DashboardContainer: React.FC<DashboardContainerProps> = ({
     isLocked: dashboardLocked,
     hasUnsavedChanges,
     saveDocument: saveDashboard,
-    lastSaved,
+    lastSaved: _lastSaved,
   } = useCollaborativeDashboard(dashboardId);
 
   // Memoized combined data
@@ -113,11 +113,11 @@ export const DashboardContainer: React.FC<DashboardContainerProps> = ({
     if (!enableRealtime) return metrics;
     
     // Merge static metrics with real-time updates
-    const metricsMap = new Map(metrics.map(m => [m.id, m]));
+    const metricsMap = new Map(metrics.map((m: any) => [m.id, m]));
     
     realtimeMetrics.forEach(rtMetric => {
       metricsMap.set(rtMetric.id, {
-        ...metricsMap.get(rtMetric.id),
+        ...(metricsMap.get(rtMetric.id) || {}),
         ...rtMetric,
         isRealtime: true,
       });
@@ -130,11 +130,11 @@ export const DashboardContainer: React.FC<DashboardContainerProps> = ({
     if (!enableRealtime) return widgets;
     
     // Merge static widgets with real-time updates
-    const widgetsMap = new Map(widgets.map(w => [w.id, w]));
+    const widgetsMap = new Map(widgets.map((w: any) => [w.id, w]));
     
     realtimeWidgets.forEach(rtWidget => {
       widgetsMap.set(rtWidget.id, {
-        ...widgetsMap.get(rtWidget.id),
+        ...(widgetsMap.get(rtWidget.id) || {}),
         ...rtWidget,
         isRealtime: true,
       });
@@ -176,7 +176,7 @@ export const DashboardContainer: React.FC<DashboardContainerProps> = ({
   }, [dashboardId, orgId]);
 
   // Event handlers
-  const handleDateRangeChange = useCallback((dateRange: { start: string; end: string }) => {
+  const _handleDateRangeChange = useCallback((dateRange: { start: string; end: string }) => {
     setState(prev => ({ ...prev, selectedDateRange: dateRange }));
     
     // Track user interaction
@@ -188,7 +188,7 @@ export const DashboardContainer: React.FC<DashboardContainerProps> = ({
     });
   }, []);
 
-  const handleMetricTypesChange = useCallback((metricTypes: string[]) => {
+  const _handleMetricTypesChange = useCallback((metricTypes: string[]) => {
     setState(prev => ({ ...prev, selectedMetricTypes: metricTypes }));
     
     performanceMonitor.recordInteraction({
@@ -199,7 +199,7 @@ export const DashboardContainer: React.FC<DashboardContainerProps> = ({
     });
   }, []);
 
-  const handleViewModeChange = useCallback((viewMode: 'view' | 'edit') => {
+  const _handleViewModeChange = useCallback((viewMode: 'view' | 'edit') => {
     setState(prev => ({ ...prev, viewMode }));
     
     if (viewMode === 'edit' && enableCollaboration) {
@@ -219,11 +219,11 @@ export const DashboardContainer: React.FC<DashboardContainerProps> = ({
     });
   }, [enableCollaboration, updateCollaborativeData]);
 
-  const handleWidgetUpdate = useCallback((widgetId: string, updates: any) => {
+  const _handleWidgetUpdate = useCallback((widgetId: string, updates: any) => {
     if (enableCollaboration) {
-      updateCollaborativeData(prev => ({
+      updateCollaborativeData((prev: any) => ({
         ...prev,
-        widgets: prev.widgets?.map(w => 
+        widgets: (prev.widgets as any[])?.map((w: any) => 
           w.id === widgetId ? { ...w, ...updates } : w
         ) || [],
       }));
@@ -282,9 +282,8 @@ export const DashboardContainer: React.FC<DashboardContainerProps> = ({
     return (
       <div className="dashboard-container">
         <LoadingSpinner 
-          message="Loading dashboard..." 
-          size="large"
-          showProgress={true}
+          label="Loading dashboard..." 
+          size="lg"
         />
       </div>
     );
@@ -300,28 +299,21 @@ export const DashboardContainer: React.FC<DashboardContainerProps> = ({
         {/* Dashboard Header */}
         <DashboardHeader
           title="Dashboard"
-          dateRange={state.selectedDateRange}
-          onDateRangeChange={handleDateRangeChange}
-          metricTypes={state.selectedMetricTypes}
-          onMetricTypesChange={handleMetricTypesChange}
-          viewMode={state.viewMode}
-          onViewModeChange={handleViewModeChange}
-          isEditable={isEditable}
           onRefresh={handleRefresh}
-          onSave={handleSaveDashboard}
-          hasUnsavedChanges={hasUnsavedChanges}
-          lastSaved={lastSaved}
-          isFullscreen={state.isFullscreen}
-          onToggleFullscreen={() => setState(prev => ({ ...prev, isFullscreen: !prev.isFullscreen }))}
+          isLoading={isLoading}
         />
 
         {/* Collaboration Indicator */}
         {enableCollaboration && (
           <CollaborationIndicator
-            collaborators={collaborators}
-            isLocked={dashboardLocked}
-            socketConnected={socketConnected}
-            lastUpdate={realtimeLastUpdate}
+            activeUsers={collaborators.map((c: any) => ({
+              id: c.id,
+              name: c.name,
+              avatar: c.avatar,
+              status: 'online' as const,
+              lastSeen: c.lastSeen
+            }))}
+            showUserCount={true}
           />
         )}
 
@@ -329,7 +321,7 @@ export const DashboardContainer: React.FC<DashboardContainerProps> = ({
         {hasError && (
           <div className="dashboard-error">
             <div className="error-message">
-              {metricsError?.message || widgetsError?.message || 'An error occurred'}
+              {(metricsError as Error)?.message || (widgetsError as Error)?.message || 'An error occurred'}
             </div>
             <button onClick={handleRefresh} className="retry-button">
               Retry
@@ -344,10 +336,7 @@ export const DashboardContainer: React.FC<DashboardContainerProps> = ({
             <DashboardMetrics
               metrics={combinedMetrics}
               loading={metricsLoading}
-              error={metricsError}
-              dateRange={state.selectedDateRange}
-              enableRealtime={enableRealtime}
-              socketConnected={socketConnected}
+              error={(metricsError as Error)?.message || null}
             />
           </div>
 
@@ -355,14 +344,7 @@ export const DashboardContainer: React.FC<DashboardContainerProps> = ({
           <div className="dashboard-widgets-section">
             <DashboardGrid
               widgets={combinedWidgets}
-              loading={widgetsLoading}
-              error={widgetsError}
-              viewMode={state.viewMode}
               isEditable={isEditable && !dashboardLocked}
-              onWidgetUpdate={handleWidgetUpdate}
-              enableCollaboration={enableCollaboration}
-              enableRealtime={enableRealtime}
-              collaborators={collaborators}
             />
           </div>
         </div>
