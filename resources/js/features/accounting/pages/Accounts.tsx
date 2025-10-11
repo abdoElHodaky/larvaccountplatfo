@@ -6,6 +6,7 @@
 import React, { useEffect } from 'react';
 import { ChartOfAccounts } from '../components/organisms/ChartOfAccounts';
 import { useAccounting } from '../hooks/useAccounting';
+import { AnimatedButton } from '../../shared/components/AnimatedButton';
 import type { Account } from '../stores/accountingModel';
 
 interface AccountsPageProps {
@@ -41,18 +42,28 @@ export const AccountsPage: React.FC<AccountsPageProps> = ({ className = '' }) =>
               
               {/* Quick Actions */}
               <div className="flex space-x-3">
-                <button className="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                <AnimatedButton
+                  variant="secondary"
+                  size="sm"
+                  animationType="slide"
+                  className="border border-gray-300 shadow-sm text-gray-700 bg-white hover:bg-gray-50"
+                >
                   <svg className="-ml-1 mr-2 h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                   </svg>
                   Export
-                </button>
-                <button className="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                </AnimatedButton>
+                <AnimatedButton
+                  variant="secondary"
+                  size="sm"
+                  animationType="slide"
+                  className="border border-gray-300 shadow-sm text-gray-700 bg-white hover:bg-gray-50"
+                >
                   <svg className="-ml-1 mr-2 h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M9 19l3 3m0 0l3-3m-3 3V10" />
                   </svg>
                   Import
-                </button>
+                </AnimatedButton>
               </div>
             </div>
           </div>

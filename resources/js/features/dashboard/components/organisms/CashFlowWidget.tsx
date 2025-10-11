@@ -4,6 +4,7 @@
  */
 
 import React from 'react';
+import { AnimatedButton } from '../../../shared/components/AnimatedButton';
 
 interface CashFlowData {
   period: string;
@@ -123,12 +124,22 @@ export const CashFlowWidget: React.FC<CashFlowWidgetProps> = ({
           {/* Quick Actions */}
           <div className="mt-6 pt-4 border-t">
             <div className="flex space-x-3">
-              <button className="flex-1 px-3 py-2 text-sm bg-blue-50 text-blue-700 rounded-md hover:bg-blue-100 transition-colors">
+              <AnimatedButton
+                variant="info"
+                size="sm"
+                animationType="fade"
+                className="flex-1 bg-blue-50 text-blue-700 hover:bg-blue-100"
+              >
                 View Details
-              </button>
-              <button className="flex-1 px-3 py-2 text-sm bg-gray-50 text-gray-700 rounded-md hover:bg-gray-100 transition-colors">
+              </AnimatedButton>
+              <AnimatedButton
+                variant="secondary"
+                size="sm"
+                animationType="fade"
+                className="flex-1 bg-gray-50 text-gray-700 hover:bg-gray-100"
+              >
                 Export Report
-              </button>
+              </AnimatedButton>
             </div>
           </div>
         </div>
