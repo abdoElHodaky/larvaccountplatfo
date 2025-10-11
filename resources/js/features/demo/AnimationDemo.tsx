@@ -13,7 +13,7 @@ interface AnimationDemoProps {
   // Add any props from Laravel controller
 }
 
-export default function AnimationDemo(props: AnimationDemoProps) {
+export default function AnimationDemo(_props: AnimationDemoProps) {
   const [showPerformanceDashboard, setShowPerformanceDashboard] = useState(false);
   const [animationCount, setAnimationCount] = useState(0);
   const { isReducedMotion } = useAnimation();
