@@ -15,14 +15,14 @@ import { useRealtimeAccounting } from '../../../shared/hooks/useSocket';
 import { useCollaborativeAccount } from '../../../shared/hooks/useCollaboration';
 import { performanceMonitor } from '../../../shared/services/analytics/PerformanceMonitor';
 import { getCurrentOrganizationId } from '../../../shared/services/alova/alova.config';
-import { ChartOfAccounts } from './organisms/ChartOfAccounts';
-import { TransactionList } from './organisms/TransactionList';
-import { AccountBalances } from './organisms/AccountBalances';
-import { TrialBalance } from './organisms/TrialBalance';
+import { ChartOfAccounts } from './ChartOfAccounts';
+import { TransactionList } from './TransactionList';
+import { AccountBalances } from './AccountBalances';
+import { TrialBalance } from './TrialBalance';
 import { AccountingHeader } from './AccountingHeader';
-import { QuickActions } from '../../dashboard/components/organisms/QuickActions';
-import { LoadingSpinner } from '../../../shared/components/ui/LoadingSpinner';
-import { ErrorFallback } from '../../../shared/components/ui/ErrorFallback';
+import { QuickActions } from './QuickActions';
+import { LoadingSpinner } from '../../../shared/components/LoadingSpinner';
+import { ErrorFallback } from '../../../shared/components/ErrorFallback';
 
 // Types
 interface AccountingDashboardProps {
@@ -140,6 +140,7 @@ export const AccountingDashboard: React.FC<AccountingDashboardProps> = ({
 
   // Collaboration hooks for selected account
   const {
+    data: collaborativeAccountData,
     collaborators: accountCollaborators,
     updateData: updateCollaborativeAccount,
     isLocked: accountLocked,

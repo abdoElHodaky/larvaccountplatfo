@@ -8,7 +8,7 @@ import { getAuthToken, getCurrentOrganizationId } from '../services/alova/alova.
 export function useSocket() {
   const [isConnected, setIsConnected] = useState(false);
   const [socketId, setSocketId] = useState<string | undefined>();
-  const _socketRef = useRef(socketManager);
+  const socketRef = useRef(socketManager);
 
   useEffect(() => {
     const token = getAuthToken();

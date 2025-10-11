@@ -1,6 +1,6 @@
 import { createAlova } from 'alova';
 import ReactHook from 'alova/react';
-import adapterFetch from 'alova/fetch';
+import GlobalFetch from 'alova/GlobalFetch';
 
 /**
  * Main Alova instance for REST API calls
@@ -8,7 +8,7 @@ import adapterFetch from 'alova/fetch';
 export const alovaInstance = createAlova({
   baseURL: import.meta.env.VITE_API_URL || '/api',
   statesHook: ReactHook,
-  requestAdapter: adapterFetch(),
+  requestAdapter: GlobalFetch(),
   timeout: 10000,
   
   // Global request interceptor
@@ -102,7 +102,7 @@ export const alovaInstance = createAlova({
 export const graphqlClient = createAlova({
   baseURL: `${import.meta.env.VITE_API_URL || '/api'}/graphql`,
   statesHook: ReactHook,
-  requestAdapter: adapterFetch(),
+  requestAdapter: GlobalFetch(),
   timeout: 15000, // Longer timeout for complex GraphQL queries
   
   // GraphQL-specific request interceptor
@@ -138,7 +138,7 @@ export const graphqlClient = createAlova({
   
   // GraphQL response interceptor
   responded: {
-    onSuccess: async (response, _method) => {
+    onSuccess: async (response, method) => {
       const result = await response.json();
       
       console.log(`✅ GraphQL Success:`, {
@@ -168,7 +168,7 @@ export const graphqlClient = createAlova({
       return result;
     },
     
-    onError: (error, _method) => {
+    onError: (error, method) => {
       console.error(`❌ GraphQL Error:`, error);
       throw error;
     }

@@ -42,35 +42,77 @@ Route::middleware(['web', 'auth', 'tenant'])->prefix('accounting')->name('accoun
     
 });
 
-// API Routes
-Route::middleware(['api', 'auth:sanctum', 'tenant'])->prefix('api/accounting')->name('api.accounting.')->group(function () {
-    
-    // Dashboard
-    Route::get('/dashboard', [AccountingApiController::class, 'dashboard'])->name('dashboard');
-    Route::get('/financial-summary', [AccountingApiController::class, 'getFinancialSummary'])->name('financial-summary');
-    
-    // Chart of Accounts
-    Route::get('/chart-of-accounts', [AccountingApiController::class, 'getChartOfAccounts'])->name('chart-of-accounts');
-    Route::get('/accounts/type/{type}', [AccountingApiController::class, 'getAccountsByType'])->name('accounts.by-type');
-    Route::get('/accounts/search', [AccountingApiController::class, 'searchAccounts'])->name('accounts.search');
-    Route::post('/accounts', [AccountingApiController::class, 'createAccountApi'])->name('accounts.store');
-    Route::get('/accounts/{account}', [AccountingApiController::class, 'getAccount'])->name('accounts.show');
-    Route::put('/accounts/{account}', [AccountingApiController::class, 'updateAccountApi'])->name('accounts.update');
-    
-    // Journal Entries
-    Route::post('/journal-entries', [AccountingApiController::class, 'createJournalEntryApi'])->name('journal-entries.store');
-    
-    // Transactions
-    Route::get('/transactions', [AccountingApiController::class, 'getTransactions'])->name('transactions.index');
-    Route::get('/transactions/{transaction}', [AccountingApiController::class, 'getTransaction'])->name('transactions.show');
-    Route::post('/transactions/{transaction}/approve', [AccountingController::class, 'approveTransaction'])->name('transactions.approve');
-    Route::post('/transactions/{transaction}/post', [AccountingController::class, 'postTransaction'])->name('transactions.post');
-    
-    // Reports
-    Route::get('/trial-balance', [AccountingApiController::class, 'getTrialBalance'])->name('trial-balance');
-    Route::get('/accounts/{account}/general-ledger', [AccountingApiController::class, 'getGeneralLedger'])->name('general-ledger');
-    
-});
+/*
+|--------------------------------------------------------------------------
+| Accounting Module API Routes (New Organized Structure)
+|--------------------------------------------------------------------------
+|
+| These routes follow the new modular organization pattern.
+| They are included from the main api.php file with proper prefixing.
+|
+*/
+
+// Dashboard and Analytics
+Route::get('/dashboard', [AccountingApiController::class, 'dashboard'])
+    ->name('accounting.dashboard');
+
+Route::get('/financial-summary', [AccountingApiController::class, 'getFinancialSummary'])
+    ->name('accounting.financial-summary');
+
+Route::get('/analytics', [AccountingApiController::class, 'analytics'])
+    ->name('accounting.analytics');
+
+// Chart of Accounts
+Route::apiResource('accounts', AccountingApiController::class);
+Route::get('/chart-of-accounts', [AccountingApiController::class, 'getChartOfAccounts'])
+    ->name('accounting.chart-of-accounts');
+
+Route::get('/accounts/type/{type}', [AccountingApiController::class, 'getAccountsByType'])
+    ->name('accounting.accounts.by-type');
+
+Route::get('/accounts/search', [AccountingApiController::class, 'searchAccounts'])
+    ->name('accounting.accounts.search');
+
+Route::get('/accounts/{account}/balance', [AccountingApiController::class, 'getAccountBalance'])
+    ->name('accounting.accounts.balance');
+
+Route::get('/accounts/{account}/transactions', [AccountingApiController::class, 'getAccountTransactions'])
+    ->name('accounting.accounts.transactions');
+
+// Journal Entries
+Route::apiResource('journal-entries', AccountingApiController::class . '@journalEntries');
+Route::post('/journal-entries/{journalEntry}/post', [AccountingApiController::class, 'postJournalEntry'])
+    ->name('accounting.journal-entries.post');
+
+Route::post('/journal-entries/{journalEntry}/reverse', [AccountingApiController::class, 'reverseJournalEntry'])
+    ->name('accounting.journal-entries.reverse');
+
+// Transactions Management
+Route::apiResource('transactions', AccountingApiController::class . '@transactions');
+Route::get('/transactions/search', [AccountingApiController::class, 'searchTransactions'])
+    ->name('accounting.transactions.search');
+
+Route::post('/transactions/{transaction}/approve', [AccountingController::class, 'approveTransaction'])
+    ->name('accounting.transactions.approve');
+
+Route::post('/transactions/{transaction}/post', [AccountingController::class, 'postTransaction'])
+    ->name('accounting.transactions.post');
+
+// Financial Reports
+Route::get('/reports/balance-sheet', [AccountingApiController::class, 'balanceSheet'])
+    ->name('accounting.reports.balance-sheet');
+
+Route::get('/reports/profit-loss', [AccountingApiController::class, 'profitLoss'])
+    ->name('accounting.reports.profit-loss');
+
+Route::get('/reports/cash-flow', [AccountingApiController::class, 'cashFlow'])
+    ->name('accounting.reports.cash-flow');
+
+Route::get('/reports/trial-balance', [AccountingApiController::class, 'getTrialBalance'])
+    ->name('accounting.reports.trial-balance');
+
+Route::get('/reports/general-ledger', [AccountingApiController::class, 'getGeneralLedger'])
+    ->name('accounting.reports.general-ledger');
 
 // Alternative API routes matching frontend expectations
 Route::middleware(['api', 'auth:sanctum', 'tenant'])->prefix('api')->group(function () {

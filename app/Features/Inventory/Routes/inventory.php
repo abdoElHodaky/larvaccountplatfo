@@ -36,31 +36,61 @@ Route::middleware(['web', 'auth', 'tenant'])->prefix('inventory')->name('invento
     
 });
 
-// API Routes
-Route::middleware(['api', 'auth:sanctum', 'tenant'])->prefix('api/inventory')->name('api.inventory.')->group(function () {
-    
-    // Dashboard
-    Route::get('/dashboard', [InventoryApiController::class, 'dashboard'])->name('dashboard');
-    Route::get('/statistics', [InventoryApiController::class, 'getStatistics'])->name('statistics');
-    
-    // Products
-    Route::get('/products', [InventoryApiController::class, 'getProducts'])->name('products.index');
-    Route::post('/products', [InventoryApiController::class, 'createProduct'])->name('products.store');
-    Route::get('/products/search', [InventoryApiController::class, 'searchProducts'])->name('products.search');
-    Route::get('/products/{product}', [InventoryApiController::class, 'getProduct'])->name('products.show');
-    Route::put('/products/{product}', [InventoryApiController::class, 'updateProduct'])->name('products.update');
-    Route::delete('/products/{product}', [InventoryApiController::class, 'deleteProduct'])->name('products.destroy');
-    
-    // Stock Management
-    Route::post('/products/{product}/adjust-stock', [InventoryApiController::class, 'adjustProductStock'])->name('products.adjust-stock');
-    
-    // Categories
-    Route::get('/categories', [InventoryApiController::class, 'getCategories'])->name('categories');
-    
-    // Stock Alerts
-    Route::get('/alerts', [InventoryApiController::class, 'getStockAlerts'])->name('alerts');
-    
-});
+/*
+|--------------------------------------------------------------------------
+| Inventory Module API Routes (New Organized Structure)
+|--------------------------------------------------------------------------
+|
+| These routes follow the new modular organization pattern.
+| They are included from the main api.php file with proper prefixing.
+|
+*/
+
+// Dashboard and Analytics
+Route::get('/dashboard', [InventoryApiController::class, 'dashboard'])
+    ->name('inventory.dashboard');
+
+Route::get('/statistics', [InventoryApiController::class, 'getStatistics'])
+    ->name('inventory.statistics');
+
+Route::get('/analytics', [InventoryApiController::class, 'analytics'])
+    ->name('inventory.analytics');
+
+// Products Management
+Route::apiResource('products', InventoryApiController::class);
+Route::get('/products/search', [InventoryApiController::class, 'searchProducts'])
+    ->name('inventory.products.search');
+
+Route::get('/products/{product}/stock-levels', [InventoryApiController::class, 'getStockLevels'])
+    ->name('inventory.products.stock-levels');
+
+Route::post('/products/{product}/stock', [InventoryApiController::class, 'adjustProductStock'])
+    ->name('inventory.products.adjust-stock');
+
+// Product Categories
+Route::get('/categories', [InventoryApiController::class, 'getCategories'])
+    ->name('inventory.categories');
+
+// Stock Management
+Route::get('/stock/low', [InventoryApiController::class, 'getLowStockProducts'])
+    ->name('inventory.stock.low');
+
+Route::get('/stock/out', [InventoryApiController::class, 'getOutOfStockProducts'])
+    ->name('inventory.stock.out');
+
+Route::get('/stock/movements', [InventoryApiController::class, 'getStockMovements'])
+    ->name('inventory.stock.movements');
+
+// Alerts
+Route::get('/alerts', [InventoryApiController::class, 'getStockAlerts'])
+    ->name('inventory.alerts');
+
+// Reports
+Route::get('/reports/stock-valuation', [InventoryApiController::class, 'stockValuationReport'])
+    ->name('inventory.reports.stock-valuation');
+
+Route::get('/reports/movement-history', [InventoryApiController::class, 'movementHistoryReport'])
+    ->name('inventory.reports.movement-history');
 
 // Alternative API routes matching frontend expectations
 Route::middleware(['api', 'auth:sanctum', 'tenant'])->prefix('api')->group(function () {

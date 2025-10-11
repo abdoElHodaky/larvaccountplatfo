@@ -127,7 +127,7 @@ export class TouchOptimizer {
    * Optimize touch events for better responsiveness
    */
   static optimizeTouchEvents(element: HTMLElement): () => void {
-    const handleTouchStart = (_e: TouchEvent) => {
+    const handleTouchStart = (e: TouchEvent) => {
       TouchOptimizer.touchStartTime = Date.now();
       TouchOptimizer.touchMoved = false;
       
@@ -553,4 +553,12 @@ if (typeof window !== 'undefined') {
   }
 }
 
-// Classes are already exported individually above
+// Export utilities
+export {
+  DeviceDetector,
+  TouchOptimizer,
+  ResponsiveImageOptimizer,
+  MobilePerformanceOptimizer,
+  MobileUIEnhancer,
+  MobileOptimizationManager,
+};

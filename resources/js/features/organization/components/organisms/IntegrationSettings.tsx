@@ -26,8 +26,6 @@ import {
   Flex,
   Spacer,
   SimpleGrid,
-  Image,
-  Code,
   Tabs,
   TabList,
   TabPanels,
@@ -40,11 +38,7 @@ import {
   FiPlus, 
   FiEdit2, 
   FiTrash2, 
-  FiExternalLink,
-  FiKey,
-  FiSettings,
   FiCheck,
-  FiX,
   FiRefreshCw
 } from 'react-icons/fi';
 import { CardContainer } from '@/shared/components/molecules/Container';
@@ -632,4 +626,3 @@ export const IntegrationSettings = memo<IntegrationSettingsProps>(({
 IntegrationSettings.displayName = 'IntegrationSettings';
 
 export default IntegrationSettings;
-

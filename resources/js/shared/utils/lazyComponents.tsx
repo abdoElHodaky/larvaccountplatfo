@@ -4,7 +4,6 @@
  */
 
 import React, { lazy, ComponentType } from 'react';
-import { LoadingSpinner } from '../components/ui/LoadingSpinner';
 
 // Retry mechanism for failed dynamic imports
 const retry = (fn: () => Promise<any>, retriesLeft = 5, interval = 1000): Promise<any> => {

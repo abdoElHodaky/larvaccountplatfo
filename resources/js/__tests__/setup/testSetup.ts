@@ -5,8 +5,7 @@
 
 import '@testing-library/jest-dom';
 import { configure } from '@testing-library/react';
-import { afterEach, vi } from 'vitest';
-// import { server } from './mocks/server'; // TODO: Create MSW server mock
+import { server } from './mocks/server';
 
 // Configure React Testing Library
 configure({
@@ -18,27 +17,27 @@ configure({
 process.env.VITE_API_URL = 'http://localhost:3000/api';
 process.env.VITE_WEBSOCKET_URL = 'ws://localhost:6001';
 
-// Setup MSW (Mock Service Worker) - TODO: Uncomment when server mock is created
-// beforeAll(() => {
-//   server.listen({
-//     onUnhandledRequest: 'warn',
-//   });
-// });
+// Setup MSW (Mock Service Worker)
+beforeAll(() => {
+  server.listen({
+    onUnhandledRequest: 'warn',
+  });
+});
 
-// afterEach(() => {
-//   server.resetHandlers();
-// });
+afterEach(() => {
+  server.resetHandlers();
+});
 
-// afterAll(() => {
-//   server.close();
-// });
+afterAll(() => {
+  server.close();
+});
 
 // Mock localStorage
 const localStorageMock = {
-  getItem: vi.fn(),
-  setItem: vi.fn(),
-  removeItem: vi.fn(),
-  clear: vi.fn(),
+  getItem: jest.fn(),
+  setItem: jest.fn(),
+  removeItem: jest.fn(),
+  clear: jest.fn(),
 };
 Object.defineProperty(window, 'localStorage', {
   value: localStorageMock,
@@ -46,17 +45,17 @@ Object.defineProperty(window, 'localStorage', {
 
 // Mock sessionStorage
 const sessionStorageMock = {
-  getItem: vi.fn(),
-  setItem: vi.fn(),
-  removeItem: vi.fn(),
-  clear: vi.fn(),
+  getItem: jest.fn(),
+  setItem: jest.fn(),
+  removeItem: jest.fn(),
+  clear: jest.fn(),
 };
 Object.defineProperty(window, 'sessionStorage', {
   value: sessionStorageMock,
 });
 
 // Mock fetch
-global.fetch = vi.fn();
+global.fetch = jest.fn();
 
 // Mock WebSocket
 class MockWebSocket {
@@ -82,7 +81,7 @@ class MockWebSocket {
     }, 100);
   }
 
-  send(_data: string | ArrayBuffer | Blob | ArrayBufferView): void {
+  send(data: string | ArrayBuffer | Blob | ArrayBufferView): void {
     // Mock send implementation
   }
 
@@ -100,7 +99,7 @@ class MockWebSocket {
     if (type === 'error') this.onerror = listener as any;
   }
 
-  removeEventListener(type: string, _listener: EventListener): void {
+  removeEventListener(type: string, listener: EventListener): void {
     if (type === 'open') this.onopen = null;
     if (type === 'close') this.onclose = null;
     if (type === 'message') this.onmessage = null;
@@ -158,21 +157,21 @@ Object.defineProperty(global, 'crypto', {
 // Mock matchMedia
 Object.defineProperty(window, 'matchMedia', {
   writable: true,
-  value: vi.fn().mockImplementation(query => ({
+  value: jest.fn().mockImplementation(query => ({
     matches: false,
     media: query,
     onchange: null,
-    addListener: vi.fn(),
-    removeListener: vi.fn(),
-    addEventListener: vi.fn(),
-    removeEventListener: vi.fn(),
-    dispatchEvent: vi.fn(),
+    addListener: jest.fn(),
+    removeListener: jest.fn(),
+    addEventListener: jest.fn(),
+    removeEventListener: jest.fn(),
+    dispatchEvent: jest.fn(),
   })),
 });
 
 // Mock scrollTo
 Object.defineProperty(window, 'scrollTo', {
-  value: vi.fn(),
+  value: jest.fn(),
 });
 
 // Mock console methods for cleaner test output
@@ -180,8 +179,8 @@ const originalConsoleError = console.error;
 const originalConsoleWarn = console.warn;
 
 beforeEach(() => {
-  console.error = vi.fn();
-  console.warn = vi.fn();
+  console.error = jest.fn();
+  console.warn = jest.fn();
 });
 
 afterEach(() => {

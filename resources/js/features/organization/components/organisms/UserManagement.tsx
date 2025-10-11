@@ -1,6 +1,5 @@
 import React, { Fragment, memo, useMemo, useState } from 'react';
 import {
-  Box,
   VStack,
   HStack,
   Text,
@@ -27,7 +26,6 @@ import {
   FormLabel,
   Input,
   Select,
-  Switch,
   Alert,
   AlertIcon,
   Flex,
@@ -43,10 +41,7 @@ import {
   FiEdit2, 
   FiTrash2, 
   FiMoreVertical,
-  FiMail,
-  FiUser,
-  FiShield,
-  FiClock
+  FiShield
 } from 'react-icons/fi';
 import { CardContainer } from '@/shared/components/molecules/Container';
 import { useMemoizedCallback } from '@/shared/hooks';
@@ -498,4 +493,3 @@ export const UserManagement = memo<UserManagementProps>(({
 UserManagement.displayName = 'UserManagement';
 
 export default UserManagement;
-

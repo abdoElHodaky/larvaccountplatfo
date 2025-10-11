@@ -7,8 +7,7 @@ module.exports = {
     },
     extends: [
         'eslint:recommended',
-        'plugin:react/recommended',
-        'plugin:react-hooks/recommended',
+        'plugin:@typescript-eslint/recommended',
     ],
     ignorePatterns: ['dist', 'node_modules'],
     parser: '@typescript-eslint/parser',
@@ -20,34 +19,11 @@ module.exports = {
         },
     },
     plugins: [
-        'react',
-        'react-hooks',
-        'react-refresh',
+        '@typescript-eslint',
     ],
-    globals: {
-        React: 'readonly',
-        route: 'readonly',
-        NodeJS: 'readonly',
-        NotificationOptions: 'readonly',
-        NotificationPermission: 'readonly',
-    },
-    settings: {
-        react: {
-            version: 'detect',
-        },
-    },
     rules: {
-        'no-unused-vars': 'off', // Turn off base rule as it can report incorrect errors
-        'no-console': 'off', // Allow console statements for now
-        'react/react-in-jsx-scope': 'off',
-        'react-refresh/only-export-components': 'off', // Disable for now
-        // Disable problematic rules
-        'react/prop-types': 'off',
-        'react/display-name': 'off',
-        'react/no-unescaped-entities': 'off',
-        'react-hooks/rules-of-hooks': 'warn', // Downgrade to warning
-        'react-hooks/exhaustive-deps': 'off', // Disable for now
-        'no-undef': 'warn', // Downgrade to warning
-        'no-case-declarations': 'off', // Allow case declarations
+        '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
+        '@typescript-eslint/no-explicit-any': 'warn',
+        'no-console': 'warn',
     },
 };

@@ -645,5 +645,10 @@ export class PerformanceRegressionDetector {
   }
 }
 
-// Classes are already exported individually above
-// PERFORMANCE_THRESHOLDS is exported at the top of the file
+// Export main classes and utilities
+export {
+  CoreWebVitalsMonitor,
+  PerformanceAnalyticsDashboard,
+  PerformanceRegressionDetector,
+  PERFORMANCE_THRESHOLDS,
+};

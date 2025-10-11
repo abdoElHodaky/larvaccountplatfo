@@ -1,4 +1,4 @@
-import React, { Fragment, memo, useMemo, useRef } from 'react';
+import React, { memo, useMemo, useRef } from 'react';
 import {
   PieChart as RechartsPieChart,
   Pie,
