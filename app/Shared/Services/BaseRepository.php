@@ -3,31 +3,40 @@
 namespace App\Shared\Services;
 
 use App\Shared\Contracts\RepositoryInterface;
+use Exception;
+use Illuminate\Container\Container as App;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Cache;
-use Illuminate\Container\Container as App;
-use Exception;
 
 /**
  * Laravel Eloquent Repository Pattern Base Implementation
- * 
+ *
  * This base repository follows Laravel's Eloquent Repository pattern
  * with advanced caching, query optimization, and relationship management
  */
 abstract class BaseRepository implements RepositoryInterface
 {
     protected App $app;
+
     protected Model $model;
+
     protected Builder $query;
+
     protected array $with = [];
+
     protected array $scopes = [];
+
     protected array $orderBy = [];
+
     protected ?int $limit = null;
+
     protected bool $cacheEnabled = false;
+
     protected int $cacheTTL = 3600; // 1 hour
+
     protected array $cacheTags = [];
 
     public function __construct(App $app)
@@ -50,11 +59,12 @@ abstract class BaseRepository implements RepositoryInterface
     {
         $model = $this->app->make($this->model());
 
-        if (!$model instanceof Model) {
+        if (! $model instanceof Model) {
             throw new Exception("Class {$this->model()} must be an instance of Illuminate\\Database\\Eloquent\\Model");
         }
 
         $this->model = $model;
+
         return $this->model;
     }
 
@@ -77,6 +87,7 @@ abstract class BaseRepository implements RepositoryInterface
     {
         if ($this->cacheEnabled) {
             $cacheKey = $this->getCacheKey('find', ['id' => $id]);
+
             return Cache::tags($this->cacheTags)->remember($cacheKey, $this->cacheTTL, function () use ($id) {
                 return $this->query->find($id);
             });
@@ -92,6 +103,7 @@ abstract class BaseRepository implements RepositoryInterface
     {
         if ($this->cacheEnabled) {
             $cacheKey = $this->getCacheKey('findOrFail', ['id' => $id]);
+
             return Cache::tags($this->cacheTags)->remember($cacheKey, $this->cacheTTL, function () use ($id) {
                 return $this->query->findOrFail($id);
             });
@@ -106,9 +118,10 @@ abstract class BaseRepository implements RepositoryInterface
     public function findBy(array $criteria): Collection
     {
         $query = $this->applyCriteria($this->query, $criteria);
-        
+
         if ($this->cacheEnabled) {
             $cacheKey = $this->getCacheKey('findBy', $criteria);
+
             return Cache::tags($this->cacheTags)->remember($cacheKey, $this->cacheTTL, function () use ($query) {
                 return $query->get();
             });
@@ -123,9 +136,10 @@ abstract class BaseRepository implements RepositoryInterface
     public function findOneBy(array $criteria): ?Model
     {
         $query = $this->applyCriteria($this->query, $criteria);
-        
+
         if ($this->cacheEnabled) {
             $cacheKey = $this->getCacheKey('findOneBy', $criteria);
+
             return Cache::tags($this->cacheTags)->remember($cacheKey, $this->cacheTTL, function () use ($query) {
                 return $query->first();
             });
@@ -141,6 +155,7 @@ abstract class BaseRepository implements RepositoryInterface
     {
         if ($this->cacheEnabled) {
             $cacheKey = $this->getCacheKey('all');
+
             return Cache::tags($this->cacheTags)->remember($cacheKey, $this->cacheTTL, function () {
                 return $this->query->get();
             });
@@ -155,6 +170,7 @@ abstract class BaseRepository implements RepositoryInterface
     public function paginate(int $perPage = 15, array $criteria = []): LengthAwarePaginator
     {
         $query = $this->applyCriteria($this->query, $criteria);
+
         return $query->paginate($perPage);
     }
 
@@ -165,6 +181,7 @@ abstract class BaseRepository implements RepositoryInterface
     {
         $model = $this->model->create($data);
         $this->clearCache();
+
         return $model;
     }
 
@@ -176,6 +193,7 @@ abstract class BaseRepository implements RepositoryInterface
         $model = $this->findOrFail($id);
         $model->update($data);
         $this->clearCache();
+
         return $model->fresh();
     }
 
@@ -187,6 +205,7 @@ abstract class BaseRepository implements RepositoryInterface
         $model = $this->findOrFail($id);
         $result = $model->delete();
         $this->clearCache();
+
         return $result;
     }
 
@@ -196,9 +215,10 @@ abstract class BaseRepository implements RepositoryInterface
     public function count(array $criteria = []): int
     {
         $query = $this->applyCriteria($this->query, $criteria);
-        
+
         if ($this->cacheEnabled) {
             $cacheKey = $this->getCacheKey('count', $criteria);
+
             return Cache::tags($this->cacheTags)->remember($cacheKey, $this->cacheTTL, function () use ($query) {
                 return $query->count();
             });
@@ -213,9 +233,10 @@ abstract class BaseRepository implements RepositoryInterface
     public function exists(array $criteria): bool
     {
         $query = $this->applyCriteria($this->query, $criteria);
-        
+
         if ($this->cacheEnabled) {
             $cacheKey = $this->getCacheKey('exists', $criteria);
+
             return Cache::tags($this->cacheTags)->remember($cacheKey, $this->cacheTTL, function () use ($query) {
                 return $query->exists();
             });
@@ -231,6 +252,7 @@ abstract class BaseRepository implements RepositoryInterface
     {
         $this->with = array_merge($this->with, $relations);
         $this->query = $this->query->with($relations);
+
         return $this;
     }
 
@@ -241,6 +263,7 @@ abstract class BaseRepository implements RepositoryInterface
     {
         $this->scopes[] = ['scope' => $scope, 'parameters' => $parameters];
         $this->query = $this->query->{$scope}(...$parameters);
+
         return $this;
     }
 
@@ -251,6 +274,7 @@ abstract class BaseRepository implements RepositoryInterface
     {
         $this->orderBy[] = ['column' => $column, 'direction' => $direction];
         $this->query = $this->query->orderBy($column, $direction);
+
         return $this;
     }
 
@@ -261,6 +285,7 @@ abstract class BaseRepository implements RepositoryInterface
     {
         $this->limit = $limit;
         $this->query = $this->query->limit($limit);
+
         return $this;
     }
 
@@ -279,6 +304,7 @@ abstract class BaseRepository implements RepositoryInterface
     {
         $this->model = $model;
         $this->resetQuery();
+
         return $this;
     }
 
@@ -292,6 +318,7 @@ abstract class BaseRepository implements RepositoryInterface
         $this->scopes = [];
         $this->orderBy = [];
         $this->limit = null;
+
         return $this;
     }
 
@@ -351,15 +378,15 @@ abstract class BaseRepository implements RepositoryInterface
     /**
      * Enable caching for this repository
      */
-    public function enableCache(int $ttl = null, array $tags = []): self
+    public function enableCache(?int $ttl = null, array $tags = []): self
     {
         $this->cacheEnabled = true;
-        
+
         if ($ttl !== null) {
             $this->cacheTTL = $ttl;
         }
-        
-        if (!empty($tags)) {
+
+        if (! empty($tags)) {
             $this->cacheTags = array_merge($this->cacheTags, $tags);
         }
 
@@ -372,6 +399,7 @@ abstract class BaseRepository implements RepositoryInterface
     public function disableCache(): self
     {
         $this->cacheEnabled = false;
+
         return $this;
     }
 
@@ -380,7 +408,7 @@ abstract class BaseRepository implements RepositoryInterface
      */
     public function clearCache(): void
     {
-        if (!empty($this->cacheTags)) {
+        if (! empty($this->cacheTags)) {
             Cache::tags($this->cacheTags)->flush();
         }
     }
@@ -393,7 +421,7 @@ abstract class BaseRepository implements RepositoryInterface
         $modelClass = get_class($this->model);
         $className = strtolower(class_basename($modelClass));
         $parameterHash = md5(serialize($parameters));
-        
+
         return "repository:{$className}:{$method}:{$parameterHash}";
     }
 
@@ -404,6 +432,7 @@ abstract class BaseRepository implements RepositoryInterface
     {
         $result = $this->model->insert($data);
         $this->clearCache();
+
         return $result;
     }
 
@@ -415,6 +444,7 @@ abstract class BaseRepository implements RepositoryInterface
         $query = $this->applyCriteria($this->model->newQuery(), $criteria);
         $result = $query->update($data);
         $this->clearCache();
+
         return $result;
     }
 
@@ -426,6 +456,7 @@ abstract class BaseRepository implements RepositoryInterface
         $query = $this->applyCriteria($this->model->newQuery(), $criteria);
         $result = $query->delete();
         $this->clearCache();
+
         return $result;
     }
 

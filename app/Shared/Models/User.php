@@ -2,17 +2,16 @@
 
 namespace App\Shared\Models;
 
-use Laravel\Jetstream\HasTeams;
-use Laravel\Sanctum\HasApiTokens;
-use Laravel\Jetstream\HasProfilePhoto;
-use Illuminate\Notifications\Notifiable;
-use Laravel\Fortify\TwoFactorAuthenticatable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\Notifiable;
+use Laravel\Fortify\TwoFactorAuthenticatable;
+use Laravel\Jetstream\HasProfilePhoto;
+use Laravel\Jetstream\HasTeams;
+use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable implements MustVerifyEmail
 {
@@ -21,8 +20,8 @@ class User extends Authenticatable implements MustVerifyEmail
     use HasProfilePhoto;
     use HasTeams;
     use Notifiable;
-    use TwoFactorAuthenticatable;
     use SoftDeletes;
+    use TwoFactorAuthenticatable;
 
     /**
      * The attributes that are mass assignable.
@@ -97,28 +96,28 @@ class User extends Authenticatable implements MustVerifyEmail
             'accounts:create', 'accounts:read', 'accounts:update', 'accounts:delete',
             'reports:read', 'reports:generate', 'reports:export',
             'users:manage', 'teams:manage', 'settings:manage',
-            'audit:read', 'system:admin'
+            'audit:read', 'system:admin',
         ],
         'accountant' => [
             'accounts:create', 'accounts:read', 'accounts:update',
             'reports:read', 'reports:generate', 'reports:export',
-            'transactions:create', 'transactions:read', 'transactions:update'
+            'transactions:create', 'transactions:read', 'transactions:update',
         ],
         'bookkeeper' => [
             'accounts:create', 'accounts:read', 'accounts:update',
             'transactions:create', 'transactions:read', 'transactions:update',
-            'reports:read'
+            'reports:read',
         ],
         'auditor' => [
             'accounts:read', 'reports:read', 'reports:generate',
-            'audit:read', 'transactions:read'
+            'audit:read', 'transactions:read',
         ],
         'manager' => [
             'accounts:read', 'reports:read', 'reports:generate', 'reports:export',
-            'users:view', 'teams:view'
+            'users:view', 'teams:view',
         ],
         'viewer' => [
-            'accounts:read', 'reports:read'
+            'accounts:read', 'reports:read',
         ],
     ];
 
@@ -152,6 +151,7 @@ class User extends Authenticatable implements MustVerifyEmail
     public function hasAccountingPermission(string $permission): bool
     {
         $rolePermissions = self::ACCOUNTING_PERMISSIONS[$this->role] ?? [];
+
         return in_array($permission, $rolePermissions);
     }
 
@@ -161,7 +161,8 @@ class User extends Authenticatable implements MustVerifyEmail
     public function hasAnyAccountingPermission(array $permissions): bool
     {
         $rolePermissions = self::ACCOUNTING_PERMISSIONS[$this->role] ?? [];
-        return !empty(array_intersect($permissions, $rolePermissions));
+
+        return ! empty(array_intersect($permissions, $rolePermissions));
     }
 
     /**
@@ -170,6 +171,7 @@ class User extends Authenticatable implements MustVerifyEmail
     public function hasAllAccountingPermissions(array $permissions): bool
     {
         $rolePermissions = self::ACCOUNTING_PERMISSIONS[$this->role] ?? [];
+
         return empty(array_diff($permissions, $rolePermissions));
     }
 
@@ -187,7 +189,7 @@ class User extends Authenticatable implements MustVerifyEmail
     public function canAccessAccounting(): bool
     {
         return $this->hasAnyAccountingPermission([
-            'accounts:read', 'accounts:create', 'accounts:update', 'accounts:delete'
+            'accounts:read', 'accounts:create', 'accounts:update', 'accounts:delete',
         ]);
     }
 
@@ -222,10 +224,10 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         // Default accounting abilities based on user role
         $defaultAbilities = $this->getAccountingPermissions();
-        
+
         // Merge with provided abilities
         $abilities = array_unique(array_merge($defaultAbilities, $abilities));
-        
+
         return $this->createToken("accounting-{$name}", $abilities);
     }
 
@@ -235,10 +237,10 @@ class User extends Authenticatable implements MustVerifyEmail
     public function contextualTeams()
     {
         $activeTenant = $this->getActiveTenant();
-        if (!$activeTenant) {
+        if (! $activeTenant) {
             return collect();
         }
-        
+
         return $this->teams()->where('tenant_id', $activeTenant->id);
     }
 
@@ -250,7 +252,7 @@ class User extends Authenticatable implements MustVerifyEmail
         if (is_string($team)) {
             return $this->contextualTeams()->where('name', $team)->exists();
         }
-        
+
         return $this->contextualTeams()->where('id', $team->id)->exists();
     }
 
@@ -329,7 +331,7 @@ class User extends Authenticatable implements MustVerifyEmail
             ->wherePivot('is_active', true)
             ->first();
 
-        if (!$tenantUser) {
+        if (! $tenantUser) {
             return false;
         }
 
@@ -340,7 +342,8 @@ class User extends Authenticatable implements MustVerifyEmail
 
         // Check if module is in user's permissions
         $permissions = $tenantUser->pivot->permissions ?? [];
-        return in_array("access-{$module}", $permissions) || 
+
+        return in_array("access-{$module}", $permissions) ||
                in_array('access-all-modules', $permissions);
     }
 
@@ -354,7 +357,7 @@ class User extends Authenticatable implements MustVerifyEmail
             ->wherePivot('is_active', true)
             ->first();
 
-        if (!$tenantUser) {
+        if (! $tenantUser) {
             return [];
         }
 
@@ -378,17 +381,18 @@ class User extends Authenticatable implements MustVerifyEmail
     /**
      * Check if user can perform a specific action in a tenant.
      */
-    public function can(string $permission, Tenant $tenant = null): bool
+    public function can(string $permission, ?Tenant $tenant = null): bool
     {
-        if (!$tenant) {
+        if (! $tenant) {
             $tenant = app('tenant');
         }
 
-        if (!$tenant) {
+        if (! $tenant) {
             return false;
         }
 
         $permissions = $this->getPermissionsForTenant($tenant);
+
         return in_array($permission, $permissions);
     }
 
@@ -399,7 +403,7 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         // Try to get from session first
         $tenantId = session('active_tenant_id');
-        
+
         if ($tenantId) {
             $tenant = $this->tenants()->where('tenant_id', $tenantId)->first();
             if ($tenant) {
@@ -416,11 +420,12 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     public function setActiveTenant(Tenant $tenant): bool
     {
-        if (!$this->hasAccessToTenant($tenant)) {
+        if (! $this->hasAccessToTenant($tenant)) {
             return false;
         }
 
         session(['active_tenant_id' => $tenant->id]);
+
         return true;
     }
 
@@ -439,11 +444,11 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         $names = explode(' ', $this->name);
         $initials = '';
-        
+
         foreach ($names as $name) {
             $initials .= strtoupper(substr($name, 0, 1));
         }
-        
+
         return substr($initials, 0, 2);
     }
 
@@ -462,7 +467,7 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         return $query->whereHas('tenants', function ($q) use ($tenant) {
             $q->where('tenant_id', $tenant->id)
-              ->wherePivot('is_active', true);
+                ->wherePivot('is_active', true);
         });
     }
 
@@ -479,7 +484,7 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     public function hasVerifiedEmail(): bool
     {
-        return !is_null($this->email_verified_at);
+        return ! is_null($this->email_verified_at);
     }
 
     /**

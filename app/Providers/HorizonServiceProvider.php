@@ -17,7 +17,7 @@ class HorizonServiceProvider extends HorizonApplicationServiceProvider
         parent::boot();
 
         // Only configure Horizon if it's enabled for this deployment
-        if (!$this->shouldUseHorizon()) {
+        if (! $this->shouldUseHorizon()) {
             return;
         }
 
@@ -65,19 +65,19 @@ class HorizonServiceProvider extends HorizonApplicationServiceProvider
     protected function configureEnvironment(): void
     {
         $profile = $this->getCurrentProfile();
-        
+
         // Set the appropriate environment configuration
         switch ($profile) {
             case 'cloud':
                 // Cloud deployment uses minimal queue configuration
                 config(['horizon.environments.production' => config('horizon.environments.cloud')]);
                 break;
-                
+
             case 'forge':
                 // Forge deployment uses optimized configuration
                 config(['horizon.environments.production' => config('horizon.environments.forge')]);
                 break;
-                
+
             default:
                 // Enterprise deployment uses full configuration
                 // Keep the default production configuration
@@ -86,7 +86,7 @@ class HorizonServiceProvider extends HorizonApplicationServiceProvider
 
         // Configure memory limits based on deployment
         $this->configureMemoryLimits($profile);
-        
+
         // Configure queue wait times based on deployment
         $this->configureWaitTimes($profile);
     }
@@ -144,7 +144,7 @@ class HorizonServiceProvider extends HorizonApplicationServiceProvider
         parent::register();
 
         // Only register Horizon if it's enabled
-        if (!$this->shouldUseHorizon()) {
+        if (! $this->shouldUseHorizon()) {
             return;
         }
 
@@ -183,7 +183,7 @@ class HorizonServiceProvider extends HorizonApplicationServiceProvider
     {
         // During bootstrap, we can't use FeatureFlag service yet
         // So we'll use a simple environment check
-        if (!class_exists(FeatureFlag::class)) {
+        if (! class_exists(FeatureFlag::class)) {
             return config('features.horizon', true);
         }
 
@@ -201,7 +201,7 @@ class HorizonServiceProvider extends HorizonApplicationServiceProvider
     protected function getCurrentProfile(): string
     {
         // During bootstrap, we can't use FeatureFlag service yet
-        if (!class_exists(FeatureFlag::class)) {
+        if (! class_exists(FeatureFlag::class)) {
             return $this->detectProfileFromEnvironment();
         }
 
@@ -219,20 +219,20 @@ class HorizonServiceProvider extends HorizonApplicationServiceProvider
     protected function detectProfileFromEnvironment(): string
     {
         $env = config('app.env', 'local');
-        
+
         // Detect deployment type based on URL or environment variables
         if (str_contains(config('app.url', ''), 'laravel.cloud')) {
             return 'cloud';
         }
-        
+
         if (env('FORGE_DEPLOYMENT', false)) {
             return 'forge';
         }
-        
+
         if ($env === 'production') {
             return 'enterprise';
         }
-        
+
         return 'enterprise'; // Default to full features for development
     }
 }

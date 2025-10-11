@@ -2,8 +2,8 @@
 
 namespace App\Features\Purchase\Models;
 
-use App\Shared\Models\HybridModel;
 use App\Features\Inventory\Models\Product;
+use App\Shared\Models\HybridModel;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class PurchaseOrderItem extends HybridModel
@@ -48,7 +48,7 @@ class PurchaseOrderItem extends HybridModel
         $discount = $subtotal * ($this->discount_percentage / 100);
         $taxable = $subtotal - $discount;
         $tax = $taxable * ($this->tax_percentage / 100);
-        
+
         $this->line_total = $taxable + $tax;
         $this->save();
     }

@@ -2,14 +2,14 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Seeder;
 use App\Features\Accounting\Models\Account;
-use App\Features\Accounting\Models\TaxRate;
 use App\Features\Accounting\Models\Budget;
 use App\Features\Accounting\Models\BudgetLineItem;
 use App\Features\Accounting\Models\FinancialForecast;
 use App\Features\Accounting\Models\ForecastLineItem;
+use App\Features\Accounting\Models\TaxRate;
 use Carbon\Carbon;
+use Illuminate\Database\Seeder;
 
 class AccountingSeeder extends Seeder
 {

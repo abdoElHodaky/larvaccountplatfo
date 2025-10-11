@@ -2,15 +2,18 @@
 
 namespace App\Shared\Services;
 
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class PerformanceMonitor
 {
     private array $timers = [];
+
     private array $metrics = [];
+
     private array $counters = [];
+
     private bool $enabled;
 
     public function __construct()
@@ -23,12 +26,12 @@ class PerformanceMonitor
      */
     public function startTimer(string $operation, array $context = []): string
     {
-        if (!$this->enabled) {
+        if (! $this->enabled) {
             return '';
         }
 
         $timerId = $this->generateTimerId($operation);
-        
+
         $this->timers[$timerId] = [
             'operation' => $operation,
             'start_time' => microtime(true),
@@ -46,7 +49,7 @@ class PerformanceMonitor
      */
     public function stopTimer(string $timerId): ?array
     {
-        if (!$this->enabled || !isset($this->timers[$timerId])) {
+        if (! $this->enabled || ! isset($this->timers[$timerId])) {
             return null;
         }
 
@@ -80,7 +83,7 @@ class PerformanceMonitor
      */
     public function recordMetric(string $name, $value, array $tags = []): void
     {
-        if (!$this->enabled) {
+        if (! $this->enabled) {
             return;
         }
 
@@ -103,7 +106,7 @@ class PerformanceMonitor
      */
     public function incrementCounter(string $name, int $value = 1, array $tags = []): void
     {
-        if (!$this->enabled) {
+        if (! $this->enabled) {
             return;
         }
 
@@ -151,7 +154,7 @@ class PerformanceMonitor
             'status' => $success ? 'success' : 'failed',
         ]);
 
-        if (!$success && isset($context['error'])) {
+        if (! $success && isset($context['error'])) {
             $this->recordMetric('event.error', 1, [
                 'event_type' => $eventType,
                 'error_type' => $context['error_type'] ?? 'unknown',
@@ -189,11 +192,11 @@ class PerformanceMonitor
      */
     public function getPerformanceSummary(int $minutes = 60): array
     {
-        $cacheKey = "performance_summary_{$minutes}min_" . $this->getCurrentTenantId();
-        
+        $cacheKey = "performance_summary_{$minutes}min_".$this->getCurrentTenantId();
+
         return Cache::remember($cacheKey, 300, function () use ($minutes) {
             $since = now()->subMinutes($minutes);
-            
+
             return [
                 'period' => "{$minutes} minutes",
                 'tenant_id' => $this->getCurrentTenantId(),
@@ -211,27 +214,27 @@ class PerformanceMonitor
      */
     public function getSlowOperations(int $thresholdMs = 1000, int $limit = 50): array
     {
-        $cacheKey = "slow_operations_{$thresholdMs}ms_" . $this->getCurrentTenantId();
-        
+        $cacheKey = "slow_operations_{$thresholdMs}ms_".$this->getCurrentTenantId();
+
         return Cache::remember($cacheKey, 300, function () use ($thresholdMs, $limit) {
             // This would typically query a metrics database
             // For now, we'll return recent slow operations from memory
             $slowOps = [];
-            
+
             foreach ($this->metrics as $metric) {
                 if ($metric['name'] === 'domain_service.operation' && $metric['value'] > $thresholdMs) {
                     $slowOps[] = [
-                        'operation' => $metric['tags']['service'] . '::' . $metric['tags']['method'],
+                        'operation' => $metric['tags']['service'].'::'.$metric['tags']['method'],
                         'duration_ms' => $metric['value'],
                         'timestamp' => $metric['timestamp'],
                         'tenant_id' => $metric['tags']['tenant_id'],
                     ];
                 }
             }
-            
+
             // Sort by duration descending
-            usort($slowOps, fn($a, $b) => $b['duration_ms'] <=> $a['duration_ms']);
-            
+            usort($slowOps, fn ($a, $b) => $b['duration_ms'] <=> $a['duration_ms']);
+
             return array_slice($slowOps, 0, $limit);
         });
     }
@@ -264,11 +267,10 @@ class PerformanceMonitor
         try {
             // Store metrics in database or external service
             $this->storeMetrics($this->metrics, $this->counters);
-            
+
             // Clear buffers
             $this->metrics = [];
             $this->counters = [];
-            
         } catch (\Exception $e) {
             Log::error('Failed to flush performance metrics', [
                 'error' => $e->getMessage(),
@@ -284,8 +286,8 @@ class PerformanceMonitor
     public function setEnabled(bool $enabled): void
     {
         $this->enabled = $enabled;
-        
-        if (!$enabled) {
+
+        if (! $enabled) {
             $this->timers = [];
             $this->metrics = [];
             $this->counters = [];
@@ -294,7 +296,7 @@ class PerformanceMonitor
 
     private function generateTimerId(string $operation): string
     {
-        return $operation . '_' . uniqid() . '_' . microtime(true);
+        return $operation.'_'.uniqid().'_'.microtime(true);
     }
 
     private function getCurrentTenantId(): ?string
@@ -306,7 +308,7 @@ class PerformanceMonitor
     private function getCurrentModule(): string
     {
         $trace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 10);
-        
+
         foreach ($trace as $frame) {
             if (isset($frame['class']) && str_contains($frame['class'], 'Modules\\')) {
                 $parts = explode('\\', $frame['class']);
@@ -315,7 +317,7 @@ class PerformanceMonitor
                 }
             }
         }
-        
+
         return 'unknown';
     }
 
@@ -333,7 +335,7 @@ class PerformanceMonitor
     {
         $this->metrics[] = $metrics;
         $this->flushMetricsIfNeeded();
-        
+
         // Log slow operations
         if ($metrics['duration_ms'] > 1000) {
             Log::warning('Slow operation detected', $metrics);
@@ -343,7 +345,7 @@ class PerformanceMonitor
     private function flushMetricsIfNeeded(): void
     {
         $maxBufferSize = config('tenant.monitoring.metrics.buffer_size', 100);
-        
+
         if (count($this->metrics) >= $maxBufferSize) {
             $this->flushMetrics();
         }
@@ -352,12 +354,12 @@ class PerformanceMonitor
     private function buildCounterKey(string $name, array $tags): string
     {
         $tagString = '';
-        if (!empty($tags)) {
+        if (! empty($tags)) {
             ksort($tags);
-            $tagString = '_' . md5(serialize($tags));
+            $tagString = '_'.md5(serialize($tags));
         }
-        
-        return $name . $tagString;
+
+        return $name.$tagString;
     }
 
     private function storeMetrics(array $metrics, array $counters): void
@@ -366,17 +368,17 @@ class PerformanceMonitor
         // - Time series database (InfluxDB, Prometheus)
         // - Logging service (ELK stack)
         // - Monitoring service (DataDog, New Relic)
-        
+
         // For now, we'll log to Laravel's logging system
-        if (!empty($metrics)) {
+        if (! empty($metrics)) {
             Log::channel('performance')->info('Performance metrics batch', [
                 'metrics_count' => count($metrics),
                 'tenant_id' => $this->getCurrentTenantId(),
                 'metrics' => $metrics,
             ]);
         }
-        
-        if (!empty($counters)) {
+
+        if (! empty($counters)) {
             Log::channel('performance')->info('Performance counters batch', [
                 'counters_count' => count($counters),
                 'tenant_id' => $this->getCurrentTenantId(),

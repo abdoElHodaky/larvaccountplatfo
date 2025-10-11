@@ -3,10 +3,9 @@
 namespace App\Features\Sales\Models;
 
 use App\Shared\Models\HybridModel;
-use App\Features\Inventory\Models\Product;
-use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class SalesOrder extends HybridModel
 {
@@ -66,12 +65,19 @@ class SalesOrder extends HybridModel
      * Order statuses
      */
     const STATUS_DRAFT = 'draft';
+
     const STATUS_PENDING = 'pending';
+
     const STATUS_CONFIRMED = 'confirmed';
+
     const STATUS_PROCESSING = 'processing';
+
     const STATUS_SHIPPED = 'shipped';
+
     const STATUS_DELIVERED = 'delivered';
+
     const STATUS_COMPLETED = 'completed';
+
     const STATUS_CANCELLED = 'cancelled';
 
     /**
@@ -135,7 +141,7 @@ class SalesOrder extends HybridModel
      */
     public function getFormattedOrderNumberAttribute(): string
     {
-        return $this->order_number ?: 'SO-' . str_pad($this->id, 8, '0', STR_PAD_LEFT);
+        return $this->order_number ?: 'SO-'.str_pad($this->id, 8, '0', STR_PAD_LEFT);
     }
 
     /**
@@ -172,11 +178,12 @@ class SalesOrder extends HybridModel
      */
     public function confirm(): bool
     {
-        if (!$this->canBeConfirmed()) {
+        if (! $this->canBeConfirmed()) {
             return false;
         }
 
         $this->status = self::STATUS_CONFIRMED;
+
         return $this->save();
     }
 
@@ -185,11 +192,12 @@ class SalesOrder extends HybridModel
      */
     public function cancel(): bool
     {
-        if (!$this->canBeCancelled()) {
+        if (! $this->canBeCancelled()) {
             return false;
         }
 
         $this->status = self::STATUS_CANCELLED;
+
         return $this->save();
     }
 

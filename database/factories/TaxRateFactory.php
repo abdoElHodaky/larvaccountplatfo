@@ -3,8 +3,8 @@
 namespace Database\Factories;
 
 use App\Features\Accounting\Models\TaxRate;
-use Illuminate\Database\Eloquent\Factories\Factory;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Features\Accounting\Models\TaxRate>
@@ -27,7 +27,7 @@ class TaxRateFactory extends Factory
     {
         $taxTypes = ['sales_tax', 'vat', 'gst', 'income_tax', 'payroll_tax', 'property_tax', 'excise_tax', 'custom_duty', 'other'];
         $taxType = $this->faker->randomElement($taxTypes);
-        
+
         // Generate realistic tax rates based on type
         $rate = match ($taxType) {
             'sales_tax' => $this->faker->randomFloat(2, 3.0, 12.0),
@@ -44,7 +44,7 @@ class TaxRateFactory extends Factory
         return [
             'organization_id' => 1,
             'name' => $this->generateTaxName($taxType),
-            'code' => strtoupper($this->faker->lexify('???')) . '_' . strtoupper(substr($taxType, 0, 3)),
+            'code' => strtoupper($this->faker->lexify('???')).'_'.strtoupper(substr($taxType, 0, 3)),
             'description' => $this->faker->sentence(),
             'tax_type' => $taxType,
             'rate' => $rate,
@@ -53,7 +53,7 @@ class TaxRateFactory extends Factory
             'effective_from' => $this->faker->optional(0.8)->dateTimeBetween('-2 years', 'now'),
             'effective_to' => $this->faker->optional(0.3)->dateTimeBetween('now', '+2 years'),
             'jurisdiction' => $this->faker->randomElement([
-                'Federal', 'California', 'New York', 'Texas', 'Florida', 'UK', 'Canada', 'Australia', 'Germany'
+                'Federal', 'California', 'New York', 'Texas', 'Florida', 'UK', 'Canada', 'Australia', 'Germany',
             ]),
             'tax_authority' => $this->generateTaxAuthority(),
             'reporting_code' => $this->faker->optional(0.7)->regexify('[A-Z]{2}[0-9]{3}'),
@@ -71,15 +71,15 @@ class TaxRateFactory extends Factory
     private function generateTaxName(string $taxType): string
     {
         return match ($taxType) {
-            'sales_tax' => 'Sales Tax - ' . $this->faker->state(),
-            'vat' => 'VAT - ' . $this->faker->randomElement(['Standard Rate', 'Reduced Rate', 'Zero Rate']),
-            'gst' => 'GST - ' . $this->faker->randomElement(['Standard', 'Reduced', 'Exempt']),
-            'income_tax' => $this->faker->randomElement(['Federal', 'State']) . ' Income Tax',
-            'payroll_tax' => 'Payroll Tax - ' . $this->faker->state(),
-            'property_tax' => 'Property Tax - ' . $this->faker->city(),
-            'excise_tax' => 'Excise Tax - ' . $this->faker->randomElement(['Fuel', 'Tobacco', 'Alcohol']),
-            'custom_duty' => 'Custom Duty - ' . $this->faker->randomElement(['Import', 'Export']),
-            default => $this->faker->words(2, true) . ' Tax',
+            'sales_tax' => 'Sales Tax - '.$this->faker->state(),
+            'vat' => 'VAT - '.$this->faker->randomElement(['Standard Rate', 'Reduced Rate', 'Zero Rate']),
+            'gst' => 'GST - '.$this->faker->randomElement(['Standard', 'Reduced', 'Exempt']),
+            'income_tax' => $this->faker->randomElement(['Federal', 'State']).' Income Tax',
+            'payroll_tax' => 'Payroll Tax - '.$this->faker->state(),
+            'property_tax' => 'Property Tax - '.$this->faker->city(),
+            'excise_tax' => 'Excise Tax - '.$this->faker->randomElement(['Fuel', 'Tobacco', 'Alcohol']),
+            'custom_duty' => 'Custom Duty - '.$this->faker->randomElement(['Import', 'Export']),
+            default => $this->faker->words(2, true).' Tax',
         };
     }
 
@@ -133,7 +133,7 @@ class TaxRateFactory extends Factory
     {
         return $this->state(fn (array $attributes) => [
             'tax_type' => 'sales_tax',
-            'name' => 'Sales Tax - ' . $this->faker->state(),
+            'name' => 'Sales Tax - '.$this->faker->state(),
             'rate' => $this->faker->randomFloat(2, 3.0, 12.0),
             'is_compound' => false,
         ]);
@@ -160,7 +160,7 @@ class TaxRateFactory extends Factory
     {
         return $this->state(fn (array $attributes) => [
             'is_compound' => true,
-            'name' => 'Compound ' . $attributes['name'],
+            'name' => 'Compound '.$attributes['name'],
         ]);
     }
 }

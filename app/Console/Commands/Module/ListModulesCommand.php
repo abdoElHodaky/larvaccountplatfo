@@ -37,20 +37,26 @@ class ListModulesCommand extends Command
 
         if (empty($modules)) {
             $this->warn('No modules found.');
+
             return self::SUCCESS;
         }
 
         $filteredModules = collect($modules)->filter(function ($module, $name) use ($showEnabled, $showDisabled, $enabledModules) {
             $isEnabled = in_array($name, $enabledModules);
-            
-            if ($showEnabled && !$isEnabled) return false;
-            if ($showDisabled && $isEnabled) return false;
-            
+
+            if ($showEnabled && ! $isEnabled) {
+                return false;
+            }
+            if ($showDisabled && $isEnabled) {
+                return false;
+            }
+
             return true;
         });
 
         if ($filteredModules->isEmpty()) {
             $this->info('No modules match the specified criteria.');
+
             return self::SUCCESS;
         }
 
@@ -82,15 +88,15 @@ class ListModulesCommand extends Command
         $modules = [];
         $modulesPath = base_path('Modules');
 
-        if (!is_dir($modulesPath)) {
+        if (! is_dir($modulesPath)) {
             return $modules;
         }
 
-        $moduleDirectories = glob($modulesPath . '/*', GLOB_ONLYDIR);
+        $moduleDirectories = glob($modulesPath.'/*', GLOB_ONLYDIR);
 
         foreach ($moduleDirectories as $moduleDir) {
             $moduleName = basename($moduleDir);
-            
+
             $modules[$moduleName] = [
                 'name' => $moduleName,
                 'path' => $moduleDir,
@@ -108,10 +114,11 @@ class ListModulesCommand extends Command
      */
     private function getModuleVersion(string $moduleDir): string
     {
-        $composerFile = $moduleDir . '/composer.json';
-        
+        $composerFile = $moduleDir.'/composer.json';
+
         if (file_exists($composerFile)) {
             $composer = json_decode(file_get_contents($composerFile), true);
+
             return $composer['version'] ?? '1.0.0';
         }
 
@@ -123,10 +130,11 @@ class ListModulesCommand extends Command
      */
     private function getModuleDescription(string $moduleDir): string
     {
-        $composerFile = $moduleDir . '/composer.json';
-        
+        $composerFile = $moduleDir.'/composer.json';
+
         if (file_exists($composerFile)) {
             $composer = json_decode(file_get_contents($composerFile), true);
+
             return $composer['description'] ?? 'No description available';
         }
 
@@ -138,10 +146,11 @@ class ListModulesCommand extends Command
      */
     private function getModuleDependencies(string $moduleDir): array
     {
-        $composerFile = $moduleDir . '/composer.json';
-        
+        $composerFile = $moduleDir.'/composer.json';
+
         if (file_exists($composerFile)) {
             $composer = json_decode(file_get_contents($composerFile), true);
+
             return array_keys($composer['require'] ?? []);
         }
 
@@ -159,7 +168,7 @@ class ListModulesCommand extends Command
         foreach ($modules as $name => $module) {
             $isEnabled = in_array($name, $enabledModules);
             $status = $isEnabled ? '✅ Enabled' : '❌ Disabled';
-            
+
             $rows[] = [
                 $name,
                 $status,
@@ -182,12 +191,12 @@ class ListModulesCommand extends Command
 
             $this->info("📦 {$name}");
             $this->line("  Status: {$status}");
-            $this->line("  Version: " . ($module['version'] ?? '1.0.0'));
-            $this->line("  Description: " . ($module['description'] ?? 'No description'));
-            $this->line("  Path: " . ($module['path'] ?? 'N/A'));
+            $this->line('  Version: '.($module['version'] ?? '1.0.0'));
+            $this->line('  Description: '.($module['description'] ?? 'No description'));
+            $this->line('  Path: '.($module['path'] ?? 'N/A'));
 
-            if (!empty($module['dependencies'])) {
-                $this->line("  Dependencies: " . implode(', ', $module['dependencies']));
+            if (! empty($module['dependencies'])) {
+                $this->line('  Dependencies: '.implode(', ', $module['dependencies']));
             }
 
             $this->newLine();

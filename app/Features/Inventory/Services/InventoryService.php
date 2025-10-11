@@ -6,10 +6,9 @@ use App\Features\Inventory\Models\Product;
 use App\Features\Inventory\Models\StockLevel;
 use App\Features\Inventory\Models\StockMovement;
 use App\Features\Inventory\Models\Warehouse;
-use App\Features\Inventory\Models\ProductCategory;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
 class InventoryService
@@ -20,32 +19,32 @@ class InventoryService
     public function getInventoryOverview(int $organizationId): array
     {
         $cacheKey = "inventory_overview_{$organizationId}";
-        
+
         return Cache::remember($cacheKey, 300, function () use ($organizationId) {
             $totalProducts = Product::where('organization_id', $organizationId)
-                                   ->active()
-                                   ->count();
+                ->active()
+                ->count();
 
             $totalStockValue = StockLevel::where('organization_id', $organizationId)
-                                       ->sum(DB::raw('quantity_on_hand * cost_per_unit'));
+                ->sum(DB::raw('quantity_on_hand * cost_per_unit'));
 
             $lowStockProducts = StockLevel::where('organization_id', $organizationId)
-                                        ->lowStock()
-                                        ->count();
+                ->lowStock()
+                ->count();
 
             $outOfStockProducts = StockLevel::where('organization_id', $organizationId)
-                                          ->outOfStock()
-                                          ->count();
+                ->outOfStock()
+                ->count();
 
             $totalWarehouses = Warehouse::where('organization_id', $organizationId)
-                                      ->active()
-                                      ->count();
+                ->active()
+                ->count();
 
             $recentMovements = StockMovement::where('organization_id', $organizationId)
-                                          ->with(['product', 'warehouse'])
-                                          ->orderBy('movement_date', 'desc')
-                                          ->limit(10)
-                                          ->get();
+                ->with(['product', 'warehouse'])
+                ->orderBy('movement_date', 'desc')
+                ->limit(10)
+                ->get();
 
             $topProducts = $this->getTopProductsByValue($organizationId, 10);
 
@@ -68,34 +67,34 @@ class InventoryService
     public function getProducts(int $organizationId, array $filters = [], int $perPage = 15): Collection
     {
         $query = Product::where('organization_id', $organizationId)
-                       ->with(['category', 'stockLevels.warehouse']);
+            ->with(['category', 'stockLevels.warehouse']);
 
         // Apply filters
-        if (!empty($filters['status'])) {
+        if (! empty($filters['status'])) {
             $query->where('status', $filters['status']);
         }
 
-        if (!empty($filters['category_id'])) {
+        if (! empty($filters['category_id'])) {
             $query->where('category_id', $filters['category_id']);
         }
 
-        if (!empty($filters['type'])) {
+        if (! empty($filters['type'])) {
             $query->where('type', $filters['type']);
         }
 
-        if (!empty($filters['search'])) {
+        if (! empty($filters['search'])) {
             $query->where(function ($q) use ($filters) {
-                $q->where('name', 'like', '%' . $filters['search'] . '%')
-                  ->orWhere('sku', 'like', '%' . $filters['search'] . '%')
-                  ->orWhere('description', 'like', '%' . $filters['search'] . '%');
+                $q->where('name', 'like', '%'.$filters['search'].'%')
+                    ->orWhere('sku', 'like', '%'.$filters['search'].'%')
+                    ->orWhere('description', 'like', '%'.$filters['search'].'%');
             });
         }
 
-        if (!empty($filters['low_stock'])) {
+        if (! empty($filters['low_stock'])) {
             $query->lowStock();
         }
 
-        if (!empty($filters['out_of_stock'])) {
+        if (! empty($filters['out_of_stock'])) {
             $query->outOfStock();
         }
 
@@ -128,8 +127,8 @@ class InventoryService
             // Create initial stock levels for all warehouses if trackable
             if ($product->is_trackable) {
                 $warehouses = Warehouse::where('organization_id', $organizationId)
-                                     ->active()
-                                     ->get();
+                    ->active()
+                    ->get();
 
                 foreach ($warehouses as $warehouse) {
                     StockLevel::create([
@@ -153,7 +152,6 @@ class InventoryService
             Log::info('Product created', ['product_id' => $product->id, 'organization_id' => $organizationId]);
 
             return $product;
-
         } catch (\Exception $e) {
             DB::rollBack();
             Log::error('Failed to create product', ['error' => $e->getMessage(), 'data' => $data]);
@@ -174,7 +172,7 @@ class InventoryService
             // Update cost per unit in stock levels if cost price changed
             if (isset($data['cost_price']) && $product->is_trackable) {
                 StockLevel::where('product_id', $product->id)
-                         ->update(['cost_per_unit' => $data['cost_price']]);
+                    ->update(['cost_per_unit' => $data['cost_price']]);
             }
 
             DB::commit();
@@ -185,7 +183,6 @@ class InventoryService
             Log::info('Product updated', ['product_id' => $product->id]);
 
             return $product->fresh();
-
         } catch (\Exception $e) {
             DB::rollBack();
             Log::error('Failed to update product', ['error' => $e->getMessage(), 'product_id' => $product->id]);
@@ -203,7 +200,7 @@ class InventoryService
         try {
             // Check if product has stock movements
             $hasMovements = StockMovement::where('product_id', $product->id)->exists();
-            
+
             if ($hasMovements) {
                 // Soft delete if has movements
                 $product->delete();
@@ -221,7 +218,6 @@ class InventoryService
             Log::info('Product deleted', ['product_id' => $product->id]);
 
             return true;
-
         } catch (\Exception $e) {
             DB::rollBack();
             Log::error('Failed to delete product', ['error' => $e->getMessage(), 'product_id' => $product->id]);
@@ -238,10 +234,10 @@ class InventoryService
 
         try {
             $stockLevel = StockLevel::where('product_id', $productId)
-                                  ->where('warehouse_id', $warehouseId)
-                                  ->first();
+                ->where('warehouse_id', $warehouseId)
+                ->first();
 
-            if (!$stockLevel) {
+            if (! $stockLevel) {
                 throw new \Exception('Stock level not found');
             }
 
@@ -280,7 +276,6 @@ class InventoryService
             ]);
 
             return true;
-
         } catch (\Exception $e) {
             DB::rollBack();
             Log::error('Failed to adjust stock', ['error' => $e->getMessage()]);
@@ -294,14 +289,14 @@ class InventoryService
     public function getStockAlerts(int $organizationId): array
     {
         $lowStockProducts = Product::where('organization_id', $organizationId)
-                                 ->lowStock()
-                                 ->with(['category', 'stockLevels'])
-                                 ->get();
+            ->lowStock()
+            ->with(['category', 'stockLevels'])
+            ->get();
 
         $outOfStockProducts = Product::where('organization_id', $organizationId)
-                                   ->outOfStock()
-                                   ->with(['category', 'stockLevels'])
-                                   ->get();
+            ->outOfStock()
+            ->with(['category', 'stockLevels'])
+            ->get();
 
         return [
             'low_stock' => $lowStockProducts,
@@ -315,16 +310,17 @@ class InventoryService
     public function getTopProductsByValue(int $organizationId, int $limit = 10): Collection
     {
         return Product::where('organization_id', $organizationId)
-                     ->active()
-                     ->with(['stockLevels'])
-                     ->get()
-                     ->map(function ($product) {
-                         $product->total_stock_value = $product->getStockValue();
-                         return $product;
-                     })
-                     ->sortByDesc('total_stock_value')
-                     ->take($limit)
-                     ->values();
+            ->active()
+            ->with(['stockLevels'])
+            ->get()
+            ->map(function ($product) {
+                $product->total_stock_value = $product->getStockValue();
+
+                return $product;
+            })
+            ->sortByDesc('total_stock_value')
+            ->take($limit)
+            ->values();
     }
 
     /**
@@ -334,7 +330,7 @@ class InventoryService
     {
         $prefix = 'PRD';
         $timestamp = now()->format('ymd');
-        
+
         do {
             $random = str_pad(mt_rand(1, 9999), 4, '0', STR_PAD_LEFT);
             $sku = "{$prefix}-{$timestamp}-{$random}";
@@ -351,7 +347,7 @@ class InventoryService
         $prefix = 'MOV';
         $timestamp = now()->format('ymdHis');
         $random = str_pad(mt_rand(1, 999), 3, '0', STR_PAD_LEFT);
-        
+
         return "{$prefix}-{$timestamp}-{$random}";
     }
 
@@ -361,8 +357,8 @@ class InventoryService
     private function checkLowStockAlert(StockLevel $stockLevel): void
     {
         $product = $stockLevel->product;
-        
-        if ($product->isLowStock() && !$product->isOutOfStock()) {
+
+        if ($product->isLowStock() && ! $product->isOutOfStock()) {
             // Trigger low stock alert event
             Log::warning('Low stock alert', [
                 'product_id' => $product->id,

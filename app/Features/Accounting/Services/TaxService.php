@@ -4,11 +4,9 @@ namespace App\Features\Accounting\Services;
 
 use App\Features\Accounting\Models\TaxRate;
 use App\Features\Accounting\Models\Transaction;
-use App\Features\Accounting\Models\JournalEntry;
-use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Cache;
 use Carbon\Carbon;
+use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Cache;
 
 class TaxService
 {
@@ -57,7 +55,7 @@ class TaxService
         ]);
 
         $this->clearTaxCache($taxRate->organization_id);
-        
+
         return $taxRate;
     }
 
@@ -66,15 +64,15 @@ class TaxService
      */
     public function getActiveTaxRates(int $organizationId, ?string $taxType = null): Collection
     {
-        $cacheKey = "active_tax_rates_{$organizationId}" . ($taxType ? "_{$taxType}" : '');
-        
+        $cacheKey = "active_tax_rates_{$organizationId}".($taxType ? "_{$taxType}" : '');
+
         return Cache::remember($cacheKey, 3600, function () use ($organizationId, $taxType) {
             $query = TaxRate::where('organization_id', $organizationId)->active();
-            
+
             if ($taxType) {
                 $query->byType($taxType);
             }
-            
+
             return $query->orderBy('name')->get();
         });
     }
@@ -90,10 +88,10 @@ class TaxService
         $compoundBase = $baseAmount;
 
         $taxRates = TaxRate::whereIn('id', $taxRateIds)
-                          ->effectiveOn($date)
-                          ->active()
-                          ->orderBy('is_compound')
-                          ->get();
+            ->effectiveOn($date)
+            ->active()
+            ->orderBy('is_compound')
+            ->get();
 
         foreach ($taxRates as $taxRate) {
             $taxAmount = $taxRate->calculateTaxAmount($compoundBase);
@@ -129,28 +127,28 @@ class TaxService
     public function getTaxSummary(int $organizationId, Carbon $startDate, Carbon $endDate): array
     {
         $cacheKey = "tax_summary_{$organizationId}_{$startDate->format('Y-m-d')}_{$endDate->format('Y-m-d')}";
-        
+
         return Cache::remember($cacheKey, 1800, function () use ($organizationId, $startDate, $endDate) {
             $transactions = Transaction::where('organization_id', $organizationId)
-                                     ->whereBetween('transaction_date', [$startDate, $endDate])
-                                     ->where('status', Transaction::STATUS_POSTED)
-                                     ->whereNotNull('tax_rate_id')
-                                     ->with('taxRate')
-                                     ->get();
+                ->whereBetween('transaction_date', [$startDate, $endDate])
+                ->where('status', Transaction::STATUS_POSTED)
+                ->whereNotNull('tax_rate_id')
+                ->with('taxRate')
+                ->get();
 
             $taxSummary = [];
             $totalTaxCollected = 0;
             $totalTaxPaid = 0;
 
             foreach ($transactions as $transaction) {
-                if (!$transaction->taxRate) {
+                if (! $transaction->taxRate) {
                     continue;
                 }
 
                 $taxRateId = $transaction->tax_rate_id;
                 $taxAmount = $transaction->tax_amount ?? 0;
 
-                if (!isset($taxSummary[$taxRateId])) {
+                if (! isset($taxSummary[$taxRateId])) {
                     $taxSummary[$taxRateId] = [
                         'tax_rate_id' => $taxRateId,
                         'tax_rate_name' => $transaction->taxRate->name,
@@ -199,7 +197,7 @@ class TaxService
     public function generateTaxReport(int $organizationId, Carbon $startDate, Carbon $endDate, ?string $taxType = null): array
     {
         $taxSummary = $this->getTaxSummary($organizationId, $startDate, $endDate);
-        
+
         // Filter by tax type if specified
         if ($taxType) {
             $taxSummary['by_tax_rate'] = array_filter($taxSummary['by_tax_rate'], function ($item) use ($taxType) {
@@ -209,10 +207,10 @@ class TaxService
 
         // Get detailed transactions
         $query = Transaction::where('organization_id', $organizationId)
-                           ->whereBetween('transaction_date', [$startDate, $endDate])
-                           ->where('status', Transaction::STATUS_POSTED)
-                           ->whereNotNull('tax_rate_id')
-                           ->with(['taxRate', 'journalEntries.account']);
+            ->whereBetween('transaction_date', [$startDate, $endDate])
+            ->where('status', Transaction::STATUS_POSTED)
+            ->whereNotNull('tax_rate_id')
+            ->with(['taxRate', 'journalEntries.account']);
 
         if ($taxType) {
             $query->whereHas('taxRate', function ($q) use ($taxType) {
@@ -266,7 +264,7 @@ class TaxService
 
         foreach ($taxSummary['by_tax_rate'] as $taxData) {
             $netTax = $taxData['net_tax'];
-            
+
             if ($netTax > 0) {
                 $liabilities[] = [
                     'tax_rate_id' => $taxData['tax_rate_id'],
@@ -307,8 +305,8 @@ class TaxService
     public function getTaxRatesForDate(int $organizationId, Carbon $date, ?string $taxType = null): Collection
     {
         $query = TaxRate::where('organization_id', $organizationId)
-                       ->effectiveOn($date)
-                       ->active();
+            ->effectiveOn($date)
+            ->active();
 
         if ($taxType) {
             $query->byType($taxType);
@@ -323,7 +321,7 @@ class TaxService
     public function validateTaxCalculation(array $taxCalculation): array
     {
         $errors = [];
-        
+
         if (empty($taxCalculation['tax_calculations'])) {
             $errors[] = 'No tax calculations provided';
         }
@@ -331,7 +329,7 @@ class TaxService
         $calculatedTotal = $taxCalculation['base_amount'];
         foreach ($taxCalculation['tax_calculations'] as $calc) {
             $calculatedTotal += $calc['tax_amount'];
-            
+
             // Validate individual tax calculation
             $expectedTax = $calc['base_amount'] * ($calc['rate'] / 100);
             if (abs($calc['tax_amount'] - $expectedTax) > 0.01) {

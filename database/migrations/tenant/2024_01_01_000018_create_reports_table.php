@@ -20,7 +20,7 @@ return new class extends Migration
             $table->enum('category', [
                 'profit_loss', 'balance_sheet', 'cash_flow', 'trial_balance', 'general_ledger',
                 'accounts_receivable', 'accounts_payable', 'inventory', 'sales', 'expenses',
-                'tax', 'budget', 'kpi', 'dashboard'
+                'tax', 'budget', 'kpi', 'dashboard',
             ]);
             $table->json('query_config')->nullable();
             $table->json('filters')->nullable();
@@ -60,4 +60,3 @@ return new class extends Migration
         Schema::dropIfExists('reports');
     }
 };
-

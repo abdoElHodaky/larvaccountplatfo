@@ -3,9 +3,8 @@
 namespace App\Features\Sales\Models;
 
 use App\Shared\Models\HybridModel;
-use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Customer extends HybridModel
 {
@@ -61,16 +60,22 @@ class Customer extends HybridModel
      * Customer types
      */
     const TYPE_INDIVIDUAL = 'individual';
+
     const TYPE_BUSINESS = 'business';
+
     const TYPE_GOVERNMENT = 'government';
 
     /**
      * Payment terms
      */
     const PAYMENT_TERMS_CASH = 'cash';
+
     const PAYMENT_TERMS_NET_15 = 'net_15';
+
     const PAYMENT_TERMS_NET_30 = 'net_30';
+
     const PAYMENT_TERMS_NET_60 = 'net_60';
+
     const PAYMENT_TERMS_NET_90 = 'net_90';
 
     /**
@@ -134,7 +139,7 @@ class Customer extends HybridModel
      */
     public function getFormattedCodeAttribute(): string
     {
-        return $this->customer_code ?: 'CUST-' . str_pad($this->id, 6, '0', STR_PAD_LEFT);
+        return $this->customer_code ?: 'CUST-'.str_pad($this->id, 6, '0', STR_PAD_LEFT);
     }
 
     /**

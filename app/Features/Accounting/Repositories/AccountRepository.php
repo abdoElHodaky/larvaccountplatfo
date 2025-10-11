@@ -2,11 +2,10 @@
 
 namespace App\Features\Accounting\Repositories;
 
-use App\Shared\Services\BaseRepository;
-use App\Features\Accounting\Models\Account;
 use App\Features\Accounting\Contracts\AccountRepositoryInterface;
+use App\Features\Accounting\Models\Account;
+use App\Shared\Services\BaseRepository;
 use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Pagination\LengthAwarePaginator;
 
 /**
  * Account Repository using Laravel Eloquent Repository Pattern
@@ -27,12 +26,12 @@ class AccountRepository extends BaseRepository implements AccountRepositoryInter
     protected function initializeCache(): void
     {
         parent::initializeCache();
-        
+
         $this->cacheTags = array_merge($this->cacheTags, [
             'accounts',
             'accounting',
         ]);
-        
+
         // Enable caching by default for accounts
         $this->enableCache(3600, $this->cacheTags); // 1 hour
     }
@@ -54,7 +53,7 @@ class AccountRepository extends BaseRepository implements AccountRepositoryInter
     /**
      * Find accounts by type
      */
-    public function findByType(string $accountType, int $organizationId = null): Collection
+    public function findByType(string $accountType, ?int $organizationId = null): Collection
     {
         $criteria = ['account_type' => $accountType];
         if ($organizationId) {
@@ -63,14 +62,14 @@ class AccountRepository extends BaseRepository implements AccountRepositoryInter
 
         return $this->cached('findByType', $criteria, function () use ($accountType, $organizationId) {
             $query = $this->model->where('account_type', $accountType);
-            
+
             if ($organizationId) {
                 $query->where('organization_id', $organizationId);
             }
-            
+
             return $query->where('is_active', true)
-                        ->orderBy('account_code')
-                        ->get();
+                ->orderBy('account_code')
+                ->get();
         });
     }
 
@@ -81,12 +80,12 @@ class AccountRepository extends BaseRepository implements AccountRepositoryInter
     {
         return $this->cached('getAccountBalance', ['account_id' => $accountId], function () use ($accountId) {
             $account = $this->findOrFail($accountId);
-            
+
             // Calculate balance from journal entries
             $balance = $account->journalEntries()
                 ->selectRaw('SUM(debit_amount - credit_amount) as balance')
                 ->value('balance') ?? 0;
-            
+
             return (float) $balance;
         });
     }
@@ -102,12 +101,13 @@ class AccountRepository extends BaseRepository implements AccountRepositoryInter
                 ->where('is_active', true)
                 ->with(['journalEntries' => function ($query) {
                     $query->selectRaw('account_id, SUM(debit_amount - credit_amount) as balance')
-                          ->groupBy('account_id');
+                        ->groupBy('account_id');
                 }])
                 ->orderBy('account_code')
                 ->get()
                 ->map(function ($account) {
                     $account->balance = $account->journalEntries->sum('balance') ?? 0;
+
                     return $account;
                 });
         });
@@ -168,8 +168,8 @@ class AccountRepository extends BaseRepository implements AccountRepositoryInter
             ->where('is_active', true)
             ->where(function ($query) use ($search) {
                 $query->where('account_name', 'LIKE', "%{$search}%")
-                      ->orWhere('account_code', 'LIKE', "%{$search}%")
-                      ->orWhere('description', 'LIKE', "%{$search}%");
+                    ->orWhere('account_code', 'LIKE', "%{$search}%")
+                    ->orWhere('description', 'LIKE', "%{$search}%");
             })
             ->orderBy('account_code')
             ->limit($limit)
@@ -209,14 +209,14 @@ class AccountRepository extends BaseRepository implements AccountRepositoryInter
     /**
      * Build account tree structure
      */
-    protected function buildAccountTree(Collection $accounts, int $parentId = null): array
+    protected function buildAccountTree(Collection $accounts, ?int $parentId = null): array
     {
         $tree = [];
-        
+
         foreach ($accounts as $account) {
             if ($account->parent_account_id == $parentId) {
                 $children = $this->buildAccountTree($accounts, $account->id);
-                
+
                 $accountData = [
                     'id' => $account->id,
                     'code' => $account->account_code,
@@ -224,15 +224,15 @@ class AccountRepository extends BaseRepository implements AccountRepositoryInter
                     'type' => $account->account_type,
                     'balance' => $this->getAccountBalance($account->id),
                 ];
-                
-                if (!empty($children)) {
+
+                if (! empty($children)) {
                     $accountData['children'] = $children;
                 }
-                
+
                 $tree[] = $accountData;
             }
         }
-        
+
         return $tree;
     }
 
