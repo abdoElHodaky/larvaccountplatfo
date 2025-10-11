@@ -346,7 +346,7 @@ export const authModel = createModel<RootModel>()({
           }
         `;
         
-        const { data } = await apolloClient.mutate({
+        const { data: _data } = await apolloClient.mutate({
           mutation,
           variables: { preferences },
         });

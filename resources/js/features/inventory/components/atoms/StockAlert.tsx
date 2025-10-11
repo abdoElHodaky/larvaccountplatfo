@@ -17,7 +17,7 @@ interface StockAlertProps {
 const StockAlert: React.FC<StockAlertProps> = ({
   level,
   quantity,
-  threshold = 10,
+  threshold: _threshold = 10,
   className = '',
 }) => {
   const getAlertConfig = (level: StockLevel) => {
