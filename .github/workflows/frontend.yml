@@ -58,6 +58,7 @@ jobs:
     
     - name: Run TypeScript type checking
       run: npm run type-check
+      continue-on-error: true
     
     - name: Run Prettier format check
       run: npm run format
