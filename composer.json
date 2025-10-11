@@ -29,7 +29,7 @@
         "docs": "https://github.com/abdoElHodaky/larvaccountplatfo/wiki"
     },
     "require": {
-        "php": "^8.2",
+        "php": "^8.3",
         "barryvdh/laravel-dompdf": "^2.2",
         "brick/math": "^0.12",
         "brick/money": "^0.9",
