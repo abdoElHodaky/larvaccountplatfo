@@ -55,7 +55,11 @@ declare global {
   
   // Google Analytics gtag function
   interface Window {
-    gtag?: (command: string, ...args: any[]) => void;
+    gtag?: (
+      command: 'config' | 'event' | 'js' | 'set',
+      targetId: string | Date,
+      config?: Record<string, any>
+    ) => void;
   }
 }
 
