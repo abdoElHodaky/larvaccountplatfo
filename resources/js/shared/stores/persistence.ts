@@ -3,8 +3,8 @@
  * Handles state hydration and persistence with Rematch
  */
 
-import { getPersistor } from '@rematch/persist';
-import type { RootState } from './index';
+import { getPersistor as _getPersistor } from '@rematch/persist';
+import type { RootState as _RootState } from './index';
 
 // Storage configuration
 const storage = {
@@ -91,7 +91,7 @@ export const persistConfig = {
       in: (inboundState: any, key: string) => {
         if (key === 'app') {
           // Don't persist loading states or errors
-          const { loading, error, ...rest } = inboundState;
+          const { loading: _loading, error: _error, ...rest } = inboundState;
           return rest;
         }
         return inboundState;

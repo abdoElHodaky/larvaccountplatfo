@@ -14,13 +14,13 @@ abstract class HybridModel extends Model
     protected static function booted(): void
     {
         // Only apply organization scope for shared databases
-        if (static::isSharedDatabase()) {
+        if (static::isUsingSharedDatabase()) {
             static::addGlobalScope(new OrganizationScope);
         }
 
         // Auto-set organization_id when creating records in shared databases
         static::creating(function ($model) {
-            if (static::isSharedDatabase() && !$model->organization_id) {
+            if (static::isUsingSharedDatabase() && ! $model->organization_id) {
                 $model->organization_id = static::getCurrentOrganizationId();
             }
         });
@@ -49,7 +49,7 @@ abstract class HybridModel extends Model
         $hidden = $this->hidden;
 
         // Hide organization_id for dedicated databases (not needed)
-        if (!$this->isSharedDatabase()) {
+        if (! $this->isSharedDatabase()) {
             $hidden[] = 'organization_id';
         }
 
@@ -61,15 +61,20 @@ abstract class HybridModel extends Model
      */
     public function isSharedDatabase(): bool
     {
-        return static::isSharedDatabase();
+        return static::isUsingSharedDatabase();
     }
 
     /**
      * Static method to check if current tenant is using shared database
      */
-    public static function isSharedDatabase(): bool
+    public static function isUsingSharedDatabase(): bool
     {
-        $tenantStrategy = app('tenant_strategy', 'shared');
+        try {
+            $tenantStrategy = app('tenant_strategy');
+        } catch (\Exception $e) {
+            $tenantStrategy = 'shared';
+        }
+
         return $tenantStrategy === 'shared';
     }
 
@@ -78,15 +83,20 @@ abstract class HybridModel extends Model
      */
     public function isDedicatedDatabase(): bool
     {
-        return static::isDedicatedDatabase();
+        return static::isUsingDedicatedDatabase();
     }
 
     /**
      * Static method to check if current tenant is using dedicated database
      */
-    public static function isDedicatedDatabase(): bool
+    public static function isUsingDedicatedDatabase(): bool
     {
-        $tenantStrategy = app('tenant_strategy', 'shared');
+        try {
+            $tenantStrategy = app('tenant_strategy');
+        } catch (\Exception $e) {
+            $tenantStrategy = 'shared';
+        }
+
         return $tenantStrategy === 'dedicated';
     }
 
@@ -95,15 +105,20 @@ abstract class HybridModel extends Model
      */
     public function isClusteredDatabase(): bool
     {
-        return static::isClusteredDatabase();
+        return static::isUsingClusteredDatabase();
     }
 
     /**
      * Static method to check if current tenant is using clustered database
      */
-    public static function isClusteredDatabase(): bool
+    public static function isUsingClusteredDatabase(): bool
     {
-        $tenantStrategy = app('tenant_strategy', 'shared');
+        try {
+            $tenantStrategy = app('tenant_strategy');
+        } catch (\Exception $e) {
+            $tenantStrategy = 'shared';
+        }
+
         return $tenantStrategy === 'clustered';
     }
 
@@ -120,7 +135,11 @@ abstract class HybridModel extends Model
      */
     public static function getCurrentTenant()
     {
-        return app('tenant');
+        try {
+            return app('tenant');
+        } catch (\Exception $e) {
+            return;
+        }
     }
 
     /**
@@ -153,7 +172,7 @@ abstract class HybridModel extends Model
 
         // Add any table prefixing logic here if needed
         // For example, you might want to prefix tables for certain tenant types
-        
+
         return $table;
     }
 
@@ -182,7 +201,7 @@ abstract class HybridModel extends Model
     public function freshTimestamp()
     {
         $tenant = static::getCurrentTenant();
-        
+
         if ($tenant && $tenant->timezone) {
             return now($tenant->timezone);
         }
@@ -199,7 +218,7 @@ abstract class HybridModel extends Model
         $array = parent::toArray();
 
         // Remove organization_id from output for dedicated databases
-        if (!$this->isSharedDatabase() && isset($array['organization_id'])) {
+        if (! $this->isSharedDatabase() && isset($array['organization_id'])) {
             unset($array['organization_id']);
         }
 
@@ -212,7 +231,7 @@ abstract class HybridModel extends Model
     public function __call($method, $parameters)
     {
         // Add any tenant-specific method handling here
-        
+
         return parent::__call($method, $parameters);
     }
 
@@ -222,7 +241,7 @@ abstract class HybridModel extends Model
     public static function __callStatic($method, $parameters)
     {
         // Add any tenant-specific static method handling here
-        
+
         return parent::__callStatic($method, $parameters);
     }
 }

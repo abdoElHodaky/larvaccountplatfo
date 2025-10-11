@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link, usePage } from '@inertiajs/react';
+
 import Sidebar from '@/shared/components/organisms/Sidebar';
 import TopBar from '@/shared/components/organisms/TopBar';
 
@@ -9,7 +9,7 @@ interface AppLayoutProps {
 
 export default function AppLayout({ children }: AppLayoutProps) {
     const [sidebarOpen, setSidebarOpen] = useState(false);
-    const { props } = usePage();
+
 
     return (
         <div className="min-h-screen bg-gray-50">

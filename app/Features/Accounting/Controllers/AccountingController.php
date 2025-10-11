@@ -6,12 +6,12 @@ use App\Features\Accounting\Models\Account;
 use App\Features\Accounting\Models\Transaction;
 use App\Features\Accounting\Services\AccountingService;
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
+use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Inertia\Inertia;
 use Inertia\Response;
-use Carbon\Carbon;
 
 class AccountingController extends Controller
 {
@@ -32,10 +32,10 @@ class AccountingController extends Controller
         try {
             $organizationId = $this->getCurrentOrganizationId();
             $overview = $this->accountingService->getDashboardOverview($organizationId);
-            
+
             // Get chart of accounts for the sidebar/navigation
             $accounts = $this->accountingService->getChartOfAccounts($organizationId, ['active_only' => true]);
-            
+
             // Get recent transactions
             $recentTransactions = $this->accountingService->getRecentTransactions($organizationId, 10);
 
@@ -48,10 +48,9 @@ class AccountingController extends Controller
                     'name' => auth()->user()->current_organization->name ?? 'Default Organization',
                 ],
             ]);
-
         } catch (\Exception $e) {
-            \Log::error('Accounting dashboard error: ' . $e->getMessage());
-            
+            \Log::error('Accounting dashboard error: '.$e->getMessage());
+
             // Return error page with Inertia
             return Inertia::render('Accounting/Dashboard', [
                 'overview' => null,
@@ -78,14 +77,13 @@ class AccountingController extends Controller
             return response()->json([
                 'success' => true,
                 'data' => $overview,
-                'message' => 'Accounting dashboard data retrieved successfully'
+                'message' => 'Accounting dashboard data retrieved successfully',
             ]);
-
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
                 'message' => 'Failed to retrieve accounting dashboard data',
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
             ], 500);
         }
     }
@@ -97,21 +95,20 @@ class AccountingController extends Controller
     {
         try {
             $organizationId = $this->getCurrentOrganizationId();
-            
+
             $filters = $request->only(['type', 'active_only', 'parent_id', 'root_only']);
             $accounts = $this->accountingService->getChartOfAccounts($organizationId, $filters);
 
             return response()->json([
                 'success' => true,
                 'data' => $accounts,
-                'message' => 'Chart of accounts retrieved successfully'
+                'message' => 'Chart of accounts retrieved successfully',
             ]);
-
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
                 'message' => 'Failed to retrieve chart of accounts',
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
             ], 500);
         }
     }
@@ -138,7 +135,7 @@ class AccountingController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => 'Validation failed',
-                'errors' => $validator->errors()
+                'errors' => $validator->errors(),
             ], 422);
         }
 
@@ -149,14 +146,13 @@ class AccountingController extends Controller
             return response()->json([
                 'success' => true,
                 'data' => $account->load(['parent', 'children']),
-                'message' => 'Account created successfully'
+                'message' => 'Account created successfully',
             ], 201);
-
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
                 'message' => 'Failed to create account',
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
             ], 500);
         }
     }
@@ -176,14 +172,13 @@ class AccountingController extends Controller
             return response()->json([
                 'success' => true,
                 'data' => $account,
-                'message' => 'Account retrieved successfully'
+                'message' => 'Account retrieved successfully',
             ]);
-
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
                 'message' => 'Failed to retrieve account',
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
             ], 500);
         }
     }
@@ -197,7 +192,7 @@ class AccountingController extends Controller
 
         $validator = Validator::make($request->all(), [
             'name' => 'sometimes|required|string|max:255',
-            'code' => 'sometimes|required|string|max:50|unique:accounts,code,' . $account->id,
+            'code' => 'sometimes|required|string|max:50|unique:accounts,code,'.$account->id,
             'description' => 'nullable|string',
             'type' => 'sometimes|required|in:asset,liability,equity,revenue,expense',
             'subtype' => 'nullable|string',
@@ -211,7 +206,7 @@ class AccountingController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => 'Validation failed',
-                'errors' => $validator->errors()
+                'errors' => $validator->errors(),
             ], 422);
         }
 
@@ -221,14 +216,13 @@ class AccountingController extends Controller
             return response()->json([
                 'success' => true,
                 'data' => $account->load(['parent', 'children']),
-                'message' => 'Account updated successfully'
+                'message' => 'Account updated successfully',
             ]);
-
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
                 'message' => 'Failed to update account',
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
             ], 500);
         }
     }
@@ -255,7 +249,7 @@ class AccountingController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => 'Validation failed',
-                'errors' => $validator->errors()
+                'errors' => $validator->errors(),
             ], 422);
         }
 
@@ -266,14 +260,13 @@ class AccountingController extends Controller
             return response()->json([
                 'success' => true,
                 'data' => $transaction,
-                'message' => 'Journal entry created successfully'
+                'message' => 'Journal entry created successfully',
             ], 201);
-
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
                 'message' => 'Failed to create journal entry',
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
             ], 500);
         }
     }
@@ -286,20 +279,19 @@ class AccountingController extends Controller
         try {
             $organizationId = $this->getCurrentOrganizationId();
             $asOfDate = $request->get('as_of_date') ? Carbon::parse($request->get('as_of_date')) : null;
-            
+
             $trialBalance = $this->accountingService->getTrialBalance($organizationId, $asOfDate);
 
             return response()->json([
                 'success' => true,
                 'data' => $trialBalance,
-                'message' => 'Trial balance retrieved successfully'
+                'message' => 'Trial balance retrieved successfully',
             ]);
-
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
                 'message' => 'Failed to retrieve trial balance',
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
             ], 500);
         }
     }
@@ -314,20 +306,19 @@ class AccountingController extends Controller
 
             $startDate = $request->get('start_date') ? Carbon::parse($request->get('start_date')) : null;
             $endDate = $request->get('end_date') ? Carbon::parse($request->get('end_date')) : null;
-            
+
             $ledger = $this->accountingService->getGeneralLedger($account->id, $startDate, $endDate);
 
             return response()->json([
                 'success' => true,
                 'data' => $ledger,
-                'message' => 'General ledger retrieved successfully'
+                'message' => 'General ledger retrieved successfully',
             ]);
-
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
                 'message' => 'Failed to retrieve general ledger',
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
             ], 500);
         }
     }
@@ -339,9 +330,9 @@ class AccountingController extends Controller
     {
         try {
             $organizationId = $this->getCurrentOrganizationId();
-            
+
             $query = Transaction::where('organization_id', $organizationId)
-                               ->with(['journalEntries.account']);
+                ->with(['journalEntries.account']);
 
             // Apply filters
             if ($request->has('status')) {
@@ -367,14 +358,13 @@ class AccountingController extends Controller
             return response()->json([
                 'success' => true,
                 'data' => $transactions,
-                'message' => 'Transactions retrieved successfully'
+                'message' => 'Transactions retrieved successfully',
             ]);
-
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
                 'message' => 'Failed to retrieve transactions',
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
             ], 500);
         }
     }
@@ -392,14 +382,13 @@ class AccountingController extends Controller
             return response()->json([
                 'success' => true,
                 'data' => $transaction,
-                'message' => 'Transaction retrieved successfully'
+                'message' => 'Transaction retrieved successfully',
             ]);
-
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
                 'message' => 'Failed to retrieve transaction',
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
             ], 500);
         }
     }
@@ -412,10 +401,10 @@ class AccountingController extends Controller
         try {
             $this->authorize('approve', $transaction);
 
-            if (!$transaction->canBeApproved()) {
+            if (! $transaction->canBeApproved()) {
                 return response()->json([
                     'success' => false,
-                    'message' => 'Transaction cannot be approved in its current state'
+                    'message' => 'Transaction cannot be approved in its current state',
                 ], 400);
             }
 
@@ -424,14 +413,13 @@ class AccountingController extends Controller
             return response()->json([
                 'success' => true,
                 'data' => $transaction->fresh(),
-                'message' => 'Transaction approved successfully'
+                'message' => 'Transaction approved successfully',
             ]);
-
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
                 'message' => 'Failed to approve transaction',
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
             ], 500);
         }
     }
@@ -444,10 +432,10 @@ class AccountingController extends Controller
         try {
             $this->authorize('post', $transaction);
 
-            if (!$transaction->canBePosted()) {
+            if (! $transaction->canBePosted()) {
                 return response()->json([
                     'success' => false,
-                    'message' => 'Transaction cannot be posted in its current state'
+                    'message' => 'Transaction cannot be posted in its current state',
                 ], 400);
             }
 
@@ -456,14 +444,13 @@ class AccountingController extends Controller
             return response()->json([
                 'success' => true,
                 'data' => $transaction->fresh(),
-                'message' => 'Transaction posted successfully'
+                'message' => 'Transaction posted successfully',
             ]);
-
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
                 'message' => 'Failed to post transaction',
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
             ], 500);
         }
     }

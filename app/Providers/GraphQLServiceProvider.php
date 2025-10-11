@@ -141,7 +141,7 @@ class GraphQLServiceProvider extends ServiceProvider
     {
         // Register GraphQL-specific middleware
         $router = $this->app['router'];
-        
+
         // Add tenant middleware to GraphQL routes
         $router->aliasMiddleware('graphql.tenant', \App\Http\Middleware\TenantMiddleware::class);
         $router->aliasMiddleware('graphql.auth', \App\Http\Middleware\Authenticate::class);

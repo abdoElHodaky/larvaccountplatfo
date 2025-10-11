@@ -102,7 +102,7 @@ const createWebSocketLink = (config: GraphQLConfig) => {
  * Error handling link
  */
 const createErrorLink = () => {
-  return onError(({ graphQLErrors, networkError, operation, forward }) => {
+  return onError(({ graphQLErrors, networkError, operation: _operation, forward: _forward }) => {
     if (graphQLErrors) {
       graphQLErrors.forEach(({ message, locations, path, extensions }) => {
         console.error(

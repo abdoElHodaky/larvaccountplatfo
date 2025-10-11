@@ -3,6 +3,9 @@
  * Feature-specific components for accounting functionality
  */
 
+// Main components
+export { default as Dashboard } from './Dashboard';
+
 // Form components
 export * from './AccountForm';
 

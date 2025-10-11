@@ -98,6 +98,7 @@ export const IncomeStatement: React.FC<IncomeStatementProps> = memo(({
   const sectionBg = useColorModeValue('blue.50', 'blue.900');
   const positiveColor = useColorModeValue('green.500', 'green.400');
   const negativeColor = useColorModeValue('red.500', 'red.400');
+  const hoverBg = useColorModeValue('gray.50', 'gray.700');
 
   // Group items by type
   const groupedItems = useMemo(() => {
@@ -198,7 +199,7 @@ export const IncomeStatement: React.FC<IncomeStatementProps> = memo(({
   const renderItemRow = useMemoizedCallback((item: IncomeStatementItem, _index: number) => (
     <Tr
       key={item.id}
-      _hover={{ bg: useColorModeValue('gray.50', 'gray.700') }}
+      _hover={{ bg: hoverBg }}
       cursor={onItemClick ? 'pointer' : 'default'}
       onClick={() => handleItemClick(item)}
     >

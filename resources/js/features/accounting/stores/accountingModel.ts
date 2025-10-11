@@ -56,7 +56,7 @@ export interface JournalEntry {
   updatedAt: string;
 }
 
-export interface AccountingFilters {
+export interface Filters {
   dateRange: {
     start: string;
     end: string;
@@ -83,7 +83,7 @@ export interface AccountingState {
   selectedJournalEntry: JournalEntry | null;
   
   // Filters and UI
-  filters: AccountingFilters;
+  filters: Filters;
   currentView: 'accounts' | 'transactions' | 'journal-entries' | 'reports';
   
   // Error handling
@@ -91,7 +91,7 @@ export interface AccountingState {
 }
 
 // Initial state
-const initialFilters: AccountingFilters = {
+const initialFilters: Filters = {
   dateRange: {
     start: new Date(new Date().getFullYear(), 0, 1).toISOString().split('T')[0],
     end: new Date().toISOString().split('T')[0],
@@ -120,7 +120,7 @@ const initialState: AccountingState = {
   error: null,
 };
 
-export const accountingModel = createModel()({
+export const accountingModel = createModel<RootModel>()({
   state: initialState,
   
   reducers: {
@@ -245,7 +245,7 @@ export const accountingModel = createModel()({
     }),
     
     // Filters and UI
-    updateFilters: (state, payload: Partial<AccountingFilters>) => ({
+    updateFilters: (state, payload: Partial<Filters>) => ({
       ...state,
       filters: { ...state.filters, ...payload },
     }),
@@ -274,7 +274,7 @@ export const accountingModel = createModel()({
   
   effects: (dispatch) => ({
     // Account effects
-    async fetchAccounts(filters?: Partial<AccountingFilters>) {
+    async fetchAccounts(filters?: Partial<Filters>) {
       dispatch.accounting.setAccountsLoading(true);
       dispatch.accounting.clearError();
       
@@ -301,16 +301,17 @@ export const accountingModel = createModel()({
       }
     },
     
-    async updateAccountData(payload: { id: string; data: Partial<Account> }, rootState) {
+    async updateAccountData(payload: { id: string; data: Partial<Account> }) {
       dispatch.accounting.clearError();
       
       try {
-        // TODO: Replace with actual API call
-        // const response = await accountingApi.updateAccount(payload.id, payload.data);
-        // dispatch.accounting.updateAccount(response.data);
+        // Actual API call implementation
+        const response = await accountingApi.updateAccount(payload.id, payload.data);
+        dispatch.accounting.updateAccount(response.data);
         
-        // Mock implementation
-        const existingAccount = rootState.accounting.accounts.find((a: any) => a.id === payload.id);
+        // Update local state with server response
+        const state = this.getState();
+        const existingAccount = state.accounting.accounts.find(a => a.id === payload.id);
         if (existingAccount) {
           const updatedAccount = {
             ...existingAccount,
@@ -334,8 +335,8 @@ export const accountingModel = createModel()({
       dispatch.accounting.clearError();
       
       try {
-        // TODO: Replace with actual API call
-        // await accountingApi.deleteAccount(accountId);
+        // Actual API call implementation
+        await accountingApi.deleteAccount(accountId);
         
         dispatch.accounting.removeAccount(accountId);
         return { success: true };
@@ -348,19 +349,16 @@ export const accountingModel = createModel()({
     },
     
     // Transaction effects
-    async fetchTransactions(_filters?: Partial<AccountingFilters>) {
+    async fetchTransactions(_filters?: Partial<Filters>) {
       dispatch.accounting.setTransactionsLoading(true);
       dispatch.accounting.clearError();
       
       try {
-        // TODO: Replace with actual API call
-        // const response = await accountingApi.getTransactions(filters);
-        // dispatch.accounting.setTransactions(response.data);
+        // Actual API call implementation
+        const response = await accountingApi.getTransactions(filters);
+        dispatch.accounting.setTransactions(response.data);
         
-        // Mock implementation
-        setTimeout(() => {
-          dispatch.accounting.setTransactions([]);
-        }, 1000);
+        return { success: true, data: response.data };
         
       } catch (error: any) {
         dispatch.accounting.setError(error.message || 'Failed to fetch transactions');
@@ -369,19 +367,16 @@ export const accountingModel = createModel()({
     },
     
     // Journal Entry effects
-    async fetchJournalEntries(_filters?: Partial<AccountingFilters>) {
+    async fetchJournalEntries(_filters?: Partial<Filters>) {
       dispatch.accounting.setJournalEntriesLoading(true);
       dispatch.accounting.clearError();
       
       try {
-        // TODO: Replace with actual API call
-        // const response = await accountingApi.getJournalEntries(filters);
-        // dispatch.accounting.setJournalEntries(response.data);
+        // Actual API call implementation
+        const response = await accountingApi.getJournalEntries(filters);
+        dispatch.accounting.setJournalEntries(response.data);
         
-        // Mock implementation
-        setTimeout(() => {
-          dispatch.accounting.setJournalEntries([]);
-        }, 1000);
+        return { success: true, data: response.data };
         
       } catch (error: any) {
         dispatch.accounting.setError(error.message || 'Failed to fetch journal entries');

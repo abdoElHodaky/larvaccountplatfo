@@ -5,8 +5,8 @@ namespace App\Features\Inventory\Controllers;
 use App\Features\Inventory\Models\Product;
 use App\Features\Inventory\Services\InventoryService;
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -30,7 +30,7 @@ class InventoryController extends Controller
         try {
             $organizationId = $this->getCurrentOrganizationId();
             $overview = $this->inventoryService->getInventoryOverview($organizationId);
-            
+
             // Get recent products and low stock alerts
             $recentProducts = $this->inventoryService->getRecentProducts($organizationId, 10);
             $lowStockProducts = $this->inventoryService->getLowStockProducts($organizationId);
@@ -46,10 +46,9 @@ class InventoryController extends Controller
                     'name' => auth()->user()->current_organization->name ?? 'Default Organization',
                 ],
             ]);
-
         } catch (\Exception $e) {
-            \Log::error('Inventory dashboard error: ' . $e->getMessage());
-            
+            \Log::error('Inventory dashboard error: '.$e->getMessage());
+
             // Return error page with Inertia
             return Inertia::render('Inventory/Dashboard', [
                 'overview' => null,
@@ -77,14 +76,13 @@ class InventoryController extends Controller
             return response()->json([
                 'success' => true,
                 'data' => $overview,
-                'message' => 'Inventory dashboard data retrieved successfully'
+                'message' => 'Inventory dashboard data retrieved successfully',
             ]);
-
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
                 'message' => 'Failed to retrieve inventory dashboard data',
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
             ], 500);
         }
     }
@@ -96,26 +94,25 @@ class InventoryController extends Controller
     {
         try {
             $organizationId = $this->getCurrentOrganizationId();
-            
+
             $filters = $request->only([
-                'status', 'category_id', 'type', 'search', 
-                'low_stock', 'out_of_stock', 'sort_by', 'sort_order'
+                'status', 'category_id', 'type', 'search',
+                'low_stock', 'out_of_stock', 'sort_by', 'sort_order',
             ]);
-            
+
             $perPage = $request->get('per_page', 15);
             $products = $this->inventoryService->getProducts($organizationId, $filters, $perPage);
 
             return response()->json([
                 'success' => true,
                 'data' => $products,
-                'message' => 'Products retrieved successfully'
+                'message' => 'Products retrieved successfully',
             ]);
-
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
                 'message' => 'Failed to retrieve products',
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
             ], 500);
         }
     }
@@ -152,7 +149,7 @@ class InventoryController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => 'Validation failed',
-                'errors' => $validator->errors()
+                'errors' => $validator->errors(),
             ], 422);
         }
 
@@ -163,14 +160,13 @@ class InventoryController extends Controller
             return response()->json([
                 'success' => true,
                 'data' => $product->load(['category', 'stockLevels']),
-                'message' => 'Product created successfully'
+                'message' => 'Product created successfully',
             ], 201);
-
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
                 'message' => 'Failed to create product',
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
             ], 500);
         }
     }
@@ -215,10 +211,9 @@ class InventoryController extends Controller
                     'name' => auth()->user()->current_organization->name ?? 'Default Organization',
                 ],
             ]);
-
         } catch (\Exception $e) {
-            \Log::error('Product detail error: ' . $e->getMessage());
-            
+            \Log::error('Product detail error: '.$e->getMessage());
+
             // Return error page with Inertia
             return Inertia::render('Inventory/ProductDetail', [
                 'product' => null,
@@ -248,14 +243,13 @@ class InventoryController extends Controller
             return response()->json([
                 'success' => true,
                 'data' => $product,
-                'message' => 'Product retrieved successfully'
+                'message' => 'Product retrieved successfully',
             ]);
-
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
                 'message' => 'Failed to retrieve product',
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
             ], 500);
         }
     }
@@ -269,7 +263,7 @@ class InventoryController extends Controller
 
         $validator = Validator::make($request->all(), [
             'name' => 'sometimes|required|string|max:255',
-            'sku' => 'sometimes|required|string|max:100|unique:products,sku,' . $product->id,
+            'sku' => 'sometimes|required|string|max:100|unique:products,sku,'.$product->id,
             'description' => 'nullable|string',
             'category_id' => 'nullable|exists:product_categories,id',
             'type' => 'sometimes|required|in:physical,digital,service',
@@ -294,7 +288,7 @@ class InventoryController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => 'Validation failed',
-                'errors' => $validator->errors()
+                'errors' => $validator->errors(),
             ], 422);
         }
 
@@ -304,14 +298,13 @@ class InventoryController extends Controller
             return response()->json([
                 'success' => true,
                 'data' => $updatedProduct->load(['category', 'stockLevels']),
-                'message' => 'Product updated successfully'
+                'message' => 'Product updated successfully',
             ]);
-
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
                 'message' => 'Failed to update product',
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
             ], 500);
         }
     }
@@ -328,14 +321,13 @@ class InventoryController extends Controller
 
             return response()->json([
                 'success' => true,
-                'message' => 'Product deleted successfully'
+                'message' => 'Product deleted successfully',
             ]);
-
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
                 'message' => 'Failed to delete product',
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
             ], 500);
         }
     }
@@ -358,7 +350,7 @@ class InventoryController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => 'Validation failed',
-                'errors' => $validator->errors()
+                'errors' => $validator->errors(),
             ], 422);
         }
 
@@ -376,14 +368,13 @@ class InventoryController extends Controller
 
             return response()->json([
                 'success' => true,
-                'message' => 'Stock adjusted successfully'
+                'message' => 'Stock adjusted successfully',
             ]);
-
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
                 'message' => 'Failed to adjust stock',
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
             ], 500);
         }
     }
@@ -400,14 +391,13 @@ class InventoryController extends Controller
             return response()->json([
                 'success' => true,
                 'data' => $alerts,
-                'message' => 'Stock alerts retrieved successfully'
+                'message' => 'Stock alerts retrieved successfully',
             ]);
-
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
                 'message' => 'Failed to retrieve stock alerts',
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
             ], 500);
         }
     }

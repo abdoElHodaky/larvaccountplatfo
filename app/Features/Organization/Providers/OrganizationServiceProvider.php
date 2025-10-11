@@ -2,8 +2,8 @@
 
 namespace App\Features\Organization\Providers;
 
-use Illuminate\Support\ServiceProvider;
 use App\Features\Organization\Services\OrganizationService;
+use Illuminate\Support\ServiceProvider;
 
 class OrganizationServiceProvider extends ServiceProvider
 {
@@ -13,7 +13,7 @@ class OrganizationServiceProvider extends ServiceProvider
     public function register(): void
     {
         $this->app->singleton(OrganizationService::class, function ($app) {
-            return new OrganizationService();
+            return new OrganizationService;
         });
     }
 
@@ -23,17 +23,17 @@ class OrganizationServiceProvider extends ServiceProvider
     public function boot(): void
     {
         // Load routes if they exist
-        $routePath = __DIR__ . '/../Routes/organization.php';
+        $routePath = __DIR__.'/../Routes/organization.php';
         if (file_exists($routePath)) {
             $this->loadRoutesFrom($routePath);
         }
-        
+
         // Load migrations if needed
         // $this->loadMigrationsFrom(__DIR__ . '/../Database/Migrations');
-        
+
         // Load views if needed
         // $this->loadViewsFrom(__DIR__ . '/../Resources/views', 'organization');
-        
+
         // Publish config if needed
         // $this->publishes([
         //     __DIR__ . '/../Config/organization.php' => config_path('organization.php'),

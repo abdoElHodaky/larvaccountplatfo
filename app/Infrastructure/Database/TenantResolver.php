@@ -13,8 +13,11 @@ use Illuminate\Support\Facades\Config;
 class TenantResolver
 {
     private const ENTERPRISE_USER_THRESHOLD = 1000;
+
     private const ENTERPRISE_TRANSACTION_THRESHOLD = 100000;
+
     private const HIGH_VOLUME_PLANS = ['enterprise', 'premium'];
+
     private const CACHE_TTL = 300; // 5 minutes
 
     /**
@@ -23,33 +26,33 @@ class TenantResolver
     public function determineDatabaseStrategy(Tenant $tenant): string
     {
         $cacheKey = "tenant_db_strategy_{$tenant->id}";
-        
+
         return Cache::remember($cacheKey, self::CACHE_TTL, function () use ($tenant) {
             // Rule 1: Enterprise plans → Dedicated database
             if (in_array($tenant->plan, self::HIGH_VOLUME_PLANS)) {
                 return 'dedicated';
             }
-            
-            // Rule 2: High user count → Dedicated database  
+
+            // Rule 2: High user count → Dedicated database
             if ($tenant->user_count >= self::ENTERPRISE_USER_THRESHOLD) {
                 return 'dedicated';
             }
-            
+
             // Rule 3: High transaction volume → Dedicated database
             if ($tenant->monthly_transaction_count >= self::ENTERPRISE_TRANSACTION_THRESHOLD) {
                 return 'dedicated';
             }
-            
+
             // Rule 4: Compliance requirements → Dedicated database
             if ($tenant->requires_data_isolation) {
                 return 'dedicated';
             }
-            
+
             // Rule 5: Geographic clustering → Regional shared database
             if ($tenant->region && $this->hasRegionalCluster($tenant->region)) {
                 return 'clustered';
             }
-            
+
             // Default: Shared database with tenant isolation
             return 'shared';
         });
@@ -61,7 +64,7 @@ class TenantResolver
     public function getConnectionName(Tenant $tenant): string
     {
         $strategy = $this->determineDatabaseStrategy($tenant);
-        
+
         return match ($strategy) {
             'dedicated' => $this->getDedicatedConnection($tenant),
             'clustered' => $this->getClusteredConnection($tenant),
@@ -77,7 +80,7 @@ class TenantResolver
     {
         $connectionName = $this->getConnectionName($tenant);
         Config::set('database.default', $connectionName);
-        
+
         // Clear any existing connection to force reconnection
         app('db')->purge($connectionName);
     }
@@ -96,6 +99,7 @@ class TenantResolver
     private function getClusteredConnection(Tenant $tenant): string
     {
         $region = $tenant->region ?? 'us-east-1';
+
         return "cluster_{$region}";
     }
 
@@ -105,6 +109,7 @@ class TenantResolver
     private function getSharedConnection(Tenant $tenant): string
     {
         $shardNumber = ($tenant->id % 4) + 1;
+
         return "shared_shard_{$shardNumber}";
     }
 
@@ -115,11 +120,11 @@ class TenantResolver
     {
         $availableRegions = [
             'us-east-1',
-            'us-west-2', 
+            'us-west-2',
             'eu-west-1',
-            'ap-southeast-1'
+            'ap-southeast-1',
         ];
-        
+
         return in_array($region, $availableRegions);
     }
 
@@ -155,12 +160,12 @@ class TenantResolver
     {
         if (auth()->check() && auth()->user()->current_tenant_id) {
             return Cache::remember(
-                "tenant_" . auth()->user()->current_tenant_id,
+                'tenant_'.auth()->user()->current_tenant_id,
                 self::CACHE_TTL,
-                fn() => Tenant::find(auth()->user()->current_tenant_id)
+                fn () => Tenant::find(auth()->user()->current_tenant_id)
             );
         }
-        
+
         return null;
     }
 
@@ -173,17 +178,17 @@ class TenantResolver
         if ($tenant = $this->getCurrentTenant()) {
             return $tenant;
         }
-        
+
         // Try to get tenant from subdomain
         if ($tenant = $this->resolveTenantFromSubdomain()) {
             return $tenant;
         }
-        
+
         // Try to get tenant from header (for API requests)
         if ($tenant = $this->resolveTenantFromHeader()) {
             return $tenant;
         }
-        
+
         return null;
     }
 
@@ -194,15 +199,15 @@ class TenantResolver
     {
         $host = request()->getHost();
         $subdomain = explode('.', $host)[0] ?? null;
-        
+
         if ($subdomain && $subdomain !== 'www') {
             return Cache::remember(
                 "tenant_subdomain_{$subdomain}",
                 self::CACHE_TTL,
-                fn() => Tenant::where('subdomain', $subdomain)->first()
+                fn () => Tenant::where('subdomain', $subdomain)->first()
             );
         }
-        
+
         return null;
     }
 
@@ -212,15 +217,15 @@ class TenantResolver
     private function resolveTenantFromHeader(): ?Tenant
     {
         $tenantId = request()->header('X-Tenant-ID');
-        
+
         if ($tenantId) {
             return Cache::remember(
                 "tenant_header_{$tenantId}",
                 self::CACHE_TTL,
-                fn() => Tenant::find($tenantId)
+                fn () => Tenant::find($tenantId)
             );
         }
-        
+
         return null;
     }
 }

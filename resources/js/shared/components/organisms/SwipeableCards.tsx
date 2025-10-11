@@ -1,13 +1,12 @@
-import React, { Fragment, memo, useMemo, useState, useRef } from 'react';
+import React, { memo, useMemo, useState, useRef } from 'react';
 import {
   Box,
   VStack,
   HStack,
-  Text,
+
   IconButton,
   useColorModeValue,
-  Flex,
-  Spacer,
+
 } from '@chakra-ui/react';
 import { useMemoizedCallback } from '@/shared/hooks';
 

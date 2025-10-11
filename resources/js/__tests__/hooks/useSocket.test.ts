@@ -4,26 +4,27 @@
  */
 
 import { renderHook, act, waitFor } from '@testing-library/react';
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { useSocket, useRealtimeDashboard, useRealtimeAccounting } from '../../shared/hooks/useSocket';
 import { socketManager } from '../../shared/services/socket/socketManager';
 import { testUtils, localStorageMock } from '../setup/testSetup';
 
 // Mock the socket manager
-jest.mock('../../shared/services/socket/socketManager', () => ({
+vi.mock('../../shared/services/socket/socketManager', () => ({
   socketManager: {
-    connect: jest.fn(),
-    disconnect: jest.fn(),
-    emit: jest.fn(),
-    on: jest.fn(),
-    off: jest.fn(),
-    joinRoom: jest.fn(),
-    leaveRoom: jest.fn(),
-    sendToRoom: jest.fn(),
-    broadcastToOrganization: jest.fn(),
-    sendToUser: jest.fn(),
+    connect: vi.fn(),
+    disconnect: vi.fn(),
+    emit: vi.fn(),
+    on: vi.fn(),
+    off: vi.fn(),
+    joinRoom: vi.fn(),
+    leaveRoom: vi.fn(),
+    sendToRoom: vi.fn(),
+    broadcastToOrganization: vi.fn(),
+    sendToUser: vi.fn(),
     isConnected: false,
     socketId: undefined,
-    getStats: jest.fn(() => ({
+    getStats: vi.fn(() => ({
       connected: false,
       socketId: undefined,
       reconnectAttempts: 0,
@@ -33,11 +34,11 @@ jest.mock('../../shared/services/socket/socketManager', () => ({
   },
 }));
 
-const mockSocketManager = socketManager as jest.Mocked<typeof socketManager>;
+const mockSocketManager = socketManager as any;
 
 describe('useSocket Hook', () => {
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
     testUtils.setupAuthenticatedUser();
     mockSocketManager.connect.mockResolvedValue({} as any);
     mockSocketManager.on.mockReturnValue(() => {});
@@ -141,7 +142,7 @@ describe('useRealtimeDashboard Hook', () => {
   const mockOrganizationId = 1;
 
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
     testUtils.setupAuthenticatedUser();
     mockSocketManager.isConnected = true;
     mockSocketManager.on.mockReturnValue(() => {});
@@ -172,8 +173,8 @@ describe('useRealtimeDashboard Hook', () => {
   });
 
   it('should update metrics on real-time events', async () => {
-    let metricsUpdateCallback: Function;
-    mockSocketManager.on.mockImplementation((event, callback) => {
+    let metricsUpdateCallback: (data: any) => void;
+    mockSocketManager.on.mockImplementation((event: string, callback: (data: any) => void) => {
       if (event === 'dashboard:metrics_updated') {
         metricsUpdateCallback = callback;
       }
@@ -202,8 +203,8 @@ describe('useRealtimeDashboard Hook', () => {
   });
 
   it('should update widgets on real-time events', async () => {
-    let widgetUpdateCallback: Function;
-    mockSocketManager.on.mockImplementation((event, callback) => {
+    let widgetUpdateCallback: (data: any) => void;
+    mockSocketManager.on.mockImplementation((event: string, callback: (data: any) => void) => {
       if (event === 'dashboard:widget_updated') {
         widgetUpdateCallback = callback;
       }
@@ -231,8 +232,8 @@ describe('useRealtimeDashboard Hook', () => {
   });
 
   it('should handle widget position updates', async () => {
-    let positionUpdateCallback: Function;
-    mockSocketManager.on.mockImplementation((event, callback) => {
+    let positionUpdateCallback: (data: any) => void;
+    mockSocketManager.on.mockImplementation((event: string, callback: (data: any) => void) => {
       if (event === 'dashboard:widget_position_updated') {
         positionUpdateCallback = callback;
       }
@@ -280,7 +281,7 @@ describe('useRealtimeAccounting Hook', () => {
   const mockOrganizationId = 1;
 
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
     testUtils.setupAuthenticatedUser();
     mockSocketManager.isConnected = true;
     mockSocketManager.on.mockReturnValue(() => {});
@@ -301,8 +302,8 @@ describe('useRealtimeAccounting Hook', () => {
   });
 
   it('should update transactions on real-time events', async () => {
-    let transactionCallback: Function;
-    mockSocketManager.on.mockImplementation((event, callback) => {
+    let transactionCallback: (data: any) => void;
+    mockSocketManager.on.mockImplementation((event: string, callback: (data: any) => void) => {
       if (event === 'accounting:transaction_created') {
         transactionCallback = callback;
       }
@@ -331,8 +332,8 @@ describe('useRealtimeAccounting Hook', () => {
   });
 
   it('should update account balances on real-time events', async () => {
-    let balanceCallback: Function;
-    mockSocketManager.on.mockImplementation((event, callback) => {
+    let balanceCallback: (data: any) => void;
+    mockSocketManager.on.mockImplementation((event: string, callback: (data: any) => void) => {
       if (event === 'accounting:account_balance_updated') {
         balanceCallback = callback;
       }
@@ -367,8 +368,8 @@ describe('useRealtimeAccounting Hook', () => {
   });
 
   it('should handle transaction updates', async () => {
-    let updateCallback: Function;
-    mockSocketManager.on.mockImplementation((event, callback) => {
+    let updateCallback: (data: any) => void;
+    mockSocketManager.on.mockImplementation((event: string, callback: (data: any) => void) => {
       if (event === 'accounting:transaction_updated') {
         updateCallback = callback;
       }
@@ -417,7 +418,7 @@ describe('useRealtimeAccounting Hook', () => {
 
 describe('Socket Hook Error Handling', () => {
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
     testUtils.setupAuthenticatedUser();
   });
 
@@ -452,8 +453,8 @@ describe('Socket Hook Error Handling', () => {
   });
 
   it('should handle event listener errors', () => {
-    const errorCallback = jest.fn();
-    mockSocketManager.on.mockImplementation((event, callback) => {
+    const errorCallback = vi.fn();
+    mockSocketManager.on.mockImplementation((event: string, callback: (data: any) => void) => {
       if (event === 'dashboard:metrics_updated') {
         // Simulate callback error
         setTimeout(() => {

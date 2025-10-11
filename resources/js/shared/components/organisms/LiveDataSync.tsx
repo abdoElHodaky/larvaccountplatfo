@@ -1,4 +1,4 @@
-import React, { Fragment, memo, useMemo, useState, useEffect, useRef } from 'react';
+import React, { memo, useMemo, useState, useEffect, useRef } from 'react';
 import {
   Box,
   VStack,
@@ -78,11 +78,11 @@ export const LiveDataSync: React.FC<LiveDataSyncProps> = memo(({
   }>>([]);
 
   const syncIntervalRef = useRef<NodeJS.Timeout | null>(null);
-  const changeQueueRef = useRef<DataChange[]>([]);
+  const _changeQueueRef = useRef<DataChange[]>([]);
 
   // Memoized color values
-  const bgColor = useColorModeValue('white', 'gray.800');
-  const borderColor = useColorModeValue('gray.200', 'gray.600');
+  const _bgColor = useColorModeValue('white', 'gray.800');
+  const _borderColor = useColorModeValue('gray.200', 'gray.600');
   const successColor = useColorModeValue('green.500', 'green.400');
   const errorColor = useColorModeValue('red.500', 'red.400');
   const warningColor = useColorModeValue('orange.500', 'orange.400');
@@ -93,8 +93,8 @@ export const LiveDataSync: React.FC<LiveDataSyncProps> = memo(({
     connect, 
     subscribe, 
     send,
-    subscribeToTransactions,
-    subscribeToAccountUpdates,
+    subscribeToTransactions: _subscribeToTransactions,
+    subscribeToAccountUpdates: _subscribeToAccountUpdates,
   } = useFinancialWebSocket(tenantId);
 
   // Connect on mount
@@ -242,7 +242,7 @@ export const LiveDataSync: React.FC<LiveDataSyncProps> = memo(({
   }, [onDataChange]);
 
   // Add a local change to the sync queue
-  const queueChange = useMemoizedCallback((change: Omit<DataChange, 'id' | 'timestamp'>) => {
+  const _queueChange = useMemoizedCallback((change: Omit<DataChange, 'id' | 'timestamp'>) => {
     const fullChange: DataChange = {
       ...change,
       id: `local-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
@@ -398,7 +398,7 @@ export const LiveDataSync: React.FC<LiveDataSyncProps> = memo(({
 
     return (
       <VStack spacing={2} align="stretch">
-        {conflicts.slice(0, 3).map((conflict, index) => (
+        {conflicts.slice(0, 3).map((conflict, _index) => (
           <Alert key={`${conflict.local.id}-${conflict.remote.id}`} status="warning" size="sm">
             <AlertIcon />
             <Text fontSize="xs">

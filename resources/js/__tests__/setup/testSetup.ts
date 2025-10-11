@@ -5,6 +5,7 @@
 
 import '@testing-library/jest-dom';
 import { configure } from '@testing-library/react';
+import { afterEach, afterAll, beforeAll, vi } from 'vitest';
 import { server } from './mocks/server';
 
 // Configure React Testing Library
@@ -34,10 +35,10 @@ afterAll(() => {
 
 // Mock localStorage
 const localStorageMock = {
-  getItem: jest.fn(),
-  setItem: jest.fn(),
-  removeItem: jest.fn(),
-  clear: jest.fn(),
+  getItem: vi.fn(),
+  setItem: vi.fn(),
+  removeItem: vi.fn(),
+  clear: vi.fn(),
 };
 Object.defineProperty(window, 'localStorage', {
   value: localStorageMock,
@@ -45,17 +46,17 @@ Object.defineProperty(window, 'localStorage', {
 
 // Mock sessionStorage
 const sessionStorageMock = {
-  getItem: jest.fn(),
-  setItem: jest.fn(),
-  removeItem: jest.fn(),
-  clear: jest.fn(),
+  getItem: vi.fn(),
+  setItem: vi.fn(),
+  removeItem: vi.fn(),
+  clear: vi.fn(),
 };
 Object.defineProperty(window, 'sessionStorage', {
   value: sessionStorageMock,
 });
 
 // Mock fetch
-global.fetch = jest.fn();
+global.fetch = vi.fn();
 
 // Mock WebSocket
 class MockWebSocket {
@@ -81,7 +82,7 @@ class MockWebSocket {
     }, 100);
   }
 
-  send(data: string | ArrayBuffer | Blob | ArrayBufferView): void {
+  send(_data: string | ArrayBuffer | Blob | ArrayBufferView): void {
     // Mock send implementation
   }
 
@@ -99,7 +100,7 @@ class MockWebSocket {
     if (type === 'error') this.onerror = listener as any;
   }
 
-  removeEventListener(type: string, listener: EventListener): void {
+  removeEventListener(type: string, _listener: EventListener): void {
     if (type === 'open') this.onopen = null;
     if (type === 'close') this.onclose = null;
     if (type === 'message') this.onmessage = null;
@@ -111,11 +112,16 @@ global.WebSocket = MockWebSocket as any;
 
 // Mock IntersectionObserver
 global.IntersectionObserver = class IntersectionObserver {
+  root = null;
+  rootMargin = '';
+  thresholds = [];
+  
   constructor() {}
   observe() {}
   unobserve() {}
   disconnect() {}
-};
+  takeRecords() { return []; }
+} as any;
 
 // Mock ResizeObserver
 global.ResizeObserver = class ResizeObserver {
@@ -127,10 +133,12 @@ global.ResizeObserver = class ResizeObserver {
 
 // Mock PerformanceObserver
 global.PerformanceObserver = class PerformanceObserver {
+  static supportedEntryTypes = ['measure', 'navigation', 'resource'];
+  
   constructor() {}
   observe() {}
   disconnect() {}
-};
+} as any;
 
 // Mock performance.memory
 Object.defineProperty(performance, 'memory', {
@@ -157,21 +165,21 @@ Object.defineProperty(global, 'crypto', {
 // Mock matchMedia
 Object.defineProperty(window, 'matchMedia', {
   writable: true,
-  value: jest.fn().mockImplementation(query => ({
+  value: vi.fn().mockImplementation(query => ({
     matches: false,
     media: query,
     onchange: null,
-    addListener: jest.fn(),
-    removeListener: jest.fn(),
-    addEventListener: jest.fn(),
-    removeEventListener: jest.fn(),
-    dispatchEvent: jest.fn(),
+    addListener: vi.fn(),
+    removeListener: vi.fn(),
+    addEventListener: vi.fn(),
+    removeEventListener: vi.fn(),
+    dispatchEvent: vi.fn(),
   })),
 });
 
 // Mock scrollTo
 Object.defineProperty(window, 'scrollTo', {
-  value: jest.fn(),
+  value: vi.fn(),
 });
 
 // Mock console methods for cleaner test output
@@ -179,8 +187,8 @@ const originalConsoleError = console.error;
 const originalConsoleWarn = console.warn;
 
 beforeEach(() => {
-  console.error = jest.fn();
-  console.warn = jest.fn();
+  console.error = vi.fn();
+  console.warn = vi.fn();
 });
 
 afterEach(() => {

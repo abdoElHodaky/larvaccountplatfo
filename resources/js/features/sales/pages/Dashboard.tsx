@@ -1,7 +1,7 @@
 import React from 'react';
 import { Head, Link } from '@inertiajs/react';
 import AppLayout from '@/shared/components/layouts/AppLayout';
-import { formatCurrency, formatDate, formatNumber, formatPercentage } from '@/shared/utils';
+import { formatCurrency, formatDate, formatNumber } from '@/shared/utils';
 import { SalesOrder, Customer, SalesStats, SalesTrends } from '../types';
 
 interface DashboardProps {
@@ -20,7 +20,7 @@ export default function Dashboard({
     overview, 
     recentOrders = [], 
     topCustomers = [], 
-    salesTrends,
+    salesTrends: _salesTrends,
     organization,
     error 
 }: DashboardProps) {

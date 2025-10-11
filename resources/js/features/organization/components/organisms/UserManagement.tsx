@@ -13,7 +13,6 @@ import {
   IconButton,
   Badge,
   Avatar,
-  useColorModeValue,
   Modal,
   ModalOverlay,
   ModalContent,
@@ -92,7 +91,7 @@ export const UserManagement = memo<UserManagementProps>(({
   onUserCreate,
   onUserUpdate,
   onUserDelete,
-  onRoleChange,
+  onRoleChange: _onRoleChange,
   loading = false,
   canManageUsers = true,
 }) => {
@@ -108,8 +107,7 @@ export const UserManagement = memo<UserManagementProps>(({
   const { isOpen: isEditOpen, onOpen: onEditOpen, onClose: onEditClose } = useDisclosure();
   const toast = useToast();
 
-  const bgColor = useColorModeValue('white', 'gray.800');
-  const borderColor = useColorModeValue('gray.200', 'gray.600');
+
 
   const handleCreateUser = useMemoizedCallback(async () => {
     if (!onUserCreate) return;
@@ -182,25 +180,7 @@ export const UserManagement = memo<UserManagementProps>(({
     }
   }, [onUserDelete, toast]);
 
-  const handleRoleChange = useMemoizedCallback(async (userId: string, newRole: User['role']) => {
-    if (!onRoleChange) return;
-    
-    try {
-      await onRoleChange(userId, newRole);
-      toast({
-        title: 'User role updated successfully',
-        status: 'success',
-        duration: 3000,
-      });
-    } catch (error) {
-      toast({
-        title: 'Failed to update user role',
-        description: error instanceof Error ? error.message : 'Unknown error',
-        status: 'error',
-        duration: 5000,
-      });
-    }
-  }, [onRoleChange, toast]);
+
 
   const openEditModal = useMemoizedCallback((user: User) => {
     setSelectedUser(user);

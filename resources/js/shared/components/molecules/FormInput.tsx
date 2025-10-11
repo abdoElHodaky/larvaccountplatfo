@@ -67,7 +67,7 @@ export const FormInput: React.FC<FormInputProps> = memo(({
   autoFocus,
   readOnly,
   currency = 'USD',
-  precision = 2,
+  precision: _precision = 2,
   showClearButton = false,
   formatOnBlur = false,
   inputProps = {},

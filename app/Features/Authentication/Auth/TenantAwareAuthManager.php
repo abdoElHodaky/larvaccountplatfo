@@ -2,9 +2,9 @@
 
 namespace App\Features\Authentication\Auth;
 
-use App\Auth\Guards\GlobalUserGuard;
-use App\Auth\Guards\TenantUserGuard;
-use App\Auth\Providers\HybridUserProvider;
+use App\Features\Authentication\Auth\Guards\GlobalUserGuard;
+use App\Features\Authentication\Auth\Guards\TenantUserGuard;
+use App\Features\Authentication\Auth\Providers\HybridUserProvider;
 use Illuminate\Auth\AuthManager;
 use Illuminate\Contracts\Foundation\Application;
 
@@ -93,8 +93,8 @@ class TenantAwareAuthManager extends AuthManager
     {
         // Check if we're in a tenant context
         $tenant = app('tenant', null);
-        
-        if (!$tenant) {
+
+        if (! $tenant) {
             // No tenant context, use global user authentication
             return 'global_user';
         }
@@ -109,10 +109,10 @@ class TenantAwareAuthManager extends AuthManager
     public function resolveGuard(?string $name = null)
     {
         $name = $name ?: $this->getDefaultDriver();
-        
+
         // Ensure the guard configuration exists
         $this->ensureGuardConfiguration($name);
-        
+
         return $this->guard($name);
     }
 
@@ -122,8 +122,8 @@ class TenantAwareAuthManager extends AuthManager
     protected function ensureGuardConfiguration(string $guardName): void
     {
         $config = $this->app['config']['auth.guards'];
-        
-        if (!isset($config[$guardName])) {
+
+        if (! isset($config[$guardName])) {
             // Dynamically create configuration based on tenant context
             $this->createDynamicGuardConfiguration($guardName);
         }
@@ -136,27 +136,27 @@ class TenantAwareAuthManager extends AuthManager
     {
         $tenant = app('tenant', null);
         $config = $this->app['config'];
-        
+
         switch ($guardName) {
             case 'global_user':
                 $config->set('auth.guards.global_user', [
                     'driver' => 'global_user',
                     'provider' => 'global_users',
                 ]);
-                
+
                 $config->set('auth.providers.global_users', [
                     'driver' => 'hybrid',
                     'model' => \App\Models\GlobalUser::class,
                     'global_model' => \App\Models\GlobalUser::class,
                 ]);
                 break;
-                
+
             case 'tenant_user':
                 $config->set('auth.guards.tenant_user', [
                     'driver' => 'tenant_user',
                     'provider' => 'tenant_users',
                 ]);
-                
+
                 $config->set('auth.providers.tenant_users', [
                     'driver' => 'hybrid',
                     'model' => \Modules\Shared\Models\User::class,
@@ -187,7 +187,7 @@ class TenantAwareAuthManager extends AuthManager
     /**
      * Forget all resolved guards to force re-resolution
      */
-    protected function forgetGuards(): void
+    public function forgetGuards(): void
     {
         $this->guards = [];
     }
@@ -197,7 +197,7 @@ class TenantAwareAuthManager extends AuthManager
      */
     public function isGlobalContext(): bool
     {
-        return !app()->bound('tenant') || app('tenant') === null;
+        return ! app()->bound('tenant') || app('tenant') === null;
     }
 
     /**
@@ -222,7 +222,7 @@ class TenantAwareAuthManager extends AuthManager
     public function attemptContextualLogin(array $credentials, bool $remember = false): bool
     {
         $guard = $this->resolveGuard();
-        
+
         return $guard->attempt($credentials, $remember);
     }
 
@@ -232,7 +232,7 @@ class TenantAwareAuthManager extends AuthManager
     public function getContextualUser()
     {
         $guard = $this->resolveGuard();
-        
+
         return $guard->user();
     }
 
@@ -242,8 +242,7 @@ class TenantAwareAuthManager extends AuthManager
     public function contextualLogout(): void
     {
         $guard = $this->resolveGuard();
-        
+
         $guard->logout();
     }
 }
-

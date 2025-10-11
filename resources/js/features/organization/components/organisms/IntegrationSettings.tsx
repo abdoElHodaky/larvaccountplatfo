@@ -125,7 +125,6 @@ export const IntegrationSettings = memo<IntegrationSettingsProps>(({
   const { isOpen: isEditOpen, onOpen: onEditOpen, onClose: onEditClose } = useDisclosure();
   const toast = useToast();
 
-  const bgColor = useColorModeValue('white', 'gray.800');
   const borderColor = useColorModeValue('gray.200', 'gray.600');
 
   const handleCreateIntegration = useMemoizedCallback(async () => {

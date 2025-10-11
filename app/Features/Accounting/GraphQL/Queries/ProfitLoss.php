@@ -20,7 +20,7 @@ class ProfitLoss
     {
         $fromDate = $args['from_date'] ?? now()->startOfMonth();
         $toDate = $args['to_date'] ?? now()->endOfMonth();
-        
+
         return $this->accountingService->getProfitLoss($fromDate, $toDate);
     }
 }

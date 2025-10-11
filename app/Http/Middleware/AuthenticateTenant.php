@@ -2,7 +2,7 @@
 
 namespace App\Http\Middleware;
 
-use App\Auth\TenantAwareAuthManager;
+use App\Features\Authentication\Auth\TenantAwareAuthManager;
 use Closure;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Auth\Middleware\Authenticate as Middleware;
@@ -67,10 +67,10 @@ class AuthenticateTenant extends Middleware
      */
     protected function redirectTo($request)
     {
-        if (!$request->expectsJson()) {
+        if (! $request->expectsJson()) {
             // Determine redirect based on tenant context
             $tenant = app('tenant', null);
-            
+
             if ($tenant) {
                 // Tenant context - redirect to tenant login
                 return route('tenant.login');
@@ -87,7 +87,7 @@ class AuthenticateTenant extends Middleware
     protected function getGuardsForRequest($request): array
     {
         $tenant = app('tenant', null);
-        
+
         if ($tenant) {
             return ['tenant_user'];
         } else {
@@ -108,7 +108,7 @@ class AuthenticateTenant extends Middleware
      */
     protected function isLandlordRoute($request): bool
     {
-        return !$this->isTenantRoute($request);
+        return ! $this->isTenantRoute($request);
     }
 
     /**
@@ -117,29 +117,29 @@ class AuthenticateTenant extends Middleware
     protected function authenticateTenant($request, array $guards)
     {
         $tenant = app('tenant');
-        
-        if (!$tenant) {
+
+        if (! $tenant) {
             throw new AuthenticationException('No tenant context found.');
         }
 
         // Use tenant-specific guard
         $guard = $this->auth->guard('tenant_user');
-        
-        if (!$guard->check()) {
+
+        if (! $guard->check()) {
             throw new AuthenticationException(
-                'Unauthenticated for tenant.', 
-                ['tenant_user'], 
+                'Unauthenticated for tenant.',
+                ['tenant_user'],
                 $this->redirectTo($request)
             );
         }
 
         // Verify user belongs to current tenant
         $user = $guard->user();
-        if (!$this->userBelongsToTenant($user, $tenant)) {
+        if (! $this->userBelongsToTenant($user, $tenant)) {
             $guard->logout();
             throw new AuthenticationException(
-                'User does not belong to current tenant.', 
-                ['tenant_user'], 
+                'User does not belong to current tenant.',
+                ['tenant_user'],
                 $this->redirectTo($request)
             );
         }
@@ -153,11 +153,11 @@ class AuthenticateTenant extends Middleware
     protected function authenticateLandlord($request, array $guards)
     {
         $guard = $this->auth->guard('global_user');
-        
-        if (!$guard->check()) {
+
+        if (! $guard->check()) {
             throw new AuthenticationException(
-                'Unauthenticated for landlord.', 
-                ['global_user'], 
+                'Unauthenticated for landlord.',
+                ['global_user'],
                 $this->redirectTo($request)
             );
         }
@@ -170,7 +170,7 @@ class AuthenticateTenant extends Middleware
      */
     protected function userBelongsToTenant($user, $tenant): bool
     {
-        if (!$user || !$tenant) {
+        if (! $user || ! $tenant) {
             return false;
         }
 
@@ -190,7 +190,7 @@ class AuthenticateTenant extends Middleware
     public function getAuthenticatedUser()
     {
         $tenant = app('tenant', null);
-        
+
         if ($tenant) {
             return $this->auth->guard('tenant_user')->user();
         } else {
@@ -204,8 +204,8 @@ class AuthenticateTenant extends Middleware
     public function userHasPermission(string $permission): bool
     {
         $user = $this->getAuthenticatedUser();
-        
-        if (!$user) {
+
+        if (! $user) {
             return false;
         }
 
@@ -223,8 +223,8 @@ class AuthenticateTenant extends Middleware
     public function userHasRole(string $role): bool
     {
         $user = $this->getAuthenticatedUser();
-        
-        if (!$user) {
+
+        if (! $user) {
             return false;
         }
 
@@ -241,7 +241,7 @@ class AuthenticateTenant extends Middleware
      */
     public function requirePermission(string $permission)
     {
-        if (!$this->userHasPermission($permission)) {
+        if (! $this->userHasPermission($permission)) {
             throw new AuthenticationException("Permission '{$permission}' required.");
         }
     }
@@ -251,9 +251,8 @@ class AuthenticateTenant extends Middleware
      */
     public function requireRole(string $role)
     {
-        if (!$this->userHasRole($role)) {
+        if (! $this->userHasRole($role)) {
             throw new AuthenticationException("Role '{$role}' required.");
         }
     }
 }
-

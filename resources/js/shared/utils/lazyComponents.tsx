@@ -52,7 +52,7 @@ export const CashFlowWidget = lazyWithRetry(
   () => import('../../features/dashboard/components/organisms/CashFlowWidget')
 );
 
-// Accounting Components - Feature-specific lazy loading
+// Accounting Components
 export const ChartOfAccounts = lazyWithRetry(
   () => import('../../features/accounting/components/organisms/ChartOfAccounts')
 );
@@ -88,11 +88,11 @@ export const JournalEntriesPage = lazyWithRetry(
 
 // Report Components
 export const IncomeStatement = lazyWithRetry(
-  () => import('../components/reports/IncomeStatement')
+  () => import('../../features/accounting/components/organisms/IncomeStatement')
 );
 
 export const BalanceSheetReport = lazyWithRetry(
-  () => import('../components/reports/BalanceSheet')
+  () => import('../../features/accounting/components/organisms/BalanceSheet')
 );
 
 export const TrialBalance = lazyWithRetry(
@@ -100,7 +100,7 @@ export const TrialBalance = lazyWithRetry(
 );
 
 export const ReportBuilder = lazyWithRetry(
-  () => import('../components/reports/ReportBuilder')
+  () => import('../../features/reporting/components/organisms/ReportBuilder')
 );
 
 // Organization Components (formerly Settings)
@@ -122,7 +122,7 @@ export const BillingSettings = lazyWithRetry(
 
 // Real-time Components
 export const WebSocketProvider = lazyWithRetry(
-  () => import('../components/realtime/WebSocketProvider')
+  () => import('../providers/WebSocketProvider')
 );
 
 // Preload critical components
@@ -141,13 +141,15 @@ export const preloadByRole = (userRole: string, permissions: string[]) => {
     import('../../features/dashboard/components/organisms/MetricsCards');
   }
   
+  // Remove conflicting preloads for components that are statically imported
   if (permissions.includes('manage_transactions')) {
-    import('../../features/accounting/components/organisms/TransactionList');
-    import('../../features/accounting/components/organisms/TransactionForm');
+    // TransactionList and TransactionForm are statically imported in their pages
+    // Only preload components that are truly lazy-loaded
+    import('../../features/accounting/components/organisms/BalanceSheet');
   }
   
   if (permissions.includes('view_reports')) {
-    import('../components/reports/IncomeStatement');
+    import('../../features/accounting/components/organisms/IncomeStatement');
   }
   
   if (userRole === 'admin') {
@@ -156,7 +158,7 @@ export const preloadByRole = (userRole: string, permissions: string[]) => {
   }
 };
 
-// Preload components based on route
+// Preload components based on route - only preload truly lazy components
 export const preloadByRoute = (currentRoute: string) => {
   switch (currentRoute) {
     case '/dashboard':
@@ -164,19 +166,22 @@ export const preloadByRoute = (currentRoute: string) => {
       import('../../features/dashboard/components/organisms/CashFlowWidget');
       break;
     case '/transactions':
-      import('../../features/accounting/components/organisms/TransactionForm');
-      import('../../features/accounting/components/organisms/JournalEntries');
+      // TransactionForm and JournalEntries are statically imported in their pages
+      // Only preload components that are truly lazy-loaded
+      import('../../features/accounting/components/organisms/BalanceSheet');
       break;
     case '/accounts':
-      import('../../features/accounting/components/organisms/TransactionList');
+      // TransactionList is statically imported in Accounts page
+      // Preload related components instead
+      import('../../features/accounting/components/organisms/BalanceSheet');
       break;
     case '/reports':
-      import('../components/reports/BalanceSheet');
+      import('../../features/accounting/components/organisms/BalanceSheet');
       import('../../features/accounting/components/organisms/TrialBalance');
       break;
     case '/settings':
-      import('../components/settings/UserManagement');
-      import('../components/settings/IntegrationSettings');
+      import('../../features/organization/components/organisms/UserManagement');
+      import('../../features/organization/components/organisms/IntegrationSettings');
       break;
   }
 };

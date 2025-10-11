@@ -2,7 +2,7 @@
 
 namespace App\Features\Authentication\Controllers\Auth;
 
-use App\Auth\TenantAwareAuthManager;
+use App\Features\Authentication\Auth\TenantAwareAuthManager;
 use App\Http\Controllers\Controller;
 use App\Services\AuthService;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
@@ -41,7 +41,7 @@ class LoginController extends Controller
     public function showLoginForm()
     {
         $tenant = app('tenant', null);
-        
+
         return Inertia::render('Auth/Login', [
             'tenant' => $tenant ? [
                 'id' => $tenant->id,
@@ -232,7 +232,7 @@ class LoginController extends Controller
     public function redirectPath()
     {
         $tenant = app('tenant', null);
-        
+
         if ($tenant) {
             // Tenant-specific dashboard
             return route('dashboard');
@@ -247,6 +247,7 @@ class LoginController extends Controller
             } elseif ($tenants->count() === 1) {
                 // Set the single tenant and redirect to dashboard
                 session(['tenant_id' => $tenants->first()->id]);
+
                 return route('dashboard');
             } else {
                 // No tenants - redirect to tenant selection with warning
@@ -273,9 +274,9 @@ class LoginController extends Controller
     {
         // Ensure we have a tenant context
         $tenant = app('tenant', null);
-        if (!$tenant) {
+        if (! $tenant) {
             return redirect()->route('tenant.select')
-                           ->withErrors(['tenant' => 'Please select a tenant first.']);
+                ->withErrors(['tenant' => 'Please select a tenant first.']);
         }
 
         return $this->login($request);
@@ -326,11 +327,11 @@ class LoginController extends Controller
         ]);
 
         $subdomain = $request->input('subdomain');
-        
+
         // Redirect to tenant-specific login
         $protocol = $request->isSecure() ? 'https' : 'http';
         $domain = config('app.domain', $request->getHost());
-        
+
         return redirect()->to("{$protocol}://{$subdomain}.{$domain}/login");
     }
 
@@ -342,7 +343,7 @@ class LoginController extends Controller
         $this->validateLogin($request);
 
         $credentials = $this->credentials($request);
-        
+
         if ($this->authService->attemptLogin($credentials)) {
             $user = $this->guard()->user();
             $token = $user->createToken('API Token')->plainTextToken;

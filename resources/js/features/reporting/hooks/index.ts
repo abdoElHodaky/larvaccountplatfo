@@ -1,10 +1,10 @@
 /**
  * Reporting Hooks Index
- * Hooks specific to reporting and analytics features
- * 
- * Note: useChartData and useReportBuilder have been moved to @/shared/hooks
- * for better reusability across the application.
+ * Phase 5+9: Advanced reporting hooks with AlovaJS integration
  */
+
+// Phase 5+9: Modern reporting data hooks
+export * from './useReportingData';
 
 // Re-export from shared hooks for backward compatibility
 export {

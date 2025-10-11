@@ -1,6 +1,7 @@
 import React, { Fragment, memo, useMemo, useState, useEffect } from 'react';
 import {
   Box,
+  Flex,
   VStack,
   HStack,
   Text,
@@ -13,11 +14,9 @@ import {
   DrawerCloseButton,
   useDisclosure,
   useColorModeValue,
-  Flex,
-  Spacer,
-  Badge,
+
 } from '@chakra-ui/react';
-import { Container } from '@/shared/components/molecules/Container';
+
 import { AppLayout } from '@/shared/components/layouts/AppLayout';
 import { useMemoizedCallback } from '@/shared/hooks';
 

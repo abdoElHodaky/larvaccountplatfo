@@ -2,12 +2,10 @@
 
 namespace App\Shared\Services;
 
+use Exception;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Redis;
-use Illuminate\Database\Query\Builder;
-use Exception;
 
 /**
  * Comprehensive performance optimization service
@@ -15,7 +13,9 @@ use Exception;
 class PerformanceOptimizer
 {
     protected array $config;
+
     protected array $metrics = [];
+
     protected array $optimizations = [];
 
     public function __construct()
@@ -92,9 +92,10 @@ class PerformanceOptimizer
             ];
 
             Log::info('Performance optimization completed', $results);
+
             return $results;
         } catch (Exception $e) {
-            Log::error('Performance optimization failed: ' . $e->getMessage());
+            Log::error('Performance optimization failed: '.$e->getMessage());
             throw $e;
         }
     }
@@ -123,7 +124,8 @@ class PerformanceOptimizer
 
             return $results;
         } catch (Exception $e) {
-            Log::error('Cache optimization failed: ' . $e->getMessage());
+            Log::error('Cache optimization failed: '.$e->getMessage());
+
             return ['error' => $e->getMessage()];
         }
     }
@@ -158,10 +160,10 @@ class PerformanceOptimizer
         try {
             // Cache financial summaries for active organizations
             $organizations = DB::table('organizations')->where('is_active', true)->pluck('id');
-            
+
             foreach ($organizations as $orgId) {
                 $cacheKey = "dashboard:financial_summary:{$orgId}";
-                if (!Cache::has($cacheKey)) {
+                if (! Cache::has($cacheKey)) {
                     // This would call the actual dashboard service
                     Cache::put($cacheKey, $this->generateDashboardData($orgId), 1800); // 30 minutes
                 }
@@ -169,7 +171,8 @@ class PerformanceOptimizer
 
             return true;
         } catch (Exception $e) {
-            Log::warning('Dashboard cache warming failed: ' . $e->getMessage());
+            Log::warning('Dashboard cache warming failed: '.$e->getMessage());
+
             return false;
         }
     }
@@ -182,17 +185,18 @@ class PerformanceOptimizer
         try {
             // Cache account balances
             $accounts = DB::table('accounts')->where('is_active', true)->pluck('id');
-            
+
             foreach ($accounts->take(50) as $accountId) { // Limit to prevent memory issues
                 $cacheKey = "accounting:balance:{$accountId}";
-                if (!Cache::has($cacheKey)) {
+                if (! Cache::has($cacheKey)) {
                     Cache::put($cacheKey, $this->calculateAccountBalance($accountId), 3600);
                 }
             }
 
             return true;
         } catch (Exception $e) {
-            Log::warning('Accounting cache warming failed: ' . $e->getMessage());
+            Log::warning('Accounting cache warming failed: '.$e->getMessage());
+
             return false;
         }
     }
@@ -205,17 +209,18 @@ class PerformanceOptimizer
         try {
             // Cache product stock levels
             $products = DB::table('products')->where('is_active', true)->pluck('id');
-            
+
             foreach ($products->take(100) as $productId) {
                 $cacheKey = "inventory:stock:{$productId}";
-                if (!Cache::has($cacheKey)) {
+                if (! Cache::has($cacheKey)) {
                     Cache::put($cacheKey, $this->calculateStockLevel($productId), 1800);
                 }
             }
 
             return true;
         } catch (Exception $e) {
-            Log::warning('Inventory cache warming failed: ' . $e->getMessage());
+            Log::warning('Inventory cache warming failed: '.$e->getMessage());
+
             return false;
         }
     }
@@ -228,17 +233,18 @@ class PerformanceOptimizer
         try {
             // Cache user preferences for active users
             $users = DB::table('users')->where('is_active', true)->pluck('id');
-            
+
             foreach ($users->take(200) as $userId) {
                 $cacheKey = "user:preferences:{$userId}";
-                if (!Cache::has($cacheKey)) {
+                if (! Cache::has($cacheKey)) {
                     Cache::put($cacheKey, $this->getUserPreferences($userId), 7200); // 2 hours
                 }
             }
 
             return true;
         } catch (Exception $e) {
-            Log::warning('User preferences cache warming failed: ' . $e->getMessage());
+            Log::warning('User preferences cache warming failed: '.$e->getMessage());
+
             return false;
         }
     }
@@ -267,7 +273,8 @@ class PerformanceOptimizer
 
             return $results;
         } catch (Exception $e) {
-            Log::error('Database optimization failed: ' . $e->getMessage());
+            Log::error('Database optimization failed: '.$e->getMessage());
+
             return ['error' => $e->getMessage()];
         }
     }
@@ -291,7 +298,8 @@ class PerformanceOptimizer
 
             return $optimizations;
         } catch (Exception $e) {
-            Log::warning('Slow query optimization failed: ' . $e->getMessage());
+            Log::warning('Slow query optimization failed: '.$e->getMessage());
+
             return ['error' => $e->getMessage()];
         }
     }
@@ -307,19 +315,19 @@ class PerformanceOptimizer
             // Common query pattern indexes
             $indexQueries = [
                 // Dashboard queries
-                "CREATE INDEX IF NOT EXISTS idx_dashboard_widgets_org_user ON dashboard_widgets(organization_id, user_id, is_active)",
-                "CREATE INDEX IF NOT EXISTS idx_dashboard_widgets_type_active ON dashboard_widgets(widget_type, is_active)",
-                
+                'CREATE INDEX IF NOT EXISTS idx_dashboard_widgets_org_user ON dashboard_widgets(organization_id, user_id, is_active)',
+                'CREATE INDEX IF NOT EXISTS idx_dashboard_widgets_type_active ON dashboard_widgets(widget_type, is_active)',
+
                 // Accounting queries
-                "CREATE INDEX IF NOT EXISTS idx_transactions_org_date ON transactions(organization_id, transaction_date)",
-                "CREATE INDEX IF NOT EXISTS idx_accounts_org_type ON accounts(organization_id, account_type, is_active)",
-                
+                'CREATE INDEX IF NOT EXISTS idx_transactions_org_date ON transactions(organization_id, transaction_date)',
+                'CREATE INDEX IF NOT EXISTS idx_accounts_org_type ON accounts(organization_id, account_type, is_active)',
+
                 // Inventory queries
-                "CREATE INDEX IF NOT EXISTS idx_products_org_active ON products(organization_id, is_active)",
-                "CREATE INDEX IF NOT EXISTS idx_inventory_movements_product_date ON inventory_movements(product_id, movement_date)",
-                
+                'CREATE INDEX IF NOT EXISTS idx_products_org_active ON products(organization_id, is_active)',
+                'CREATE INDEX IF NOT EXISTS idx_inventory_movements_product_date ON inventory_movements(product_id, movement_date)',
+
                 // Budget queries
-                "CREATE INDEX IF NOT EXISTS idx_budgets_org_period ON budgets(organization_id, budget_period_start, budget_period_end)",
+                'CREATE INDEX IF NOT EXISTS idx_budgets_org_period ON budgets(organization_id, budget_period_start, budget_period_end)',
             ];
 
             foreach ($indexQueries as $query) {
@@ -327,13 +335,14 @@ class PerformanceOptimizer
                     DB::statement($query);
                     $indexes[] = $query;
                 } catch (Exception $e) {
-                    Log::warning("Failed to create index: {$query} - " . $e->getMessage());
+                    Log::warning("Failed to create index: {$query} - ".$e->getMessage());
                 }
             }
 
             return $indexes;
         } catch (Exception $e) {
-            Log::error('Index creation failed: ' . $e->getMessage());
+            Log::error('Index creation failed: '.$e->getMessage());
+
             return [];
         }
     }
@@ -359,7 +368,8 @@ class PerformanceOptimizer
 
             return $results;
         } catch (Exception $e) {
-            Log::error('Memory optimization failed: ' . $e->getMessage());
+            Log::error('Memory optimization failed: '.$e->getMessage());
+
             return ['error' => $e->getMessage()];
         }
     }
@@ -387,7 +397,8 @@ class PerformanceOptimizer
 
             return $results;
         } catch (Exception $e) {
-            Log::error('Response optimization failed: ' . $e->getMessage());
+            Log::error('Response optimization failed: '.$e->getMessage());
+
             return ['error' => $e->getMessage()];
         }
     }
@@ -411,7 +422,8 @@ class PerformanceOptimizer
 
             return $results;
         } catch (Exception $e) {
-            Log::error('Application optimization failed: ' . $e->getMessage());
+            Log::error('Application optimization failed: '.$e->getMessage());
+
             return ['error' => $e->getMessage()];
         }
     }
@@ -434,27 +446,120 @@ class PerformanceOptimizer
     }
 
     // Placeholder methods for actual implementations
-    protected function generateDashboardData($orgId) { return ['placeholder' => true]; }
-    protected function calculateAccountBalance($accountId) { return 0; }
-    protected function calculateStockLevel($productId) { return 0; }
-    protected function getUserPreferences($userId) { return []; }
-    protected function optimizeCacheKeys() { return ['optimized' => true]; }
-    protected function cleanupExpiredCache() { return ['cleaned' => true]; }
-    protected function enableCacheCompression() { return ['enabled' => true]; }
-    protected function optimizeConnectionPooling() { return ['optimized' => true]; }
-    protected function optimizeEagerLoading() { return ['optimized' => true]; }
-    protected function updateDatabaseStatistics() { return ['updated' => true]; }
-    protected function optimizeJoinQueries() { return ['optimized' => true]; }
-    protected function implementQueryCaching() { return ['implemented' => true]; }
-    protected function forceGarbageCollection() { gc_collect_cycles(); return ['collected' => true]; }
-    protected function optimizeObjectCaching() { return ['optimized' => true]; }
-    protected function cleanupVariables() { return ['cleaned' => true]; }
-    protected function enableResponseCompression() { return ['enabled' => true]; }
-    protected function implementETags() { return ['implemented' => true]; }
-    protected function optimizeJsonResponses() { return ['optimized' => true]; }
-    protected function optimizeLaravelFeatures() { return ['optimized' => true]; }
-    protected function optimizeServiceLayer() { return ['optimized' => true]; }
-    protected function optimizeMiddleware() { return ['optimized' => true]; }
-    protected function getCacheStats() { return ['hits' => 0, 'misses' => 0]; }
-    protected function getDatabaseStats() { return ['queries' => 0, 'time' => 0]; }
+    protected function generateDashboardData($orgId)
+    {
+        return ['placeholder' => true];
+    }
+
+    protected function calculateAccountBalance($accountId)
+    {
+        return 0;
+    }
+
+    protected function calculateStockLevel($productId)
+    {
+        return 0;
+    }
+
+    protected function getUserPreferences($userId)
+    {
+        return [];
+    }
+
+    protected function optimizeCacheKeys()
+    {
+        return ['optimized' => true];
+    }
+
+    protected function cleanupExpiredCache()
+    {
+        return ['cleaned' => true];
+    }
+
+    protected function enableCacheCompression()
+    {
+        return ['enabled' => true];
+    }
+
+    protected function optimizeConnectionPooling()
+    {
+        return ['optimized' => true];
+    }
+
+    protected function optimizeEagerLoading()
+    {
+        return ['optimized' => true];
+    }
+
+    protected function updateDatabaseStatistics()
+    {
+        return ['updated' => true];
+    }
+
+    protected function optimizeJoinQueries()
+    {
+        return ['optimized' => true];
+    }
+
+    protected function implementQueryCaching()
+    {
+        return ['implemented' => true];
+    }
+
+    protected function forceGarbageCollection()
+    {
+        gc_collect_cycles();
+
+        return ['collected' => true];
+    }
+
+    protected function optimizeObjectCaching()
+    {
+        return ['optimized' => true];
+    }
+
+    protected function cleanupVariables()
+    {
+        return ['cleaned' => true];
+    }
+
+    protected function enableResponseCompression()
+    {
+        return ['enabled' => true];
+    }
+
+    protected function implementETags()
+    {
+        return ['implemented' => true];
+    }
+
+    protected function optimizeJsonResponses()
+    {
+        return ['optimized' => true];
+    }
+
+    protected function optimizeLaravelFeatures()
+    {
+        return ['optimized' => true];
+    }
+
+    protected function optimizeServiceLayer()
+    {
+        return ['optimized' => true];
+    }
+
+    protected function optimizeMiddleware()
+    {
+        return ['optimized' => true];
+    }
+
+    protected function getCacheStats()
+    {
+        return ['hits' => 0, 'misses' => 0];
+    }
+
+    protected function getDatabaseStats()
+    {
+        return ['queries' => 0, 'time' => 0];
+    }
 }
