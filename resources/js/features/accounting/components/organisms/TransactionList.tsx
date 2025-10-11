@@ -4,8 +4,7 @@
  */
 
 import React, { useState } from 'react';
-import { AnimatedList, StaggeredChildren } from '@/shared/components/animations/AnimatedFragment';
-import { useListAnimation } from '@/shared/hooks/useAnimation';
+import { AnimatedList } from '@/shared/components/animations/AnimatedFragment';
 
 interface Transaction {
   id: string;

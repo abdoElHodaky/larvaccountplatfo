@@ -5,7 +5,7 @@
  * and performance optimizations for Inertia.js pages.
  */
 
-import { lazy, ComponentType } from 'react';
+import { ComponentType } from 'react';
 import type { PageProps } from '@inertiajs/react';
 
 // Page metadata interface

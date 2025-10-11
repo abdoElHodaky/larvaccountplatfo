@@ -5,7 +5,6 @@ import { FormSelect } from '@/shared/components/molecules/FormSelect';
 import { CardContainer } from '@/shared/components/molecules/Container';
 import { useAccountTypes, useCreateAccount, useUpdateAccount, type Account, type CreateAccountData } from '../hooks/useAccountData';
 import { AnimatedFormField, StaggeredChildren } from '@/shared/components/animations/AnimatedFragment';
-import { useFormAnimation } from '@/shared/hooks/useAnimation';
 
 interface AccountFormProps {
     account?: Account;
