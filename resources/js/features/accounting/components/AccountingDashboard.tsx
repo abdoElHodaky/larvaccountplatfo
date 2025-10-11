@@ -84,7 +84,7 @@ export const AccountingDashboard: React.FC<AccountingDashboardProps> = ({
     refetch: refetchAccounts,
   } = useAccounts(
     {
-      organizationId: orgId,
+      organizationId: orgId ?? undefined,
       accountType: state.selectedAccountTypes,
       isActive: true,
       searchTerm: state.filterOptions.searchTerm,
@@ -99,7 +99,7 @@ export const AccountingDashboard: React.FC<AccountingDashboardProps> = ({
     refetch: refetchTransactions,
   } = useTransactions(
     {
-      organizationId: orgId,
+      organizationId: orgId ?? undefined,
       dateRange: state.selectedDateRange,
       accountId: state.filterOptions.accountId,
       reconciled: state.filterOptions.reconciled,
@@ -114,7 +114,7 @@ export const AccountingDashboard: React.FC<AccountingDashboardProps> = ({
     error: balancesError,
     refetch: refetchBalances,
   } = useAccountBalances(
-    orgId,
+    orgId!,
     state.selectedDateRange.end,
     { enabled: !!orgId }
   );
@@ -125,7 +125,7 @@ export const AccountingDashboard: React.FC<AccountingDashboardProps> = ({
     error: trialBalanceError,
     refetch: refetchTrialBalance,
   } = useTrialBalance(
-    orgId,
+    orgId!,
     state.selectedDateRange.end,
     { enabled: !!orgId && state.viewMode === 'reports' }
   );
@@ -136,7 +136,7 @@ export const AccountingDashboard: React.FC<AccountingDashboardProps> = ({
     accounts: realtimeAccounts,
     lastUpdate: realtimeLastUpdate,
     isConnected: socketConnected,
-  } = useRealtimeAccounting(orgId);
+  } = useRealtimeAccounting(orgId ?? undefined);
 
   // Collaboration hooks for selected account
   const {
@@ -152,25 +152,25 @@ export const AccountingDashboard: React.FC<AccountingDashboardProps> = ({
     if (!enableRealtime) return transactions;
     
     // Merge static transactions with real-time updates
-    const transactionsMap = new Map(transactions.map(t => [t.id, t]));
+    const transactionsMap = new Map(transactions.map((t: any) => [t.id, t]));
     
-    realtimeTransactions.forEach(rtTransaction => {
+    realtimeTransactions.forEach((rtTransaction: any) => {
       transactionsMap.set(rtTransaction.id, {
-        ...transactionsMap.get(rtTransaction.id),
+        ...(transactionsMap.get(rtTransaction.id) || {}),
         ...rtTransaction,
         isRealtime: true,
       });
     });
     
     return Array.from(transactionsMap.values())
-      .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+      .sort((a: any, b: any) => new Date(b.date).getTime() - new Date(a.date).getTime());
   }, [transactions, realtimeTransactions, enableRealtime]);
 
   const combinedAccounts = useMemo(() => {
     if (!enableRealtime) return accounts;
     
     // Merge static accounts with real-time balance updates
-    const accountsMap = new Map(accounts.map(a => [a.id, a]));
+    const accountsMap = new Map(accounts.map((a: any) => [a.id, a]));
     
     realtimeAccounts.forEach(rtAccount => {
       const existingAccount = accountsMap.get(rtAccount.id);
@@ -265,7 +265,8 @@ export const AccountingDashboard: React.FC<AccountingDashboardProps> = ({
     });
   }, []);
 
-  const handleAccountSelect = useCallback((accountId: string) => {
+  const handleAccountSelect = useCallback((account: any) => {
+    const accountId = typeof account === 'string' ? account : account.id;
     setState(prev => ({
       ...prev,
       filterOptions: { ...prev.filterOptions, accountId },
@@ -344,7 +345,7 @@ export const AccountingDashboard: React.FC<AccountingDashboardProps> = ({
       <div className="accounting-dashboard">
         <LoadingSpinner 
           message="Loading accounting data..." 
-          size="large"
+          size="lg"
           showProgress={true}
         />
       </div>
@@ -407,7 +408,7 @@ export const AccountingDashboard: React.FC<AccountingDashboardProps> = ({
                   <AccountBalances
                     balances={balances}
                     loading={balancesLoading}
-                    error={balancesError}
+                    error={balancesError?.message}
                     enableRealtime={enableRealtime}
                     socketConnected={socketConnected}
                   />
@@ -419,7 +420,7 @@ export const AccountingDashboard: React.FC<AccountingDashboardProps> = ({
                     transactions={combinedTransactions.slice(0, 10)}
                     loading={transactionsLoading}
                     error={transactionsError}
-                    onTransactionSelect={(id) => console.log('Transaction selected:', id)}
+                    onTransactionSelect={(id: any) => console.log('Transaction selected:', id)}
                     enableRealtime={enableRealtime}
                     compact={true}
                   />
@@ -451,8 +452,8 @@ export const AccountingDashboard: React.FC<AccountingDashboardProps> = ({
                 transactions={combinedTransactions}
                 loading={transactionsLoading}
                 error={transactionsError}
-                onTransactionSelect={(id) => console.log('Transaction selected:', id)}
-                onTransactionUpdate={(id, updates) => console.log('Transaction update:', id, updates)}
+                onTransactionSelect={(id: any) => console.log('Transaction selected:', id)}
+                onTransactionUpdate={(id: any, updates: any) => console.log('Transaction update:', id, updates)}
                 filterOptions={state.filterOptions}
                 enableRealtime={enableRealtime}
                 enableCollaboration={enableCollaboration}
@@ -478,7 +479,7 @@ export const AccountingDashboard: React.FC<AccountingDashboardProps> = ({
                   <AccountBalances
                     balances={balances}
                     loading={balancesLoading}
-                    error={balancesError}
+                    error={balancesError?.message}
                     enableRealtime={enableRealtime}
                     socketConnected={socketConnected}
                     showSummary={true}
