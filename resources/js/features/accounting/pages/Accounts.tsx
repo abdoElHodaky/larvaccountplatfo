@@ -6,7 +6,7 @@
 import React, { useEffect } from 'react';
 import { ChartOfAccounts } from '../components/organisms/ChartOfAccounts';
 import { useAccounting } from '../hooks/useAccounting';
-import AnimatedButton from '../../shared/components/AnimatedButton';
+import AnimatedButton from '../../../shared/components/AnimatedButton';
 import type { Account } from '../stores/accountingModel';
 
 interface AccountsPageProps {
