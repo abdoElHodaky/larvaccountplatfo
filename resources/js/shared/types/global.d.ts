@@ -54,11 +54,12 @@ declare global {
   const route: (name: string, params?: any) => string;
   
   // Google Analytics gtag function
-  function gtag(...args: any[]): void;
-  
-  // Window interface extensions
   interface Window {
-    gtag?: (...args: any[]) => void;
+    gtag?: (
+      command: 'config' | 'event' | 'js' | 'set',
+      targetId: string | Date,
+      config?: Record<string, any>
+    ) => void;
   }
 }
 

@@ -1,4 +1,5 @@
 import React, { Suspense, ComponentType, LazyExoticComponent } from 'react';
+import { ErrorBoundary } from 'react-error-boundary';
 import { Box, Spinner, VStack, Text, useColorModeValue } from '@chakra-ui/react';
 
 /**
@@ -159,15 +160,17 @@ export function createLazyComponent<T extends ComponentType<any>>(
     }
 
     return (
-      <React.ErrorBoundary
-        fallback={<errorFallback error={new Error('Component error')} retry={retry} />}
+      <ErrorBoundary
+        fallback={({ error, resetErrorBoundary }) => 
+          React.createElement(errorFallback, { error, retry: resetErrorBoundary })
+        }
         onError={setError}
-        key={retryKey}
+        resetKeys={[retryKey]}
       >
         <Suspense fallback={React.createElement(fallback)}>
           <LazyComponent {...props} ref={ref} />
         </Suspense>
-      </React.ErrorBoundary>
+      </ErrorBoundary>
     );
   });
 
@@ -253,9 +256,10 @@ export const routePreloader = {
       }
     });
   },
-
+  
   initialize() {
-    // Initialize route preloader - can be used for setup tasks
+    // Initialize route preloading system
+    // This can be used to set up event listeners or other initialization logic
     console.log('Route preloader initialized');
   }
 };

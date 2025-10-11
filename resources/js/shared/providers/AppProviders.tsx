@@ -215,7 +215,7 @@ export const AppProviders: React.FC<AppProvidersProps> = ({ children }) => {
             <ThemeProvider>
               <AnimationProvider>
                 <DndProvider backend={HTML5Backend}>
-                  <SocketProvider>
+                <SocketProvider>
                   <PerformanceMonitor>
                     <ConnectionMonitor>
                       <AppInitializer>
@@ -229,7 +229,7 @@ export const AppProviders: React.FC<AppProvidersProps> = ({ children }) => {
                       </AppInitializer>
                     </ConnectionMonitor>
                   </PerformanceMonitor>
-                  </SocketProvider>
+                </SocketProvider>
                 </DndProvider>
               </AnimationProvider>
             </ThemeProvider>

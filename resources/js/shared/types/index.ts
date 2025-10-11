@@ -23,8 +23,17 @@ export type {
   DashboardStats 
 } from './laravel';
 
-// Re-export accounting types for backward compatibility
-export * from '@/features/accounting/types';
+// Re-export accounting types for backward compatibility (excluding conflicting names)
+export type { 
+  AccountWithBalance, 
+  TransactionWithLegacy, 
+  JournalEntryWithLegacy,
+  TrialBalanceItem,
+  BalanceSheetItem,
+  IncomeStatementItem,
+  AccountType,
+  AccountingFilters
+} from '@/features/accounting/types';
 
 // Legacy compatibility - BaseEntity is already exported from common.ts
 

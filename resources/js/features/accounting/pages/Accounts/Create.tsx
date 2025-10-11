@@ -3,6 +3,7 @@ import { Head, Link, useForm } from '@inertiajs/react';
 import AppLayout from '@/shared/components/layouts/AppLayout';
 import { Account, PageProps, SelectOption } from '@/shared/types';
 import { ArrowLeftIcon } from '@heroicons/react/24/outline';
+import { AnimatedFormInput } from '@/shared/components/AnimatedFormInput';
 
 interface Props extends PageProps {
     parentAccounts: Account[];
@@ -11,12 +12,7 @@ interface Props extends PageProps {
     currencies: SelectOption[];
 }
 
-export default function CreateAccount({
-    parentAccounts,
-    accountTypes,
-    accountSubtypes,
-    currencies,
-}: Props) {
+export default function CreateAccount({ parentAccounts, accountTypes, accountSubtypes, currencies }: Props) {
     const { data, setData, post, processing, errors, reset } = useForm({
         parent_id: '',
         code: '',
@@ -45,127 +41,101 @@ export default function CreateAccount({
     };
 
     const handleTypeChange = (type: string) => {
-        setData((prev) => ({
+        setData(prev => ({
             ...prev,
             type,
             subtype: '',
-            normal_balance: ['asset', 'expense'].includes(type) ? 'debit' : 'credit',
+            normal_balance: ['asset', 'expense'].includes(type) ? 'debit' : 'credit'
         }));
     };
 
     return (
         <AppLayout>
-            <Head title='Create Account' />
+            <Head title="Create Account" />
 
-            <div className='py-6'>
-                <div className='max-w-4xl mx-auto px-4 sm:px-6 lg:px-8'>
+            <div className="py-6">
+                <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
                     {/* Header */}
-                    <div className='mb-6'>
-                        <div className='flex items-center space-x-4'>
+                    <div className="mb-6">
+                        <div className="flex items-center space-x-4">
                             <Link
                                 href={route('accounting.accounts.index')}
-                                className='inline-flex items-center text-sm font-medium text-gray-500 hover:text-gray-700'
+                                className="inline-flex items-center text-sm font-medium text-gray-500 hover:text-gray-700"
                             >
-                                <ArrowLeftIcon className='h-4 w-4 mr-1' />
+                                <ArrowLeftIcon className="h-4 w-4 mr-1" />
                                 Back to Accounts
                             </Link>
                         </div>
-                        <div className='mt-4'>
-                            <h1 className='text-2xl font-bold text-gray-900'>Create New Account</h1>
-                            <p className='mt-1 text-sm text-gray-500'>
+                        <div className="mt-4">
+                            <h1 className="text-2xl font-bold text-gray-900">Create New Account</h1>
+                            <p className="mt-1 text-sm text-gray-500">
                                 Add a new account to your chart of accounts
                             </p>
                         </div>
                     </div>
 
                     {/* Form */}
-                    <div className='bg-white shadow rounded-lg'>
-                        <form onSubmit={handleSubmit} className='space-y-6 p-6'>
-                            <div className='grid grid-cols-1 gap-6 sm:grid-cols-2'>
+                    <div className="bg-white shadow rounded-lg">
+                        <form onSubmit={handleSubmit} className="space-y-6 p-6">
+                            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
                                 {/* Account Code */}
                                 <div>
-                                    <label
-                                        htmlFor='code'
-                                        className='block text-sm font-medium text-gray-700'
-                                    >
-                                        Account Code *
-                                    </label>
-                                    <input
-                                        type='text'
-                                        id='code'
+                                    <AnimatedFormInput
+                                        type="text"
+                                        label="Account Code *"
                                         value={data.code}
                                         onChange={(e) => setData('code', e.target.value)}
-                                        className={`mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm ${
-                                            errors.code ? 'border-red-300' : ''
-                                        }`}
-                                        placeholder='e.g., 1000'
+                                        error={errors.code}
+                                        placeholder="e.g., 1000"
+                                        animationType="focus"
+                                        className="mt-1"
                                     />
-                                    {errors.code && (
-                                        <p className='mt-1 text-sm text-red-600'>{errors.code}</p>
-                                    )}
                                 </div>
 
                                 {/* Account Name */}
                                 <div>
-                                    <label
-                                        htmlFor='name'
-                                        className='block text-sm font-medium text-gray-700'
-                                    >
-                                        Account Name *
-                                    </label>
-                                    <input
-                                        type='text'
-                                        id='name'
+                                    <AnimatedFormInput
+                                        type="text"
+                                        label="Account Name *"
                                         value={data.name}
                                         onChange={(e) => setData('name', e.target.value)}
-                                        className={`mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm ${
-                                            errors.name ? 'border-red-300' : ''
-                                        }`}
-                                        placeholder='e.g., Cash in Bank'
+                                        error={errors.name}
+                                        placeholder="e.g., Cash in Bank"
+                                        animationType="glow"
+                                        className="mt-1"
                                     />
-                                    {errors.name && (
-                                        <p className='mt-1 text-sm text-red-600'>{errors.name}</p>
-                                    )}
                                 </div>
 
                                 {/* Account Type */}
                                 <div>
-                                    <label
-                                        htmlFor='type'
-                                        className='block text-sm font-medium text-gray-700'
-                                    >
+                                    <label htmlFor="type" className="block text-sm font-medium text-gray-700">
                                         Account Type *
                                     </label>
                                     <select
-                                        id='type'
+                                        id="type"
                                         value={data.type}
                                         onChange={(e) => handleTypeChange(e.target.value)}
                                         className={`mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm ${
                                             errors.type ? 'border-red-300' : ''
                                         }`}
                                     >
-                                        <option value=''>Select account type</option>
+                                        <option value="">Select account type</option>
                                         {Object.entries(accountTypes).map(([value, label]) => (
-                                            <option key={value} value={value}>
-                                                {label}
-                                            </option>
+                                            <option key={value} value={value}>{label}</option>
                                         ))}
                                     </select>
                                     {errors.type && (
-                                        <p className='mt-1 text-sm text-red-600'>{errors.type}</p>
+                                        <p className="mt-1 text-sm text-red-600">{errors.type}</p>
                                     )}
                                 </div>
 
                                 {/* Account Subtype */}
                                 <div>
-                                    <label
-                                        htmlFor='subtype'
-                                        className='block text-sm font-medium text-gray-700'
-                                    >
+                                    <label htmlFor="subtype" className="block text-sm font-medium text-gray-700">
                                         Account Subtype *
                                     </label>
                                     <select
-                                        id='subtype'
+                                        id="subtype"
                                         value={data.subtype}
                                         onChange={(e) => setData('subtype', e.target.value)}
                                         disabled={!data.type}
@@ -173,35 +143,28 @@ export default function CreateAccount({
                                             errors.subtype ? 'border-red-300' : ''
                                         } ${!data.type ? 'bg-gray-100' : ''}`}
                                     >
-                                        <option value=''>Select account subtype</option>
+                                        <option value="">Select account subtype</option>
                                         {getAvailableSubtypes().map((subtype) => (
-                                            <option key={subtype} value={subtype}>
-                                                {subtype}
-                                            </option>
+                                            <option key={subtype} value={subtype}>{subtype}</option>
                                         ))}
                                     </select>
                                     {errors.subtype && (
-                                        <p className='mt-1 text-sm text-red-600'>
-                                            {errors.subtype}
-                                        </p>
+                                        <p className="mt-1 text-sm text-red-600">{errors.subtype}</p>
                                     )}
                                 </div>
 
                                 {/* Parent Account */}
                                 <div>
-                                    <label
-                                        htmlFor='parent_id'
-                                        className='block text-sm font-medium text-gray-700'
-                                    >
+                                    <label htmlFor="parent_id" className="block text-sm font-medium text-gray-700">
                                         Parent Account
                                     </label>
                                     <select
-                                        id='parent_id'
+                                        id="parent_id"
                                         value={data.parent_id}
                                         onChange={(e) => setData('parent_id', e.target.value)}
-                                        className='mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm'
+                                        className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                                     >
-                                        <option value=''>No parent (top-level account)</option>
+                                        <option value="">No parent (top-level account)</option>
                                         {parentAccounts.map((account) => (
                                             <option key={account.id} value={account.id}>
                                                 {account.code} - {account.name}
@@ -209,53 +172,38 @@ export default function CreateAccount({
                                         ))}
                                     </select>
                                     {errors.parent_id && (
-                                        <p className='mt-1 text-sm text-red-600'>
-                                            {errors.parent_id}
-                                        </p>
+                                        <p className="mt-1 text-sm text-red-600">{errors.parent_id}</p>
                                     )}
                                 </div>
 
                                 {/* Normal Balance */}
                                 <div>
-                                    <label
-                                        htmlFor='normal_balance'
-                                        className='block text-sm font-medium text-gray-700'
-                                    >
+                                    <label htmlFor="normal_balance" className="block text-sm font-medium text-gray-700">
                                         Normal Balance *
                                     </label>
                                     <select
-                                        id='normal_balance'
+                                        id="normal_balance"
                                         value={data.normal_balance}
-                                        onChange={(e) =>
-                                            setData(
-                                                'normal_balance',
-                                                e.target.value as 'debit' | 'credit'
-                                            )
-                                        }
+                                        onChange={(e) => setData('normal_balance', e.target.value as 'debit' | 'credit')}
                                         className={`mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm ${
                                             errors.normal_balance ? 'border-red-300' : ''
                                         }`}
                                     >
-                                        <option value='debit'>Debit</option>
-                                        <option value='credit'>Credit</option>
+                                        <option value="debit">Debit</option>
+                                        <option value="credit">Credit</option>
                                     </select>
                                     {errors.normal_balance && (
-                                        <p className='mt-1 text-sm text-red-600'>
-                                            {errors.normal_balance}
-                                        </p>
+                                        <p className="mt-1 text-sm text-red-600">{errors.normal_balance}</p>
                                     )}
                                 </div>
 
                                 {/* Currency */}
                                 <div>
-                                    <label
-                                        htmlFor='currency'
-                                        className='block text-sm font-medium text-gray-700'
-                                    >
+                                    <label htmlFor="currency" className="block text-sm font-medium text-gray-700">
                                         Currency *
                                     </label>
                                     <select
-                                        id='currency'
+                                        id="currency"
                                         value={data.currency}
                                         onChange={(e) => setData('currency', e.target.value)}
                                         className={`mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm ${
@@ -269,132 +217,109 @@ export default function CreateAccount({
                                         ))}
                                     </select>
                                     {errors.currency && (
-                                        <p className='mt-1 text-sm text-red-600'>
-                                            {errors.currency}
-                                        </p>
+                                        <p className="mt-1 text-sm text-red-600">{errors.currency}</p>
                                     )}
                                 </div>
 
                                 {/* Opening Balance */}
                                 <div>
-                                    <label
-                                        htmlFor='opening_balance'
-                                        className='block text-sm font-medium text-gray-700'
-                                    >
+                                    <label htmlFor="opening_balance" className="block text-sm font-medium text-gray-700">
                                         Opening Balance
                                     </label>
                                     <input
-                                        type='number'
-                                        step='0.01'
-                                        id='opening_balance'
+                                        type="number"
+                                        step="0.01"
+                                        id="opening_balance"
                                         value={data.opening_balance}
                                         onChange={(e) => setData('opening_balance', e.target.value)}
                                         className={`mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm ${
                                             errors.opening_balance ? 'border-red-300' : ''
                                         }`}
-                                        placeholder='0.00'
+                                        placeholder="0.00"
                                     />
                                     {errors.opening_balance && (
-                                        <p className='mt-1 text-sm text-red-600'>
-                                            {errors.opening_balance}
-                                        </p>
+                                        <p className="mt-1 text-sm text-red-600">{errors.opening_balance}</p>
                                     )}
                                 </div>
                             </div>
 
                             {/* Description */}
                             <div>
-                                <label
-                                    htmlFor='description'
-                                    className='block text-sm font-medium text-gray-700'
-                                >
+                                <label htmlFor="description" className="block text-sm font-medium text-gray-700">
                                     Description
                                 </label>
                                 <textarea
-                                    id='description'
+                                    id="description"
                                     rows={3}
                                     value={data.description}
                                     onChange={(e) => setData('description', e.target.value)}
-                                    className='mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm'
-                                    placeholder='Optional description for this account'
+                                    className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                                    placeholder="Optional description for this account"
                                 />
                                 {errors.description && (
-                                    <p className='mt-1 text-sm text-red-600'>
-                                        {errors.description}
-                                    </p>
+                                    <p className="mt-1 text-sm text-red-600">{errors.description}</p>
                                 )}
                             </div>
 
                             {/* Tax Code */}
                             <div>
-                                <label
-                                    htmlFor='tax_code'
-                                    className='block text-sm font-medium text-gray-700'
-                                >
+                                <label htmlFor="tax_code" className="block text-sm font-medium text-gray-700">
                                     Tax Code
                                 </label>
                                 <input
-                                    type='text'
-                                    id='tax_code'
+                                    type="text"
+                                    id="tax_code"
                                     value={data.tax_code}
                                     onChange={(e) => setData('tax_code', e.target.value)}
-                                    className='mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm'
-                                    placeholder='Optional tax code'
+                                    className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                                    placeholder="Optional tax code"
                                 />
                                 {errors.tax_code && (
-                                    <p className='mt-1 text-sm text-red-600'>{errors.tax_code}</p>
+                                    <p className="mt-1 text-sm text-red-600">{errors.tax_code}</p>
                                 )}
                             </div>
 
                             {/* Checkboxes */}
-                            <div className='space-y-4'>
-                                <div className='flex items-center'>
+                            <div className="space-y-4">
+                                <div className="flex items-center">
                                     <input
-                                        id='is_active'
-                                        type='checkbox'
+                                        id="is_active"
+                                        type="checkbox"
                                         checked={data.is_active}
                                         onChange={(e) => setData('is_active', e.target.checked)}
-                                        className='h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded'
+                                        className="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
                                     />
-                                    <label
-                                        htmlFor='is_active'
-                                        className='ml-2 block text-sm text-gray-900'
-                                    >
+                                    <label htmlFor="is_active" className="ml-2 block text-sm text-gray-900">
                                         Active account
                                     </label>
                                 </div>
 
-                                <div className='flex items-center'>
+                                <div className="flex items-center">
                                     <input
-                                        id='allow_manual_entries'
-                                        type='checkbox'
+                                        id="allow_manual_entries"
+                                        type="checkbox"
                                         checked={data.allow_manual_entries}
-                                        onChange={(e) =>
-                                            setData('allow_manual_entries', e.target.checked)
-                                        }
-                                        className='h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded'
+                                        onChange={(e) => setData('allow_manual_entries', e.target.checked)}
+                                        className="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
                                     />
-                                    <label
-                                        htmlFor='allow_manual_entries'
-                                        className='ml-2 block text-sm text-gray-900'
-                                    >
+                                    <label htmlFor="allow_manual_entries" className="ml-2 block text-sm text-gray-900">
                                         Allow manual journal entries
                                     </label>
                                 </div>
                             </div>
 
                             {/* Form Actions */}
-                            <div className='flex justify-end space-x-3 pt-6 border-t border-gray-200'>
+                            <div className="flex justify-end space-x-3 pt-6 border-t border-gray-200">
                                 <Link
                                     href={route('accounting.accounts.index')}
-                                    className='bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500'
+                                    className="bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                                 >
                                     Cancel
                                 </Link>
                                 <button
-                                    type='submit'
+                                    type="submit"
                                     disabled={processing}
-                                    className='inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50'
+                                    className="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50"
                                 >
                                     {processing ? 'Creating...' : 'Create Account'}
                                 </button>
