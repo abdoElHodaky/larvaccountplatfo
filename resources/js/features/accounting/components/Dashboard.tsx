@@ -15,7 +15,7 @@ import { useRealtimeAccounting } from '../../../shared/hooks/useSocket';
 import { useCollaborativeAccount } from '../../../shared/hooks/useCollaboration';
 import { performanceMonitor } from '../../../shared/services/analytics/PerformanceMonitor';
 import { getCurrentOrganizationId } from '../../../shared/services/alova/alova.config';
-import { Accounts } from './organisms/Accounts';
+import { ChartOfAccounts } from './organisms/ChartOfAccounts';
 import { TransactionList } from './organisms/TransactionList';
 import { AccountBalances } from './organisms/AccountBalances';
 import { TrialBalance } from './organisms/TrialBalance';
@@ -25,7 +25,7 @@ import { LoadingSpinner } from '../../../shared/components/ui/LoadingSpinner';
 import { ErrorFallback } from '../../../shared/components/ui/ErrorFallback';
 
 // Types
-interface DashboardProps {
+interface AccountingDashboardProps {
   organizationId?: number;
   selectedAccountId?: string;
   enableRealtime?: boolean;
@@ -50,7 +50,7 @@ interface AccountingState {
  * Main Accounting Dashboard Component
  * Integrates Alova.js API calls with real-time Socket.io updates
  */
-export const Dashboard: React.FC<DashboardProps> = ({
+export const AccountingDashboard: React.FC<AccountingDashboardProps> = ({
   organizationId,
   selectedAccountId,
   enableRealtime = true,
@@ -114,7 +114,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
     error: balancesError,
     refetch: refetchBalances,
   } = useAccountBalances(
-    orgId ?? 0,
+    orgId!,
     state.selectedDateRange.end,
     { enabled: !!orgId }
   );
@@ -125,7 +125,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
     error: trialBalanceError,
     refetch: refetchTrialBalance,
   } = useTrialBalance(
-    orgId ?? 0,
+    orgId!,
     state.selectedDateRange.end,
     { enabled: !!orgId && state.viewMode === 'reports' }
   );
@@ -156,7 +156,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
     
     realtimeTransactions.forEach((rtTransaction: any) => {
       transactionsMap.set(rtTransaction.id, {
-        ...transactionsMap.get(rtTransaction.id),
+        ...(transactionsMap.get(rtTransaction.id) || {}),
         ...rtTransaction,
         isRealtime: true,
       });
@@ -265,7 +265,8 @@ export const Dashboard: React.FC<DashboardProps> = ({
     });
   }, []);
 
-  const handleAccountSelect = useCallback((accountId: string) => {
+  const handleAccountSelect = useCallback((account: any) => {
+    const accountId = typeof account === 'string' ? account : account.id;
     setState(prev => ({
       ...prev,
       filterOptions: { ...prev.filterOptions, accountId },
@@ -344,7 +345,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
       <div className="accounting-dashboard">
         <LoadingSpinner 
           message="Loading accounting data..." 
-          size="large"
+          size="lg"
           showProgress={true}
         />
       </div>
@@ -407,7 +408,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
                   <AccountBalances
                     balances={balances}
                     loading={balancesLoading}
-                    error={balancesError}
+                    error={balancesError?.message}
                     enableRealtime={enableRealtime}
                     socketConnected={socketConnected}
                   />
@@ -419,7 +420,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
                     transactions={combinedTransactions.slice(0, 10)}
                     loading={transactionsLoading}
                     error={transactionsError}
-                    onTransactionSelect={(id) => console.log('Transaction selected:', id)}
+                    onTransactionSelect={(id: any) => console.log('Transaction selected:', id)}
                     enableRealtime={enableRealtime}
                     compact={true}
                   />
@@ -430,7 +431,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
 
           {state.viewMode === 'accounts' && (
             <div className="accounts-view">
-              <Accounts
+              <ChartOfAccounts
                 accounts={combinedAccounts}
                 loading={accountsLoading}
                 error={accountsError}
@@ -451,8 +452,8 @@ export const Dashboard: React.FC<DashboardProps> = ({
                 transactions={combinedTransactions}
                 loading={transactionsLoading}
                 error={transactionsError}
-                onTransactionSelect={(id) => console.log('Transaction selected:', id)}
-                onTransactionUpdate={(id, updates) => console.log('Transaction update:', id, updates)}
+                onTransactionSelect={(id: any) => console.log('Transaction selected:', id)}
+                onTransactionUpdate={(id: any, updates: any) => console.log('Transaction update:', id, updates)}
                 filterOptions={state.filterOptions}
                 enableRealtime={enableRealtime}
                 enableCollaboration={enableCollaboration}
@@ -478,7 +479,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
                   <AccountBalances
                     balances={balances}
                     loading={balancesLoading}
-                    error={balancesError}
+                    error={balancesError?.message}
                     enableRealtime={enableRealtime}
                     socketConnected={socketConnected}
                     showSummary={true}
@@ -526,4 +527,4 @@ export const Dashboard: React.FC<DashboardProps> = ({
 };
 
 // Memoized export for performance
-export default React.memo(Dashboard);
+export default React.memo(AccountingDashboard);

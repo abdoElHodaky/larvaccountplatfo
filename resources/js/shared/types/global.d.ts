@@ -54,21 +54,11 @@ declare global {
   const route: (name: string, params?: any) => string;
   
   // Google Analytics gtag function
-  declare function gtag(command: string, targetId: string, config?: any): void;
-  
-  // Test globals (Jest/Vitest)
-  declare function beforeEach(fn: () => void | Promise<void>): void;
+  function gtag(...args: any[]): void;
   
   // Window interface extensions
   interface Window {
-    FORGE_DEPLOYMENT?: boolean;
-    gtag?: (command: string, targetId: string, config?: any) => void;
-  }
-  
-  // ImportMeta interface extensions
-  interface ImportMeta {
-    env: Record<string, string>;
-    glob: (pattern: string, options?: any) => Record<string, any>;
+    gtag?: (...args: any[]) => void;
   }
 }
 
