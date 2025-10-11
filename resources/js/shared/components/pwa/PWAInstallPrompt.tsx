@@ -6,7 +6,7 @@
 import React from 'react';
 
 export interface PWAInstallPromptProps {
-  className?: string;
+    className?: string;
 }
 
 /**
@@ -14,11 +14,11 @@ export interface PWAInstallPromptProps {
  * Placeholder component for PWA installation functionality
  */
 export const PWAInstallPrompt: React.FC<PWAInstallPromptProps> = ({ className }) => {
-  return (
-    <div className={className} style={{ display: 'none' }}>
-      {/* PWA Install Prompt - Hidden for now */}
-    </div>
-  );
+    return (
+        <div className={className} style={{ display: 'none' }}>
+            {/* PWA Install Prompt - Hidden for now */}
+        </div>
+    );
 };
 
 export default PWAInstallPrompt;

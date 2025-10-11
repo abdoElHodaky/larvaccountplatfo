@@ -1,6 +1,6 @@
 /**
  * Feedback Components - Phase 6 Unified Design System
- * 
+ *
  * Components for providing user feedback including alerts,
  * loading states, and confirmation dialogs.
  */

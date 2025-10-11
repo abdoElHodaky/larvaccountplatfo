@@ -1,6 +1,6 @@
 /**
  * Accounting Feature Pages
- * 
+ *
  * This module exports all accounting-related page components.
  * These pages handle chart of accounts, transactions, and journal entries management.
  */

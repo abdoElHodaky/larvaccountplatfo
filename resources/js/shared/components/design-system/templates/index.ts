@@ -1,6 +1,6 @@
 /**
  * Component Templates - Phase 6 Unified Design System
- * 
+ *
  * Standardized component templates that provide consistent patterns
  * for common UI structures across all features.
  */

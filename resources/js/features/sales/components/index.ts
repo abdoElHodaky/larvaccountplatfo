@@ -4,7 +4,7 @@
 // Atoms
 export * from './atoms';
 
-// Molecules  
+// Molecules
 export * from './molecules';
 
 // Organisms

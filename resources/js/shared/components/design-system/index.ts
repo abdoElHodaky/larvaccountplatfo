@@ -1,6 +1,6 @@
 /**
  * Design System - Phase 6 Unified Component Architecture
- * 
+ *
  * This module provides a comprehensive design system that ensures consistency
  * across all feature modules while maintaining flexibility and performance.
  */

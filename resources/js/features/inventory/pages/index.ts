@@ -1,6 +1,6 @@
 /**
  * Inventory Feature Pages
- * 
+ *
  * This module exports all inventory-related page components.
  * These pages handle product management, stock tracking, and warehouse operations.
  */

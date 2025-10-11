@@ -11,7 +11,18 @@ import { ReactNode, HTMLAttributes, ButtonHTMLAttributes, InputHTMLAttributes } 
 
 export type Size = 'xs' | 'sm' | 'md' | 'lg' | 'xl';
 export type Variant = 'primary' | 'secondary' | 'outline' | 'ghost' | 'link';
-export type ColorScheme = 'primary' | 'secondary' | 'success' | 'warning' | 'error' | 'info' | 'asset' | 'liability' | 'equity' | 'revenue' | 'expense';
+export type ColorScheme =
+    | 'primary'
+    | 'secondary'
+    | 'success'
+    | 'warning'
+    | 'error'
+    | 'info'
+    | 'asset'
+    | 'liability'
+    | 'equity'
+    | 'revenue'
+    | 'expense';
 export type Status = 'idle' | 'loading' | 'success' | 'error';
 
 // =============================================================================
@@ -19,32 +30,32 @@ export type Status = 'idle' | 'loading' | 'success' | 'error';
 // =============================================================================
 
 export interface BaseProps {
-  className?: string;
-  children?: ReactNode;
+    className?: string;
+    children?: ReactNode;
 }
 
 export interface SizeProps {
-  size?: Size;
+    size?: Size;
 }
 
 export interface VariantProps {
-  variant?: Variant;
+    variant?: Variant;
 }
 
 export interface ColorProps {
-  colorScheme?: ColorScheme;
+    colorScheme?: ColorScheme;
 }
 
 export interface StatusProps {
-  status?: Status;
+    status?: Status;
 }
 
 export interface LoadingProps {
-  loading?: boolean;
+    loading?: boolean;
 }
 
 export interface DisabledProps {
-  disabled?: boolean;
+    disabled?: boolean;
 }
 
 // =============================================================================
@@ -52,38 +63,41 @@ export interface DisabledProps {
 // =============================================================================
 
 export interface FormFieldProps extends BaseProps {
-  label?: string;
-  description?: string;
-  error?: string;
-  required?: boolean;
-  optional?: boolean;
+    label?: string;
+    description?: string;
+    error?: string;
+    required?: boolean;
+    optional?: boolean;
 }
 
-export interface InputProps extends FormFieldProps, SizeProps, Omit<InputHTMLAttributes<HTMLInputElement>, 'size'> {
-  leftIcon?: ReactNode;
-  rightIcon?: ReactNode;
-  leftElement?: ReactNode;
-  rightElement?: ReactNode;
+export interface InputProps
+    extends FormFieldProps,
+        SizeProps,
+        Omit<InputHTMLAttributes<HTMLInputElement>, 'size'> {
+    leftIcon?: ReactNode;
+    rightIcon?: ReactNode;
+    leftElement?: ReactNode;
+    rightElement?: ReactNode;
 }
 
 export interface SelectOption {
-  value: string | number;
-  label: string;
-  description?: string;
-  icon?: ReactNode;
-  disabled?: boolean;
-  group?: string;
+    value: string | number;
+    label: string;
+    description?: string;
+    icon?: ReactNode;
+    disabled?: boolean;
+    group?: string;
 }
 
 export interface SelectProps extends FormFieldProps, SizeProps {
-  options: SelectOption[];
-  value?: string | number | (string | number)[];
-  onChange?: (value: string | number | (string | number)[]) => void;
-  placeholder?: string;
-  multiple?: boolean;
-  searchable?: boolean;
-  clearable?: boolean;
-  loading?: boolean;
+    options: SelectOption[];
+    value?: string | number | (string | number)[];
+    onChange?: (value: string | number | (string | number)[]) => void;
+    placeholder?: string;
+    multiple?: boolean;
+    searchable?: boolean;
+    clearable?: boolean;
+    loading?: boolean;
 }
 
 // =============================================================================
@@ -91,55 +105,57 @@ export interface SelectProps extends FormFieldProps, SizeProps {
 // =============================================================================
 
 export interface TableColumn<T = any> {
-  key: string;
-  title: string;
-  dataIndex?: keyof T;
-  render?: (value: any, record: T, index: number) => ReactNode;
-  width?: number | string;
-  align?: 'left' | 'center' | 'right';
-  sortable?: boolean;
-  filterable?: boolean;
-  fixed?: 'left' | 'right';
+    key: string;
+    title: string;
+    dataIndex?: keyof T;
+    render?: (value: any, record: T, index: number) => ReactNode;
+    width?: number | string;
+    align?: 'left' | 'center' | 'right';
+    sortable?: boolean;
+    filterable?: boolean;
+    fixed?: 'left' | 'right';
 }
 
 export interface TableProps<T = any> extends BaseProps {
-  columns: TableColumn<T>[];
-  data: T[];
-  loading?: boolean;
-  pagination?: boolean | {
-    current: number;
-    pageSize: number;
-    total: number;
-    onChange: (page: number, pageSize: number) => void;
-  };
-  rowKey?: string | ((record: T) => string);
-  onRow?: (record: T, index: number) => HTMLAttributes<HTMLTableRowElement>;
-  scroll?: { x?: number | string; y?: number | string };
-  size?: Size;
+    columns: TableColumn<T>[];
+    data: T[];
+    loading?: boolean;
+    pagination?:
+        | boolean
+        | {
+              current: number;
+              pageSize: number;
+              total: number;
+              onChange: (page: number, pageSize: number) => void;
+          };
+    rowKey?: string | ((record: T) => string);
+    onRow?: (record: T, index: number) => HTMLAttributes<HTMLTableRowElement>;
+    scroll?: { x?: number | string; y?: number | string };
+    size?: Size;
 }
 
 export interface CardProps extends BaseProps, SizeProps {
-  title?: ReactNode;
-  subtitle?: ReactNode;
-  actions?: ReactNode;
-  cover?: ReactNode;
-  hoverable?: boolean;
-  loading?: boolean;
+    title?: ReactNode;
+    subtitle?: ReactNode;
+    actions?: ReactNode;
+    cover?: ReactNode;
+    hoverable?: boolean;
+    loading?: boolean;
 }
 
 export interface BadgeProps extends BaseProps, SizeProps, ColorProps {
-  count?: number;
-  dot?: boolean;
-  showZero?: boolean;
-  offset?: [number, number];
+    count?: number;
+    dot?: boolean;
+    showZero?: boolean;
+    offset?: [number, number];
 }
 
 export interface AvatarProps extends BaseProps, SizeProps {
-  src?: string;
-  alt?: string;
-  name?: string;
-  icon?: ReactNode;
-  shape?: 'circle' | 'square';
+    src?: string;
+    alt?: string;
+    name?: string;
+    icon?: ReactNode;
+    shape?: 'circle' | 'square';
 }
 
 // =============================================================================
@@ -147,38 +163,38 @@ export interface AvatarProps extends BaseProps, SizeProps {
 // =============================================================================
 
 export interface ToastProps extends BaseProps, ColorProps {
-  title?: string;
-  description?: string;
-  duration?: number;
-  closable?: boolean;
-  onClose?: () => void;
-  action?: ReactNode;
+    title?: string;
+    description?: string;
+    duration?: number;
+    closable?: boolean;
+    onClose?: () => void;
+    action?: ReactNode;
 }
 
 export interface AlertProps extends BaseProps, SizeProps, ColorProps {
-  title?: string;
-  description?: string;
-  closable?: boolean;
-  onClose?: () => void;
-  icon?: ReactNode;
-  action?: ReactNode;
+    title?: string;
+    description?: string;
+    closable?: boolean;
+    onClose?: () => void;
+    icon?: ReactNode;
+    action?: ReactNode;
 }
 
 export interface ProgressProps extends BaseProps, SizeProps, ColorProps {
-  value: number;
-  max?: number;
-  showValue?: boolean;
-  format?: (value: number, max: number) => string;
-  indeterminate?: boolean;
+    value: number;
+    max?: number;
+    showValue?: boolean;
+    format?: (value: number, max: number) => string;
+    indeterminate?: boolean;
 }
 
 export interface SkeletonProps extends BaseProps {
-  active?: boolean;
-  avatar?: boolean | { size?: Size; shape?: 'circle' | 'square' };
-  paragraph?: boolean | { rows?: number; width?: number | string | (number | string)[] };
-  title?: boolean | { width?: number | string };
-  loading?: boolean;
-  children?: ReactNode;
+    active?: boolean;
+    avatar?: boolean | { size?: Size; shape?: 'circle' | 'square' };
+    paragraph?: boolean | { rows?: number; width?: number | string | (number | string)[] };
+    title?: boolean | { width?: number | string };
+    loading?: boolean;
+    children?: ReactNode;
 }
 
 // =============================================================================
@@ -186,18 +202,18 @@ export interface SkeletonProps extends BaseProps {
 // =============================================================================
 
 export interface FlexProps extends BaseProps, HTMLAttributes<HTMLDivElement> {
-  direction?: 'row' | 'column' | 'row-reverse' | 'column-reverse';
-  wrap?: 'nowrap' | 'wrap' | 'wrap-reverse';
-  justify?: 'start' | 'end' | 'center' | 'between' | 'around' | 'evenly';
-  align?: 'start' | 'end' | 'center' | 'baseline' | 'stretch';
-  gap?: number | string;
+    direction?: 'row' | 'column' | 'row-reverse' | 'column-reverse';
+    wrap?: 'nowrap' | 'wrap' | 'wrap-reverse';
+    justify?: 'start' | 'end' | 'center' | 'between' | 'around' | 'evenly';
+    align?: 'start' | 'end' | 'center' | 'baseline' | 'stretch';
+    gap?: number | string;
 }
 
 export interface GridProps extends BaseProps, HTMLAttributes<HTMLDivElement> {
-  columns?: number | string;
-  rows?: number | string;
-  gap?: number | string;
-  areas?: string;
+    columns?: number | string;
+    rows?: number | string;
+    gap?: number | string;
+    areas?: string;
 }
 
 // =============================================================================
@@ -205,21 +221,21 @@ export interface GridProps extends BaseProps, HTMLAttributes<HTMLDivElement> {
 // =============================================================================
 
 export interface MenuItem {
-  key: string;
-  label: string;
-  icon?: ReactNode;
-  href?: string;
-  onClick?: () => void;
-  disabled?: boolean;
-  children?: MenuItem[];
-  badge?: string | number;
+    key: string;
+    label: string;
+    icon?: ReactNode;
+    href?: string;
+    onClick?: () => void;
+    disabled?: boolean;
+    children?: MenuItem[];
+    badge?: string | number;
 }
 
 export interface BreadcrumbItem {
-  label: string;
-  href?: string;
-  icon?: ReactNode;
-  onClick?: () => void;
+    label: string;
+    href?: string;
+    icon?: ReactNode;
+    onClick?: () => void;
 }
 
 // =============================================================================
@@ -227,33 +243,33 @@ export interface BreadcrumbItem {
 // =============================================================================
 
 export interface AccountingAmount {
-  amount: number;
-  currency?: string;
-  type?: 'debit' | 'credit';
-  formatted?: string;
+    amount: number;
+    currency?: string;
+    type?: 'debit' | 'credit';
+    formatted?: string;
 }
 
 export interface TransactionRowProps extends BaseProps {
-  date: string;
-  description: string;
-  account: string;
-  debit?: AccountingAmount;
-  credit?: AccountingAmount;
-  balance?: AccountingAmount;
-  reference?: string;
-  onClick?: () => void;
+    date: string;
+    description: string;
+    account: string;
+    debit?: AccountingAmount;
+    credit?: AccountingAmount;
+    balance?: AccountingAmount;
+    reference?: string;
+    onClick?: () => void;
 }
 
 export interface FinancialSummaryProps extends BaseProps {
-  title: string;
-  amount: AccountingAmount;
-  change?: {
-    amount: number;
-    percentage: number;
-    period: string;
-  };
-  trend?: 'up' | 'down' | 'neutral';
-  loading?: boolean;
+    title: string;
+    amount: AccountingAmount;
+    change?: {
+        amount: number;
+        percentage: number;
+        period: string;
+    };
+    trend?: 'up' | 'down' | 'neutral';
+    loading?: boolean;
 }
 
 // =============================================================================
@@ -266,7 +282,13 @@ export type ComponentColor = ColorScheme;
 export type ComponentStatus = Status;
 
 // Generic component props that can be extended
-export interface ComponentProps extends BaseProps, SizeProps, VariantProps, ColorProps, LoadingProps, DisabledProps {}
+export interface ComponentProps
+    extends BaseProps,
+        SizeProps,
+        VariantProps,
+        ColorProps,
+        LoadingProps,
+        DisabledProps {}
 
 // Event handler types
 export type ClickHandler = () => void;
@@ -283,18 +305,18 @@ export type AnimationType = 'fade' | 'slide' | 'scale' | 'bounce';
 
 // Theme types
 export interface ThemeConfig {
-  colors: Record<ColorScheme, string>;
-  sizes: Record<Size, string>;
-  spacing: Record<string, string>;
-  borderRadius: Record<string, string>;
-  shadows: Record<string, string>;
-  fonts: Record<string, string>;
-  animations: Record<AnimationType, string>;
+    colors: Record<ColorScheme, string>;
+    sizes: Record<Size, string>;
+    spacing: Record<string, string>;
+    borderRadius: Record<string, string>;
+    shadows: Record<string, string>;
+    fonts: Record<string, string>;
+    animations: Record<AnimationType, string>;
 }
 
 export interface ThemeContextValue {
-  theme: ThemeConfig;
-  colorMode: 'light' | 'dark';
-  toggleColorMode: () => void;
-  setColorMode: (mode: 'light' | 'dark') => void;
+    theme: ThemeConfig;
+    colorMode: 'light' | 'dark';
+    toggleColorMode: () => void;
+    setColorMode: (mode: 'light' | 'dark') => void;
 }
