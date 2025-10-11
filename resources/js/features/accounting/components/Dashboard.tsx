@@ -3,7 +3,7 @@
  * Updated to use Alova.js GraphQL and real-time Socket.io integration
  */
 
-import React, { useState, useEffect, useCallback, useMemo } from 'react';
+import React, { useState, useEffect, useCallback, useMemo, Fragment } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { 
   useAccounts, 
@@ -23,6 +23,8 @@ import { AccountingHeader } from './AccountingHeader';
 import { QuickActions } from '../../dashboard/components/organisms/QuickActions';
 import { LoadingSpinner } from '../../../shared/components/ui/LoadingSpinner';
 import { ErrorFallback } from '../../../shared/components/ui/ErrorFallback';
+import { FragmentAnimationWrapper, StaggerAnimation } from '../../../shared/components/animation/FragmentAnimationWrapper';
+import { useAnimationPerformance } from '../../../shared/hooks/useAnimationPerformance';
 
 // Types
 interface DashboardProps {
@@ -58,6 +60,9 @@ export const Dashboard: React.FC<DashboardProps> = ({
 }) => {
   // Performance monitoring
   const renderStartTime = performance.now();
+  
+  // Animation performance configuration
+  const { shouldAnimate, animationLevel } = useAnimationPerformance();
 
   // State management
   const [state, setState] = useState<AccountingState>({
@@ -400,92 +405,142 @@ export const Dashboard: React.FC<DashboardProps> = ({
         {/* Main Content */}
         <div className="accounting-content">
           {state.viewMode === 'overview' && (
-            <div className="accounting-overview">
-              <div className="overview-grid">
-                <div className="overview-section">
-                  <h3>Account Balances</h3>
-                  <AccountBalances
-                    balances={balances}
-                    loading={balancesLoading}
-                    error={balancesError}
-                    enableRealtime={enableRealtime}
-                    socketConnected={socketConnected}
-                  />
-                </div>
-                
-                <div className="overview-section">
-                  <h3>Recent Transactions</h3>
-                  <TransactionList
-                    transactions={combinedTransactions.slice(0, 10)}
-                    loading={transactionsLoading}
-                    error={transactionsError}
-                    onTransactionSelect={(id) => console.log('Transaction selected:', id)}
-                    enableRealtime={enableRealtime}
-                    compact={true}
-                  />
-                </div>
-              </div>
-            </div>
+            <Fragment>
+              <FragmentAnimationWrapper
+                variant="fadeIn"
+                className="accounting-overview"
+              >
+                <StaggerAnimation
+                  staggerDelay={0.15}
+                  className="overview-grid"
+                >
+                  {[
+                    <div key="balances" className="overview-section">
+                      <FragmentAnimationWrapper
+                        variant="slideUp"
+                        className="section-header"
+                      >
+                        <h3>Account Balances</h3>
+                      </FragmentAnimationWrapper>
+                      <AccountBalances
+                        balances={balances}
+                        loading={balancesLoading}
+                        error={balancesError}
+                        enableRealtime={enableRealtime}
+                        socketConnected={socketConnected}
+                      />
+                    </div>,
+                    
+                    <div key="transactions" className="overview-section">
+                      <FragmentAnimationWrapper
+                        variant="slideUp"
+                        className="section-header"
+                      >
+                        <h3>Recent Transactions</h3>
+                      </FragmentAnimationWrapper>
+                      <TransactionList
+                        transactions={combinedTransactions.slice(0, 10)}
+                        loading={transactionsLoading}
+                        error={transactionsError}
+                        onTransactionSelect={(id) => console.log('Transaction selected:', id)}
+                        enableRealtime={enableRealtime}
+                        compact={true}
+                      />
+                    </div>
+                  ]}
+                </StaggerAnimation>
+              </FragmentAnimationWrapper>
+            </Fragment>
           )}
 
           {state.viewMode === 'accounts' && (
-            <div className="accounts-view">
-              <Accounts
-                accounts={combinedAccounts}
-                loading={accountsLoading}
-                error={accountsError}
-                onAccountSelect={handleAccountSelect}
-                onAccountUpdate={handleAccountUpdate}
-                selectedAccountId={state.filterOptions.accountId}
-                enableCollaboration={enableCollaboration}
-                collaborators={accountCollaborators}
-                isLocked={accountLocked}
-                enableRealtime={enableRealtime}
-              />
-            </div>
+            <Fragment>
+              <FragmentAnimationWrapper
+                variant="slideLeft"
+                className="accounts-view"
+              >
+                <Accounts
+                  accounts={combinedAccounts}
+                  loading={accountsLoading}
+                  error={accountsError}
+                  onAccountSelect={handleAccountSelect}
+                  onAccountUpdate={handleAccountUpdate}
+                  selectedAccountId={state.filterOptions.accountId}
+                  enableCollaboration={enableCollaboration}
+                  collaborators={accountCollaborators}
+                  isLocked={accountLocked}
+                  enableRealtime={enableRealtime}
+                />
+              </FragmentAnimationWrapper>
+            </Fragment>
           )}
 
           {state.viewMode === 'transactions' && (
-            <div className="transactions-view">
-              <TransactionList
-                transactions={combinedTransactions}
-                loading={transactionsLoading}
-                error={transactionsError}
-                onTransactionSelect={(id) => console.log('Transaction selected:', id)}
-                onTransactionUpdate={(id, updates) => console.log('Transaction update:', id, updates)}
-                filterOptions={state.filterOptions}
-                enableRealtime={enableRealtime}
-                enableCollaboration={enableCollaboration}
-              />
-            </div>
+            <Fragment>
+              <FragmentAnimationWrapper
+                variant="slideRight"
+                className="transactions-view"
+              >
+                <TransactionList
+                  transactions={combinedTransactions}
+                  loading={transactionsLoading}
+                  error={transactionsError}
+                  onTransactionSelect={(id) => console.log('Transaction selected:', id)}
+                  onTransactionUpdate={(id, updates) => console.log('Transaction update:', id, updates)}
+                  filterOptions={state.filterOptions}
+                  enableRealtime={enableRealtime}
+                  enableCollaboration={enableCollaboration}
+                />
+              </FragmentAnimationWrapper>
+            </Fragment>
           )}
 
           {state.viewMode === 'reports' && (
-            <div className="reports-view">
-              <div className="reports-grid">
-                <div className="report-section">
-                  <h3>Trial Balance</h3>
-                  <TrialBalance
-                    trialBalance={trialBalance}
-                    loading={trialBalanceLoading}
-                    error={trialBalanceError}
-                    asOfDate={state.selectedDateRange.end}
-                  />
-                </div>
-                
-                <div className="report-section">
-                  <h3>Account Balances Summary</h3>
-                  <AccountBalances
-                    balances={balances}
-                    loading={balancesLoading}
-                    error={balancesError}
-                    enableRealtime={enableRealtime}
-                    socketConnected={socketConnected}
-                    showSummary={true}
-                  />
-                </div>
-              </div>
-            </div>
+            <Fragment>
+              <FragmentAnimationWrapper
+                variant="scaleIn"
+                className="reports-view"
+              >
+                <StaggerAnimation
+                  staggerDelay={0.2}
+                  className="reports-grid"
+                >
+                  {[
+                    <div key="trial-balance" className="report-section">
+                      <FragmentAnimationWrapper
+                        variant="slideUp"
+                        className="section-header"
+                      >
+                        <h3>Trial Balance</h3>
+                      </FragmentAnimationWrapper>
+                      <TrialBalance
+                        trialBalance={trialBalance}
+                        loading={trialBalanceLoading}
+                        error={trialBalanceError}
+                        asOfDate={state.selectedDateRange.end}
+                      />
+                    </div>,
+                    
+                    <div key="balances-summary" className="report-section">
+                      <FragmentAnimationWrapper
+                        variant="slideUp"
+                        className="section-header"
+                      >
+                        <h3>Account Balances Summary</h3>
+                      </FragmentAnimationWrapper>
+                      <AccountBalances
+                        balances={balances}
+                        loading={balancesLoading}
+                        error={balancesError}
+                        enableRealtime={enableRealtime}
+                        socketConnected={socketConnected}
+                        showSummary={true}
+                      />
+                    </div>
+                  ]}
+                </StaggerAnimation>
+              </FragmentAnimationWrapper>
+            </Fragment>
           )}
         </div>
 
