@@ -124,7 +124,12 @@ abstract class HybridModel extends Model
      */
     public static function getCurrentOrganizationId(): ?int
     {
-        return app('tenant_id');
+        try {
+            return app('tenant_id');
+        } catch (\Illuminate\Contracts\Container\BindingResolutionException $e) {
+            // Return null if tenant_id is not bound (e.g., during testing)
+            return null;
+        }
     }
 
     /**

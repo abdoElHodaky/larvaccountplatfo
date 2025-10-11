@@ -1,6 +1,6 @@
 <?php
 
-namespace Database\Factories;
+namespace Database\Factories\Features\Inventory\Models;
 
 use App\Features\Inventory\Models\Product;
 use App\Features\Inventory\Models\ProductCategory;

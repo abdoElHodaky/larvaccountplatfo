@@ -2,11 +2,8 @@
 
 namespace App\Models;
 
-use Laravel\Jetstream\HasTeams;
 use Laravel\Sanctum\HasApiTokens;
-use Laravel\Jetstream\HasProfilePhoto;
 use Illuminate\Notifications\Notifiable;
-use Laravel\Fortify\TwoFactorAuthenticatable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -18,10 +15,7 @@ class User extends Authenticatable implements MustVerifyEmail
 {
     use HasApiTokens;
     use HasFactory;
-    use HasProfilePhoto;
-    use HasTeams;
     use Notifiable;
-    use TwoFactorAuthenticatable;
     use SoftDeletes;
 
     /**
@@ -378,7 +372,7 @@ class User extends Authenticatable implements MustVerifyEmail
     /**
      * Check if user can perform a specific action in a tenant.
      */
-    public function can(string $permission, Tenant $tenant = null): bool
+    public function canPerform(string $permission, Tenant $tenant = null): bool
     {
         if (!$tenant) {
             $tenant = app('tenant');

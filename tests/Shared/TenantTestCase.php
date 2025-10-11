@@ -133,6 +133,7 @@ abstract class TenantTestCase extends TestCase
     {
         if ($this->tenant) {
             app()->instance('tenant', $this->tenant);
+            app()->instance('tenant_id', $this->tenant->id);
             
             // Set the default database connection for tenant data
             DB::setDefaultConnection($this->tenant->database_name);
