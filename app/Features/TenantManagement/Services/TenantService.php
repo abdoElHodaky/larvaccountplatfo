@@ -13,7 +13,7 @@ class TenantService
      */
     public function getUserTenants($user): array
     {
-        if (!$user) {
+        if (! $user) {
             return [];
         }
 
@@ -39,8 +39,8 @@ class TenantService
     {
         // Verify user has access to this tenant
         $tenant = $user->tenants()->find($tenantId);
-        
-        if (!$tenant) {
+
+        if (! $tenant) {
             return [
                 'success' => false,
                 'message' => 'You do not have access to this organization.',
@@ -105,8 +105,8 @@ class TenantService
                 'message' => 'Organization settings updated successfully.',
             ];
         } catch (\Exception $e) {
-            Log::error('Tenant settings update error: ' . $e->getMessage());
-            
+            Log::error('Tenant settings update error: '.$e->getMessage());
+
             return [
                 'success' => false,
                 'message' => 'Failed to update organization settings. Please try again.',
@@ -136,7 +136,8 @@ class TenantService
                 ];
             })->toArray();
         } catch (\Exception $e) {
-            Log::error('Tenant users fetch error: ' . $e->getMessage());
+            Log::error('Tenant users fetch error: '.$e->getMessage());
+
             return [];
         }
     }
@@ -159,8 +160,8 @@ class TenantService
                 'message' => 'User invitation sent successfully.',
             ];
         } catch (\Exception $e) {
-            Log::error('User invitation error: ' . $e->getMessage());
-            
+            Log::error('User invitation error: '.$e->getMessage());
+
             return [
                 'success' => false,
                 'message' => 'Failed to send user invitation. Please try again.',

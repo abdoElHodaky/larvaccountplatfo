@@ -3,8 +3,8 @@
 namespace App\Console\Commands\System;
 
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\DB;
 
 class HealthCheckCommand extends Command
 {
@@ -51,8 +51,8 @@ class HealthCheckCommand extends Command
             'modules' => $this->checkModules($detailed),
         ];
 
-        $overallStatus = collect($checks)->every(fn($check) => $check['status'] === 'healthy') 
-            ? 'healthy' 
+        $overallStatus = collect($checks)->every(fn ($check) => $check['status'] === 'healthy')
+            ? 'healthy'
             : 'unhealthy';
 
         return [
@@ -76,17 +76,16 @@ class HealthCheckCommand extends Command
         try {
             // Test basic database connection
             DB::connection()->getPdo();
-            
+
             if ($detailed) {
                 $result['details'] = [
                     'driver' => DB::connection()->getDriverName(),
                     'database' => DB::connection()->getDatabaseName(),
                 ];
             }
-
         } catch (\Exception $e) {
             $result['status'] = 'unhealthy';
-            $result['message'] = 'Database connection failed: ' . $e->getMessage();
+            $result['message'] = 'Database connection failed: '.$e->getMessage();
         }
 
         return $result;
@@ -104,7 +103,7 @@ class HealthCheckCommand extends Command
         ];
 
         try {
-            $testKey = 'health_check_' . time();
+            $testKey = 'health_check_'.time();
             $testValue = 'test_value';
 
             Cache::put($testKey, $testValue, 60);
@@ -122,10 +121,9 @@ class HealthCheckCommand extends Command
                     'prefix' => config('cache.prefix'),
                 ];
             }
-
         } catch (\Exception $e) {
             $result['status'] = 'unhealthy';
-            $result['message'] = 'Cache test failed: ' . $e->getMessage();
+            $result['message'] = 'Cache test failed: '.$e->getMessage();
         }
 
         return $result;
@@ -143,7 +141,7 @@ class HealthCheckCommand extends Command
         ];
 
         try {
-            $testFile = 'health_check_' . time() . '.txt';
+            $testFile = 'health_check_'.time().'.txt';
             $testContent = 'Health check test file';
 
             \Storage::put($testFile, $testContent);
@@ -160,10 +158,9 @@ class HealthCheckCommand extends Command
                     'default_disk' => config('filesystems.default'),
                 ];
             }
-
         } catch (\Exception $e) {
             $result['status'] = 'unhealthy';
-            $result['message'] = 'Storage test failed: ' . $e->getMessage();
+            $result['message'] = 'Storage test failed: '.$e->getMessage();
         }
 
         return $result;
@@ -195,10 +192,9 @@ class HealthCheckCommand extends Command
                 $result['status'] = 'warning';
                 $result['message'] = 'No modules enabled';
             }
-
         } catch (\Exception $e) {
             $result['status'] = 'unhealthy';
-            $result['message'] = 'Module check failed: ' . $e->getMessage();
+            $result['message'] = 'Module check failed: '.$e->getMessage();
         }
 
         return $result;
@@ -217,19 +213,19 @@ class HealthCheckCommand extends Command
         $this->newLine();
 
         foreach ($healthData['checks'] as $component => $check) {
-            $icon = match($check['status']) {
+            $icon = match ($check['status']) {
                 'healthy' => '✅',
                 'warning' => '⚠️',
                 'unhealthy' => '❌',
                 default => '❓',
             };
 
-            $this->line("{$icon} " . ucfirst($component) . ": {$check['message']}");
+            $this->line("{$icon} ".ucfirst($component).": {$check['message']}");
 
-            if ($detailed && !empty($check['details'])) {
+            if ($detailed && ! empty($check['details'])) {
                 foreach ($check['details'] as $key => $value) {
                     if (is_array($value)) {
-                        $this->line("    {$key}: " . json_encode($value));
+                        $this->line("    {$key}: ".json_encode($value));
                     } else {
                         $this->line("    {$key}: {$value}");
                     }

@@ -47,37 +47,54 @@ class FinancialForecast extends HybridModel
      * Forecast types
      */
     const TYPE_REVENUE = 'revenue';
+
     const TYPE_EXPENSE = 'expense';
+
     const TYPE_CASH_FLOW = 'cash_flow';
+
     const TYPE_PROFIT_LOSS = 'profit_loss';
+
     const TYPE_BALANCE_SHEET = 'balance_sheet';
+
     const TYPE_COMPREHENSIVE = 'comprehensive';
 
     /**
      * Period types
      */
     const PERIOD_MONTHLY = 'monthly';
+
     const PERIOD_QUARTERLY = 'quarterly';
+
     const PERIOD_YEARLY = 'yearly';
 
     /**
      * Methodologies
      */
     const METHOD_HISTORICAL_TREND = 'historical_trend';
+
     const METHOD_REGRESSION_ANALYSIS = 'regression_analysis';
+
     const METHOD_SEASONAL_ADJUSTMENT = 'seasonal_adjustment';
+
     const METHOD_MARKET_BASED = 'market_based';
+
     const METHOD_BOTTOM_UP = 'bottom_up';
+
     const METHOD_TOP_DOWN = 'top_down';
+
     const METHOD_SCENARIO_BASED = 'scenario_based';
 
     /**
      * Forecast statuses
      */
     const STATUS_DRAFT = 'draft';
+
     const STATUS_IN_REVIEW = 'in_review';
+
     const STATUS_APPROVED = 'approved';
+
     const STATUS_ACTIVE = 'active';
+
     const STATUS_ARCHIVED = 'archived';
 
     /**
@@ -118,8 +135,8 @@ class FinancialForecast extends HybridModel
     public function scopeActive($query)
     {
         return $query->where('status', self::STATUS_ACTIVE)
-                    ->where('start_date', '<=', now())
-                    ->where('end_date', '>=', now());
+            ->where('start_date', '<=', now())
+            ->where('end_date', '>=', now());
     }
 
     /**
@@ -137,11 +154,11 @@ class FinancialForecast extends HybridModel
     {
         return $query->where(function ($q) use ($startDate, $endDate) {
             $q->whereBetween('start_date', [$startDate, $endDate])
-              ->orWhereBetween('end_date', [$startDate, $endDate])
-              ->orWhere(function ($q2) use ($startDate, $endDate) {
-                  $q2->where('start_date', '<=', $startDate)
-                     ->where('end_date', '>=', $endDate);
-              });
+                ->orWhereBetween('end_date', [$startDate, $endDate])
+                ->orWhere(function ($q2) use ($startDate, $endDate) {
+                    $q2->where('start_date', '<=', $startDate)
+                        ->where('end_date', '>=', $endDate);
+                });
         });
     }
 
@@ -158,9 +175,9 @@ class FinancialForecast extends HybridModel
         foreach ($lineItems as $item) {
             $actual = $this->getActualAmount($item->account_id, $item->period_start, $item->period_end);
             $forecast = $item->forecasted_amount;
-            
+
             $accuracy = $forecast > 0 ? (1 - abs($actual - $forecast) / $forecast) * 100 : 0;
-            
+
             $accuracyByItem[] = [
                 'account_id' => $item->account_id,
                 'account_name' => $item->account->name ?? 'Unknown',
@@ -191,11 +208,11 @@ class FinancialForecast extends HybridModel
     private function getActualAmount(int $accountId, $startDate, $endDate): float
     {
         return JournalEntry::where('account_id', $accountId)
-                          ->whereHas('transaction', function ($query) use ($startDate, $endDate) {
-                              $query->whereBetween('transaction_date', [$startDate, $endDate])
-                                   ->where('status', Transaction::STATUS_POSTED);
-                          })
-                          ->sum('amount');
+            ->whereHas('transaction', function ($query) use ($startDate, $endDate) {
+                $query->whereBetween('transaction_date', [$startDate, $endDate])
+                    ->where('status', Transaction::STATUS_POSTED);
+            })
+            ->sum('amount');
     }
 
     /**
@@ -204,7 +221,7 @@ class FinancialForecast extends HybridModel
     public function generateScenarios(): array
     {
         $baseCase = $this->lineItems()->sum('forecasted_amount');
-        
+
         return [
             'optimistic' => [
                 'name' => 'Optimistic Scenario',
@@ -235,7 +252,7 @@ class FinancialForecast extends HybridModel
         $this->status = self::STATUS_APPROVED;
         $this->approved_by = $approvedBy;
         $this->approved_at = now();
-        
+
         return $this->save();
     }
 
@@ -249,6 +266,7 @@ class FinancialForecast extends HybridModel
         }
 
         $this->status = self::STATUS_ACTIVE;
+
         return $this->save();
     }
 
@@ -258,6 +276,7 @@ class FinancialForecast extends HybridModel
     public function archive(): bool
     {
         $this->status = self::STATUS_ARCHIVED;
+
         return $this->save();
     }
 
@@ -268,7 +287,7 @@ class FinancialForecast extends HybridModel
     {
         $lineItems = $this->lineItems()->with('account')->get();
         $totalAmount = $lineItems->sum('forecasted_amount');
-        
+
         $byAccount = $lineItems->groupBy('account.type')->map(function ($items) {
             return [
                 'count' => $items->count(),

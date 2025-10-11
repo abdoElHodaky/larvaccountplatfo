@@ -3,7 +3,6 @@
 namespace App\Console\Commands\Tenant;
 
 use App\Models\Tenant;
-use App\Services\TenantProvisioningService;
 use Illuminate\Console\Command;
 use Illuminate\Support\Str;
 
@@ -39,7 +38,7 @@ class CreateTenantCommand extends Command
 
         $this->info("Creating tenant: {$name}");
         $this->info("Subdomain: {$subdomain}");
-        
+
         if ($domain) {
             $this->info("Custom domain: {$domain}");
         }
@@ -60,7 +59,7 @@ class CreateTenantCommand extends Command
             ];
 
             // For demo purposes, create a basic tenant record
-            $tenant = new \stdClass();
+            $tenant = new \stdClass;
             $tenant->id = rand(1000, 9999);
             $tenant->name = $name;
             $tenant->subdomain = $subdomain;
@@ -93,9 +92,9 @@ class CreateTenantCommand extends Command
             }
 
             return self::SUCCESS;
-
         } catch (\Exception $e) {
-            $this->error('Failed to create tenant: ' . $e->getMessage());
+            $this->error('Failed to create tenant: '.$e->getMessage());
+
             return self::FAILURE;
         }
     }

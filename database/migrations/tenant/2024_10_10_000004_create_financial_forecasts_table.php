@@ -17,8 +17,8 @@ return new class extends Migration
             $table->string('name');
             $table->text('description')->nullable();
             $table->enum('forecast_type', [
-                'revenue', 'expense', 'cash_flow', 
-                'profit_loss', 'balance_sheet', 'comprehensive'
+                'revenue', 'expense', 'cash_flow',
+                'profit_loss', 'balance_sheet', 'comprehensive',
             ]);
             $table->enum('period_type', ['monthly', 'quarterly', 'yearly']);
             $table->date('start_date');
@@ -26,7 +26,7 @@ return new class extends Migration
             $table->integer('base_year');
             $table->enum('methodology', [
                 'historical_trend', 'regression_analysis', 'seasonal_adjustment',
-                'market_based', 'bottom_up', 'top_down', 'scenario_based'
+                'market_based', 'bottom_up', 'top_down', 'scenario_based',
             ]);
             $table->decimal('confidence_level', 5, 2)->default(75.00); // 0.00 to 100.00
             $table->enum('status', ['draft', 'in_review', 'approved', 'active', 'archived'])->default('draft');

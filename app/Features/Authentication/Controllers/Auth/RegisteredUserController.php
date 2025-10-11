@@ -3,8 +3,8 @@
 namespace App\Features\Authentication\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
-use App\Models\User;
 use App\Models\Tenant;
+use App\Models\User;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -105,13 +105,13 @@ class RegisteredUserController extends Controller
         $token = $request->query('token');
         $email = $request->query('email');
 
-        if (!$token || !$email) {
+        if (! $token || ! $email) {
             abort(404);
         }
 
         // Verify invitation token (you might want to create an Invitation model)
         // For now, we'll just pass the data to the view
-        
+
         return Inertia::render('Auth/RegisterFromInvitation', [
             'token' => $token,
             'email' => $email,
@@ -135,7 +135,7 @@ class RegisteredUserController extends Controller
 
         // TODO: Verify invitation token and get invitation details
         // For now, we'll create a basic user
-        
+
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,

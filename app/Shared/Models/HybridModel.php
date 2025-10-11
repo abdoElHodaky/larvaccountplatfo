@@ -20,7 +20,7 @@ abstract class HybridModel extends Model
 
         // Auto-set organization_id when creating records in shared databases
         static::creating(function ($model) {
-            if (static::isUsingSharedDatabase() && !$model->organization_id) {
+            if (static::isUsingSharedDatabase() && ! $model->organization_id) {
                 $model->organization_id = static::getCurrentOrganizationId();
             }
         });
@@ -49,7 +49,7 @@ abstract class HybridModel extends Model
         $hidden = $this->hidden;
 
         // Hide organization_id for dedicated databases (not needed)
-        if (!$this->isSharedDatabase()) {
+        if (! $this->isSharedDatabase()) {
             $hidden[] = 'organization_id';
         }
 
@@ -74,6 +74,7 @@ abstract class HybridModel extends Model
         } catch (\Exception $e) {
             $tenantStrategy = 'shared';
         }
+
         return $tenantStrategy === 'shared';
     }
 
@@ -95,6 +96,7 @@ abstract class HybridModel extends Model
         } catch (\Exception $e) {
             $tenantStrategy = 'shared';
         }
+
         return $tenantStrategy === 'dedicated';
     }
 
@@ -116,6 +118,7 @@ abstract class HybridModel extends Model
         } catch (\Exception $e) {
             $tenantStrategy = 'shared';
         }
+
         return $tenantStrategy === 'clustered';
     }
 
@@ -135,7 +138,7 @@ abstract class HybridModel extends Model
         try {
             return app('tenant');
         } catch (\Exception $e) {
-            return null;
+            return;
         }
     }
 
@@ -169,7 +172,7 @@ abstract class HybridModel extends Model
 
         // Add any table prefixing logic here if needed
         // For example, you might want to prefix tables for certain tenant types
-        
+
         return $table;
     }
 
@@ -198,7 +201,7 @@ abstract class HybridModel extends Model
     public function freshTimestamp()
     {
         $tenant = static::getCurrentTenant();
-        
+
         if ($tenant && $tenant->timezone) {
             return now($tenant->timezone);
         }
@@ -215,7 +218,7 @@ abstract class HybridModel extends Model
         $array = parent::toArray();
 
         // Remove organization_id from output for dedicated databases
-        if (!$this->isSharedDatabase() && isset($array['organization_id'])) {
+        if (! $this->isSharedDatabase() && isset($array['organization_id'])) {
             unset($array['organization_id']);
         }
 
@@ -228,7 +231,7 @@ abstract class HybridModel extends Model
     public function __call($method, $parameters)
     {
         // Add any tenant-specific method handling here
-        
+
         return parent::__call($method, $parameters);
     }
 
@@ -238,7 +241,7 @@ abstract class HybridModel extends Model
     public static function __callStatic($method, $parameters)
     {
         // Add any tenant-specific static method handling here
-        
+
         return parent::__callStatic($method, $parameters);
     }
 }

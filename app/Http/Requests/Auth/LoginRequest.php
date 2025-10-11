@@ -43,7 +43,7 @@ class LoginRequest extends FormRequest
         $this->ensureIsNotRateLimited();
 
         $credentials = $this->only('email', 'password');
-        
+
         // Add active user constraint
         $credentials['is_active'] = true;
 

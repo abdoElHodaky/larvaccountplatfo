@@ -4,7 +4,6 @@ namespace App\Features\Sales\Controllers;
 
 use App\Features\Sales\Services\SalesService;
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -27,7 +26,7 @@ class SalesController extends Controller
         try {
             $organizationId = $this->getCurrentOrganizationId();
             $overview = $this->salesService->getDashboardOverview($organizationId);
-            
+
             // Get recent orders and customers
             $recentOrders = $this->salesService->getRecentOrders($organizationId, 10);
             $topCustomers = $this->salesService->getTopCustomers($organizationId, 5);
@@ -43,10 +42,9 @@ class SalesController extends Controller
                     'name' => auth()->user()->current_organization->name ?? 'Default Organization',
                 ],
             ]);
-
         } catch (\Exception $e) {
-            \Log::error('Sales dashboard error: ' . $e->getMessage());
-            
+            \Log::error('Sales dashboard error: '.$e->getMessage());
+
             // Return error page with Inertia
             return Inertia::render('Sales/Dashboard', [
                 'overview' => null,
@@ -80,10 +78,9 @@ class SalesController extends Controller
                     'name' => auth()->user()->current_organization->name ?? 'Default Organization',
                 ],
             ]);
-
         } catch (\Exception $e) {
-            \Log::error('Sales customers error: ' . $e->getMessage());
-            
+            \Log::error('Sales customers error: '.$e->getMessage());
+
             return Inertia::render('Sales/Customers', [
                 'customers' => [],
                 'stats' => null,
@@ -114,10 +111,9 @@ class SalesController extends Controller
                     'name' => auth()->user()->current_organization->name ?? 'Default Organization',
                 ],
             ]);
-
         } catch (\Exception $e) {
-            \Log::error('Sales orders error: ' . $e->getMessage());
-            
+            \Log::error('Sales orders error: '.$e->getMessage());
+
             return Inertia::render('Sales/Orders', [
                 'orders' => [],
                 'stats' => null,
@@ -148,10 +144,9 @@ class SalesController extends Controller
                     'name' => auth()->user()->current_organization->name ?? 'Default Organization',
                 ],
             ]);
-
         } catch (\Exception $e) {
-            \Log::error('Sales create order error: ' . $e->getMessage());
-            
+            \Log::error('Sales create order error: '.$e->getMessage());
+
             return Inertia::render('Sales/CreateOrder', [
                 'customers' => [],
                 'products' => [],
@@ -178,10 +173,9 @@ class SalesController extends Controller
                     'name' => auth()->user()->current_organization->name ?? 'Default Organization',
                 ],
             ]);
-
         } catch (\Exception $e) {
-            \Log::error('Sales create customer error: ' . $e->getMessage());
-            
+            \Log::error('Sales create customer error: '.$e->getMessage());
+
             return Inertia::render('Sales/CreateCustomer', [
                 'error' => 'Failed to load customer creation page. Please try again.',
                 'organization' => [
