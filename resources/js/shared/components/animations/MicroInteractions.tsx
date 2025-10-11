@@ -3,10 +3,10 @@
  * Advanced button interactions, loading states, and user feedback animations
  */
 
-import React, { ReactNode, useState, useRef } from 'react';
-import { motion, useAnimation, useMotionValue, useTransform } from 'framer-motion';
+import React, { ReactNode, useState, useRef as _useRef } from 'react';
+import { motion, useAnimation, useMotionValue as _useMotionValue, useTransform as _useTransform } from 'framer-motion';
 import { useAnimationContext } from './AnimationProvider';
-import { useHoverAnimation } from '../../hooks/useAnimation';
+import { useHoverAnimation as _useHoverAnimation } from '../../hooks/useAnimation';
 
 interface AnimatedButtonProps {
   children: ReactNode;

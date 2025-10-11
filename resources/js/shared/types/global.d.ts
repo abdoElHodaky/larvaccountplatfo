@@ -37,6 +37,63 @@ declare global {
     showNotification(title: string, options?: NotificationOptions): Promise<void>;
   }
   
+  // Intersection Observer types
+  interface IntersectionObserverEntry {
+    boundingClientRect: DOMRectReadOnly;
+    intersectionRatio: number;
+    intersectionRect: DOMRectReadOnly;
+    isIntersecting: boolean;
+    rootBounds: DOMRectReadOnly | null;
+    target: Element;
+    time: number;
+  }
+  
+  interface IntersectionObserverInit {
+    root?: Element | null;
+    rootMargin?: string;
+    threshold?: number | number[];
+  }
+  
+  type IntersectionObserverCallback = (entries: IntersectionObserverEntry[], observer: IntersectionObserver) => void;
+  
+  interface IntersectionObserver {
+    readonly root: Element | null;
+    readonly rootMargin: string;
+    readonly thresholds: ReadonlyArray<number>;
+    disconnect(): void;
+    observe(target: Element): void;
+    takeRecords(): IntersectionObserverEntry[];
+    unobserve(target: Element): void;
+  }
+  
+  // Performance Observer types
+  interface PerformanceEntry {
+    duration: number;
+    entryType: string;
+    name: string;
+    startTime: number;
+  }
+  
+  interface PerformanceObserverEntryList {
+    getEntries(): PerformanceEntry[];
+    getEntriesByName(name: string, type?: string): PerformanceEntry[];
+    getEntriesByType(type: string): PerformanceEntry[];
+  }
+  
+  type PerformanceObserverCallback = (list: PerformanceObserverEntryList, observer: PerformanceObserver) => void;
+  
+  interface PerformanceObserverInit {
+    entryTypes?: string[];
+    type?: string;
+    buffered?: boolean;
+  }
+  
+  interface PerformanceObserver {
+    disconnect(): void;
+    observe(options: PerformanceObserverInit): void;
+    takeRecords(): PerformanceEntry[];
+  }
+  
   // Node.js types for timers and other Node.js APIs
   namespace NodeJS {
     interface Timeout {
