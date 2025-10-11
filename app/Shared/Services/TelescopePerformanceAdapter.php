@@ -2,11 +2,10 @@
 
 namespace App\Shared\Services;
 
-use Laravel\Telescope\Telescope;
-use Laravel\Telescope\Storage\EntryQueryOptions;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\DB;
+use Laravel\Telescope\Storage\EntryQueryOptions;
+use Laravel\Telescope\Telescope;
 
 class TelescopePerformanceAdapter
 {
@@ -22,11 +21,11 @@ class TelescopePerformanceAdapter
      */
     public function getUnifiedPerformanceSummary(int $minutes = 60): array
     {
-        $cacheKey = "unified_performance_summary_{$minutes}min_" . $this->getCurrentTenantId();
-        
+        $cacheKey = "unified_performance_summary_{$minutes}min_".$this->getCurrentTenantId();
+
         return Cache::remember($cacheKey, 300, function () use ($minutes) {
             $since = now()->subMinutes($minutes);
-            
+
             return [
                 'period' => "{$minutes} minutes",
                 'tenant_id' => $this->getCurrentTenantId(),
@@ -45,11 +44,11 @@ class TelescopePerformanceAdapter
     {
         $telescopeSlowOps = $this->getTelescopeSlowOperations($thresholdMs, $limit);
         $customSlowOps = $this->customMonitor->getSlowOperations($thresholdMs, $limit);
-        
+
         // Merge and sort by duration
         $allSlowOps = array_merge($telescopeSlowOps, $customSlowOps);
-        usort($allSlowOps, fn($a, $b) => ($b['duration_ms'] ?? 0) <=> ($a['duration_ms'] ?? 0));
-        
+        usort($allSlowOps, fn ($a, $b) => ($b['duration_ms'] ?? 0) <=> ($a['duration_ms'] ?? 0));
+
         return array_slice($allSlowOps, 0, $limit);
     }
 
@@ -58,13 +57,13 @@ class TelescopePerformanceAdapter
      */
     public function getDatabasePerformanceFromTelescope(\DateTimeInterface $since): array
     {
-        if (!$this->isTelescopeEnabled()) {
+        if (! $this->isTelescopeEnabled()) {
             return $this->getEmptyDatabaseMetrics();
         }
 
         try {
             $queries = $this->getTelescopeEntries('queries', $since);
-            
+
             return [
                 'total_queries' => $queries->count(),
                 'slow_queries' => $queries->where('slow', true)->count(),
@@ -84,13 +83,13 @@ class TelescopePerformanceAdapter
      */
     public function getRequestPerformanceFromTelescope(\DateTimeInterface $since): array
     {
-        if (!$this->isTelescopeEnabled()) {
+        if (! $this->isTelescopeEnabled()) {
             return $this->getEmptyRequestMetrics();
         }
 
         try {
             $requests = $this->getTelescopeEntries('requests', $since);
-            
+
             return [
                 'total_requests' => $requests->count(),
                 'average_response_time_ms' => $requests->avg('duration') ?? 0,
@@ -109,13 +108,13 @@ class TelescopePerformanceAdapter
      */
     public function getDomainEventMetricsFromTelescope(\DateTimeInterface $since): array
     {
-        if (!$this->isTelescopeEnabled()) {
+        if (! $this->isTelescopeEnabled()) {
             return $this->getEmptyDomainEventMetrics();
         }
 
         try {
             $events = $this->getTelescopeEntries('domain_events', $since);
-            
+
             return [
                 'total_events' => $events->count(),
                 'events_by_type' => $events->groupBy('event_type')->map->count(),
@@ -133,17 +132,17 @@ class TelescopePerformanceAdapter
      */
     public function getTenantPerformanceFromTelescope(string $tenantId, \DateTimeInterface $since): array
     {
-        if (!$this->isTelescopeEnabled()) {
+        if (! $this->isTelescopeEnabled()) {
             return $this->getEmptyTenantMetrics();
         }
 
         try {
             $tenantRequests = $this->getTelescopeEntries('requests', $since)
                 ->where('tenant_id', $tenantId);
-            
+
             $tenantQueries = $this->getTelescopeEntries('queries', $since)
                 ->where('tenant_id', $tenantId);
-            
+
             return [
                 'tenant_id' => $tenantId,
                 'request_count' => $tenantRequests->count(),
@@ -163,12 +162,12 @@ class TelescopePerformanceAdapter
      */
     public function syncCustomMetricsToTelescope(): void
     {
-        if (!$this->isTelescopeEnabled() || !config('telescope.performance_integration.sync_metrics', true)) {
+        if (! $this->isTelescopeEnabled() || ! config('telescope.performance_integration.sync_metrics', true)) {
             return;
         }
 
         $customMetrics = $this->customMonitor->getCurrentStatus();
-        
+
         Telescope::recordCustomMetrics([
             'type' => 'custom_performance_sync',
             'metrics' => $customMetrics,
@@ -183,18 +182,18 @@ class TelescopePerformanceAdapter
     public function getPerformanceAlerts(): array
     {
         $alerts = [];
-        
+
         // Check for slow operations
         $slowOps = $this->getUnifiedSlowOperations(5000, 10); // 5 second threshold
-        if (!empty($slowOps)) {
+        if (! empty($slowOps)) {
             $alerts[] = [
                 'type' => 'slow_operations',
                 'severity' => 'high',
-                'message' => count($slowOps) . ' operations detected over 5 seconds',
+                'message' => count($slowOps).' operations detected over 5 seconds',
                 'data' => $slowOps,
             ];
         }
-        
+
         // Check error rates from Telescope
         if ($this->isTelescopeEnabled()) {
             $errorRate = $this->getRecentErrorRate();
@@ -207,7 +206,7 @@ class TelescopePerformanceAdapter
                 ];
             }
         }
-        
+
         return $alerts;
     }
 
@@ -216,7 +215,7 @@ class TelescopePerformanceAdapter
      */
     private function getTelescopeEntries(string $type, \DateTimeInterface $since): Collection
     {
-        if (!$this->isTelescopeEnabled()) {
+        if (! $this->isTelescopeEnabled()) {
             return collect();
         }
 
@@ -255,7 +254,7 @@ class TelescopePerformanceAdapter
     private function generatePerformanceRecommendations(): array
     {
         $recommendations = [];
-        
+
         // Check for N+1 query patterns
         if ($this->detectNPlusOneQueries()) {
             $recommendations[] = [
@@ -264,7 +263,7 @@ class TelescopePerformanceAdapter
                 'message' => 'Potential N+1 query patterns detected. Consider using eager loading.',
             ];
         }
-        
+
         // Check for memory usage
         $memoryUsage = memory_get_peak_usage(true) / 1024 / 1024;
         if ($memoryUsage > 128) { // 128MB threshold
@@ -274,7 +273,7 @@ class TelescopePerformanceAdapter
                 'message' => "Peak memory usage is {$memoryUsage}MB. Consider optimizing memory-intensive operations.",
             ];
         }
-        
+
         return $recommendations;
     }
 

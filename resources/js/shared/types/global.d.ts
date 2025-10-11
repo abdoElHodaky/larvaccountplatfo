@@ -54,20 +54,24 @@ declare global {
   const route: (name: string, params?: any) => string;
   
   // Google Analytics gtag function
-  interface Window {
-    gtag?: (
-      command: 'config' | 'event' | 'js' | 'set',
-      targetId: string | Date,
-      config?: any
-    ) => void;
+  function gtag(command: 'config' | 'event' | 'js' | 'set', targetId: string | Date, config?: any): void;
+  
+  // EventListener type for DOM events
+  type EventListener = (event: Event) => void;
+  
+  // Testing globals
+  function beforeEach(fn: () => void): void;
+  
+  // ImportMeta interface extensions
+  interface ImportMeta {
+    env: Record<string, string>;
+    glob: (pattern: string) => Record<string, () => Promise<any>>;
   }
   
-  // Route preloader interface
-  interface RoutePreloader {
-    preloadedRoutes: Set<string>;
-    preloadRoute(routeName: string, importFn: () => Promise<any>): void;
-    preloadLikelyRoutes(currentRoute: string, routeMap: Record<string, () => Promise<any>>): void;
-    initialize?(): void;
+  // Window interface extensions
+  interface Window {
+    FORGE_DEPLOYMENT?: boolean;
+    gtag?: typeof gtag;
   }
 }
 

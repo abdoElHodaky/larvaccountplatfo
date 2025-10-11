@@ -1,7 +1,5 @@
 <?php
 
-use Illuminate\Support\Str;
-
 return [
 
     /*
@@ -235,6 +233,53 @@ return [
                 'memory' => 512,
                 'tries' => 3,
                 'timeout' => 120,
+                'nice' => 0,
+            ],
+        ],
+
+        // Laravel Forge optimized configuration
+        'forge' => [
+            'supervisor-main' => [
+                'connection' => 'redis',
+                'queue' => ['default', 'critical', 'emails', 'reports'],
+                'balance' => 'auto',
+                'autoScalingStrategy' => 'time',
+                'maxProcesses' => 6,
+                'maxTime' => 0,
+                'maxJobs' => 0,
+                'memory' => 256,
+                'tries' => 3,
+                'timeout' => 60,
+                'nice' => 0,
+            ],
+            'supervisor-broadcasts' => [
+                'connection' => 'redis',
+                'queue' => ['broadcasts'],
+                'balance' => 'simple',
+                'autoScalingStrategy' => 'simple',
+                'maxProcesses' => 2,
+                'maxTime' => 0,
+                'maxJobs' => 0,
+                'memory' => 128,
+                'tries' => 2,
+                'timeout' => 30,
+                'nice' => 0,
+            ],
+        ],
+
+        // Laravel Cloud simplified configuration
+        'cloud' => [
+            'supervisor-simple' => [
+                'connection' => 'redis',
+                'queue' => ['default', 'emails'],
+                'balance' => 'simple',
+                'autoScalingStrategy' => 'simple',
+                'maxProcesses' => 3,
+                'maxTime' => 0,
+                'maxJobs' => 0,
+                'memory' => 128,
+                'tries' => 2,
+                'timeout' => 60,
                 'nice' => 0,
             ],
         ],

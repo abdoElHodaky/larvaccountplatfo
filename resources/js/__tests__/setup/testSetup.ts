@@ -5,8 +5,8 @@
 
 import '@testing-library/jest-dom';
 import { configure } from '@testing-library/react';
-import { afterEach, beforeEach, vi } from 'vitest';
-// import { server } from './mocks/server'; // TODO: Create MSW server mock
+import { afterEach, afterAll, beforeAll, vi } from 'vitest';
+import { server } from './mocks/server';
 
 // Configure React Testing Library
 configure({
@@ -18,20 +18,20 @@ configure({
 process.env.VITE_API_URL = 'http://localhost:3000/api';
 process.env.VITE_WEBSOCKET_URL = 'ws://localhost:6001';
 
-// Setup MSW (Mock Service Worker) - TODO: Uncomment when server mock is created
-// beforeAll(() => {
-//   server.listen({
-//     onUnhandledRequest: 'warn',
-//   });
-// });
+// Setup MSW (Mock Service Worker)
+beforeAll(() => {
+  server.listen({
+    onUnhandledRequest: 'warn',
+  });
+});
 
-// afterEach(() => {
-//   server.resetHandlers();
-// });
+afterEach(() => {
+  server.resetHandlers();
+});
 
-// afterAll(() => {
-//   server.close();
-// });
+afterAll(() => {
+  server.close();
+});
 
 // Mock localStorage
 const localStorageMock = {
@@ -112,15 +112,15 @@ global.WebSocket = MockWebSocket as any;
 
 // Mock IntersectionObserver
 global.IntersectionObserver = class IntersectionObserver {
-  root: Element | null = null;
-  rootMargin: string = '0px';
-  thresholds: ReadonlyArray<number> = [0];
+  root = null;
+  rootMargin = '';
+  thresholds = [];
   
-  constructor(_callback: IntersectionObserverCallback, _options?: IntersectionObserverInit) {}
+  constructor() {}
   observe() {}
   unobserve() {}
   disconnect() {}
-  takeRecords(): IntersectionObserverEntry[] { return []; }
+  takeRecords() { return []; }
 } as any;
 
 // Mock ResizeObserver
@@ -133,12 +133,11 @@ global.ResizeObserver = class ResizeObserver {
 
 // Mock PerformanceObserver
 global.PerformanceObserver = class PerformanceObserver {
-  static supportedEntryTypes: readonly string[] = ['measure', 'navigation', 'resource'];
+  static supportedEntryTypes = ['measure', 'navigation', 'resource'];
   
-  constructor(_callback: PerformanceObserverCallback) {}
+  constructor() {}
   observe() {}
   disconnect() {}
-  takeRecords(): PerformanceEntryList { return []; }
 } as any;
 
 // Mock performance.memory

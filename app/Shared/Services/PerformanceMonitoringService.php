@@ -2,12 +2,10 @@
 
 namespace App\Shared\Services;
 
-use App\Shared\Services\BaseService;
+use Exception;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Redis;
-use Exception;
 
 /**
  * Advanced performance monitoring service
@@ -15,7 +13,9 @@ use Exception;
 class PerformanceMonitoringService extends BaseService
 {
     protected array $metrics = [];
+
     protected array $thresholds = [];
+
     protected array $alerts = [];
 
     public function __construct()
@@ -150,7 +150,7 @@ class PerformanceMonitoringService extends BaseService
     {
         return $this->cached('getDatabaseMetrics', [], function () {
             $connectionName = config('database.default');
-            
+
             return [
                 'connection' => $connectionName,
                 'queries' => [
@@ -331,7 +331,7 @@ class PerformanceMonitoringService extends BaseService
     {
         try {
             // Store in cache for recent access
-            $cacheKey = 'performance_metrics:' . date('Y-m-d-H-i');
+            $cacheKey = 'performance_metrics:'.date('Y-m-d-H-i');
             Cache::put($cacheKey, $metrics, 3600); // 1 hour
 
             // Store in database for long-term analysis
@@ -347,7 +347,7 @@ class PerformanceMonitoringService extends BaseService
                 ->where('created_at', '<', now()->subDays(7))
                 ->delete();
         } catch (Exception $e) {
-            Log::warning('Failed to store performance metrics: ' . $e->getMessage());
+            Log::warning('Failed to store performance metrics: '.$e->getMessage());
         }
     }
 
@@ -370,51 +370,215 @@ class PerformanceMonitoringService extends BaseService
                 })
                 ->toArray();
         } catch (Exception $e) {
-            Log::error('Failed to retrieve historical metrics: ' . $e->getMessage());
+            Log::error('Failed to retrieve historical metrics: '.$e->getMessage());
+
             return [];
         }
     }
 
     // Helper methods (placeholder implementations)
-    protected function parseMemoryLimit(string $limit): int { return 134217728; } // 128MB default
-    protected function calculateMemoryUsagePercentage(): float { return (memory_get_usage(true) / $this->parseMemoryLimit(ini_get('memory_limit'))) * 100; }
-    protected function getLoadAverage(): array { return [0.1, 0.2, 0.3]; }
-    protected function getProcessCount(): int { return 10; }
-    protected function calculateDiskUsagePercentage(): float { return 50.0; }
-    protected function getOpcacheStats(): array { return function_exists('opcache_get_status') ? opcache_get_status() : []; }
-    protected function getTotalQueryCount(): int { return 100; }
-    protected function getSlowQueryCount(): int { return 5; }
-    protected function getAverageQueryTime(): float { return 0.05; }
-    protected function getActiveConnectionCount(): int { return 10; }
-    protected function getMaxConnectionCount(): int { return 100; }
-    protected function getConnectionPoolUsage(): float { return 0.1; }
-    protected function getLargestTables(): array { return []; }
-    protected function getTableLocks(): int { return 0; }
-    protected function getIndexUsageStats(): array { return []; }
-    protected function getBufferPoolHitRate(): float { return 0.95; }
-    protected function getQueryCacheHitRate(): float { return 0.85; }
-    protected function getRedisMetrics(): array { return []; }
-    protected function getApplicationCacheMetrics(): array { return []; }
-    protected function getOpcacheMetrics(): array { return []; }
-    protected function calculateOverallCacheHitRate(): float { return 0.9; }
-    protected function calculateOverallCacheMissRate(): float { return 0.1; }
-    protected function getTotalCacheKeys(): int { return 1000; }
-    protected function getCacheMemoryUsage(): int { return 10485760; } // 10MB
-    protected function getQueueSize(): int { return 5; }
-    protected function getFailedJobsCount(): int { return 0; }
-    protected function getDashboardMetrics(): array { return ['widgets_rendered' => 50]; }
-    protected function getAccountingMetrics(): array { return ['transactions_processed' => 100]; }
-    protected function getInventoryMetrics(): array { return ['products_updated' => 25]; }
-    protected function getApiRequestsPerMinute(): int { return 120; }
-    protected function getAverageApiResponseTime(): float { return 0.25; }
-    protected function getApiErrorRate(): float { return 0.02; }
-    protected function getActiveSessionCount(): int { return 50; }
-    protected function getConcurrentUserCount(): int { return 25; }
-    protected function getTotalOrganizations(): int { return 10; }
-    protected function getActiveUsersToday(): int { return 100; }
-    protected function getTransactionsProcessedToday(): int { return 500; }
-    protected function getDashboardWidgetsCreated(): int { return 200; }
-    protected function getDashboardLoadTime(): float { return 0.8; }
-    protected function getReportGenerationTime(): float { return 2.5; }
-    protected function getDataExportTime(): float { return 1.2; }
+    protected function parseMemoryLimit(string $limit): int
+    {
+        return 134217728;
+    } // 128MB default
+
+    protected function calculateMemoryUsagePercentage(): float
+    {
+        return (memory_get_usage(true) / $this->parseMemoryLimit(ini_get('memory_limit'))) * 100;
+    }
+
+    protected function getLoadAverage(): array
+    {
+        return [0.1, 0.2, 0.3];
+    }
+
+    protected function getProcessCount(): int
+    {
+        return 10;
+    }
+
+    protected function calculateDiskUsagePercentage(): float
+    {
+        return 50.0;
+    }
+
+    protected function getOpcacheStats(): array
+    {
+        return function_exists('opcache_get_status') ? opcache_get_status() : [];
+    }
+
+    protected function getTotalQueryCount(): int
+    {
+        return 100;
+    }
+
+    protected function getSlowQueryCount(): int
+    {
+        return 5;
+    }
+
+    protected function getAverageQueryTime(): float
+    {
+        return 0.05;
+    }
+
+    protected function getActiveConnectionCount(): int
+    {
+        return 10;
+    }
+
+    protected function getMaxConnectionCount(): int
+    {
+        return 100;
+    }
+
+    protected function getConnectionPoolUsage(): float
+    {
+        return 0.1;
+    }
+
+    protected function getLargestTables(): array
+    {
+        return [];
+    }
+
+    protected function getTableLocks(): int
+    {
+        return 0;
+    }
+
+    protected function getIndexUsageStats(): array
+    {
+        return [];
+    }
+
+    protected function getBufferPoolHitRate(): float
+    {
+        return 0.95;
+    }
+
+    protected function getQueryCacheHitRate(): float
+    {
+        return 0.85;
+    }
+
+    protected function getRedisMetrics(): array
+    {
+        return [];
+    }
+
+    protected function getApplicationCacheMetrics(): array
+    {
+        return [];
+    }
+
+    protected function getOpcacheMetrics(): array
+    {
+        return [];
+    }
+
+    protected function calculateOverallCacheHitRate(): float
+    {
+        return 0.9;
+    }
+
+    protected function calculateOverallCacheMissRate(): float
+    {
+        return 0.1;
+    }
+
+    protected function getTotalCacheKeys(): int
+    {
+        return 1000;
+    }
+
+    protected function getCacheMemoryUsage(): int
+    {
+        return 10485760;
+    } // 10MB
+
+    protected function getQueueSize(): int
+    {
+        return 5;
+    }
+
+    protected function getFailedJobsCount(): int
+    {
+        return 0;
+    }
+
+    protected function getDashboardMetrics(): array
+    {
+        return ['widgets_rendered' => 50];
+    }
+
+    protected function getAccountingMetrics(): array
+    {
+        return ['transactions_processed' => 100];
+    }
+
+    protected function getInventoryMetrics(): array
+    {
+        return ['products_updated' => 25];
+    }
+
+    protected function getApiRequestsPerMinute(): int
+    {
+        return 120;
+    }
+
+    protected function getAverageApiResponseTime(): float
+    {
+        return 0.25;
+    }
+
+    protected function getApiErrorRate(): float
+    {
+        return 0.02;
+    }
+
+    protected function getActiveSessionCount(): int
+    {
+        return 50;
+    }
+
+    protected function getConcurrentUserCount(): int
+    {
+        return 25;
+    }
+
+    protected function getTotalOrganizations(): int
+    {
+        return 10;
+    }
+
+    protected function getActiveUsersToday(): int
+    {
+        return 100;
+    }
+
+    protected function getTransactionsProcessedToday(): int
+    {
+        return 500;
+    }
+
+    protected function getDashboardWidgetsCreated(): int
+    {
+        return 200;
+    }
+
+    protected function getDashboardLoadTime(): float
+    {
+        return 0.8;
+    }
+
+    protected function getReportGenerationTime(): float
+    {
+        return 2.5;
+    }
+
+    protected function getDataExportTime(): float
+    {
+        return 1.2;
+    }
 }

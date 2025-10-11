@@ -94,6 +94,8 @@ export const TrialBalance: React.FC<TrialBalanceProps> = memo(({
   const evenRowBg = useColorModeValue('gray.50', 'gray.700');
   // const balancedColor = useColorModeValue('green.500', 'green.400');
   const unbalancedColor = useColorModeValue('red.500', 'red.400');
+  const headerHoverBg = useColorModeValue('gray.100', 'gray.600');
+  const rowHoverBg = useColorModeValue('blue.50', 'blue.900');
 
   // Memoized filtered and sorted accounts
   const processedAccounts = useMemo(() => {
@@ -293,7 +295,7 @@ export const TrialBalance: React.FC<TrialBalanceProps> = memo(({
         <Th
           cursor="pointer"
           onClick={() => handleSort('code')}
-          _hover={{ bg: useColorModeValue('gray.100', 'gray.600') }}
+          _hover={{ bg: headerHoverBg }}
         >
           <HStack spacing={1}>
             <Text>Account Code</Text>
@@ -307,7 +309,7 @@ export const TrialBalance: React.FC<TrialBalanceProps> = memo(({
         <Th
           cursor="pointer"
           onClick={() => handleSort('name')}
-          _hover={{ bg: useColorModeValue('gray.100', 'gray.600') }}
+          _hover={{ bg: headerHoverBg }}
         >
           <HStack spacing={1}>
             <Text>Account Name</Text>
@@ -323,7 +325,7 @@ export const TrialBalance: React.FC<TrialBalanceProps> = memo(({
           isNumeric
           cursor="pointer"
           onClick={() => handleSort('debit')}
-          _hover={{ bg: useColorModeValue('gray.100', 'gray.600') }}
+          _hover={{ bg: headerHoverBg }}
         >
           <HStack spacing={1} justify="flex-end">
             <Text>Debit</Text>
@@ -338,7 +340,7 @@ export const TrialBalance: React.FC<TrialBalanceProps> = memo(({
           isNumeric
           cursor="pointer"
           onClick={() => handleSort('credit')}
-          _hover={{ bg: useColorModeValue('gray.100', 'gray.600') }}
+          _hover={{ bg: headerHoverBg }}
         >
           <HStack spacing={1} justify="flex-end">
             <Text>Credit</Text>
@@ -403,7 +405,7 @@ export const TrialBalance: React.FC<TrialBalanceProps> = memo(({
             <Tr
               key={account.id}
               bg={index % 2 === 0 ? evenRowBg : 'transparent'}
-              _hover={{ bg: useColorModeValue('blue.50', 'blue.900') }}
+              _hover={{ bg: rowHoverBg }}
               cursor={onAccountClick ? 'pointer' : 'default'}
               onClick={() => handleAccountClick(account)}
             >

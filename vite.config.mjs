@@ -43,53 +43,82 @@ export default defineConfig({
         rollupOptions: {
             output: {
                 manualChunks: (id) => {
-                    // Core vendor chunks
+                    // Core vendor chunks - optimized for better caching
                     if (id.includes('node_modules')) {
+                        // React core - most stable, cache-friendly
                         if (id.includes('react') || id.includes('react-dom')) {
-                            return 'vendor';
+                            return 'react-vendor';
                         }
+                        // Inertia.js - Laravel integration
                         if (id.includes('@inertiajs/react')) {
-                            return 'inertia';
+                            return 'inertia-vendor';
                         }
+                        // UI libraries - separate for potential future consolidation
                         if (id.includes('@headlessui/react') || id.includes('@heroicons/react')) {
-                            return 'ui';
+                            return 'headless-ui';
                         }
+                        // Chakra UI - separate chunk for potential removal
                         if (id.includes('@chakra-ui/react') || id.includes('@emotion/react') || id.includes('@emotion/styled')) {
-                            return 'chakra';
+                            return 'chakra-ui';
                         }
+                        // Animation library
                         if (id.includes('framer-motion')) {
-                            return 'motion';
+                            return 'animation';
                         }
-                        if (id.includes('chart.js') || id.includes('react-chartjs-2')) {
+                        // Chart libraries
+                        if (id.includes('chart.js') || id.includes('react-chartjs-2') || id.includes('recharts')) {
                             return 'charts';
                         }
-                        if (id.includes('lodash') || id.includes('date-fns') || id.includes('axios')) {
-                            return 'utils';
+                        // State management
+                        if (id.includes('@rematch') || id.includes('react-redux') || id.includes('@apollo/client')) {
+                            return 'state-management';
                         }
-                        return 'vendor';
+                        // Utilities and smaller libraries
+                        if (id.includes('date-fns') || id.includes('axios') || id.includes('socket.io-client')) {
+                            return 'utilities';
+                        }
+                        // Default vendor chunk for remaining dependencies
+                        return 'vendor-misc';
                     }
                     
-                    // Feature chunks for better code splitting
+                    // Shared components - separate chunk for reusability
+                    if (id.includes('/shared/components/')) {
+                        return 'shared-components';
+                    }
+                    
+                    // Shared services and utilities
+                    if (id.includes('/shared/services/') || id.includes('/shared/utils/')) {
+                        return 'shared-services';
+                    }
+                    
+                    // Feature-based chunks - optimized for lazy loading
                     if (id.includes('/features/accounting/')) {
-                        return 'feature-accounting';
+                        // Split large accounting feature into sub-chunks
+                        if (id.includes('/pages/')) {
+                            return 'accounting-pages';
+                        }
+                        if (id.includes('/components/organisms/')) {
+                            return 'accounting-components';
+                        }
+                        return 'accounting-core';
                     }
                     if (id.includes('/features/dashboard/')) {
-                        return 'feature-dashboard';
+                        return 'dashboard';
                     }
                     if (id.includes('/features/inventory/')) {
-                        return 'feature-inventory';
+                        return 'inventory';
                     }
                     if (id.includes('/features/sales/')) {
-                        return 'feature-sales';
+                        return 'sales';
                     }
                     if (id.includes('/features/auth/')) {
-                        return 'feature-auth';
+                        return 'auth';
                     }
                     if (id.includes('/features/organization/')) {
-                        return 'feature-organization';
+                        return 'organization';
                     }
                     if (id.includes('/features/reporting/')) {
-                        return 'feature-reporting';
+                        return 'reporting';
                     }
                 },
                 // Optimize chunk naming for better caching
@@ -117,18 +146,41 @@ export default defineConfig({
     },
     optimizeDeps: {
         include: [
+            // Core React dependencies
             'react',
             'react-dom',
+            'react/jsx-runtime',
+            
+            // Laravel integration
             '@inertiajs/react',
+            
+            // UI libraries - optimize most used components
             '@headlessui/react',
             '@heroicons/react/24/outline',
             '@heroicons/react/24/solid',
+            
+            // State management
+            'react-redux',
+            '@rematch/core',
+            '@apollo/client',
+            
+            // Charts and visualization
+            'chart.js',
+            'react-chartjs-2',
+            'recharts',
+            
+            // Utilities
+            'date-fns',
+            'axios',
+            
+            // Animation
+            'framer-motion',
+        ],
+        // Exclude Chakra UI from pre-bundling to prepare for removal
+        exclude: [
             '@chakra-ui/react',
             '@emotion/react',
             '@emotion/styled',
-            'framer-motion',
-            'chart.js',
-            'react-chartjs-2',
         ],
     },
 });

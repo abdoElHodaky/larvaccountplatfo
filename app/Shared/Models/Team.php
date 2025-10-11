@@ -2,12 +2,12 @@
 
 namespace App\Shared\Models;
 
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Laravel\Jetstream\Events\TeamCreated;
 use Laravel\Jetstream\Events\TeamDeleted;
 use Laravel\Jetstream\Events\TeamUpdated;
 use Laravel\Jetstream\Team as JetstreamTeam;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Team extends JetstreamTeam
 {
@@ -59,22 +59,22 @@ class Team extends JetstreamTeam
         'accounting' => [
             'accounts:read', 'accounts:create', 'accounts:update',
             'transactions:read', 'transactions:create', 'transactions:update',
-            'reports:read', 'reports:generate'
+            'reports:read', 'reports:generate',
         ],
         'finance' => [
             'accounts:read', 'reports:read', 'reports:generate', 'reports:export',
-            'transactions:read', 'budgets:read', 'budgets:create', 'budgets:update'
+            'transactions:read', 'budgets:read', 'budgets:create', 'budgets:update',
         ],
         'audit' => [
             'accounts:read', 'transactions:read', 'reports:read', 'reports:generate',
-            'audit:read', 'audit:create'
+            'audit:read', 'audit:create',
         ],
         'management' => [
             'accounts:read', 'reports:read', 'reports:generate', 'reports:export',
-            'users:view', 'teams:view', 'dashboard:view'
+            'users:view', 'teams:view', 'dashboard:view',
         ],
         'operations' => [
-            'accounts:read', 'transactions:read', 'reports:read'
+            'accounts:read', 'transactions:read', 'reports:read',
         ],
     ];
 
@@ -127,6 +127,7 @@ class Team extends JetstreamTeam
     public function getDefaultPermissions(): array
     {
         $teamType = $this->getTeamType();
+
         return self::DEFAULT_PERMISSIONS[$teamType] ?? self::DEFAULT_PERMISSIONS['accounting'];
     }
 
@@ -136,6 +137,7 @@ class Team extends JetstreamTeam
     public function getTeamPermissions(): array
     {
         $settings = $this->settings ?? [];
+
         return $settings['permissions'] ?? $this->getDefaultPermissions();
     }
 
@@ -155,6 +157,7 @@ class Team extends JetstreamTeam
     public function hasPermission(string $permission): bool
     {
         $permissions = $this->getTeamPermissions();
+
         return in_array($permission, $permissions);
     }
 
@@ -164,7 +167,8 @@ class Team extends JetstreamTeam
     public function hasAnyPermission(array $permissions): bool
     {
         $teamPermissions = $this->getTeamPermissions();
-        return !empty(array_intersect($permissions, $teamPermissions));
+
+        return ! empty(array_intersect($permissions, $teamPermissions));
     }
 
     /**
@@ -173,6 +177,7 @@ class Team extends JetstreamTeam
     public function hasAllPermissions(array $permissions): bool
     {
         $teamPermissions = $this->getTeamPermissions();
+
         return empty(array_diff($permissions, $teamPermissions));
     }
 
@@ -182,7 +187,7 @@ class Team extends JetstreamTeam
     public function addPermission(string $permission): void
     {
         $permissions = $this->getTeamPermissions();
-        if (!in_array($permission, $permissions)) {
+        if (! in_array($permission, $permissions)) {
             $permissions[] = $permission;
             $this->setTeamPermissions($permissions);
         }
@@ -194,7 +199,7 @@ class Team extends JetstreamTeam
     public function removePermission(string $permission): void
     {
         $permissions = $this->getTeamPermissions();
-        $permissions = array_filter($permissions, fn($p) => $p !== $permission);
+        $permissions = array_filter($permissions, fn ($p) => $p !== $permission);
         $this->setTeamPermissions(array_values($permissions));
     }
 
@@ -225,7 +230,7 @@ class Team extends JetstreamTeam
      */
     public function addUserWithRole(User $user, string $role = 'member', array $permissions = []): void
     {
-        if (!$this->hasUser($user)) {
+        if (! $this->hasUser($user)) {
             $this->users()->attach($user->id, [
                 'role' => $role,
                 'permissions' => json_encode($permissions),
@@ -255,6 +260,7 @@ class Team extends JetstreamTeam
     public function getUserRole(User $user): ?string
     {
         $teamUser = $this->users()->where('user_id', $user->id)->first();
+
         return $teamUser ? $teamUser->pivot->role : null;
     }
 
@@ -264,11 +270,12 @@ class Team extends JetstreamTeam
     public function getUserPermissions(User $user): array
     {
         $teamUser = $this->users()->where('user_id', $user->id)->first();
-        if (!$teamUser) {
+        if (! $teamUser) {
             return [];
         }
 
         $permissions = json_decode($teamUser->pivot->permissions ?? '[]', true);
+
         return is_array($permissions) ? $permissions : [];
     }
 
@@ -287,7 +294,7 @@ class Team extends JetstreamTeam
     {
         $userPermissions = $this->getUserPermissions($user);
         $teamPermissions = $this->getTeamPermissions();
-        
+
         // Check both user-specific and team-wide permissions
         return in_array($permission, $userPermissions) || in_array($permission, $teamPermissions);
     }
@@ -299,10 +306,10 @@ class Team extends JetstreamTeam
     {
         // Default team abilities based on team permissions
         $defaultAbilities = $this->getTeamPermissions();
-        
+
         // Merge with provided abilities
         $abilities = array_unique(array_merge($defaultAbilities, $abilities));
-        
+
         return $this->createToken("team-{$this->id}-{$name}", $abilities);
     }
 
@@ -363,7 +370,7 @@ class Team extends JetstreamTeam
 
         // Set default settings when creating teams
         static::creating(function ($team) {
-            if (!$team->settings) {
+            if (! $team->settings) {
                 $team->settings = [
                     'type' => 'accounting',
                     'permissions' => self::DEFAULT_PERMISSIONS['accounting'],
@@ -371,7 +378,7 @@ class Team extends JetstreamTeam
             }
 
             // Set tenant_id from session if not provided
-            if (!$team->tenant_id && session('tenant_id')) {
+            if (! $team->tenant_id && session('tenant_id')) {
                 $team->tenant_id = session('tenant_id');
             }
         });

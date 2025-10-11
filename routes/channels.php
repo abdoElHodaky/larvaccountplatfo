@@ -114,7 +114,7 @@ Broadcast::channel('presence-tenant.{tenantId}.workspace', function ($user, $ten
             'joined_at' => now()->toISOString(),
         ];
     }
-    
+
     return false;
 });
 
@@ -131,7 +131,7 @@ Broadcast::channel('presence-tenant.{tenantId}.account.{accountId}', function ($
             'joined_at' => now()->toISOString(),
         ];
     }
-    
+
     return false;
 });
 
@@ -174,7 +174,7 @@ if (app()->environment(['local', 'development', 'staging'])) {
     Broadcast::channel('debug.{tenantId}', function ($user, $tenantId) {
         return $user && ($user->tenant_id === $tenantId || $user->hasRole('admin'));
     });
-    
+
     // Telescope integration channel
     Broadcast::channel('telescope.{tenantId}', function ($user, $tenantId) {
         return $user && ($user->tenant_id === $tenantId || $user->hasRole('admin'));

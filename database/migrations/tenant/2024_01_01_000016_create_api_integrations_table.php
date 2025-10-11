@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('name');
             $table->enum('type', [
                 'bank', 'payment_processor', 'accounting_software', 'erp', 'crm',
-                'ecommerce', 'inventory', 'payroll', 'tax', 'custom'
+                'ecommerce', 'inventory', 'payroll', 'tax', 'custom',
             ]);
             $table->string('provider');
             $table->enum('status', ['pending', 'connected', 'error', 'disconnected', 'suspended'])->default('pending');
@@ -56,4 +56,3 @@ return new class extends Migration
         Schema::dropIfExists('api_integrations');
     }
 };
-

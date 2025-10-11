@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
-use App\Features\Dashboard\Controllers\DashboardApiController;
 use App\Features\Dashboard\Controllers\AdvancedDashboardController;
+use App\Features\Dashboard\Controllers\DashboardApiController;
+use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
@@ -108,13 +108,13 @@ Route::prefix('v2')->name('v2.')->group(function () {
     // Dashboard overview
     Route::get('/overview', [AdvancedDashboardController::class, 'overview'])
         ->name('overview');
-    
+
     Route::get('/financial-summary', [AdvancedDashboardController::class, 'financialSummary'])
         ->name('financial-summary');
-    
+
     Route::get('/performance-metrics', [AdvancedDashboardController::class, 'performanceMetrics'])
         ->name('performance-metrics');
-    
+
     Route::get('/budget-overview', [AdvancedDashboardController::class, 'budgetOverview'])
         ->name('budget-overview');
 
@@ -122,22 +122,22 @@ Route::prefix('v2')->name('v2.')->group(function () {
     Route::prefix('widgets')->name('widgets.')->group(function () {
         Route::get('/', [AdvancedDashboardController::class, 'widgets'])
             ->name('index');
-        
+
         Route::post('/', [AdvancedDashboardController::class, 'createWidget'])
             ->name('create');
-        
+
         Route::get('/types', [AdvancedDashboardController::class, 'widgetTypes'])
             ->name('types');
-        
+
         Route::get('/{widgetId}/data', [AdvancedDashboardController::class, 'widgetData'])
             ->name('data');
-        
+
         Route::put('/{widgetId}', [AdvancedDashboardController::class, 'updateWidget'])
             ->name('update');
-        
+
         Route::delete('/{widgetId}', [AdvancedDashboardController::class, 'deleteWidget'])
             ->name('delete');
-        
+
         Route::patch('/positions', [AdvancedDashboardController::class, 'updateWidgetPositions'])
             ->name('update-positions');
     });

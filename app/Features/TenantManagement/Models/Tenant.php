@@ -4,8 +4,8 @@ namespace App\Features\TenantManagement\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Tenant extends Model
 {
@@ -106,6 +106,7 @@ class Tenant extends Model
             case 'shared':
             default:
                 $shardNumber = (($this->id - 1) % 4) + 1;
+
                 return "shared_shard_{$shardNumber}";
         }
     }
@@ -117,7 +118,7 @@ class Tenant extends Model
     {
         $protocol = config('app.env') === 'production' ? 'https' : 'http';
         $domain = config('app.domain', 'localhost');
-        
+
         return "{$protocol}://{$this->subdomain}.{$domain}";
     }
 
@@ -160,7 +161,7 @@ class Tenant extends Model
     {
         return $query->where(function ($q) {
             $q->whereNull('stats_updated_at')
-              ->orWhere('stats_updated_at', '<', now()->subHours(6));
+                ->orWhere('stats_updated_at', '<', now()->subHours(6));
         });
     }
 
@@ -172,9 +173,9 @@ class Tenant extends Model
         return $query->where('database_strategy', 'shared')
             ->where(function ($q) {
                 $q->where('user_count', '>=', 1000)
-                  ->orWhere('monthly_transaction_count', '>=', 100000)
-                  ->orWhereIn('plan', ['enterprise', 'premium'])
-                  ->orWhere('requires_data_isolation', true);
+                    ->orWhere('monthly_transaction_count', '>=', 100000)
+                    ->orWhereIn('plan', ['enterprise', 'premium'])
+                    ->orWhere('requires_data_isolation', true);
             });
     }
 

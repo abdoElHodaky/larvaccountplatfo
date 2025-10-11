@@ -38,10 +38,10 @@ abstract class QueueableDomainEvent extends DomainEvent implements ShouldQueue
     public function __construct()
     {
         parent::__construct();
-        
+
         // Configure queue settings based on event type
         $this->configureQueueSettings();
-        
+
         // Set tenant-specific queue
         $this->setTenantQueue();
     }
@@ -69,24 +69,23 @@ abstract class QueueableDomainEvent extends DomainEvent implements ShouldQueue
     {
         $startTime = microtime(true);
         $tenantId = $this->getTenantId();
-        
+
         try {
             // Set tenant context for queue processing
             $this->setTenantContext($tenantId);
-            
+
             // Track queue job start
             $this->trackQueueJobStart();
-            
+
             // Process the domain event
             $this->process();
-            
+
             // Track successful completion
             $this->trackQueueJobSuccess($startTime);
-            
         } catch (\Throwable $exception) {
             // Track failed job
             $this->trackQueueJobFailure($exception, $startTime);
-            
+
             // Re-throw to let Laravel handle retry logic
             throw $exception;
         } finally {
@@ -107,7 +106,7 @@ abstract class QueueableDomainEvent extends DomainEvent implements ShouldQueue
     {
         $eventType = $this->getEventType();
         $jobConfig = config("horizon.job_types.{$eventType}");
-        
+
         if ($jobConfig) {
             $this->timeout = $jobConfig['timeout'] ?? $this->timeout;
             $this->tries = $jobConfig['tries'] ?? $this->tries;
@@ -124,13 +123,13 @@ abstract class QueueableDomainEvent extends DomainEvent implements ShouldQueue
             $tenantId = $this->getTenantId();
             $queueName = $this->getBaseQueueName();
             $pattern = config('horizon.multi_tenant.queue_naming.pattern', 'tenant_{tenant_id}_{queue_name}');
-            
+
             $tenantQueue = str_replace(
                 ['{tenant_id}', '{queue_name}'],
                 [$tenantId, $queueName],
                 $pattern
             );
-            
+
             $this->onQueue($tenantQueue);
         }
     }
@@ -142,7 +141,7 @@ abstract class QueueableDomainEvent extends DomainEvent implements ShouldQueue
     {
         $eventType = $this->getEventType();
         $jobConfig = config("horizon.job_types.{$eventType}");
-        
+
         return $jobConfig['queue'] ?? 'default';
     }
 
@@ -155,14 +154,14 @@ abstract class QueueableDomainEvent extends DomainEvent implements ShouldQueue
             $tenantId = $this->getTenantId();
             $queueName = $this->getBaseQueueName();
             $pattern = config('horizon.multi_tenant.queue_naming.pattern', 'tenant_{tenant_id}_{queue_name}');
-            
+
             return str_replace(
                 ['{tenant_id}', '{queue_name}'],
                 [$tenantId, $queueName],
                 $pattern
             );
         }
-        
+
         return $this->getBaseQueueName();
     }
 
@@ -181,7 +180,7 @@ abstract class QueueableDomainEvent extends DomainEvent implements ShouldQueue
     {
         // Set tenant context in session or application state
         session(['tenant_id' => $tenantId]);
-        
+
         // You might also want to set database connection, etc.
         // This depends on your multi-tenant architecture
     }
@@ -201,7 +200,7 @@ abstract class QueueableDomainEvent extends DomainEvent implements ShouldQueue
     {
         if (config('horizon.performance_monitoring.enabled', true)) {
             $performanceMonitor = app(config('horizon.performance_monitoring.performance_monitor'));
-            
+
             $performanceMonitor->startTimer("queue_job.{$this->getEventType()}", [
                 'event_id' => $this->getEventId(),
                 'tenant_id' => $this->getTenantId(),
@@ -219,10 +218,10 @@ abstract class QueueableDomainEvent extends DomainEvent implements ShouldQueue
         if (config('horizon.performance_monitoring.enabled', true)) {
             $performanceMonitor = app(config('horizon.performance_monitoring.performance_monitor'));
             $duration = (microtime(true) - $startTime) * 1000; // Convert to milliseconds
-            
+
             $performanceMonitor->stopTimer("queue_job.{$this->getEventType()}");
-            
-            $performanceMonitor->recordMetric("queue_job_success", 1, [
+
+            $performanceMonitor->recordMetric('queue_job_success', 1, [
                 'event_type' => $this->getEventType(),
                 'tenant_id' => $this->getTenantId(),
                 'queue' => $this->getQueueName(),
@@ -239,10 +238,10 @@ abstract class QueueableDomainEvent extends DomainEvent implements ShouldQueue
         if (config('horizon.performance_monitoring.enabled', true)) {
             $performanceMonitor = app(config('horizon.performance_monitoring.performance_monitor'));
             $duration = (microtime(true) - $startTime) * 1000; // Convert to milliseconds
-            
+
             $performanceMonitor->stopTimer("queue_job.{$this->getEventType()}");
-            
-            $performanceMonitor->recordMetric("queue_job_failure", 1, [
+
+            $performanceMonitor->recordMetric('queue_job_failure', 1, [
                 'event_type' => $this->getEventType(),
                 'tenant_id' => $this->getTenantId(),
                 'queue' => $this->getQueueName(),
@@ -261,10 +260,10 @@ abstract class QueueableDomainEvent extends DomainEvent implements ShouldQueue
         return [
             'queue-job',
             'domain-event',
-            'tenant:' . $this->getTenantId(),
-            'event-type:' . $this->getEventType(),
-            'aggregate-type:' . $this->getAggregateType(),
-            'queue:' . $this->getQueueName(),
+            'tenant:'.$this->getTenantId(),
+            'event-type:'.$this->getEventType(),
+            'aggregate-type:'.$this->getAggregateType(),
+            'queue:'.$this->getQueueName(),
         ];
     }
 

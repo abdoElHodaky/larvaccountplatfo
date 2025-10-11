@@ -65,11 +65,11 @@ class ForecastLineItem extends HybridModel
     {
         return $query->where(function ($q) use ($startDate, $endDate) {
             $q->whereBetween('period_start', [$startDate, $endDate])
-              ->orWhereBetween('period_end', [$startDate, $endDate])
-              ->orWhere(function ($q2) use ($startDate, $endDate) {
-                  $q2->where('period_start', '<=', $startDate)
-                     ->where('period_end', '>=', $endDate);
-              });
+                ->orWhereBetween('period_end', [$startDate, $endDate])
+                ->orWhere(function ($q2) use ($startDate, $endDate) {
+                    $q2->where('period_start', '<=', $startDate)
+                        ->where('period_end', '>=', $endDate);
+                });
         });
     }
 
@@ -124,17 +124,17 @@ class ForecastLineItem extends HybridModel
     public function calculateForecastedAmount(float $baseAmount): float
     {
         $amount = $baseAmount;
-        
+
         // Apply growth rate
         if ($this->growth_rate) {
             $amount = $this->applyGrowthRate($amount);
         }
-        
+
         // Apply seasonality factor
         if ($this->seasonality_factor && $this->seasonality_factor != 1.0) {
             $amount = $this->applySeasonalityFactor($amount);
         }
-        
+
         return $amount;
     }
 
@@ -145,7 +145,7 @@ class ForecastLineItem extends HybridModel
     {
         $this->actual_amount = $amount;
         $this->save();
-        
+
         return $this->calculateVariance();
     }
 
@@ -157,8 +157,9 @@ class ForecastLineItem extends HybridModel
         if ($this->forecasted_amount == 0) {
             return 0;
         }
-        
+
         $variance = abs($this->actual_amount - $this->forecasted_amount);
+
         return max(0, (1 - ($variance / $this->forecasted_amount)) * 100);
     }
 
@@ -168,6 +169,7 @@ class ForecastLineItem extends HybridModel
     public function isWithinVarianceThreshold(float $thresholdPercent = 10.0): bool
     {
         $variance = $this->calculateVariance();
+
         return abs($variance['variance_percent']) <= $thresholdPercent;
     }
 
@@ -185,6 +187,7 @@ class ForecastLineItem extends HybridModel
     public function getDailyAverageAttribute(): float
     {
         $duration = $this->period_duration;
+
         return $duration > 0 ? $this->forecasted_amount / $duration : 0;
     }
 
@@ -212,7 +215,7 @@ class ForecastLineItem extends HybridModel
     public function getVarianceStatusColorAttribute(): string
     {
         $variance = $this->calculateVariance();
-        
+
         return match ($variance['status']) {
             'over_forecast' => 'green',
             'under_forecast' => 'red',
@@ -227,7 +230,7 @@ class ForecastLineItem extends HybridModel
     public function generateScenarios(): array
     {
         $base = $this->forecasted_amount;
-        
+
         return [
             'optimistic' => [
                 'amount' => $base * 1.15,
@@ -254,19 +257,19 @@ class ForecastLineItem extends HybridModel
     {
         $historicalData = [];
         $currentYear = $this->period_start->year;
-        
+
         for ($i = 1; $i <= $years; $i++) {
             $year = $currentYear - $i;
             $startDate = $this->period_start->copy()->year($year);
             $endDate = $this->period_end->copy()->year($year);
-            
+
             $amount = JournalEntry::where('account_id', $this->account_id)
-                                 ->whereHas('transaction', function ($query) use ($startDate, $endDate) {
-                                     $query->whereBetween('transaction_date', [$startDate, $endDate])
-                                          ->where('status', Transaction::STATUS_POSTED);
-                                 })
-                                 ->sum('amount');
-            
+                ->whereHas('transaction', function ($query) use ($startDate, $endDate) {
+                    $query->whereBetween('transaction_date', [$startDate, $endDate])
+                        ->where('status', Transaction::STATUS_POSTED);
+                })
+                ->sum('amount');
+
             $historicalData[] = [
                 'year' => $year,
                 'amount' => $amount,
@@ -274,7 +277,7 @@ class ForecastLineItem extends HybridModel
                 'period_end' => $endDate,
             ];
         }
-        
+
         return $historicalData;
     }
 }

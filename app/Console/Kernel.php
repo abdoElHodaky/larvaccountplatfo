@@ -14,114 +14,114 @@ class Kernel extends ConsoleKernel
     {
         // Tenant Management
         $schedule->command('tenant:cleanup-expired')
-                 ->daily()
-                 ->at('02:00')
-                 ->withoutOverlapping()
-                 ->runInBackground();
+            ->daily()
+            ->at('02:00')
+            ->withoutOverlapping()
+            ->runInBackground();
 
         $schedule->command('tenant:promote-eligible')
-                 ->hourly()
-                 ->withoutOverlapping()
-                 ->runInBackground();
+            ->hourly()
+            ->withoutOverlapping()
+            ->runInBackground();
 
         $schedule->command('tenant:backup-databases')
-                 ->daily()
-                 ->at('03:00')
-                 ->withoutOverlapping()
-                 ->runInBackground();
+            ->daily()
+            ->at('03:00')
+            ->withoutOverlapping()
+            ->runInBackground();
 
         // Financial Reports
         $schedule->command('reports:generate-scheduled')
-                 ->everyFiveMinutes()
-                 ->withoutOverlapping()
-                 ->runInBackground();
+            ->everyFiveMinutes()
+            ->withoutOverlapping()
+            ->runInBackground();
 
         $schedule->command('reports:cleanup-old')
-                 ->daily()
-                 ->at('04:00')
-                 ->withoutOverlapping();
+            ->daily()
+            ->at('04:00')
+            ->withoutOverlapping();
 
         // Security & Audit
         $schedule->command('security:analyze-threats')
-                 ->everyTenMinutes()
-                 ->withoutOverlapping()
-                 ->runInBackground();
+            ->everyTenMinutes()
+            ->withoutOverlapping()
+            ->runInBackground();
 
         $schedule->command('audit:cleanup-old-logs')
-                 ->weekly()
-                 ->sundays()
-                 ->at('05:00')
-                 ->withoutOverlapping();
+            ->weekly()
+            ->sundays()
+            ->at('05:00')
+            ->withoutOverlapping();
 
         // Integration Sync
         $schedule->command('integration:sync-all')
-                 ->everyThirtyMinutes()
-                 ->withoutOverlapping()
-                 ->runInBackground();
+            ->everyThirtyMinutes()
+            ->withoutOverlapping()
+            ->runInBackground();
 
         $schedule->command('integration:retry-failed')
-                 ->hourly()
-                 ->withoutOverlapping()
-                 ->runInBackground();
+            ->hourly()
+            ->withoutOverlapping()
+            ->runInBackground();
 
         // Inventory Management
         $schedule->command('inventory:check-low-stock')
-                 ->hourly()
-                 ->withoutOverlapping()
-                 ->runInBackground();
+            ->hourly()
+            ->withoutOverlapping()
+            ->runInBackground();
 
         $schedule->command('inventory:update-valuations')
-                 ->daily()
-                 ->at('06:00')
-                 ->withoutOverlapping()
-                 ->runInBackground();
+            ->daily()
+            ->at('06:00')
+            ->withoutOverlapping()
+            ->runInBackground();
 
         // Cache Management
         $schedule->command('cache:warm --type=config')
-                 ->everyFifteenMinutes()
-                 ->withoutOverlapping()
-                 ->runInBackground();
+            ->everyFifteenMinutes()
+            ->withoutOverlapping()
+            ->runInBackground();
 
         $schedule->command('cache:warm --type=users')
-                 ->everyThirtyMinutes()
-                 ->withoutOverlapping()
-                 ->runInBackground();
+            ->everyThirtyMinutes()
+            ->withoutOverlapping()
+            ->runInBackground();
 
         $schedule->command('cache:warm --type=organizations')
-                 ->hourly()
-                 ->withoutOverlapping()
-                 ->runInBackground();
+            ->hourly()
+            ->withoutOverlapping()
+            ->runInBackground();
 
         $schedule->command('cache:prune-stale')
-                 ->hourly()
-                 ->withoutOverlapping();
+            ->hourly()
+            ->withoutOverlapping();
 
         // Queue Management
         $schedule->command('queue:prune-batches --hours=48')
-                 ->daily()
-                 ->at('07:00');
+            ->daily()
+            ->at('07:00');
 
         $schedule->command('queue:prune-failed --hours=168')
-                 ->weekly()
-                 ->sundays()
-                 ->at('08:00');
+            ->weekly()
+            ->sundays()
+            ->at('08:00');
 
         // System Maintenance
         $schedule->command('system:health-check')
-                 ->everyFiveMinutes()
-                 ->withoutOverlapping()
-                 ->runInBackground();
+            ->everyFiveMinutes()
+            ->withoutOverlapping()
+            ->runInBackground();
 
         $schedule->command('system:optimize-performance')
-                 ->daily()
-                 ->at('01:00')
-                 ->withoutOverlapping();
+            ->daily()
+            ->at('01:00')
+            ->withoutOverlapping();
 
         // Module Management
         $schedule->command('module:sync-services')
-                 ->everyTenMinutes()
-                 ->withoutOverlapping()
-                 ->runInBackground();
+            ->everyTenMinutes()
+            ->withoutOverlapping()
+            ->runInBackground();
     }
 
     /**

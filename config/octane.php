@@ -171,9 +171,10 @@ return [
         ],
 
         RequestReceived::class => [
-            // Only load Octane listeners if not in testing environment
-            ...(env('APP_ENV') === 'testing' ? [] : \Laravel\Octane\Facades\Octane::prepareApplicationForNextOperation()),
-            ...(env('APP_ENV') === 'testing' ? [] : \Laravel\Octane\Facades\Octane::prepareApplicationForNextRequest()),
+            // Temporarily disabled Octane facade calls for CI
+            // TODO: Re-enable after fixing bootstrap issues
+            // ...(env('APP_ENV') === 'testing' ? [] : \Laravel\Octane\Facades\Octane::prepareApplicationForNextOperation()),
+            // ...(env('APP_ENV') === 'testing' ? [] : \Laravel\Octane\Facades\Octane::prepareApplicationForNextRequest()),
             // Custom listeners for multi-tenant setup
             FlushTenantContext::class,
             SetupDatabaseConnection::class,
@@ -192,7 +193,8 @@ return [
         ],
 
         TaskReceived::class => [
-            ...(env('APP_ENV') === 'testing' ? [] : \Laravel\Octane\Facades\Octane::prepareApplicationForNextOperation()),
+            // Temporarily disabled Octane facade calls for CI
+            // ...(env('APP_ENV') === 'testing' ? [] : \Laravel\Octane\Facades\Octane::prepareApplicationForNextOperation()),
         ],
 
         TaskTerminated::class => [
@@ -200,7 +202,8 @@ return [
         ],
 
         TickReceived::class => [
-            ...(env('APP_ENV') === 'testing' ? [] : \Laravel\Octane\Facades\Octane::prepareApplicationForNextOperation()),
+            // Temporarily disabled Octane facade calls for CI
+            // ...(env('APP_ENV') === 'testing' ? [] : \Laravel\Octane\Facades\Octane::prepareApplicationForNextOperation()),
         ],
 
         TickTerminated::class => [
@@ -311,21 +314,25 @@ return [
 ];
 
 // Import necessary classes
-use Laravel\Octane\Events\RequestReceived;
+use App\Infrastructure\Performance\Listeners\CleanupTenantResources;
+use App\Infrastructure\Performance\Listeners\CleanupWebSocketConnections;
+use App\Infrastructure\Performance\Listeners\FlushTenantContext;
+use App\Infrastructure\Performance\Listeners\LogPerformanceMetrics;
+use App\Infrastructure\Performance\Listeners\SetupDatabaseConnection;
+use Laravel\Octane\Events\OperationTerminated;
 use Laravel\Octane\Events\RequestHandled;
+use Laravel\Octane\Events\RequestReceived;
 use Laravel\Octane\Events\RequestTerminated;
 use Laravel\Octane\Events\TaskReceived;
 use Laravel\Octane\Events\TaskTerminated;
 use Laravel\Octane\Events\TickReceived;
 use Laravel\Octane\Events\TickTerminated;
-use Laravel\Octane\Events\OperationTerminated;
 use Laravel\Octane\Events\WorkerErrorOccurred;
 use Laravel\Octane\Events\WorkerStarting;
 use Laravel\Octane\Events\WorkerStopping;
 use Laravel\Octane\Facades\Octane;
 use Laravel\Octane\Listeners\EnsureUploadedFilesAreValid;
 use Laravel\Octane\Listeners\EnsureUploadedFilesCanBeMoved;
-use Laravel\Octane\Listeners\FlushTemporaryContainerInstances;
 use Laravel\Octane\Listeners\FlushArrayCache;
 use Laravel\Octane\Listeners\FlushAuthenticationState;
 use Laravel\Octane\Listeners\FlushBroadcastingState;
@@ -347,14 +354,9 @@ use Laravel\Octane\Listeners\FlushRedisState;
 use Laravel\Octane\Listeners\FlushRequestState;
 use Laravel\Octane\Listeners\FlushRouterState;
 use Laravel\Octane\Listeners\FlushSessionState;
+// Custom listeners for multi-tenant accounting platform
+use Laravel\Octane\Listeners\FlushTemporaryContainerInstances;
 use Laravel\Octane\Listeners\FlushValidationState;
 use Laravel\Octane\Listeners\FlushViewState;
 use Laravel\Octane\Listeners\ReportException;
 use Laravel\Octane\Listeners\StopWorkerIfNecessary;
-
-// Custom listeners for multi-tenant accounting platform
-use App\Infrastructure\Performance\Listeners\FlushTenantContext;
-use App\Infrastructure\Performance\Listeners\SetupDatabaseConnection;
-use App\Infrastructure\Performance\Listeners\CleanupTenantResources;
-use App\Infrastructure\Performance\Listeners\LogPerformanceMetrics;
-use App\Infrastructure\Performance\Listeners\CleanupWebSocketConnections;

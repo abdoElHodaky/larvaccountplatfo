@@ -1,7 +1,10 @@
 /**
  * Accounting Hooks Index
- * Feature-specific hooks for accounting functionality
+ * Phase 5+9: Feature-specific hooks with AlovaJS integration
  */
+
+// Account data management hooks (Phase 5+9)
+export * from './useAccountData';
 
 // Financial data management hooks
 export * from './useFinancialData';

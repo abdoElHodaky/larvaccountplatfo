@@ -160,7 +160,7 @@ export function createLazyComponent<T extends ComponentType<any>>(
 
     return (
       <React.ErrorBoundary
-        fallback={<errorFallback error={new Error('Component error')} retry={retry} />}
+        fallback={React.createElement(errorFallback, { error: new Error('Component error'), retry })}
         onError={setError}
         key={retryKey}
       >

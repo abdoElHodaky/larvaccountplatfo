@@ -31,7 +31,7 @@ interface JournalEntriesProps {
 export const JournalEntries: React.FC<JournalEntriesProps> = ({
   entries = [],
   className = '',
-  onEntryClick: _onEntryClick,
+  onEntryClick,
   onEdit,
   onDelete
 }) => {

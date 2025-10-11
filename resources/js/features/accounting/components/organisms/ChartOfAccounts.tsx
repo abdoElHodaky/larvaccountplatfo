@@ -1,238 +1,274 @@
-/**
- * Chart of Accounts Component
- * Displays and manages the company's chart of accounts
- */
+import React, { useState, useEffect } from 'react';
+import {
+  Box,
+  VStack,
+  HStack,
+  Text,
+  Button,
+  Table,
+  Thead,
+  Tbody,
+  Tr,
+  Th,
+  Td,
+  Badge,
+  IconButton,
+  useColorModeValue,
+  Spinner,
+  Alert,
+  AlertIcon,
+  Input,
+  Select,
+  Flex,
+} from '@chakra-ui/react';
+import { AddIcon, EditIcon, DeleteIcon, ViewIcon } from '@chakra-ui/icons';
 
-import React, { useEffect } from 'react';
-import { useAccounts, useFilters } from '../../hooks/useAccounting';
-import type { Account } from '../../stores/accountingModel';
-
-interface ChartOfAccountsProps {
-  className?: string;
-  onAccountSelect?: (account: Account) => void;
+interface Account {
+  id: string;
+  code: string;
+  name: string;
+  type: 'asset' | 'liability' | 'equity' | 'revenue' | 'expense';
+  balance: number;
+  parentId?: string;
+  isActive: boolean;
+  level: number;
 }
 
-export const ChartOfAccounts: React.FC<ChartOfAccountsProps> = ({
-  className = '',
+interface ChartOfAccountsProps {
+  accounts?: Account[];
+  loading?: boolean;
+  error?: string;
+  onAccountSelect?: (account: Account) => void;
+  onAccountCreate?: () => void;
+  onAccountEdit?: (account: Account) => void;
+  onAccountDelete?: (accountId: string) => void;
+  searchTerm?: string;
+  onSearchChange?: (term: string) => void;
+  accountTypeFilter?: string;
+  onAccountTypeFilterChange?: (type: string) => void;
+}
+
+const ChartOfAccounts: React.FC<ChartOfAccountsProps> = ({
+  accounts = [],
+  loading = false,
+  error,
   onAccountSelect,
+  onAccountCreate,
+  onAccountEdit,
+  onAccountDelete,
+  searchTerm = '',
+  onSearchChange,
+  accountTypeFilter = '',
+  onAccountTypeFilterChange,
 }) => {
-  const { accounts, loading, error, fetch, delete: deleteAccount, select } = useAccounts();
-  const { filters, setSearchTerm, setAccountTypes } = useFilters();
-  // const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
-  // const [editingAccount, setEditingAccount] = useState<Account | null>(null);
+  const [filteredAccounts, setFilteredAccounts] = useState<Account[]>([]);
+  
+  const bgColor = useColorModeValue('white', 'gray.800');
+  const borderColor = useColorModeValue('gray.200', 'gray.600');
+  const hoverBg = useColorModeValue('gray.50', 'gray.700');
 
   useEffect(() => {
-    fetch(filters);
-  }, [filters]);
+    let filtered = accounts;
 
-  const handleAccountClick = (account: Account) => {
-    select(account);
-    onAccountSelect?.(account);
+    // Filter by search term
+    if (searchTerm) {
+      filtered = filtered.filter(
+        account =>
+          account.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          account.code.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+    }
+
+    // Filter by account type
+    if (accountTypeFilter) {
+      filtered = filtered.filter(account => account.type === accountTypeFilter);
+    }
+
+    setFilteredAccounts(filtered);
+  }, [accounts, searchTerm, accountTypeFilter]);
+
+  const getAccountTypeColor = (type: Account['type']) => {
+    const colors = {
+      asset: 'green',
+      liability: 'red',
+      equity: 'blue',
+      revenue: 'purple',
+      expense: 'orange',
+    };
+    return colors[type];
   };
 
-  // const handleCreateAccount = async (accountData: Omit<Account, 'id' | 'createdAt' | 'updatedAt'>) => {
-  //   const result = await create(accountData);
-  //   if (result.success) {
-  //     setIsCreateModalOpen(false);
-  //   }
-  // };
-
-  // const handleUpdateAccount = async (id: string, data: Partial<Account>) => {
-  //   const result = await update({ id, data });
-  //   if (result.success) {
-  //     setEditingAccount(null);
-  //   }
-  // };
-
-  const handleDeleteAccount = async (id: string) => {
-    if (window.confirm('Are you sure you want to delete this account?')) {
-      await deleteAccount(id);
-    }
-  };
-
-  const groupedAccounts = accounts.reduce((groups, account) => {
-    const type = account.type;
-    if (!groups[type]) {
-      groups[type] = [];
-    }
-    groups[type].push(account);
-    return groups;
-  }, {} as Record<string, Account[]>);
-
-  const accountTypeLabels = {
-    asset: 'Assets',
-    liability: 'Liabilities',
-    equity: 'Equity',
-    revenue: 'Revenue',
-    expense: 'Expenses',
+  const formatCurrency = (amount: number) => {
+    return new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency: 'USD',
+    }).format(amount);
   };
 
   if (loading) {
     return (
-      <div className={`flex items-center justify-center p-8 ${className}`}>
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
-        <span className="ml-2 text-gray-600">Loading accounts...</span>
-      </div>
+      <Box p={6} textAlign="center">
+        <Spinner size="lg" />
+        <Text mt={4}>Loading chart of accounts...</Text>
+      </Box>
     );
   }
 
   if (error) {
     return (
-      <div className={`bg-red-50 border border-red-200 rounded-md p-4 ${className}`}>
-        <div className="flex">
-          <div className="flex-shrink-0">
-            <svg className="h-5 w-5 text-red-400" viewBox="0 0 20 20" fill="currentColor">
-              <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
-            </svg>
-          </div>
-          <div className="ml-3">
-            <h3 className="text-sm font-medium text-red-800">Error loading accounts</h3>
-            <p className="mt-1 text-sm text-red-700">{error}</p>
-          </div>
-        </div>
-      </div>
+      <Alert status="error">
+        <AlertIcon />
+        {error}
+      </Alert>
     );
   }
 
   return (
-    <div className={`bg-white shadow rounded-lg ${className}`}>
-      {/* Header */}
-      <div className="px-6 py-4 border-b border-gray-200">
-        <div className="flex items-center justify-between">
-          <h2 className="text-lg font-medium text-gray-900">Chart of Accounts</h2>
-          <button
-            onClick={() => {/* setIsCreateModalOpen(true) */}}
-            className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
-          >
-            <svg className="-ml-1 mr-2 h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-            </svg>
-            Add Account
-          </button>
-        </div>
+    <Box bg={bgColor} borderRadius="lg" border="1px" borderColor={borderColor} p={6}>
+      <VStack spacing={6} align="stretch">
+        {/* Header */}
+        <Flex justify="space-between" align="center">
+          <Text fontSize="2xl" fontWeight="bold">
+            Chart of Accounts
+          </Text>
+          {onAccountCreate && (
+            <Button
+              leftIcon={<AddIcon />}
+              colorScheme="blue"
+              onClick={onAccountCreate}
+            >
+              Add Account
+            </Button>
+          )}
+        </Flex>
 
-        {/* Search and Filters */}
-        <div className="mt-4 flex flex-col sm:flex-row gap-4">
-          <div className="flex-1">
-            <input
-              type="text"
+        {/* Filters */}
+        <HStack spacing={4}>
+          {onSearchChange && (
+            <Input
               placeholder="Search accounts..."
-              value={filters.searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+              value={searchTerm}
+              onChange={(e) => onSearchChange(e.target.value)}
+              maxW="300px"
             />
-          </div>
-          <div className="sm:w-48">
-            <select
-              multiple
-              value={filters.accountTypes}
-              onChange={(e) => setAccountTypes(Array.from(e.target.selectedOptions, option => option.value))}
-              className="block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+          )}
+          {onAccountTypeFilterChange && (
+            <Select
+              placeholder="All Types"
+              value={accountTypeFilter}
+              onChange={(e) => onAccountTypeFilterChange(e.target.value)}
+              maxW="200px"
             >
               <option value="asset">Assets</option>
               <option value="liability">Liabilities</option>
               <option value="equity">Equity</option>
               <option value="revenue">Revenue</option>
               <option value="expense">Expenses</option>
-            </select>
-          </div>
-        </div>
-      </div>
+            </Select>
+          )}
+        </HStack>
 
-      {/* Account Groups */}
-      <div className="divide-y divide-gray-200">
-        {Object.entries(groupedAccounts).map(([type, typeAccounts]) => (
-          <div key={type} className="p-6">
-            <h3 className="text-base font-medium text-gray-900 mb-4">
-              {accountTypeLabels[type as keyof typeof accountTypeLabels]} ({typeAccounts.length})
-            </h3>
-            
-            <div className="space-y-2">
-              {typeAccounts.map((account) => (
-                <div
+        {/* Accounts Table */}
+        <Box overflowX="auto">
+          <Table variant="simple">
+            <Thead>
+              <Tr>
+                <Th>Code</Th>
+                <Th>Account Name</Th>
+                <Th>Type</Th>
+                <Th isNumeric>Balance</Th>
+                <Th>Status</Th>
+                <Th>Actions</Th>
+              </Tr>
+            </Thead>
+            <Tbody>
+              {filteredAccounts.map((account) => (
+                <Tr
                   key={account.id}
-                  className="flex items-center justify-between p-3 bg-gray-50 rounded-lg hover:bg-gray-100 cursor-pointer transition-colors"
-                  onClick={() => handleAccountClick(account)}
+                  _hover={{ bg: hoverBg }}
+                  cursor={onAccountSelect ? 'pointer' : 'default'}
+                  onClick={() => onAccountSelect?.(account)}
                 >
-                  <div className="flex items-center space-x-3">
-                    <div className="flex-shrink-0">
-                      <span className="inline-flex items-center justify-center h-8 w-8 rounded-full bg-blue-100 text-blue-800 text-sm font-medium">
-                        {account.code}
-                      </span>
-                    </div>
-                    <div>
-                      <p className="text-sm font-medium text-gray-900">{account.name}</p>
-                      <p className="text-sm text-gray-500">{account.subtype}</p>
-                    </div>
-                  </div>
-                  
-                  <div className="flex items-center space-x-4">
-                    <div className="text-right">
-                      <p className="text-sm font-medium text-gray-900">
-                        ${account.balance.toLocaleString()}
-                      </p>
-                      <p className={`text-xs ${account.isActive ? 'text-green-600' : 'text-red-600'}`}>
-                        {account.isActive ? 'Active' : 'Inactive'}
-                      </p>
-                    </div>
-                    
-                    <div className="flex space-x-2">
-                      <button
+                  <Td fontFamily="mono" fontWeight="medium">
+                    {account.code}
+                  </Td>
+                  <Td>
+                    <Text
+                      pl={account.level * 4}
+                      fontWeight={account.level === 0 ? 'bold' : 'normal'}
+                    >
+                      {account.name}
+                    </Text>
+                  </Td>
+                  <Td>
+                    <Badge colorScheme={getAccountTypeColor(account.type)}>
+                      {account.type.toUpperCase()}
+                    </Badge>
+                  </Td>
+                  <Td isNumeric fontFamily="mono">
+                    {formatCurrency(account.balance)}
+                  </Td>
+                  <Td>
+                    <Badge colorScheme={account.isActive ? 'green' : 'gray'}>
+                      {account.isActive ? 'Active' : 'Inactive'}
+                    </Badge>
+                  </Td>
+                  <Td>
+                    <HStack spacing={2}>
+                      <IconButton
+                        aria-label="View account"
+                        icon={<ViewIcon />}
+                        size="sm"
+                        variant="ghost"
                         onClick={(e) => {
                           e.stopPropagation();
-                          /* setEditingAccount(account); */
+                          onAccountSelect?.(account);
                         }}
-                        className="text-blue-600 hover:text-blue-800"
-                      >
-                        <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                        </svg>
-                      </button>
-                      <button
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          handleDeleteAccount(account.id);
-                        }}
-                        className="text-red-600 hover:text-red-800"
-                      >
-                        <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                        </svg>
-                      </button>
-                    </div>
-                  </div>
-                </div>
+                      />
+                      {onAccountEdit && (
+                        <IconButton
+                          aria-label="Edit account"
+                          icon={<EditIcon />}
+                          size="sm"
+                          variant="ghost"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            onAccountEdit(account);
+                          }}
+                        />
+                      )}
+                      {onAccountDelete && (
+                        <IconButton
+                          aria-label="Delete account"
+                          icon={<DeleteIcon />}
+                          size="sm"
+                          variant="ghost"
+                          colorScheme="red"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            onAccountDelete(account.id);
+                          }}
+                        />
+                      )}
+                    </HStack>
+                  </Td>
+                </Tr>
               ))}
-            </div>
-          </div>
-        ))}
-      </div>
+            </Tbody>
+          </Table>
+        </Box>
 
-      {/* Empty State */}
-      {accounts.length === 0 && (
-        <div className="text-center py-12">
-          <svg className="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-          </svg>
-          <h3 className="mt-2 text-sm font-medium text-gray-900">No accounts</h3>
-          <p className="mt-1 text-sm text-gray-500">Get started by creating your first account.</p>
-          <div className="mt-6">
-            <button
-              onClick={() => {/* setIsCreateModalOpen(true) */}}
-              className="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
-            >
-              <svg className="-ml-1 mr-2 h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-              </svg>
-              Add Account
-            </button>
-          </div>
-        </div>
-      )}
-
-      {/* Modals would be implemented here */}
-      {/* CreateAccountModal, EditAccountModal components */}
-    </div>
+        {filteredAccounts.length === 0 && (
+          <Box textAlign="center" py={8}>
+            <Text color="gray.500">
+              {searchTerm || accountTypeFilter
+                ? 'No accounts match your filters'
+                : 'No accounts found'}
+            </Text>
+          </Box>
+        )}
+      </VStack>
+    </Box>
   );
 };
 

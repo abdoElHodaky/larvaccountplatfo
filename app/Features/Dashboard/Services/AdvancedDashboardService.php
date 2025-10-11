@@ -2,23 +2,24 @@
 
 namespace App\Features\Dashboard\Services;
 
+use App\Features\Accounting\Models\Account;
+use App\Features\Accounting\Models\Budget;
+use App\Features\Accounting\Models\Transaction;
 use App\Features\Accounting\Services\AccountingService;
 use App\Features\Accounting\Services\BudgetService;
-use App\Features\Accounting\Services\TaxService;
 use App\Features\Accounting\Services\ForecastingService;
-use App\Features\Accounting\Models\Account;
-use App\Features\Accounting\Models\Transaction;
-use App\Features\Accounting\Models\Budget;
-use App\Features\Accounting\Models\FinancialForecast;
-use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\DB;
+use App\Features\Accounting\Services\TaxService;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Cache;
 
 class AdvancedDashboardService
 {
     protected AccountingService $accountingService;
+
     protected BudgetService $budgetService;
+
     protected TaxService $taxService;
+
     protected ForecastingService $forecastingService;
 
     public function __construct(
@@ -39,7 +40,7 @@ class AdvancedDashboardService
     public function getDashboardOverview(int $organizationId): array
     {
         $cacheKey = "dashboard_overview_{$organizationId}";
-        
+
         return Cache::remember($cacheKey, 300, function () use ($organizationId) {
             return [
                 'financial_summary' => $this->getFinancialSummary($organizationId),
@@ -89,8 +90,8 @@ class AdvancedDashboardService
                 'revenue' => $currentMonthData['revenue'],
                 'expenses' => $currentMonthData['expenses'],
                 'net_income' => $currentMonthData['revenue'] - $currentMonthData['expenses'],
-                'gross_margin' => $currentMonthData['revenue'] > 0 
-                    ? (($currentMonthData['revenue'] - $currentMonthData['cogs']) / $currentMonthData['revenue']) * 100 
+                'gross_margin' => $currentMonthData['revenue'] > 0
+                    ? (($currentMonthData['revenue'] - $currentMonthData['cogs']) / $currentMonthData['revenue']) * 100
                     : 0,
             ],
             'previous_month' => [
@@ -125,10 +126,10 @@ class AdvancedDashboardService
 
         // Cash flow metrics
         $cashFlow = $this->getCashFlowMetrics($organizationId, $last12Months, $currentMonth);
-        
+
         // Profitability metrics
         $profitability = $this->getProfitabilityMetrics($organizationId, $currentMonth);
-        
+
         // Efficiency metrics
         $efficiency = $this->getEfficiencyMetrics($organizationId, $currentMonth);
 
@@ -151,9 +152,9 @@ class AdvancedDashboardService
 
         // Get active budgets with performance
         $activeBudgets = Budget::where('organization_id', $organizationId)
-                              ->where('status', 'active')
-                              ->with('lineItems')
-                              ->get();
+            ->where('status', 'active')
+            ->with('lineItems')
+            ->get();
 
         $budgetPerformance = [];
         foreach ($activeBudgets as $budget) {
@@ -182,10 +183,10 @@ class AdvancedDashboardService
     public function getForecastInsights(int $organizationId): array
     {
         $forecastDashboard = $this->forecastingService->getForecastDashboard($organizationId);
-        
+
         // Get next 3 months forecast
         $nextQuarter = $this->getNextQuarterForecast($organizationId);
-        
+
         // Get forecast accuracy for completed periods
         $forecastAccuracy = $this->getForecastAccuracyMetrics($organizationId);
 
@@ -233,9 +234,9 @@ class AdvancedDashboardService
 
         // Recent transactions
         $recentTransactions = Transaction::where('organization_id', $organizationId)
-                                        ->orderBy('created_at', 'desc')
-                                        ->limit($limit / 2)
-                                        ->get();
+            ->orderBy('created_at', 'desc')
+            ->limit($limit / 2)
+            ->get();
 
         foreach ($recentTransactions as $transaction) {
             $activities[] = [
@@ -252,9 +253,9 @@ class AdvancedDashboardService
 
         // Recent budget activities
         $recentBudgets = Budget::where('organization_id', $organizationId)
-                              ->orderBy('updated_at', 'desc')
-                              ->limit($limit / 4)
-                              ->get();
+            ->orderBy('updated_at', 'desc')
+            ->limit($limit / 4)
+            ->get();
 
         foreach ($recentBudgets as $budget) {
             $activities[] = [
@@ -310,11 +311,11 @@ class AdvancedDashboardService
             $severityOrder = ['high' => 3, 'medium' => 2, 'low' => 1];
             $aSeverity = $severityOrder[$a['severity']] ?? 0;
             $bSeverity = $severityOrder[$b['severity']] ?? 0;
-            
+
             if ($aSeverity === $bSeverity) {
                 return $b['timestamp'] <=> $a['timestamp'];
             }
-            
+
             return $bSeverity <=> $aSeverity;
         });
 
@@ -327,19 +328,19 @@ class AdvancedDashboardService
     public function getQuickStats(int $organizationId): array
     {
         $currentMonth = Carbon::now();
-        
+
         return [
             'total_accounts' => Account::where('organization_id', $organizationId)->count(),
             'active_budgets' => Budget::where('organization_id', $organizationId)
-                                     ->where('status', 'active')
-                                     ->count(),
+                ->where('status', 'active')
+                ->count(),
             'pending_transactions' => Transaction::where('organization_id', $organizationId)
-                                                ->where('status', 'pending')
-                                                ->count(),
+                ->where('status', 'pending')
+                ->count(),
             'monthly_transactions' => Transaction::where('organization_id', $organizationId)
-                                                ->whereMonth('transaction_date', $currentMonth->month)
-                                                ->whereYear('transaction_date', $currentMonth->year)
-                                                ->count(),
+                ->whereMonth('transaction_date', $currentMonth->month)
+                ->whereYear('transaction_date', $currentMonth->year)
+                ->count(),
             'cash_balance' => $this->getCurrentCashBalance($organizationId),
             'accounts_receivable' => $this->getAccountsReceivableBalance($organizationId),
             'accounts_payable' => $this->getAccountsPayableBalance($organizationId),
@@ -352,10 +353,10 @@ class AdvancedDashboardService
     private function getFinancialDataForPeriod(int $organizationId, Carbon $startDate, Carbon $endDate): array
     {
         $transactions = Transaction::where('organization_id', $organizationId)
-                                  ->whereBetween('transaction_date', [$startDate, $endDate])
-                                  ->where('status', 'posted')
-                                  ->with('journalEntries.account')
-                                  ->get();
+            ->whereBetween('transaction_date', [$startDate, $endDate])
+            ->where('status', 'posted')
+            ->with('journalEntries.account')
+            ->get();
 
         $revenue = 0;
         $expenses = 0;
@@ -475,10 +476,10 @@ class AdvancedDashboardService
     {
         $now = Carbon::now();
         $quarter = ceil($now->month / 3);
-        
+
         $startMonth = ($quarter - 1) * 3 + 1;
         $endMonth = $quarter * 3;
-        
+
         return [
             'start' => Carbon::create($now->year, $startMonth, 1)->startOfMonth(),
             'end' => Carbon::create($now->year, $endMonth, 1)->endOfMonth(),
@@ -501,15 +502,58 @@ class AdvancedDashboardService
     /**
      * Helper methods for specific metrics (simplified implementations)
      */
-    private function getTopBudgetVariances(int $organizationId): array { return []; }
-    private function getNextQuarterForecast(int $organizationId): array { return []; }
-    private function getForecastAccuracyMetrics(int $organizationId): array { return []; }
-    private function getForecastConfidenceLevels(int $organizationId): array { return []; }
-    private function getTaxComplianceStatus(int $organizationId): array { return []; }
-    private function getUpcomingTaxDeadlines(int $organizationId): array { return []; }
-    private function getCashFlowAlerts(int $organizationId): array { return []; }
-    private function getTaxComplianceAlerts(int $organizationId): array { return []; }
-    private function getCurrentCashBalance(int $organizationId): float { return 0; }
-    private function getAccountsReceivableBalance(int $organizationId): float { return 0; }
-    private function getAccountsPayableBalance(int $organizationId): float { return 0; }
+    private function getTopBudgetVariances(int $organizationId): array
+    {
+        return [];
+    }
+
+    private function getNextQuarterForecast(int $organizationId): array
+    {
+        return [];
+    }
+
+    private function getForecastAccuracyMetrics(int $organizationId): array
+    {
+        return [];
+    }
+
+    private function getForecastConfidenceLevels(int $organizationId): array
+    {
+        return [];
+    }
+
+    private function getTaxComplianceStatus(int $organizationId): array
+    {
+        return [];
+    }
+
+    private function getUpcomingTaxDeadlines(int $organizationId): array
+    {
+        return [];
+    }
+
+    private function getCashFlowAlerts(int $organizationId): array
+    {
+        return [];
+    }
+
+    private function getTaxComplianceAlerts(int $organizationId): array
+    {
+        return [];
+    }
+
+    private function getCurrentCashBalance(int $organizationId): float
+    {
+        return 0;
+    }
+
+    private function getAccountsReceivableBalance(int $organizationId): float
+    {
+        return 0;
+    }
+
+    private function getAccountsPayableBalance(int $organizationId): float
+    {
+        return 0;
+    }
 }

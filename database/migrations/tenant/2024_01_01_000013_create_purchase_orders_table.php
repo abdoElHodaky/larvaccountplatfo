@@ -19,8 +19,8 @@ return new class extends Migration
             $table->string('po_number', 50)->unique();
             $table->string('reference_number')->nullable();
             $table->enum('status', [
-                'draft', 'pending_approval', 'approved', 'sent', 
-                'partially_received', 'received', 'completed', 'cancelled'
+                'draft', 'pending_approval', 'approved', 'sent',
+                'partially_received', 'received', 'completed', 'cancelled',
             ])->default('draft');
             $table->date('order_date');
             $table->date('expected_delivery_date')->nullable();
@@ -66,4 +66,3 @@ return new class extends Migration
         Schema::dropIfExists('purchase_orders');
     }
 };
-

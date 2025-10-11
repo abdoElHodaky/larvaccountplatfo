@@ -1,6 +1,7 @@
 import React, { Fragment, memo, useMemo, useState, useEffect } from 'react';
 import {
   Box,
+  Flex,
   VStack,
   HStack,
   Text,

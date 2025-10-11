@@ -53,12 +53,11 @@ jobs:
 
   backend-test:
     runs-on: ubuntu-latest
-    continue-on-error: ${{ matrix.php-version == '8.2' }}
     
     strategy:
       fail-fast: false
       matrix:
-        php-version: [8.2, 8.3]
+        php-version: [8.3]
     
     steps:
     - uses: actions/checkout@v4

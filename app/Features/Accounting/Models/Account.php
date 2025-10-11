@@ -3,9 +3,9 @@
 namespace App\Features\Accounting\Models;
 
 use App\Shared\Models\HybridModel;
-use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Account extends HybridModel
 {
@@ -53,28 +53,41 @@ class Account extends HybridModel
      * Account types
      */
     const TYPE_ASSET = 'asset';
+
     const TYPE_LIABILITY = 'liability';
+
     const TYPE_EQUITY = 'equity';
+
     const TYPE_REVENUE = 'revenue';
+
     const TYPE_EXPENSE = 'expense';
 
     /**
      * Account subtypes
      */
     const SUBTYPE_CURRENT_ASSET = 'current_asset';
+
     const SUBTYPE_FIXED_ASSET = 'fixed_asset';
+
     const SUBTYPE_CURRENT_LIABILITY = 'current_liability';
+
     const SUBTYPE_LONG_TERM_LIABILITY = 'long_term_liability';
+
     const SUBTYPE_OWNERS_EQUITY = 'owners_equity';
+
     const SUBTYPE_OPERATING_REVENUE = 'operating_revenue';
+
     const SUBTYPE_OTHER_REVENUE = 'other_revenue';
+
     const SUBTYPE_OPERATING_EXPENSE = 'operating_expense';
+
     const SUBTYPE_OTHER_EXPENSE = 'other_expense';
 
     /**
      * Normal balance types
      */
     const NORMAL_BALANCE_DEBIT = 'debit';
+
     const NORMAL_BALANCE_CREDIT = 'credit';
 
     /**
@@ -219,9 +232,9 @@ class Account extends HybridModel
     public function getBalanceAsOf(\DateTime $date): float
     {
         $balance = $this->balances()
-                       ->where('balance_date', '<=', $date)
-                       ->orderBy('balance_date', 'desc')
-                       ->first();
+            ->where('balance_date', '<=', $date)
+            ->orderBy('balance_date', 'desc')
+            ->first();
 
         return $balance ? $balance->balance : $this->opening_balance;
     }
