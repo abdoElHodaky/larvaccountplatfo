@@ -5,7 +5,7 @@
 
 import '@testing-library/jest-dom';
 import { configure } from '@testing-library/react';
-import { afterEach, afterAll, beforeAll, vi } from 'vitest';
+import { afterEach, afterAll, beforeAll, beforeEach, vi } from 'vitest';
 import { server } from './mocks/server';
 
 // Configure React Testing Library
@@ -112,11 +112,16 @@ global.WebSocket = MockWebSocket as any;
 
 // Mock IntersectionObserver
 global.IntersectionObserver = class IntersectionObserver {
-  constructor() {}
+  root: Element | null = null;
+  rootMargin: string = '0px';
+  thresholds: ReadonlyArray<number> = [0];
+  
+  constructor(_callback: IntersectionObserverCallback, _options?: IntersectionObserverInit) {}
   observe() {}
   unobserve() {}
   disconnect() {}
-};
+  takeRecords(): IntersectionObserverEntry[] { return []; }
+} as any;
 
 // Mock ResizeObserver
 global.ResizeObserver = class ResizeObserver {
@@ -128,10 +133,12 @@ global.ResizeObserver = class ResizeObserver {
 
 // Mock PerformanceObserver
 global.PerformanceObserver = class PerformanceObserver {
-  constructor() {}
+  static supportedEntryTypes: readonly string[] = ['measure', 'navigation', 'resource'];
+  
+  constructor(_callback: PerformanceObserverCallback) {}
   observe() {}
   disconnect() {}
-};
+} as any;
 
 // Mock performance.memory
 Object.defineProperty(performance, 'memory', {

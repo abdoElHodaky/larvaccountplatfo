@@ -56,6 +56,12 @@ declare global {
   // Window interface extensions
   interface Window {
     FORGE_DEPLOYMENT?: boolean;
+    gtag?: (command: string, targetId: string, config?: any) => void;
+  }
+  
+  // ImportMeta interface extensions
+  interface ImportMeta {
+    glob: (pattern: string, options?: { eager?: boolean }) => Record<string, any>;
   }
 }
 
