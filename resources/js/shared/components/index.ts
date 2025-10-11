@@ -15,3 +15,8 @@ export { PrimaryButton } from './atoms/PrimaryButton';
 export { TextInput } from './atoms/TextInput';
 export { InputError } from './atoms/InputError';
 export { InputLabel } from './atoms/InputLabel';
+
+// Animation Components
+// export { default as AnimatedFormInput } from './AnimatedFormInput';
+// export { default as AnimatedModal } from './AnimatedModal';
+// export { default as AnimatedSidebar } from './AnimatedSidebar';

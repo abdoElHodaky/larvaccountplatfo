@@ -419,11 +419,11 @@ interface AnimatedNavigationItemProps {
 const AnimatedNavigationItem: React.FC<AnimatedNavigationItemProps> = ({
   item,
   url,
-  index,
+  index: _index,
   isOrganization = false,
 }) => {
   const itemRef = useRef<HTMLDivElement>(null);
-  const [isHovered, setIsHovered] = useState(false);
+  const [_isHovered, setIsHovered] = useState(false);
   const { animate, presets, isReducedMotion } = useAnimation();
 
   // Handle hover animations
@@ -514,7 +514,7 @@ interface AnimatedSubNavigationItemProps {
 const AnimatedSubNavigationItem: React.FC<AnimatedSubNavigationItemProps> = ({
   item,
   url,
-  index,
+  index: _index,
 }) => {
   const itemRef = useRef<HTMLAnchorElement>(null);
   const { animate, presets, isReducedMotion } = useAnimation();

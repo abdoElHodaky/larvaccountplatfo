@@ -3,7 +3,7 @@ import { Head, Link, useForm } from '@inertiajs/react';
 import AppLayout from '@/shared/components/layouts/AppLayout';
 import { Account, PageProps, SelectOption } from '@/shared/types';
 import { ArrowLeftIcon } from '@heroicons/react/24/outline';
-import { AnimatedFormInput } from '@/shared/components/AnimatedFormInput';
+import AnimatedFormInput from '@/shared/components/AnimatedFormInput';
 
 interface Props extends PageProps {
     parentAccounts: Account[];
