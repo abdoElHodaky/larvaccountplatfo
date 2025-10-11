@@ -78,7 +78,11 @@ jobs:
           ${{ runner.os }}-php-${{ matrix.php-version }}-
     
     - name: Install Composer dependencies
-      run: composer install --prefer-dist --no-progress --no-suggest --optimize-autoloader
+      run: composer install --prefer-dist --no-progress --optimize-autoloader
+      env:
+        COMPOSER_PROCESS_TIMEOUT: 0
+        COMPOSER_NO_INTERACTION: 1
+        COMPOSER_NO_AUDIT: 1
     
     - name: Run Laravel Pint (Code Style)
       run: ./vendor/bin/pint --test
