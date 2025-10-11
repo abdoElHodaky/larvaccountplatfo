@@ -16,7 +16,7 @@ interface AnimatedFormInputProps extends InputHTMLAttributes<HTMLInputElement> {
   helperText?: string;
 }
 
-export const AnimatedFormInput = forwardRef<HTMLInputElement, AnimatedFormInputProps>(({
+const AnimatedFormInput = forwardRef<HTMLInputElement, AnimatedFormInputProps>(({
   label,
   error,
   success = false,
@@ -79,11 +79,11 @@ export const AnimatedFormInput = forwardRef<HTMLInputElement, AnimatedFormInputP
                 animate(input, [
                   { transform: 'scale(1)', boxShadow: '0 0 0 0 rgba(59, 130, 246, 0)' },
                   { transform: 'scale(1.02)', boxShadow: '0 0 0 3px rgba(59, 130, 246, 0.1)' }
-                ], { ...presets.fast, fillMode: 'forwards' }),
+                ], { ...presets.fast, fill: 'forwards' }),
                 animate(label, [
                   { transform: 'translateY(0) scale(1)', color: '#6b7280' },
                   { transform: 'translateY(-20px) scale(0.85)', color: '#3b82f6' }
-                ], { ...presets.fast, fillMode: 'forwards' })
+                ], { ...presets.fast, fill: 'forwards' })
               ]);
               break;
             
@@ -99,7 +99,7 @@ export const AnimatedFormInput = forwardRef<HTMLInputElement, AnimatedFormInputP
               await animate(input, [
                 { boxShadow: '0 0 0 0 rgba(59, 130, 246, 0)' },
                 { boxShadow: '0 0 0 4px rgba(59, 130, 246, 0.2)' }
-              ], { ...presets.normal, fillMode: 'forwards' });
+              ], { ...presets.normal, fill: 'forwards' });
               break;
             
             case 'bounce':
@@ -111,7 +111,7 @@ export const AnimatedFormInput = forwardRef<HTMLInputElement, AnimatedFormInputP
               break;
           }
         } catch (error) {
-          console.warn('Input focus animation failed:', error);
+          // Animation failed silently
         }
       }
     }
@@ -136,11 +136,11 @@ export const AnimatedFormInput = forwardRef<HTMLInputElement, AnimatedFormInputP
                 animate(input, [
                   { transform: 'scale(1.02)', boxShadow: '0 0 0 3px rgba(59, 130, 246, 0.1)' },
                   { transform: 'scale(1)', boxShadow: '0 0 0 0 rgba(59, 130, 246, 0)' }
-                ], { ...presets.fast, fillMode: 'forwards' }),
+                ], { ...presets.fast, fill: 'forwards' }),
                 !hasValue ? animate(label, [
                   { transform: 'translateY(-20px) scale(0.85)', color: '#3b82f6' },
                   { transform: 'translateY(0) scale(1)', color: '#6b7280' }
-                ], { ...presets.fast, fillMode: 'forwards' }) : Promise.resolve()
+                ], { ...presets.fast, fill: 'forwards' }) : Promise.resolve()
               ]);
               break;
             
@@ -148,11 +148,11 @@ export const AnimatedFormInput = forwardRef<HTMLInputElement, AnimatedFormInputP
               await animate(input, [
                 { boxShadow: '0 0 0 4px rgba(59, 130, 246, 0.2)' },
                 { boxShadow: '0 0 0 0 rgba(59, 130, 246, 0)' }
-              ], { ...presets.normal, fillMode: 'forwards' });
+              ], { ...presets.normal, fill: 'forwards' });
               break;
           }
         } catch (error) {
-          console.warn('Input blur animation failed:', error);
+          // Animation failed silently
         }
       }
     }
@@ -207,11 +207,13 @@ export const AnimatedFormInput = forwardRef<HTMLInputElement, AnimatedFormInputP
         
         <input
           ref={(node) => {
-            inputRef.current = node;
+            if (inputRef.current !== node) {
+              (inputRef as React.MutableRefObject<HTMLInputElement | null>).current = node;
+            }
             if (typeof ref === 'function') {
               ref(node);
-            } else if (ref) {
-              ref.current = node;
+            } else if (ref && 'current' in ref) {
+              (ref as React.MutableRefObject<HTMLInputElement | null>).current = node;
             }
           }}
           className={inputClasses}
@@ -265,5 +267,5 @@ export const AnimatedFormInput = forwardRef<HTMLInputElement, AnimatedFormInputP
 
 AnimatedFormInput.displayName = 'AnimatedFormInput';
 
+export { AnimatedFormInput };
 export default AnimatedFormInput;
-

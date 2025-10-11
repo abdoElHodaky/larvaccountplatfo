@@ -4,7 +4,7 @@
  */
 
 import React, { useState } from 'react';
-import { AnimatedFormInput } from '../../../../shared/components/AnimatedFormInput';
+import AnimatedFormInput from '@/shared/components/AnimatedFormInput';
 
 interface TransactionFormData {
   date: string;

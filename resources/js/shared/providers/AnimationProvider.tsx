@@ -1,27 +1,34 @@
 /**
- * Animation Provider - Web Animations API Integration
- * Provides animation utilities and presets for consistent animations across the app
+ * Animation Provider - Web Animations API wrapper
+ * Provides consistent animation utilities across the application
  */
 
-import React, { createContext, useContext, useCallback, useMemo, ReactNode } from 'react';
+import React, { createContext, useContext, useCallback, useMemo } from 'react';
+
+interface AnimationOptions {
+  duration?: number;
+  easing?: string;
+  fill?: FillMode;
+  delay?: number;
+}
 
 interface AnimationPresets {
-  fast: KeyframeAnimationOptions;
-  normal: KeyframeAnimationOptions;
-  slow: KeyframeAnimationOptions;
-  spring: KeyframeAnimationOptions;
+  fast: AnimationOptions;
+  normal: AnimationOptions;
+  slow: AnimationOptions;
+  spring: AnimationOptions;
 }
 
 interface AnimationContextType {
-  animate: (element: Element, keyframes: Keyframe[], options?: KeyframeAnimationOptions) => Promise<Animation>;
+  animate: (element: Element, keyframes: Keyframe[], options?: AnimationOptions) => Promise<void>;
   presets: AnimationPresets;
   isReducedMotion: boolean;
 }
 
-const AnimationContext = createContext<AnimationContextType | undefined>(undefined);
+const AnimationContext = createContext<AnimationContextType | null>(null);
 
 interface AnimationProviderProps {
-  children: ReactNode;
+  children: React.ReactNode;
 }
 
 export const AnimationProvider: React.FC<AnimationProviderProps> = ({ children }) => {
@@ -36,63 +43,54 @@ export const AnimationProvider: React.FC<AnimationProviderProps> = ({ children }
     fast: {
       duration: 150,
       easing: 'ease-out',
-      fill: 'both'
+      fill: 'forwards' as FillMode,
     },
     normal: {
       duration: 300,
       easing: 'ease-out',
-      fill: 'both'
+      fill: 'forwards' as FillMode,
     },
     slow: {
       duration: 500,
       easing: 'ease-out',
-      fill: 'both'
+      fill: 'forwards' as FillMode,
     },
     spring: {
       duration: 400,
-      easing: 'cubic-bezier(0.68, -0.55, 0.265, 1.55)',
-      fill: 'both'
-    }
+      easing: 'cubic-bezier(0.34, 1.56, 0.64, 1)',
+      fill: 'forwards' as FillMode,
+    },
   }), []);
 
   // Main animate function using Web Animations API
   const animate = useCallback(async (
     element: Element,
     keyframes: Keyframe[],
-    options: KeyframeAnimationOptions = {}
-  ): Promise<Animation> => {
-    // Return a resolved promise if animations are disabled or reduced motion is preferred
-    if (isReducedMotion) {
-      return Promise.resolve({} as Animation);
+    options: AnimationOptions = {}
+  ): Promise<void> => {
+    if (!element || isReducedMotion) {
+      return Promise.resolve();
     }
 
-    // Check if Web Animations API is supported
-    if (!element.animate) {
-      console.warn('Web Animations API not supported');
-      return Promise.resolve({} as Animation);
-    }
+    const animationOptions: KeyframeAnimationOptions = {
+      duration: options.duration || presets.normal.duration,
+      easing: options.easing || presets.normal.easing,
+      fill: options.fill || presets.normal.fill,
+      delay: options.delay || 0,
+    };
 
     try {
-      const animation = element.animate(keyframes, {
-        ...presets.normal,
-        ...options
-      });
-
-      // Return a promise that resolves when animation completes
-      return new Promise((resolve, reject) => {
-        animation.addEventListener('finish', () => resolve(animation));
-        animation.addEventListener('cancel', () => reject(new Error('Animation cancelled')));
-      });
+      const animation = element.animate(keyframes, animationOptions);
+      await animation.finished;
     } catch (error) {
-      console.warn('Animation failed:', error);
-      return Promise.resolve({} as Animation);
+      // Animation failed silently
     }
   }, [isReducedMotion, presets]);
 
   const contextValue = useMemo(() => ({
     animate,
     presets,
-    isReducedMotion
+    isReducedMotion,
   }), [animate, presets, isReducedMotion]);
 
   return (
@@ -102,13 +100,10 @@ export const AnimationProvider: React.FC<AnimationProviderProps> = ({ children }
   );
 };
 
-// Hook to use animation context
 export const useAnimation = (): AnimationContextType => {
   const context = useContext(AnimationContext);
-  if (context === undefined) {
+  if (!context) {
     throw new Error('useAnimation must be used within an AnimationProvider');
   }
   return context;
 };
-
-export default AnimationProvider;

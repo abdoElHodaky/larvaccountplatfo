@@ -18,3 +18,8 @@ export { PrimaryButton } from './atoms/PrimaryButton';
 export { TextInput } from './atoms/TextInput';
 export { InputError } from './atoms/InputError';
 export { InputLabel } from './atoms/InputLabel';
+
+// Animation Components
+export { AnimatedFormInput } from './AnimatedFormInput';
+export { AnimatedModal, AnimatedConfirmationModal, useAnimatedModal } from './AnimatedModal';
+export { AnimatedSidebar, useAnimatedSidebar } from './AnimatedSidebar';
