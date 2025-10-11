@@ -24,9 +24,6 @@ abstract class TenantTestCase extends TestCase
     {
         parent::setUp();
         
-        // Set up test databases
-        $this->setUpTestDatabases();
-        
         // Create default tenant for testing
         $this->createTestTenant();
         
@@ -39,11 +36,48 @@ abstract class TenantTestCase extends TestCase
      */
     protected function setUpTestDatabases(): void
     {
-        // Configure test database connections
+        // Configure test database connections to use SQLite
         config([
+            'database.connections.landlord.driver' => 'sqlite',
             'database.connections.landlord.database' => ':memory:',
+            'database.connections.shared_shard_1.driver' => 'sqlite',
             'database.connections.shared_shard_1.database' => ':memory:',
+            'database.connections.testing.driver' => 'sqlite',
             'database.connections.testing.database' => ':memory:',
+        ]);
+    }
+
+    /**
+     * Refresh the in-memory database for multi-tenant testing.
+     */
+    public function refreshDatabase()
+    {
+        // Set up test databases first
+        $this->setUpTestDatabases();
+        
+        // Recreate database connections to ensure clean state
+        DB::purge('landlord');
+        DB::purge('shared_shard_1');
+        
+        // Run landlord migrations
+        $this->artisan('migrate:fresh', [
+            '--database' => 'landlord',
+            '--path' => 'database/migrations/landlord',
+            '--force' => true,
+        ]);
+
+        // Run shared migrations
+        $this->artisan('migrate:fresh', [
+            '--database' => 'shared_shard_1',
+            '--path' => 'database/migrations/shared',
+            '--force' => true,
+        ]);
+
+        // Run tenant migrations
+        $this->artisan('migrate', [
+            '--database' => 'shared_shard_1',
+            '--path' => 'database/migrations/tenant',
+            '--force' => true,
         ]);
     }
 

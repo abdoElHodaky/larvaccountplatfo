@@ -164,11 +164,16 @@ class InventoryService
     /**
      * Update a product
      */
-    public function updateProduct(Product $product, array $data): Product
+    public function updateProduct(Product|int $product, array $data): Product
     {
         DB::beginTransaction();
 
         try {
+            // If an ID is passed, find the product
+            if (is_int($product)) {
+                $product = Product::findOrFail($product);
+            }
+
             $product->update($data);
 
             // Update cost per unit in stock levels if cost price changed
@@ -188,7 +193,7 @@ class InventoryService
 
         } catch (\Exception $e) {
             DB::rollBack();
-            Log::error('Failed to update product', ['error' => $e->getMessage(), 'product_id' => $product->id]);
+            Log::error('Failed to update product', ['error' => $e->getMessage(), 'product_id' => is_int($product) ? $product : $product->id]);
             throw $e;
         }
     }
@@ -370,6 +375,29 @@ class InventoryService
                 'current_stock' => $stockLevel->quantity_on_hand,
                 'reorder_point' => $product->reorder_point,
             ]);
+        }
+    }
+
+    /**
+     * Create a new product category
+     */
+    public function createCategory(array $data): ProductCategory
+    {
+        DB::beginTransaction();
+
+        try {
+            $category = ProductCategory::create($data);
+
+            DB::commit();
+
+            Log::info('Product category created', ['category_id' => $category->id]);
+
+            return $category;
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+            Log::error('Failed to create product category', ['error' => $e->getMessage()]);
+            throw $e;
         }
     }
 

@@ -2,23 +2,27 @@
 
 namespace Tests\Unit\Inventory;
 
-use Tests\TestCase;
+use Tests\Shared\TenantTestCase;
 use App\Features\Inventory\Services\InventoryService;
 use App\Features\Inventory\Models\Product;
 use App\Features\Inventory\Models\ProductCategory;
 use App\Features\Inventory\Models\StockLevel;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Mockery;
 
-class InventoryServiceTest extends TestCase
+class InventoryServiceTest extends TenantTestCase
 {
-    use RefreshDatabase;
 
     private InventoryService $inventoryService;
 
     protected function setUp(): void
     {
         parent::setUp();
+        
+        // Set up tenant_id in the container for HybridModel
+        if ($this->tenant) {
+            app()->instance('tenant_id', $this->tenant->id);
+        }
+        
         $this->inventoryService = new InventoryService();
     }
 

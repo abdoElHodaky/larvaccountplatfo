@@ -21,10 +21,11 @@ return new class extends Migration
                 $table->json('enabled_modules')->nullable()->after('settings');
             }
 
-            // Add indexes for better performance
-            $table->index('status');
-            $table->index('plan');
-            $table->index('subdomain');
+            // Add index for status (plan and subdomain indexes already exist from create migration)
+            if (!Schema::hasColumn('tenants', 'status')) {
+                // Only add status index if we're adding the status column
+                $table->index('status');
+            }
         });
     }
 
@@ -34,10 +35,10 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('tenants', function (Blueprint $table) {
-            // Remove indexes
-            $table->dropIndex(['status']);
-            $table->dropIndex(['plan']);
-            $table->dropIndex(['subdomain']);
+            // Remove status index only (plan and subdomain indexes are from create migration)
+            if (Schema::hasColumn('tenants', 'status')) {
+                $table->dropIndex(['status']);
+            }
 
             // Remove columns if they exist
             if (Schema::hasColumn('tenants', 'enabled_modules')) {
