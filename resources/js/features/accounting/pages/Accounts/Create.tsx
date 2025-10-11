@@ -3,6 +3,7 @@ import { Head, Link, useForm } from '@inertiajs/react';
 import AppLayout from '@/shared/components/layouts/AppLayout';
 import { Account, PageProps, SelectOption } from '@/shared/types';
 import { ArrowLeftIcon } from '@heroicons/react/24/outline';
+import { AnimatedFormInput } from '@/shared/components/AnimatedFormInput';
 
 interface Props extends PageProps {
     parentAccounts: Account[];
@@ -79,42 +80,30 @@ export default function CreateAccount({ parentAccounts, accountTypes, accountSub
                             <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
                                 {/* Account Code */}
                                 <div>
-                                    <label htmlFor="code" className="block text-sm font-medium text-gray-700">
-                                        Account Code *
-                                    </label>
-                                    <input
+                                    <AnimatedFormInput
                                         type="text"
-                                        id="code"
+                                        label="Account Code *"
                                         value={data.code}
                                         onChange={(e) => setData('code', e.target.value)}
-                                        className={`mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm ${
-                                            errors.code ? 'border-red-300' : ''
-                                        }`}
+                                        error={errors.code}
                                         placeholder="e.g., 1000"
+                                        animationType="focus"
+                                        className="mt-1"
                                     />
-                                    {errors.code && (
-                                        <p className="mt-1 text-sm text-red-600">{errors.code}</p>
-                                    )}
                                 </div>
 
                                 {/* Account Name */}
                                 <div>
-                                    <label htmlFor="name" className="block text-sm font-medium text-gray-700">
-                                        Account Name *
-                                    </label>
-                                    <input
+                                    <AnimatedFormInput
                                         type="text"
-                                        id="name"
+                                        label="Account Name *"
                                         value={data.name}
                                         onChange={(e) => setData('name', e.target.value)}
-                                        className={`mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm ${
-                                            errors.name ? 'border-red-300' : ''
-                                        }`}
+                                        error={errors.name}
                                         placeholder="e.g., Cash in Bank"
+                                        animationType="glow"
+                                        className="mt-1"
                                     />
-                                    {errors.name && (
-                                        <p className="mt-1 text-sm text-red-600">{errors.name}</p>
-                                    )}
                                 </div>
 
                                 {/* Account Type */}

@@ -4,6 +4,7 @@
  */
 
 import React, { useState } from 'react';
+import { AnimatedFormInput } from '../../../shared/components/AnimatedFormInput';
 
 interface Transaction {
   id: string;
@@ -146,12 +147,14 @@ export const TransactionList: React.FC<TransactionListProps> = ({
           <div className="flex items-center justify-between">
             <h3 className="text-lg font-semibold text-gray-900">Transactions</h3>
             <div className="flex items-center space-x-4">
-              <input
+              <AnimatedFormInput
                 type="text"
                 placeholder="Filter by account..."
                 value={filterAccount}
                 onChange={(e) => setFilterAccount(e.target.value)}
-                className="px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                variant="search"
+                animationType="glow"
+                className="text-sm"
               />
               <button className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 text-sm">
                 Add Transaction
