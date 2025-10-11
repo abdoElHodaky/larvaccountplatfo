@@ -5,6 +5,9 @@ export * from './organisms';
 export * from './ui';
 export * from './layouts';
 
+// Animation Components
+export { AnimatedButton } from './AnimatedButton';
+
 // Re-export commonly used components for convenience
 export { default as AppLayout } from './layouts/AppLayout';
 export { Container, CardContainer } from './molecules/Container';

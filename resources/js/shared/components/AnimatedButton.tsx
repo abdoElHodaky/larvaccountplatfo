@@ -163,11 +163,13 @@ export const AnimatedButton = forwardRef<HTMLButtonElement, AnimatedButtonProps>
   return (
     <button
       ref={(node) => {
-        buttonRef.current = node;
+        if (buttonRef.current !== node) {
+          buttonRef.current = node;
+        }
         if (typeof ref === 'function') {
           ref(node);
-        } else if (ref) {
-          ref.current = node;
+        } else if (ref && 'current' in ref) {
+          (ref as React.MutableRefObject<HTMLButtonElement | null>).current = node;
         }
       }}
       className={combinedClasses}
