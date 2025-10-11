@@ -3,8 +3,8 @@
 namespace App\Shared\Services;
 
 use App\Shared\Contracts\ServiceInterface;
-use Illuminate\Support\Facades\Log;
 use Exception;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Service manager for coordinating service lifecycle and operations
@@ -12,7 +12,9 @@ use Exception;
 class ServiceManager
 {
     protected ServiceRegistry $registry;
+
     protected bool $initialized = false;
+
     protected array $config = [];
 
     public function __construct(ServiceRegistry $registry)
@@ -58,7 +60,7 @@ class ServiceManager
             $this->initialized = true;
             Log::info('Service Manager initialized successfully');
         } catch (Exception $e) {
-            Log::error('Failed to initialize Service Manager: ' . $e->getMessage());
+            Log::error('Failed to initialize Service Manager: '.$e->getMessage());
             throw $e;
         }
     }
@@ -134,7 +136,7 @@ class ServiceManager
                 }
             }
         } catch (Exception $e) {
-            Log::warning('Failed to register some accounting services: ' . $e->getMessage());
+            Log::warning('Failed to register some accounting services: '.$e->getMessage());
         }
     }
 
@@ -158,7 +160,7 @@ class ServiceManager
                 }
             }
         } catch (Exception $e) {
-            Log::warning('Failed to register some inventory services: ' . $e->getMessage());
+            Log::warning('Failed to register some inventory services: '.$e->getMessage());
         }
     }
 
@@ -182,7 +184,7 @@ class ServiceManager
                 }
             }
         } catch (Exception $e) {
-            Log::warning('Failed to register some dashboard services: ' . $e->getMessage());
+            Log::warning('Failed to register some dashboard services: '.$e->getMessage());
         }
     }
 
@@ -195,7 +197,7 @@ class ServiceManager
             $this->registry->initializeAll();
             Log::info('All services initialized successfully');
         } catch (Exception $e) {
-            Log::error('Failed to initialize all services: ' . $e->getMessage());
+            Log::error('Failed to initialize all services: '.$e->getMessage());
             throw $e;
         }
     }
@@ -212,11 +214,12 @@ class ServiceManager
             try {
                 $this->registry->initializeService($name);
                 Log::info("Service '{$name}' initialized successfully");
+
                 return;
             } catch (Exception $e) {
                 $retries++;
-                Log::warning("Failed to initialize service '{$name}' (attempt {$retries}/{$maxRetries}): " . $e->getMessage());
-                
+                Log::warning("Failed to initialize service '{$name}' (attempt {$retries}/{$maxRetries}): ".$e->getMessage());
+
                 if ($retries >= $maxRetries) {
                     Log::error("Failed to initialize service '{$name}' after {$maxRetries} attempts");
                     throw $e;
@@ -239,7 +242,7 @@ class ServiceManager
             $this->initialized = false;
             Log::info('Service Manager shutdown completed');
         } catch (Exception $e) {
-            Log::error('Error during Service Manager shutdown: ' . $e->getMessage());
+            Log::error('Error during Service Manager shutdown: '.$e->getMessage());
             throw $e;
         }
     }
@@ -274,13 +277,13 @@ class ServiceManager
     public function getHealthStatus(): array
     {
         $status = $this->registry->getHealthStatus();
-        
+
         return [
             'service_manager' => [
                 'initialized' => $this->initialized,
                 'total_services' => count($status),
-                'healthy_services' => count(array_filter($status, fn($s) => $s['healthy'])),
-                'unhealthy_services' => count(array_filter($status, fn($s) => !$s['healthy'])),
+                'healthy_services' => count(array_filter($status, fn ($s) => $s['healthy'])),
+                'unhealthy_services' => count(array_filter($status, fn ($s) => ! $s['healthy'])),
             ],
             'services' => $status,
         ];
@@ -292,7 +295,7 @@ class ServiceManager
     public function getMetrics(): array
     {
         $registryMetrics = $this->registry->getMetrics();
-        
+
         return [
             'service_manager' => [
                 'initialized' => $this->initialized,
@@ -320,19 +323,19 @@ class ServiceManager
     {
         try {
             Log::info("Restarting service: {$name}");
-            
+
             // Cleanup the service
             $this->registry->cleanupService($name);
-            
+
             // Wait a moment
             usleep(100000); // 100ms
-            
+
             // Initialize the service again
             $this->registry->initializeService($name);
-            
+
             Log::info("Service '{$name}' restarted successfully");
         } catch (Exception $e) {
-            Log::error("Failed to restart service '{$name}': " . $e->getMessage());
+            Log::error("Failed to restart service '{$name}': ".$e->getMessage());
             throw $e;
         }
     }
@@ -344,21 +347,21 @@ class ServiceManager
     {
         try {
             Log::info('Restarting all services');
-            
+
             $serviceNames = $this->registry->getServiceNames();
-            
+
             // Cleanup all services
             $this->registry->cleanupAll();
-            
+
             // Wait a moment
             sleep(1);
-            
+
             // Initialize all services
             $this->registry->initializeAll();
-            
+
             Log::info('All services restarted successfully');
         } catch (Exception $e) {
-            Log::error('Failed to restart all services: ' . $e->getMessage());
+            Log::error('Failed to restart all services: '.$e->getMessage());
             throw $e;
         }
     }

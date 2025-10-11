@@ -15,11 +15,15 @@ class ProcessAccountingReport implements ShouldQueue
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
     public $timeout;
+
     public $tries;
+
     public $maxExceptions;
 
     protected $reportId;
+
     protected $tenantId;
+
     protected $reportType;
 
     /**
@@ -40,11 +44,11 @@ class ProcessAccountingReport implements ShouldQueue
      */
     public function handle(): void
     {
-        Log::info("Processing accounting report", [
+        Log::info('Processing accounting report', [
             'report_id' => $this->reportId,
             'tenant_id' => $this->tenantId,
             'report_type' => $this->reportType,
-            'deployment_profile' => $this->getCurrentProfile()
+            'deployment_profile' => $this->getCurrentProfile(),
         ]);
 
         try {
@@ -56,15 +60,14 @@ class ProcessAccountingReport implements ShouldQueue
             // Process the report based on type and deployment capabilities
             $this->processReport();
 
-            Log::info("Accounting report processed successfully", [
-                'report_id' => $this->reportId
+            Log::info('Accounting report processed successfully', [
+                'report_id' => $this->reportId,
             ]);
-
         } catch (\Exception $e) {
-            Log::error("Failed to process accounting report", [
+            Log::error('Failed to process accounting report', [
                 'report_id' => $this->reportId,
                 'error' => $e->getMessage(),
-                'trace' => $e->getTraceAsString()
+                'trace' => $e->getTraceAsString(),
             ]);
 
             throw $e;
@@ -109,7 +112,7 @@ class ProcessAccountingReport implements ShouldQueue
     {
         // Implementation would depend on your multi-tenancy setup
         // This is a placeholder for tenant context switching
-        Log::debug("Switching to tenant context", ['tenant_id' => $this->tenantId]);
+        Log::debug('Switching to tenant context', ['tenant_id' => $this->tenantId]);
     }
 
     /**
@@ -147,11 +150,11 @@ class ProcessAccountingReport implements ShouldQueue
      */
     protected function processAdvancedReport(): void
     {
-        Log::info("Processing advanced report", ['report_id' => $this->reportId]);
-        
+        Log::info('Processing advanced report', ['report_id' => $this->reportId]);
+
         // Simulate advanced report processing
         sleep(2);
-        
+
         // Advanced features like complex calculations, multiple data sources, etc.
         $this->generateAdvancedMetrics();
         $this->createVisualizationData();
@@ -163,11 +166,11 @@ class ProcessAccountingReport implements ShouldQueue
      */
     protected function processBasicReport(): void
     {
-        Log::info("Processing basic report", ['report_id' => $this->reportId]);
-        
+        Log::info('Processing basic report', ['report_id' => $this->reportId]);
+
         // Simulate basic report processing
         sleep(1);
-        
+
         // Basic report with essential data only
         $this->generateBasicMetrics();
     }
@@ -177,8 +180,8 @@ class ProcessAccountingReport implements ShouldQueue
      */
     protected function processRealTimeReport(): void
     {
-        Log::info("Processing real-time report", ['report_id' => $this->reportId]);
-        
+        Log::info('Processing real-time report', ['report_id' => $this->reportId]);
+
         // Real-time processing with live data
         $this->fetchLiveData();
         $this->broadcastUpdates();
@@ -189,8 +192,8 @@ class ProcessAccountingReport implements ShouldQueue
      */
     protected function processStandardReport(): void
     {
-        Log::info("Processing standard report", ['report_id' => $this->reportId]);
-        
+        Log::info('Processing standard report', ['report_id' => $this->reportId]);
+
         // Standard report processing
         sleep(1);
         $this->generateStandardMetrics();
@@ -202,7 +205,7 @@ class ProcessAccountingReport implements ShouldQueue
     protected function generateAdvancedMetrics(): void
     {
         // Complex calculations, forecasting, trend analysis
-        Log::debug("Generating advanced metrics");
+        Log::debug('Generating advanced metrics');
     }
 
     /**
@@ -211,7 +214,7 @@ class ProcessAccountingReport implements ShouldQueue
     protected function generateBasicMetrics(): void
     {
         // Simple calculations, basic totals
-        Log::debug("Generating basic metrics");
+        Log::debug('Generating basic metrics');
     }
 
     /**
@@ -220,7 +223,7 @@ class ProcessAccountingReport implements ShouldQueue
     protected function generateStandardMetrics(): void
     {
         // Standard calculations
-        Log::debug("Generating standard metrics");
+        Log::debug('Generating standard metrics');
     }
 
     /**
@@ -229,7 +232,7 @@ class ProcessAccountingReport implements ShouldQueue
     protected function createVisualizationData(): void
     {
         if ($this->isFeatureEnabled('advanced_reporting')) {
-            Log::debug("Creating visualization data");
+            Log::debug('Creating visualization data');
             // Generate charts, graphs, etc.
         }
     }
@@ -240,7 +243,7 @@ class ProcessAccountingReport implements ShouldQueue
     protected function sendNotifications(): void
     {
         if ($this->isFeatureEnabled('email_reports')) {
-            Log::debug("Sending report notifications");
+            Log::debug('Sending report notifications');
             // Send email notifications
         }
     }
@@ -250,7 +253,7 @@ class ProcessAccountingReport implements ShouldQueue
      */
     protected function fetchLiveData(): void
     {
-        Log::debug("Fetching live data");
+        Log::debug('Fetching live data');
         // Fetch real-time data
     }
 
@@ -260,7 +263,7 @@ class ProcessAccountingReport implements ShouldQueue
     protected function broadcastUpdates(): void
     {
         if ($this->isFeatureEnabled('real_time_financial_updates')) {
-            Log::debug("Broadcasting real-time updates");
+            Log::debug('Broadcasting real-time updates');
             // Broadcast to connected clients
         }
     }
@@ -270,11 +273,11 @@ class ProcessAccountingReport implements ShouldQueue
      */
     public function failed(\Throwable $exception): void
     {
-        Log::error("Accounting report job failed", [
+        Log::error('Accounting report job failed', [
             'report_id' => $this->reportId,
             'tenant_id' => $this->tenantId,
             'error' => $exception->getMessage(),
-            'deployment_profile' => $this->getCurrentProfile()
+            'deployment_profile' => $this->getCurrentProfile(),
         ]);
 
         // Send failure notification if enabled
@@ -288,7 +291,7 @@ class ProcessAccountingReport implements ShouldQueue
      */
     protected function shouldUseSharding(): bool
     {
-        if (!class_exists(FeatureFlag::class)) {
+        if (! class_exists(FeatureFlag::class)) {
             return config('features.sharding', false);
         }
 
@@ -304,7 +307,7 @@ class ProcessAccountingReport implements ShouldQueue
      */
     protected function shouldUseAdvancedReporting(): bool
     {
-        if (!class_exists(FeatureFlag::class)) {
+        if (! class_exists(FeatureFlag::class)) {
             return config('features.advanced_reporting', false);
         }
 
@@ -320,7 +323,7 @@ class ProcessAccountingReport implements ShouldQueue
      */
     protected function isFeatureEnabled(string $feature): bool
     {
-        if (!class_exists(FeatureFlag::class)) {
+        if (! class_exists(FeatureFlag::class)) {
             return config("features.{$feature}", false);
         }
 
@@ -336,7 +339,7 @@ class ProcessAccountingReport implements ShouldQueue
      */
     protected function getCurrentProfile(): string
     {
-        if (!class_exists(FeatureFlag::class)) {
+        if (! class_exists(FeatureFlag::class)) {
             return $this->detectProfileFromEnvironment();
         }
 
@@ -353,19 +356,19 @@ class ProcessAccountingReport implements ShouldQueue
     protected function detectProfileFromEnvironment(): string
     {
         $env = config('app.env', 'local');
-        
+
         if (str_contains(config('app.url', ''), 'laravel.cloud')) {
             return 'cloud';
         }
-        
+
         if (env('FORGE_DEPLOYMENT', false)) {
             return 'forge';
         }
-        
+
         if ($env === 'production') {
             return 'enterprise';
         }
-        
+
         return 'enterprise'; // Default to full features for development
     }
 }

@@ -14,9 +14,9 @@ class OrganizationScope implements Scope
     public function apply(Builder $builder, Model $model): void
     {
         $organizationId = $this->getCurrentOrganizationId();
-        
+
         if ($organizationId) {
-            $builder->where($model->getTable() . '.organization_id', $organizationId);
+            $builder->where($model->getTable().'.organization_id', $organizationId);
         }
     }
 
@@ -47,7 +47,7 @@ class OrganizationScope implements Scope
     {
         $builder->macro('withOrganization', function (Builder $builder, int $organizationId) {
             return $builder->withoutGlobalScope($this)
-                          ->where($builder->getModel()->getTable() . '.organization_id', $organizationId);
+                ->where($builder->getModel()->getTable().'.organization_id', $organizationId);
         });
     }
 
@@ -58,7 +58,7 @@ class OrganizationScope implements Scope
     {
         $builder->macro('onlyOrganization', function (Builder $builder, int $organizationId) {
             return $builder->withoutGlobalScope($this)
-                          ->where($builder->getModel()->getTable() . '.organization_id', $organizationId);
+                ->where($builder->getModel()->getTable().'.organization_id', $organizationId);
         });
     }
 
@@ -69,7 +69,7 @@ class OrganizationScope implements Scope
     {
         // Try to get from application container first
         $organizationId = app('tenant_id', null);
-        
+
         if ($organizationId) {
             return $organizationId;
         }
@@ -89,4 +89,3 @@ class OrganizationScope implements Scope
         return null;
     }
 }
-

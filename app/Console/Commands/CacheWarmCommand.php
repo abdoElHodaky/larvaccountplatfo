@@ -2,11 +2,10 @@
 
 namespace App\Console\Commands;
 
-use Illuminate\Console\Command;
-use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\DB;
 use App\Models\Organization;
 use App\Models\User;
+use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Cache;
 
 class CacheWarmCommand extends Command
 {
@@ -42,10 +41,11 @@ class CacheWarmCommand extends Command
             };
 
             $this->info('✅ Cache warming completed successfully!');
-            return Command::SUCCESS;
 
+            return Command::SUCCESS;
         } catch (\Exception $e) {
             $this->error("❌ Cache warming failed: {$e->getMessage()}");
+
             return Command::FAILURE;
         }
     }
@@ -110,7 +110,7 @@ class CacheWarmCommand extends Command
         $this->info('👥 Warming users cache...');
 
         $query = User::with(['organization', 'roles', 'permissions']);
-        
+
         if ($tenant) {
             $query->whereHas('organization', function ($q) use ($tenant) {
                 $q->where('slug', $tenant);
@@ -144,7 +144,7 @@ class CacheWarmCommand extends Command
             });
 
             // User dashboard cache
-            Cache::remember("user.dashboard.{$user->id}", 900, function () use ($user) {
+            Cache::remember("user.dashboard.{$user->id}", 900, function () {
                 return [
                     'recent_transactions' => [],
                     'account_summary' => [],
@@ -165,7 +165,7 @@ class CacheWarmCommand extends Command
         $this->info('🏢 Warming organizations cache...');
 
         $query = Organization::with(['users', 'settings']);
-        
+
         if ($tenant) {
             $query->where('slug', $tenant);
         }
@@ -217,7 +217,7 @@ class CacheWarmCommand extends Command
         $this->info('💰 Warming financial cache...');
 
         $query = Organization::query();
-        
+
         if ($tenant) {
             $query->where('slug', $tenant);
         }
@@ -226,7 +226,7 @@ class CacheWarmCommand extends Command
 
         foreach ($organizations as $org) {
             // Chart of accounts cache
-            Cache::remember("financial.accounts.{$org->id}", 3600, function () use ($org) {
+            Cache::remember("financial.accounts.{$org->id}", 3600, function () {
                 return [
                     'assets' => [],
                     'liabilities' => [],
@@ -237,7 +237,7 @@ class CacheWarmCommand extends Command
             });
 
             // Financial summary cache
-            Cache::remember("financial.summary.{$org->id}", 1800, function () use ($org) {
+            Cache::remember("financial.summary.{$org->id}", 1800, function () {
                 return [
                     'total_assets' => 0,
                     'total_liabilities' => 0,
@@ -249,7 +249,7 @@ class CacheWarmCommand extends Command
             });
 
             // Recent transactions cache
-            Cache::remember("financial.recent_transactions.{$org->id}", 900, function () use ($org) {
+            Cache::remember("financial.recent_transactions.{$org->id}", 900, function () {
                 return [
                     'transactions' => [],
                     'count' => 0,

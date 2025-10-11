@@ -3,8 +3,8 @@
 namespace App\Http\Middleware;
 
 use Closure;
-use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 class ApiResponseMiddleware
@@ -19,7 +19,7 @@ class ApiResponseMiddleware
         // Only process JSON responses for API routes
         if ($request->is('api/*') && $response instanceof JsonResponse) {
             $data = $response->getData(true);
-            
+
             // If response is already standardized, return as is
             if (isset($data['success']) && isset($data['data'])) {
                 return $response;
@@ -27,7 +27,7 @@ class ApiResponseMiddleware
 
             // Standardize the response format
             $standardizedData = $this->standardizeResponse($data, $response->getStatusCode());
-            
+
             return response()->json($standardizedData, $response->getStatusCode());
         }
 
@@ -40,7 +40,7 @@ class ApiResponseMiddleware
     private function standardizeResponse(array $data, int $statusCode): array
     {
         $isSuccess = $statusCode >= 200 && $statusCode < 300;
-        
+
         $standardized = [
             'success' => $isSuccess,
             'status_code' => $statusCode,
@@ -58,7 +58,7 @@ class ApiResponseMiddleware
                 'code' => $data['code'] ?? $statusCode,
                 'details' => $data['errors'] ?? $data['details'] ?? null,
             ];
-            
+
             // Remove null details
             if (is_null($standardized['error']['details'])) {
                 unset($standardized['error']['details']);

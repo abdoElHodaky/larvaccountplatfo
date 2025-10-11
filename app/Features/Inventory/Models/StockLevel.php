@@ -78,13 +78,13 @@ class StockLevel extends HybridModel
      */
     public function reserveStock(float $quantity): bool
     {
-        if (!$this->isAvailable($quantity)) {
+        if (! $this->isAvailable($quantity)) {
             return false;
         }
 
         $this->quantity_available -= $quantity;
         $this->quantity_reserved += $quantity;
-        
+
         return $this->save();
     }
 
@@ -99,19 +99,19 @@ class StockLevel extends HybridModel
 
         $this->quantity_reserved -= $quantity;
         $this->quantity_available += $quantity;
-        
+
         return $this->save();
     }
 
     /**
      * Adjust stock levels
      */
-    public function adjustStock(float $quantity, string $reason = null): bool
+    public function adjustStock(float $quantity, ?string $reason = null): bool
     {
         $this->quantity_on_hand += $quantity;
         $this->quantity_available += $quantity;
         $this->last_movement_at = now();
-        
+
         return $this->save();
     }
 

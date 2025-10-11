@@ -2,11 +2,10 @@
 
 namespace App\Features\Dashboard\Repositories;
 
-use App\Shared\Services\BaseRepository;
-use App\Features\Dashboard\Models\DashboardWidget;
 use App\Features\Dashboard\Contracts\DashboardWidgetRepositoryInterface;
+use App\Features\Dashboard\Models\DashboardWidget;
+use App\Shared\Services\BaseRepository;
 use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Pagination\LengthAwarePaginator;
 
 /**
  * Dashboard Widget Repository using Laravel Eloquent Repository Pattern
@@ -27,12 +26,12 @@ class DashboardWidgetRepository extends BaseRepository implements DashboardWidge
     protected function initializeCache(): void
     {
         parent::initializeCache();
-        
+
         $this->cacheTags = array_merge($this->cacheTags, [
             'dashboard_widgets',
             'dashboard',
         ]);
-        
+
         // Enable caching by default for widgets
         $this->enableCache(1800, $this->cacheTags); // 30 minutes
     }
@@ -40,18 +39,18 @@ class DashboardWidgetRepository extends BaseRepository implements DashboardWidge
     /**
      * Find widgets by organization and user
      */
-    public function findByOrganizationAndUser(int $organizationId, int $userId = null): Collection
+    public function findByOrganizationAndUser(int $organizationId, ?int $userId = null): Collection
     {
         return $this->cached('findByOrganizationAndUser', [
-            'org_id' => $organizationId, 
-            'user_id' => $userId
+            'org_id' => $organizationId,
+            'user_id' => $userId,
         ], function () use ($organizationId, $userId) {
             return $this->model
                 ->where('organization_id', $organizationId)
                 ->where(function ($query) use ($userId) {
                     if ($userId) {
                         $query->where('user_id', $userId)
-                              ->orWhereNull('user_id'); // Include global widgets
+                            ->orWhereNull('user_id'); // Include global widgets
                     } else {
                         $query->whereNull('user_id'); // Only global widgets
                     }
@@ -66,7 +65,7 @@ class DashboardWidgetRepository extends BaseRepository implements DashboardWidge
     /**
      * Find widgets by type
      */
-    public function findByType(string $widgetType, int $organizationId = null): Collection
+    public function findByType(string $widgetType, ?int $organizationId = null): Collection
     {
         $criteria = ['widget_type' => $widgetType];
         if ($organizationId) {
@@ -75,11 +74,11 @@ class DashboardWidgetRepository extends BaseRepository implements DashboardWidge
 
         return $this->cached('findByType', $criteria, function () use ($widgetType, $organizationId) {
             $query = $this->model->where('widget_type', $widgetType);
-            
+
             if ($organizationId) {
                 $query->where('organization_id', $organizationId);
             }
-            
+
             return $query->active()->get();
         });
     }
@@ -90,8 +89,8 @@ class DashboardWidgetRepository extends BaseRepository implements DashboardWidge
     public function getUserActiveWidgets(int $userId, int $organizationId): Collection
     {
         return $this->cached('getUserActiveWidgets', [
-            'user_id' => $userId, 
-            'org_id' => $organizationId
+            'user_id' => $userId,
+            'org_id' => $organizationId,
         ], function () use ($userId, $organizationId) {
             return $this->model
                 ->where('organization_id', $organizationId)
@@ -146,7 +145,7 @@ class DashboardWidgetRepository extends BaseRepository implements DashboardWidge
         $success = true;
 
         foreach ($positions as $position) {
-            if (!isset($position['id'], $position['position_x'], $position['position_y'])) {
+            if (! isset($position['id'], $position['position_x'], $position['position_y'])) {
                 continue;
             }
 
@@ -156,7 +155,7 @@ class DashboardWidgetRepository extends BaseRepository implements DashboardWidge
                 $position['position_y']
             );
 
-            if (!$result) {
+            if (! $result) {
                 $success = false;
             }
         }
@@ -167,7 +166,7 @@ class DashboardWidgetRepository extends BaseRepository implements DashboardWidge
     /**
      * Get widgets by data source
      */
-    public function findByDataSource(string $dataSource, int $organizationId = null): Collection
+    public function findByDataSource(string $dataSource, ?int $organizationId = null): Collection
     {
         $criteria = ['data_source' => $dataSource];
         if ($organizationId) {
@@ -176,11 +175,11 @@ class DashboardWidgetRepository extends BaseRepository implements DashboardWidge
 
         return $this->cached('findByDataSource', $criteria, function () use ($dataSource, $organizationId) {
             $query = $this->model->where('data_source', $dataSource);
-            
+
             if ($organizationId) {
                 $query->where('organization_id', $organizationId);
             }
-            
+
             return $query->active()->get();
         });
     }
@@ -225,8 +224,8 @@ class DashboardWidgetRepository extends BaseRepository implements DashboardWidge
             ->where('organization_id', $organizationId)
             ->where(function ($query) use ($search) {
                 $query->where('title', 'LIKE', "%{$search}%")
-                      ->orWhere('description', 'LIKE', "%{$search}%")
-                      ->orWhere('widget_type', 'LIKE', "%{$search}%");
+                    ->orWhere('description', 'LIKE', "%{$search}%")
+                    ->orWhere('widget_type', 'LIKE', "%{$search}%");
             })
             ->active()
             ->limit($limit)
@@ -242,7 +241,7 @@ class DashboardWidgetRepository extends BaseRepository implements DashboardWidge
             ->where('is_active', true)
             ->where(function ($query) {
                 $query->whereRaw('updated_at < DATE_SUB(NOW(), INTERVAL refresh_interval SECOND)')
-                      ->orWhereNull('updated_at');
+                    ->orWhereNull('updated_at');
             })
             ->get();
     }
@@ -253,18 +252,18 @@ class DashboardWidgetRepository extends BaseRepository implements DashboardWidge
     public function cloneWidgetForUser(int $widgetId, int $userId, array $overrides = []): ?DashboardWidget
     {
         $originalWidget = $this->findOrFail($widgetId);
-        
+
         $widgetData = $originalWidget->toArray();
         unset($widgetData['id'], $widgetData['created_at'], $widgetData['updated_at']);
-        
+
         $widgetData['user_id'] = $userId;
         $widgetData = array_merge($widgetData, $overrides);
-        
+
         $newWidget = $this->create($widgetData);
-        
+
         // Clear cache after creating new widget
         $this->clearCache();
-        
+
         return $newWidget;
     }
 
@@ -274,11 +273,11 @@ class DashboardWidgetRepository extends BaseRepository implements DashboardWidge
     public function getWidgetUsageAnalytics(int $organizationId, int $days = 30): array
     {
         return $this->cached('getWidgetUsageAnalytics', [
-            'org_id' => $organizationId, 
-            'days' => $days
+            'org_id' => $organizationId,
+            'days' => $days,
         ], function () use ($organizationId, $days) {
             $startDate = now()->subDays($days);
-            
+
             return [
                 'most_used_types' => $this->model
                     ->where('organization_id', $organizationId)
@@ -289,7 +288,7 @@ class DashboardWidgetRepository extends BaseRepository implements DashboardWidge
                     ->limit(10)
                     ->get()
                     ->toArray(),
-                
+
                 'creation_trend' => $this->model
                     ->where('organization_id', $organizationId)
                     ->where('created_at', '>=', $startDate)
@@ -298,7 +297,7 @@ class DashboardWidgetRepository extends BaseRepository implements DashboardWidge
                     ->orderBy('date')
                     ->get()
                     ->toArray(),
-                
+
                 'active_vs_inactive' => [
                     'active' => $this->model
                         ->where('organization_id', $organizationId)
