@@ -4,7 +4,7 @@
  */
 
 import React, { useState } from 'react';
-import { AnimatedList } from '@/shared/components/animations/AnimatedFragment';
+import AnimatedButton from '../../../../shared/components/AnimatedButton';
 
 interface Transaction {
   id: string;
@@ -154,9 +154,13 @@ export const TransactionList: React.FC<TransactionListProps> = ({
                 onChange={(e) => setFilterAccount(e.target.value)}
                 className="px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
-              <button className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 text-sm">
+              <AnimatedButton
+                variant="primary"
+                size="sm"
+                animationType="bounce"
+              >
                 Add Transaction
-              </button>
+              </AnimatedButton>
             </div>
           </div>
         </div>
@@ -201,31 +205,31 @@ export const TransactionList: React.FC<TransactionListProps> = ({
                 </th>
               </tr>
             </thead>
-            <AnimatedList as="tbody" className="bg-white divide-y divide-gray-200" stagger={0.05}>
+            <tbody className="bg-white divide-y divide-gray-200">
               {filteredTransactions.map((transaction) => (
                 <tr 
                   key={transaction.id}
-                  className="hover:bg-gray-50 cursor-pointer transition-colors duration-150"
+                  className="hover:bg-gray-50 cursor-pointer"
                   onClick={() => onTransactionClick?.(transaction)}
                 >
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                     {formatDate(transaction.date)}
                   </td>
                   <td className="px-6 py-4 text-sm text-gray-900">
-                    <>
+                    <div>
                       <div className="font-medium">{transaction.description}</div>
                       {transaction.reference && (
                         <div className="text-xs text-gray-500">Ref: {transaction.reference}</div>
                       )}
-                    </>
+                    </div>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                    <>
+                    <div>
                       <div>{transaction.account}</div>
                       {transaction.category && (
                         <div className="text-xs text-gray-500">{transaction.category}</div>
                       )}
-                    </>
+                    </div>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-right">
                     {transaction.debit > 0 ? (
@@ -253,7 +257,7 @@ export const TransactionList: React.FC<TransactionListProps> = ({
                             e.stopPropagation();
                             onEdit(transaction);
                           }}
-                          className="text-blue-600 hover:text-blue-900 transition-colors duration-150"
+                          className="text-blue-600 hover:text-blue-900"
                         >
                           Edit
                         </button>
@@ -264,7 +268,7 @@ export const TransactionList: React.FC<TransactionListProps> = ({
                             e.stopPropagation();
                             onDelete(transaction.id);
                           }}
-                          className="text-red-600 hover:text-red-900 transition-colors duration-150"
+                          className="text-red-600 hover:text-red-900"
                         >
                           Delete
                         </button>
@@ -273,7 +277,7 @@ export const TransactionList: React.FC<TransactionListProps> = ({
                   </td>
                 </tr>
               ))}
-            </AnimatedList>
+            </tbody>
           </table>
         </div>
 

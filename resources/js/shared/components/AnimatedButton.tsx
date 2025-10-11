@@ -3,7 +3,7 @@
  * Enhanced button with smooth animations and accessibility
  */
 
-import React, { useRef, useCallback, forwardRef, ButtonHTMLAttributes, useImperativeHandle } from 'react';
+import React, { useRef, useCallback, forwardRef, ButtonHTMLAttributes } from 'react';
 import { useAnimation } from '../providers/AnimationProvider';
 
 interface AnimatedButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
@@ -27,9 +27,6 @@ export const AnimatedButton = forwardRef<HTMLButtonElement, AnimatedButtonProps>
 }, ref) => {
   const buttonRef = useRef<HTMLButtonElement>(null);
   const { animate, presets, isReducedMotion } = useAnimation();
-
-  // Expose the button element to parent components
-  useImperativeHandle(ref, () => buttonRef.current!);
 
   // Base classes for styling
   const baseClasses = 'inline-flex items-center justify-center font-medium rounded-md transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2';
@@ -165,7 +162,15 @@ export const AnimatedButton = forwardRef<HTMLButtonElement, AnimatedButtonProps>
 
   return (
     <button
-      ref={buttonRef}
+      ref={(node) => {
+        // @ts-expect-error - Assigning to ref.current
+        buttonRef.current = node;
+        if (typeof ref === 'function') {
+          ref(node);
+        } else if (ref && 'current' in ref) {
+          (ref as React.MutableRefObject<HTMLButtonElement | null>).current = node;
+        }
+      }}
       className={combinedClasses}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}

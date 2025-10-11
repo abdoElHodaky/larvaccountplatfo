@@ -213,22 +213,22 @@ export const AppProviders: React.FC<AppProvidersProps> = ({ children }) => {
       <Provider store={store}>
         <ApolloProvider client={apolloClient}>
             <ThemeProvider>
-              <AnimationProvider enablePerformanceMonitoring={true}>
+              <AnimationProvider>
                 <DndProvider backend={HTML5Backend}>
                   <SocketProvider>
-                    <PerformanceMonitor>
-                      <ConnectionMonitor>
-                        <AppInitializer>
-                          <AuthInitializer>
-                            <Suspense fallback={<LoadingFallback />}>
-                              {children}
-                              <NotificationContainer />
-                              <PWAInstallPrompt />
-                            </Suspense>
-                          </AuthInitializer>
-                        </AppInitializer>
-                      </ConnectionMonitor>
-                    </PerformanceMonitor>
+                  <PerformanceMonitor>
+                    <ConnectionMonitor>
+                      <AppInitializer>
+                        <AuthInitializer>
+                          <Suspense fallback={<LoadingFallback />}>
+                            {children}
+                            <NotificationContainer />
+                            <PWAInstallPrompt />
+                          </Suspense>
+                        </AuthInitializer>
+                      </AppInitializer>
+                    </ConnectionMonitor>
+                  </PerformanceMonitor>
                   </SocketProvider>
                 </DndProvider>
               </AnimationProvider>

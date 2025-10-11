@@ -233,15 +233,4 @@ export const useAnimation = (): AnimationContextType => {
   return context;
 };
 
-// Higher-order component for animated components
-export const withAnimation = <P extends object>(
-  Component: React.ComponentType<P>
-): React.ComponentType<P> => {
-  return (props: P) => (
-    <AnimationProvider>
-      <Component {...props} />
-    </AnimationProvider>
-  );
-};
-
 export default AnimationProvider;
