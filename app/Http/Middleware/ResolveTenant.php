@@ -56,7 +56,6 @@ class ResolveTenant
 
         // Try to resolve from custom domain (if implemented)
         // This would be for tenants with custom domains
-
     }
 
     /**

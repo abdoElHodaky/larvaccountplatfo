@@ -5,7 +5,7 @@
 
 import '@testing-library/jest-dom';
 import { configure } from '@testing-library/react';
-import { afterEach, afterAll, beforeAll, beforeEach, vi } from 'vitest';
+import { afterEach, afterAll, beforeAll, vi } from 'vitest';
 import { server } from './mocks/server';
 
 // Configure React Testing Library
@@ -116,11 +116,13 @@ global.IntersectionObserver = class IntersectionObserver {
   rootMargin: string = '0px';
   thresholds: ReadonlyArray<number> = [0];
   
-  constructor(_callback: IntersectionObserverCallback, _options?: IntersectionObserverInit) {}
+  constructor() {}
   observe() {}
   unobserve() {}
   disconnect() {}
-  takeRecords(): IntersectionObserverEntry[] { return []; }
+  takeRecords(): IntersectionObserverEntry[] {
+    return [];
+  }
 } as any;
 
 // Mock ResizeObserver
@@ -135,7 +137,7 @@ global.ResizeObserver = class ResizeObserver {
 global.PerformanceObserver = class PerformanceObserver {
   static supportedEntryTypes: readonly string[] = ['measure', 'navigation', 'resource'];
   
-  constructor(_callback: PerformanceObserverCallback) {}
+  constructor() {}
   observe() {}
   disconnect() {}
 } as any;

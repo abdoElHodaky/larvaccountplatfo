@@ -4,7 +4,7 @@
  */
 
 import React, { ReactNode } from 'react';
-import { motion, AnimatePresence as _AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { useListAnimation } from '../../hooks/useAnimation';
 import { useAnimationContext } from './AnimationProvider';
 
