@@ -68,7 +68,6 @@ export const AnimatedFragment: React.FC<AnimatedFragmentProps> = ({
       exit="exit"
       variants={containerVariants}
       className={className}
-      animate={controls}
       {...props}
     >
       {children}

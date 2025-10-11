@@ -214,15 +214,16 @@ export const enhancedPageRegistry: PageRegistry = {
   ),
   
   // Reporting Pages
-  'reporting/Dashboard': createLazyPage(
-    () => import('@/features/reporting/pages/Dashboard'),
-    {
-      title: 'Reports Dashboard - Laravel Accounting Platform',
-      description: 'Financial reports and analytics',
-      priority: 'medium',
-      bundle: 'reporting',
-    }
-  ),
+  // Note: Reporting Dashboard page not yet implemented
+  // 'reporting/Dashboard': createLazyPage(
+  //   () => import('@/features/reporting/pages/Dashboard'),
+  //   {
+  //     title: 'Reports Dashboard - Laravel Accounting Platform',
+  //     description: 'Financial reports and analytics',
+  //     priority: 'medium',
+  //     bundle: 'reporting',
+  //   }
+  // ),
 } as const;
 
 // Type for page names
