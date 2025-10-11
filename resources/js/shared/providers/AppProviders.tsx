@@ -17,6 +17,7 @@ import { store } from '../stores';
 import { apolloClient } from '../services/graphql/apollo-client';
 import { useAuth, useApp, useAppActions } from '../hooks/useRematchStore';
 import { SocketProvider } from './SocketProvider';
+import { AnimationProvider } from './AnimationProvider';
 import { pwaManager } from '../utils/pwa';
 import { PWAInstallPrompt } from '../components/pwa/PWAInstallPrompt';
 
@@ -212,23 +213,25 @@ export const AppProviders: React.FC<AppProvidersProps> = ({ children }) => {
       <Provider store={store}>
         <ApolloProvider client={apolloClient}>
             <ThemeProvider>
-              <DndProvider backend={HTML5Backend}>
-                <SocketProvider>
-                  <PerformanceMonitor>
-                    <ConnectionMonitor>
-                      <AppInitializer>
-                        <AuthInitializer>
-                          <Suspense fallback={<LoadingFallback />}>
-                            {children}
-                            <NotificationContainer />
-                            <PWAInstallPrompt />
-                          </Suspense>
-                        </AuthInitializer>
-                      </AppInitializer>
-                    </ConnectionMonitor>
-                  </PerformanceMonitor>
-                </SocketProvider>
-              </DndProvider>
+              <AnimationProvider enablePerformanceMonitoring={true}>
+                <DndProvider backend={HTML5Backend}>
+                  <SocketProvider>
+                    <PerformanceMonitor>
+                      <ConnectionMonitor>
+                        <AppInitializer>
+                          <AuthInitializer>
+                            <Suspense fallback={<LoadingFallback />}>
+                              {children}
+                              <NotificationContainer />
+                              <PWAInstallPrompt />
+                            </Suspense>
+                          </AuthInitializer>
+                        </AppInitializer>
+                      </ConnectionMonitor>
+                    </PerformanceMonitor>
+                  </SocketProvider>
+                </DndProvider>
+              </AnimationProvider>
             </ThemeProvider>
         </ApolloProvider>
       </Provider>
