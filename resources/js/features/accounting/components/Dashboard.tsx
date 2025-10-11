@@ -84,7 +84,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
     refetch: refetchAccounts,
   } = useAccounts(
     {
-      organizationId: orgId,
+      organizationId: orgId || undefined,
       accountType: state.selectedAccountTypes,
       isActive: true,
       searchTerm: state.filterOptions.searchTerm,
@@ -99,7 +99,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
     refetch: refetchTransactions,
   } = useTransactions(
     {
-      organizationId: orgId,
+      organizationId: orgId || undefined,
       dateRange: state.selectedDateRange,
       accountId: state.filterOptions.accountId,
       reconciled: state.filterOptions.reconciled,
@@ -114,7 +114,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
     error: balancesError,
     refetch: refetchBalances,
   } = useAccountBalances(
-    orgId,
+    orgId || undefined,
     state.selectedDateRange.end,
     { enabled: !!orgId }
   );
@@ -125,7 +125,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
     error: trialBalanceError,
     refetch: refetchTrialBalance,
   } = useTrialBalance(
-    orgId,
+    orgId || undefined,
     state.selectedDateRange.end,
     { enabled: !!orgId && state.viewMode === 'reports' }
   );
@@ -136,7 +136,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
     accounts: realtimeAccounts,
     lastUpdate: realtimeLastUpdate,
     isConnected: socketConnected,
-  } = useRealtimeAccounting(orgId);
+  } = useRealtimeAccounting(orgId || undefined);
 
   // Collaboration hooks for selected account
   const {

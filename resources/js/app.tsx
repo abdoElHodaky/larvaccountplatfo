@@ -2,9 +2,16 @@ import '../css/app.css';
 import './bootstrap';
 
 import { createRoot } from 'react-dom/client';
+
+// Extend Window interface for gtag
+declare global {
+  interface Window {
+    gtag?: (command: string, targetId: string, config?: any) => void;
+  }
+}
 import { createInertiaApp } from '@inertiajs/react';
 import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
-import { AppProviders } from './app/providers/AppProviders';
+import AppProviders from './app/providers/AppProviders';
 import { routePreloader } from './shared/utils/routeBasedLazyLoading';
 import { MobileOptimizationManager } from './shared/utils/mobileOptimization';
 import { PWAEnhancementManager } from './shared/utils/pwaEnhancements';
@@ -160,7 +167,9 @@ if (typeof window !== 'undefined') {
   addResourceHints();
   
   // Initialize route preloading
-  routePreloader.initialize();
+  if (routePreloader && typeof routePreloader.initialize === 'function') {
+    routePreloader.initialize();
+  }
 }
 
 /**
