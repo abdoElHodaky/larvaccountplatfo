@@ -12,20 +12,27 @@ export default {
         './resources/js/**/*.ts',
     ],
     
-    // Prevent conflicts with Chakra UI
+    // Optimized configuration for better performance
     corePlugins: {
-        preflight: false, // Disable Tailwind's base styles to avoid conflicts with Chakra UI
+        preflight: true, // Re-enable preflight for better CSS optimization
     },
     
-    // Safelist Chakra UI classes to prevent purging
+    // Optimized safelist - removed invalid patterns causing build warnings
     safelist: [
-        // Chakra UI class patterns
-        { pattern: /^chakra-.*/ },
-        { pattern: /^css-.*/ },
-        // Emotion class patterns (used by Chakra UI)
-        { pattern: /^emotion-.*/ },
-        // Common Chakra UI utility patterns
-        { pattern: /^(bg|text|border|shadow|rounded|p|m|w|h|flex|grid)-.*/ },
+        // Dynamic classes that might be generated programmatically
+        'bg-primary-50', 'bg-primary-100', 'bg-primary-500', 'bg-primary-600',
+        'text-primary-50', 'text-primary-100', 'text-primary-500', 'text-primary-600',
+        'border-primary-50', 'border-primary-100', 'border-primary-500', 'border-primary-600',
+        'bg-success-50', 'bg-success-500', 'text-success-50', 'text-success-500',
+        'bg-warning-50', 'bg-warning-500', 'text-warning-50', 'text-warning-500',
+        'bg-danger-50', 'bg-danger-500', 'text-danger-50', 'text-danger-500',
+        // Animation classes
+        'animate-fade-in', 'animate-slide-in', 'animate-bounce-in',
+        // Common dynamic utility classes
+        'opacity-0', 'opacity-25', 'opacity-50', 'opacity-75', 'opacity-100',
+        'scale-0', 'scale-50', 'scale-75', 'scale-90', 'scale-95', 'scale-100', 'scale-105', 'scale-110',
+        'translate-x-0', 'translate-y-0', '-translate-x-full', '-translate-y-full',
+        'rotate-0', 'rotate-45', 'rotate-90', 'rotate-180',
     ],
 
     theme: {

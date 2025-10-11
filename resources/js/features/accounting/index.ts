@@ -32,7 +32,7 @@ export {
 
 // Lazy component exports
 export {
-  ChartOfAccounts,
+  Accounts,
   TransactionList,
   TransactionForm,
   JournalEntries,

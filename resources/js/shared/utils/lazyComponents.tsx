@@ -52,22 +52,9 @@ export const CashFlowWidget = lazyWithRetry(
   () => import('../../features/dashboard/components/organisms/CashFlowWidget')
 );
 
-// Accounting Components - Feature-specific lazy loading
-export const ChartOfAccounts = lazyWithRetry(
-  () => import('../../features/accounting/components/organisms/ChartOfAccounts')
-);
-
-export const TransactionList = lazyWithRetry(
-  () => import('../../features/accounting/components/organisms/TransactionList')
-);
-
-export const TransactionForm = lazyWithRetry(
-  () => import('../../features/accounting/components/organisms/TransactionForm')
-);
-
-export const JournalEntries = lazyWithRetry(
-  () => import('../../features/accounting/components/organisms/JournalEntries')
-);
+// Accounting Components - Only lazy load components not used in static imports
+// Note: ChartOfAccounts, TransactionList, TransactionForm, JournalEntries are statically imported
+// in their respective pages, so we don't need lazy versions here
 
 export const BalanceSheet = lazyWithRetry(
   () => import('../../features/accounting/components/organisms/BalanceSheet')
@@ -120,10 +107,8 @@ export const BillingSettings = lazyWithRetry(
   () => import('../../features/organization/components/organisms/BillingSettings')
 );
 
-// Real-time Components
-export const WebSocketProvider = lazyWithRetry(
-  () => import('../components/realtime/WebSocketProvider')
-);
+// Real-time Components - Remove lazy loading for WebSocketProvider as it's statically imported
+// Note: WebSocketProvider is statically imported in useRealTimeNotifications.ts
 
 // Preload critical components
 export const preloadCriticalComponents = () => {
@@ -141,9 +126,11 @@ export const preloadByRole = (userRole: string, permissions: string[]) => {
     import('../../features/dashboard/components/organisms/MetricsCards');
   }
   
+  // Remove conflicting preloads for components that are statically imported
   if (permissions.includes('manage_transactions')) {
-    import('../../features/accounting/components/organisms/TransactionList');
-    import('../../features/accounting/components/organisms/TransactionForm');
+    // TransactionList and TransactionForm are statically imported in their pages
+    // Only preload components that are truly lazy-loaded
+    import('../../features/accounting/components/organisms/BalanceSheet');
   }
   
   if (permissions.includes('view_reports')) {
@@ -156,7 +143,7 @@ export const preloadByRole = (userRole: string, permissions: string[]) => {
   }
 };
 
-// Preload components based on route
+// Preload components based on route - only preload truly lazy components
 export const preloadByRoute = (currentRoute: string) => {
   switch (currentRoute) {
     case '/dashboard':
@@ -164,11 +151,14 @@ export const preloadByRoute = (currentRoute: string) => {
       import('../../features/dashboard/components/organisms/CashFlowWidget');
       break;
     case '/transactions':
-      import('../../features/accounting/components/organisms/TransactionForm');
-      import('../../features/accounting/components/organisms/JournalEntries');
+      // TransactionForm and JournalEntries are statically imported in their pages
+      // Only preload components that are truly lazy-loaded
+      import('../../features/accounting/components/organisms/BalanceSheet');
       break;
     case '/accounts':
-      import('../../features/accounting/components/organisms/TransactionList');
+      // TransactionList is statically imported in Accounts page
+      // Preload related components instead
+      import('../../features/accounting/components/organisms/BalanceSheet');
       break;
     case '/reports':
       import('../../features/accounting/components/organisms/BalanceSheet');

@@ -171,9 +171,10 @@ return [
         ],
 
         RequestReceived::class => [
-            // Only load Octane listeners if not in testing environment
-            ...(env('APP_ENV') === 'testing' ? [] : \Laravel\Octane\Facades\Octane::prepareApplicationForNextOperation()),
-            ...(env('APP_ENV') === 'testing' ? [] : \Laravel\Octane\Facades\Octane::prepareApplicationForNextRequest()),
+            // Temporarily disabled Octane facade calls for CI
+            // TODO: Re-enable after fixing bootstrap issues
+            // ...(env('APP_ENV') === 'testing' ? [] : \Laravel\Octane\Facades\Octane::prepareApplicationForNextOperation()),
+            // ...(env('APP_ENV') === 'testing' ? [] : \Laravel\Octane\Facades\Octane::prepareApplicationForNextRequest()),
             // Custom listeners for multi-tenant setup
             FlushTenantContext::class,
             SetupDatabaseConnection::class,
@@ -192,7 +193,8 @@ return [
         ],
 
         TaskReceived::class => [
-            ...(env('APP_ENV') === 'testing' ? [] : \Laravel\Octane\Facades\Octane::prepareApplicationForNextOperation()),
+            // Temporarily disabled Octane facade calls for CI
+            // ...(env('APP_ENV') === 'testing' ? [] : \Laravel\Octane\Facades\Octane::prepareApplicationForNextOperation()),
         ],
 
         TaskTerminated::class => [
@@ -200,7 +202,8 @@ return [
         ],
 
         TickReceived::class => [
-            ...(env('APP_ENV') === 'testing' ? [] : \Laravel\Octane\Facades\Octane::prepareApplicationForNextOperation()),
+            // Temporarily disabled Octane facade calls for CI
+            // ...(env('APP_ENV') === 'testing' ? [] : \Laravel\Octane\Facades\Octane::prepareApplicationForNextOperation()),
         ],
 
         TickTerminated::class => [

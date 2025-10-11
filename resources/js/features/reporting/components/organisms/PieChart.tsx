@@ -7,10 +7,10 @@ import {
   Legend,
   ResponsiveContainer,
 } from 'recharts';
-import { useColorModeValue } from '@chakra-ui/react';
 import { ChartContainer, ChartContainerProps } from './ChartContainer';
 import { useMemoizedCallback } from '@/shared/hooks';
 import { FinancialPerformanceUtils } from '@/shared/utils/performance';
+import { useChartFormatters, useChartData } from '../../hooks/useReportingData';
 
 /**
  * Performance-Optimized Pie Chart Component
@@ -65,11 +65,14 @@ export const PieChart: React.FC<PieChartProps> = memo(({
   ...containerProps
 }) => {
   const chartRef = useRef<SVGSVGElement>(null);
+  
+  // Get chart formatters from hook
+  const { formatCurrency, formatPercentage, generateColors } = useChartFormatters();
 
-  // Memoized color values
-  const textColor = useColorModeValue('#4a5568', '#a0aec0');
-  const tooltipBg = useColorModeValue('white', 'gray.800');
-  const tooltipBorder = useColorModeValue('gray.200', 'gray.600');
+  // Theme-aware colors (replace Chakra UI)
+  const textColor = '#4a5568';
+  const tooltipBg = 'white';
+  const tooltipBorder = '#e2e8f0';
 
   // Memoized color schemes
   const colorSchemes = useMemo(() => ({
@@ -115,9 +118,9 @@ export const PieChart: React.FC<PieChartProps> = memo(({
       return formatValue(value);
     }
     
-    // Default financial formatting
+    // Default financial formatting using hook
     if (typeof value === 'number') {
-      return FinancialPerformanceUtils.formatCurrency(value, 'USD');
+      return formatCurrency(value, 'USD');
     }
     
     return String(value);

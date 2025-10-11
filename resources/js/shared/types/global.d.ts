@@ -53,21 +53,9 @@ declare global {
   // Make route available as a global variable
   const route: (name: string, params?: any) => string;
   
-  // Google Analytics gtag function
+  // Window interface extensions
   interface Window {
-    gtag?: (
-      command: 'config' | 'event' | 'js' | 'set',
-      targetId: string | Date,
-      config?: any
-    ) => void;
-  }
-  
-  // Route preloader interface
-  interface RoutePreloader {
-    preloadedRoutes: Set<string>;
-    preloadRoute(routeName: string, importFn: () => Promise<any>): void;
-    preloadLikelyRoutes(currentRoute: string, routeMap: Record<string, () => Promise<any>>): void;
-    initialize?(): void;
+    FORGE_DEPLOYMENT?: boolean;
   }
 }
 

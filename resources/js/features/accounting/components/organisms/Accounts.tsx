@@ -7,12 +7,12 @@ import React, { useEffect } from 'react';
 import { useAccounts, useFilters } from '../../hooks/useAccounting';
 import type { Account } from '../../stores/accountingModel';
 
-interface ChartOfAccountsProps {
+interface AccountsProps {
   className?: string;
   onAccountSelect?: (account: Account) => void;
 }
 
-export const ChartOfAccounts: React.FC<ChartOfAccountsProps> = ({
+export const Accounts: React.FC<AccountsProps> = ({
   className = '',
   onAccountSelect,
 }) => {
@@ -236,4 +236,4 @@ export const ChartOfAccounts: React.FC<ChartOfAccountsProps> = ({
   );
 };
 
-export default ChartOfAccounts;
+export default Accounts;

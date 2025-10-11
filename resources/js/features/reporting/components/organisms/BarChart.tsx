@@ -204,7 +204,53 @@ export const BarChart: React.FC<BarChartProps> = memo(({
       URL.revokeObjectURL(url);
     } else {
       // Export chart as image (PNG/PDF)
-      // TODO: Implement image export functionality
+      try {
+        const chartElement = document.querySelector('.recharts-wrapper');
+        if (!chartElement) {
+          throw new Error('Chart element not found');
+        }
+
+        // Use html2canvas to capture the chart
+        const html2canvas = await import('html2canvas');
+        const canvas = await html2canvas.default(chartElement as HTMLElement, {
+          backgroundColor: '#ffffff',
+          scale: 2, // Higher resolution
+          useCORS: true,
+        });
+
+        if (format === 'png') {
+          // Download as PNG
+          const link = document.createElement('a');
+          link.download = `chart-${Date.now()}.png`;
+          link.href = canvas.toDataURL('image/png');
+          link.click();
+        } else if (format === 'pdf') {
+          // Convert to PDF using jsPDF
+          const jsPDF = await import('jspdf');
+          const pdf = new jsPDF.default();
+          const imgData = canvas.toDataURL('image/png');
+          const imgWidth = 210;
+          const pageHeight = 295;
+          const imgHeight = (canvas.height * imgWidth) / canvas.width;
+          let heightLeft = imgHeight;
+
+          let position = 0;
+          pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+          heightLeft -= pageHeight;
+
+          while (heightLeft >= 0) {
+            position = heightLeft - imgHeight;
+            pdf.addPage();
+            pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+            heightLeft -= pageHeight;
+          }
+
+          pdf.save(`chart-${Date.now()}.pdf`);
+        }
+      } catch (error) {
+        console.error('Failed to export chart:', error);
+        // You might want to show a toast notification here
+      }
     }
   }, [processedData, processedSeries, xAxisKey]);
 
