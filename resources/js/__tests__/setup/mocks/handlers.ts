@@ -81,9 +81,9 @@ export const restHandlers = [
 // GraphQL Handlers
 export const graphqlHandlers = [
   // User queries
-  graphql.query('GetCurrentUser', (req, res, ctx) => {
-    return res(
-      ctx.data({
+  graphql.query('GetCurrentUser', () => {
+    return Response.json({
+      data: {
         currentUser: {
           id: '1',
           email: 'test@example.com',
@@ -95,14 +95,14 @@ export const graphqlHandlers = [
             notifications: true,
           },
         },
-      })
-    );
+      }
+    });
   }),
 
   // Accounting queries
-  graphql.query('GetChartOfAccounts', (req, res, ctx) => {
-    return res(
-      ctx.data({
+  graphql.query('GetChartOfAccounts', () => {
+    return Response.json({
+      data: {
         chartOfAccounts: [
           {
             id: '1',
@@ -121,13 +121,13 @@ export const graphqlHandlers = [
             parentId: null,
           },
         ],
-      })
-    );
+      }
+    });
   }),
 
-  graphql.query('GetTransactions', (req, res, ctx) => {
-    return res(
-      ctx.data({
+  graphql.query('GetTransactions', () => {
+    return Response.json({
+      data: {
         transactions: {
           edges: [
             {
@@ -149,32 +149,32 @@ export const graphqlHandlers = [
             hasPreviousPage: false,
           },
         },
-      })
-    );
+      }
+    });
   }),
 
   // Mutations
-  graphql.mutation('UpdateUserPreferences', (req, res, ctx) => {
-    return res(
-      ctx.data({
+  graphql.mutation('UpdateUserPreferences', ({ variables }) => {
+    return Response.json({
+      data: {
         updateUserPreferences: {
           id: '1',
-          preferences: req.variables.preferences,
+          preferences: variables.preferences,
         },
-      })
-    );
+      }
+    });
   }),
 
-  graphql.mutation('ReconcileTransactions', (req, res, ctx) => {
-    return res(
-      ctx.data({
+  graphql.mutation('ReconcileTransactions', ({ variables }) => {
+    return Response.json({
+      data: {
         reconcileTransactions: {
           success: true,
-          reconciledCount: req.variables.transactionIds.length,
+          reconciledCount: variables.transactionIds.length,
           errors: [],
         },
-      })
-    );
+      }
+    });
   }),
 ];
 

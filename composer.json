@@ -29,7 +29,7 @@
         "docs": "https://github.com/abdoElHodaky/larvaccountplatfo/wiki"
     },
     "require": {
-        "php": "^8.3",
+        "php": "^8.2",
         "barryvdh/laravel-dompdf": "^2.2",
         "brick/math": "^0.12",
         "brick/money": "^0.9",
@@ -62,23 +62,21 @@
         "spatie/laravel-query-builder": "^5.8"
     },
     "require-dev": {
-        "fakerphp/faker": "^1.23",
-        "laravel/pint": "^1.13",
-        "laravel/sail": "^1.26",
-        "mockery/mockery": "^1.6",
-        "nunomaduro/collision": "^8.0",
-        "phpunit/phpunit": "^11.0",
-        "spatie/laravel-ignition": "^2.4",
         "barryvdh/laravel-debugbar": "^3.9",
         "barryvdh/laravel-ide-helper": "^3.0",
         "beyondcode/laravel-dump-server": "^2.0",
+        "fakerphp/faker": "^1.23",
         "filp/whoops": "^2.15",
         "friendsofphp/php-cs-fixer": "^3.48",
         "larastan/larastan": "^2.8",
+        "laravel/pint": "^1.25",
+        "laravel/sail": "^1.26",
+        "mockery/mockery": "^1.6",
+        "nunomaduro/collision": "^8.0",
         "pestphp/pest": "^3.0",
-        "pestphp/pest-plugin-arch": "^3.1",
         "pestphp/pest-plugin-laravel": "^3.0",
-        "pestphp/pest-plugin-mutate": "^3.0"
+        "phpunit/phpunit": "^11.0",
+        "spatie/laravel-ignition": "^2.4"
     },
     "autoload": {
         "psr-4": {
