@@ -1,5 +1,6 @@
 // React import removed - not needed for this component
-import { Head, Link } from '@inertiajs/react';
+import { Link } from '@inertiajs/react';
+import { DocumentHead } from '@/shared/components/seo/DocumentHead';
 import AppLayout from '@/shared/components/layouts/AppLayout';
 import { formatCurrency, formatDate, formatNumber } from '@/shared/utils';
 import { Product, StockMovement, InventoryStats } from '../types';
@@ -27,7 +28,10 @@ export default function Dashboard({
     if (error) {
         return (
             <AppLayout>
-                <Head title="Inventory Dashboard" />
+                <DocumentHead 
+                    title="Inventory Dashboard" 
+                    description="Inventory dashboard error page"
+                />
                 <div className="bg-red-50 border border-red-200 rounded-md p-4">
                     <div className="flex">
                         <div className="ml-3">
@@ -48,7 +52,10 @@ export default function Dashboard({
 
     return (
         <AppLayout>
-            <Head title="Inventory Dashboard" />
+            <DocumentHead 
+                title="Inventory Dashboard" 
+                description="Inventory management dashboard with stock levels and product overview"
+            />
             
             <div className="space-y-6">
                 {/* Header */}

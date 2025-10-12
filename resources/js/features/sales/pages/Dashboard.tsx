@@ -1,5 +1,6 @@
 import React from 'react';
-import { Head, Link } from '@inertiajs/react';
+import { Link } from '@inertiajs/react';
+import { DocumentHead } from '@/shared/components/seo/DocumentHead';
 import AppLayout from '@/shared/components/layouts/AppLayout';
 import { formatCurrency, formatDate, formatNumber } from '@/shared/utils';
 import { SalesOrder, Customer, SalesStats, SalesTrends } from '../types';
@@ -27,7 +28,10 @@ export default function Dashboard({
     if (error) {
         return (
             <AppLayout>
-                <Head title="Sales Dashboard" />
+                <DocumentHead 
+                    title="Sales Dashboard" 
+                    description="Sales dashboard error page"
+                />
                 <div className="bg-red-50 border border-red-200 rounded-md p-4">
                     <div className="flex">
                         <div className="ml-3">
@@ -48,7 +52,10 @@ export default function Dashboard({
 
     return (
         <AppLayout>
-            <Head title="Sales Dashboard" />
+            <DocumentHead 
+                title="Sales Dashboard" 
+                description="Sales performance dashboard with revenue metrics and customer insights"
+            />
             
             <div className="space-y-6">
                 {/* Header */}

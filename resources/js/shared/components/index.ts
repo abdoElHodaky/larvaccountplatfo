@@ -22,6 +22,9 @@ export * from './animations';
 export { AnimatedCard, useAnimatedCard } from './animations/AnimatedCard';
 export { AnimatedList, AnimatedListItem, useAnimatedList } from './animations/AnimatedList';
 
+// Phase 5 SEO Components - Inertia.js Migration
+export { DocumentHead, Head } from './seo/DocumentHead';
+
 // Phase 5 Enhanced Components - HeadlessUI + LiveIcons Integration
 export { EnhancedMenu, ActionMenu } from './enhanced/EnhancedMenu';
 export { EnhancedDialog, ConfirmDialog } from './enhanced/EnhancedDialog';

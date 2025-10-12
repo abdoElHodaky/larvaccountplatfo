@@ -282,9 +282,9 @@ export const DashboardContainer: React.FC<DashboardContainerProps> = ({
     return (
       <div className="dashboard-container">
         <LoadingSpinner 
-          message="Loading dashboard..." 
-          size="large"
-          showProgress={true}
+          label="Loading dashboard..." 
+          size="lg"
+          overlay={true}
         />
       </div>
     );

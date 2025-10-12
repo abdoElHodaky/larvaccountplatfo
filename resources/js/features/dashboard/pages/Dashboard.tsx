@@ -1,4 +1,4 @@
-import { Head } from '@inertiajs/react';
+import { DocumentHead } from '@/shared/components/seo/DocumentHead';
 import AppLayout from '@/shared/components/layouts/AppLayout';
 import { 
   StatusChartIcon, 
@@ -117,7 +117,10 @@ export default function Dashboard({ tenant, user, stats, recentActivity, quickAc
 
     return (
         <AppLayout>
-            <Head title="Dashboard" />
+            <DocumentHead 
+                title="Dashboard" 
+                description="Main dashboard with organization overview and quick actions"
+            />
 
             <div className="space-y-6">
                 {/* Welcome Section */}

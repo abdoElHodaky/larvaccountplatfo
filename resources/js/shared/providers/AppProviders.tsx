@@ -7,6 +7,7 @@ import React, { Suspense, useEffect } from 'react';
 import { Provider } from 'react-redux';
 import { ApolloProvider } from '@apollo/client';
 import { ChakraProvider, ColorModeScript } from '@chakra-ui/react';
+import { HelmetProvider } from 'react-helmet-async';
 
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
@@ -203,9 +204,10 @@ export const AppProviders: React.FC<AppProvidersProps> = ({ children }) => {
       onError={handleError}
       onReset={() => window.location.reload()}
     >
-      <Provider store={store}>
-        <ApolloProvider client={apolloClient}>
-            <ThemeProvider>
+      <HelmetProvider>
+        <Provider store={store}>
+          <ApolloProvider client={apolloClient}>
+              <ThemeProvider>
               <DndProvider backend={HTML5Backend}>
                 <SocketProvider>
                   <AnimationProvider>
@@ -225,9 +227,10 @@ export const AppProviders: React.FC<AppProvidersProps> = ({ children }) => {
                   </AnimationProvider>
                 </SocketProvider>
               </DndProvider>
-            </ThemeProvider>
-        </ApolloProvider>
-      </Provider>
+              </ThemeProvider>
+          </ApolloProvider>
+        </Provider>
+      </HelmetProvider>
     </ErrorBoundary>
   );
 };
