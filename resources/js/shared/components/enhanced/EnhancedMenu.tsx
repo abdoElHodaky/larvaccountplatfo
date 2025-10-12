@@ -5,7 +5,7 @@
 
 import React, { Fragment } from 'react';
 import { Menu, Transition } from '@headlessui/react';
-import { ChevronDownIcon } from '@heroicons/react/20/solid';
+import { NavChevronDownIcon } from '@/shared/icons';
 import { 
   LiveChevronDownIcon, 
   LiveMenuToggleIcon,
@@ -163,4 +163,3 @@ export const ActionMenu: React.FC<Omit<EnhancedMenuProps, 'items'> & {
 
   return <EnhancedMenu items={items} {...props} />;
 };
-

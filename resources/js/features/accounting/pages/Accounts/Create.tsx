@@ -2,7 +2,7 @@ import React from 'react';
 import { Head, Link, useForm } from '@inertiajs/react';
 import AppLayout from '@/shared/components/layouts/AppLayout';
 import { Account, PageProps, SelectOption } from '@/shared/types';
-import { ArrowLeftIcon } from '@heroicons/react/24/outline';
+import { NavBackIcon } from '@/shared/icons';
 import AnimatedFormInput from '@/shared/components/AnimatedFormInput';
 
 interface Props extends PageProps {
@@ -62,7 +62,7 @@ export default function CreateAccount({ parentAccounts, accountTypes, accountSub
                                 href={route('accounting.accounts.index')}
                                 className="inline-flex items-center text-sm font-medium text-gray-500 hover:text-gray-700"
                             >
-                                <ArrowLeftIcon className="h-4 w-4 mr-1" />
+                                <NavBackIcon size="sm" className="mr-1" />
                                 Back to Accounts
                             </Link>
                         </div>

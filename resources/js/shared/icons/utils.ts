@@ -6,7 +6,8 @@
 import React, { Suspense } from 'react';
 import { animate, animations } from '../animations';
 import { iconRegistry } from './IconRegistry';
-import type { IconProps, ICON_SIZES, ICON_COLORS, ICON_ANIMATIONS } from './types';
+import type { IconProps } from './types';
+import { ICON_SIZES, ICON_COLORS, ICON_ANIMATIONS } from './types';
 
 // Enhanced LiveIcon component with parallel processing
 export const createLiveIcon = (
@@ -124,30 +125,35 @@ export const createLiveIcon = (
 
       if (isLoading || !IconComponent) {
         // Loading placeholder
-        return (
-          <div 
-            className={`${ICON_SIZES[size]} ${ICON_COLORS[color]} animate-pulse bg-current opacity-20 rounded`}
-            style={{ aspectRatio: '1' }}
-          />
-        );
+        const loadingClasses = [
+          ICON_SIZES[size], 
+          ICON_COLORS[color], 
+          'animate-pulse', 
+          'bg-current', 
+          'opacity-20', 
+          'rounded'
+        ].join(' ');
+        
+        return React.createElement('div', {
+          className: loadingClasses,
+          style: { aspectRatio: '1' }
+        });
       }
 
-      const classes = `
-        ${ICON_SIZES[size]}
-        ${ICON_COLORS[color]}
-        ${animated ? 'transition-all duration-200' : ''}
-        ${onClick ? 'cursor-pointer' : ''}
-        ${className}
-      `.trim();
+      const classes = [
+        ICON_SIZES[size],
+        ICON_COLORS[color],
+        animated ? 'transition-all duration-200' : '',
+        onClick ? 'cursor-pointer' : '',
+        className
+      ].filter(Boolean).join(' ');
 
-      return (
-        <IconComponent
-          ref={ref || iconRef}
-          className={classes}
-          onClick={onClick}
-          {...props}
-        />
-      );
+      return React.createElement(IconComponent, {
+        ref: ref || iconRef,
+        className: classes,
+        onClick: onClick,
+        ...props
+      });
     }
   );
 };
@@ -156,16 +162,23 @@ export const createLiveIcon = (
 export const DynamicIcon: React.FC<IconProps & { name: string }> = ({ name, ...props }) => {
   const IconComponent = React.useMemo(() => createLiveIcon(name), [name]);
   
-  return (
-    <Suspense fallback={
-      <div 
-        className={`${ICON_SIZES[props.size || 'md']} ${ICON_COLORS[props.color || 'gray']} animate-pulse bg-current opacity-20 rounded`}
-        style={{ aspectRatio: '1' }}
-      />
-    }>
-      <IconComponent {...props} />
-    </Suspense>
-  );
+  const fallbackClasses = [
+    ICON_SIZES[props.size || 'md'], 
+    ICON_COLORS[props.color || 'gray'], 
+    'animate-pulse', 
+    'bg-current', 
+    'opacity-20', 
+    'rounded'
+  ].join(' ');
+  
+  const fallbackElement = React.createElement('div', {
+    className: fallbackClasses,
+    style: { aspectRatio: '1' }
+  });
+  
+  return React.createElement(Suspense, {
+    fallback: fallbackElement
+  }, React.createElement(IconComponent, props));
 };
 
 // Batch icon preloader for performance optimization

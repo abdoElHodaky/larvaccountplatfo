@@ -352,7 +352,7 @@ export const IntegrationShowcase: React.FC = () => {
           <h2 className="text-2xl font-semibold mb-4">Performance Metrics</h2>
           <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
             <div className="text-center">
-              <div className="text-3xl font-bold text-primary-600">⚡ <50ms</div>
+              <div className="text-3xl font-bold text-primary-600">⚡ &lt;50ms</div>
               <div className="text-sm text-gray-600">Animation Start Time</div>
             </div>
             <div className="text-center">
@@ -406,4 +406,3 @@ export const IntegrationShowcase: React.FC = () => {
     </div>
   );
 };
-
