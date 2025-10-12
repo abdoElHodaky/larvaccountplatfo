@@ -45,7 +45,18 @@ export const StatusIcons = createIconSet([
   'status-error',
   'status-warning',
   'status-info',
-  'status-loading'
+  'status-loading',
+  'status-chart',
+  'status-document',
+  'status-bank',
+  'status-box',
+  'status-trend-up',
+  'status-trend-down',
+  'status-trend-right',
+  'status-free',
+  'status-business',
+  'status-enterprise',
+  'status-wave'
 ]);
 
 // Individual icon exports for tree-shaking
@@ -55,6 +66,7 @@ export const NavBackIcon = createLiveIcon('nav-back');
 export const NavForwardIcon = createLiveIcon('nav-forward');
 export const NavUpIcon = createLiveIcon('nav-up');
 export const NavDownIcon = createLiveIcon('nav-down');
+export const NavChevronDownIcon = createLiveIcon('nav-down'); // Alias for compatibility
 export const NavLeftIcon = createLiveIcon('nav-left');
 export const NavRightIcon = createLiveIcon('nav-right');
 export const NavMenuIcon = createLiveIcon('nav-menu');
@@ -85,6 +97,17 @@ export const StatusErrorIcon = createLiveIcon('status-error');
 export const StatusWarningIcon = createLiveIcon('status-warning');
 export const StatusInfoIcon = createLiveIcon('status-info');
 export const StatusLoadingIcon = createLiveIcon('status-loading');
+export const StatusChartIcon = createLiveIcon('status-chart');
+export const StatusDocumentIcon = createLiveIcon('status-document');
+export const StatusBankIcon = createLiveIcon('status-bank');
+export const StatusBoxIcon = createLiveIcon('status-box');
+export const StatusTrendUpIcon = createLiveIcon('status-trend-up');
+export const StatusTrendDownIcon = createLiveIcon('status-trend-down');
+export const StatusTrendRightIcon = createLiveIcon('status-trend-right');
+export const StatusFreeIcon = createLiveIcon('status-free');
+export const StatusBusinessIcon = createLiveIcon('status-business');
+export const StatusEnterpriseIcon = createLiveIcon('status-enterprise');
+export const StatusWaveIcon = createLiveIcon('status-wave');
 
 // Convenience aliases for common icons (backward compatibility)
 export const HomeIcon = NavHomeIcon;

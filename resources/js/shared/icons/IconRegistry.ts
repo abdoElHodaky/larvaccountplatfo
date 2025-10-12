@@ -225,6 +225,83 @@ const STATUS_ICONS: Record<string, Omit<IconRegistryEntry, 'component'> & { impo
     defaultAnimation: 'loading',
     description: 'Loading/spinner icon',
     import: () => import('@heroicons/react/24/outline').then(m => ({ default: m.ArrowPathIcon }))
+  },
+  'status-chart': {
+    name: 'status-chart',
+    category: 'status',
+    defaultAnimation: 'pulse',
+    description: 'Chart/analytics icon',
+    import: () => import('@heroicons/react/24/outline').then(m => ({ default: m.ChartBarIcon }))
+  },
+  'status-document': {
+    name: 'status-document',
+    category: 'status',
+    defaultAnimation: 'pulse',
+    description: 'Document icon',
+    import: () => import('@heroicons/react/24/outline').then(m => ({ default: m.DocumentIcon }))
+  },
+  'status-bank': {
+    name: 'status-bank',
+    category: 'status',
+    defaultAnimation: 'pulse',
+    description: 'Bank/building icon',
+    import: () => import('@heroicons/react/24/outline').then(m => ({ default: m.BuildingLibraryIcon }))
+  },
+  'status-box': {
+    name: 'status-box',
+    category: 'status',
+    defaultAnimation: 'bounce',
+    description: 'Box/package icon',
+    import: () => import('@heroicons/react/24/outline').then(m => ({ default: m.CubeIcon }))
+  },
+  'status-trend-up': {
+    name: 'status-trend-up',
+    category: 'status',
+    defaultAnimation: 'bounce',
+    description: 'Trending up icon',
+    import: () => import('@heroicons/react/24/outline').then(m => ({ default: m.TrendingUpIcon }))
+  },
+  'status-trend-down': {
+    name: 'status-trend-down',
+    category: 'status',
+    defaultAnimation: 'bounce',
+    description: 'Trending down icon',
+    import: () => import('@heroicons/react/24/outline').then(m => ({ default: m.TrendingDownIcon }))
+  },
+  'status-trend-right': {
+    name: 'status-trend-right',
+    category: 'status',
+    defaultAnimation: 'bounce',
+    description: 'Trending right icon',
+    import: () => import('@heroicons/react/24/outline').then(m => ({ default: m.ArrowRightIcon }))
+  },
+  'status-free': {
+    name: 'status-free',
+    category: 'status',
+    defaultAnimation: 'pulse',
+    description: 'Free/gift icon',
+    import: () => import('@heroicons/react/24/outline').then(m => ({ default: m.GiftIcon }))
+  },
+  'status-business': {
+    name: 'status-business',
+    category: 'status',
+    defaultAnimation: 'pulse',
+    description: 'Business/briefcase icon',
+    import: () => import('@heroicons/react/24/outline').then(m => ({ default: m.BriefcaseIcon }))
+  },
+  'status-enterprise': {
+    name: 'status-enterprise',
+    category: 'status',
+    defaultAnimation: 'pulse',
+    description: 'Enterprise/building icon',
+    import: () => import('@heroicons/react/24/outline').then(m => ({ default: m.BuildingOfficeIcon }))
+  },
+  'status-wave': {
+    name: 'status-wave',
+    category: 'status',
+    defaultAnimation: 'wave',
+    description: 'Wave/greeting icon',
+    import: () => import('@heroicons/react/24/outline').then(m => ({ default: m.HandRaisedIcon }))
   }
 };
 
