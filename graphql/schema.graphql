@@ -119,6 +119,32 @@ type Query {
     ): ProfitLoss @field(resolver: "App\\Features\\Accounting\\GraphQL\\Queries\\ProfitLoss")
 }
 
+"Real-time subscriptions"
+type Subscription {
+    # Accounting Subscriptions
+    "Subscribe to transaction updates for an organization"
+    transactionUpdates(organizationId: ID!): Transaction
+        @subscription(class: "App\\Features\\Accounting\\GraphQL\\Subscriptions\\TransactionUpdates")
+
+    "Subscribe to account balance updates"
+    accountBalanceUpdates(organizationId: ID!): AccountBalance
+        @subscription(class: "App\\Features\\Accounting\\GraphQL\\Subscriptions\\AccountBalanceUpdates")
+
+    # Inventory Subscriptions
+    "Subscribe to stock level updates"
+    stockUpdates(organizationId: ID!): Product
+        @subscription(class: "App\\Features\\Inventory\\GraphQL\\Subscriptions\\StockUpdates")
+
+    "Subscribe to low stock alerts"
+    lowStockAlerts(organizationId: ID!): Product
+        @subscription(class: "App\\Features\\Inventory\\GraphQL\\Subscriptions\\LowStockAlerts")
+
+    # Dashboard Subscriptions
+    "Subscribe to dashboard metrics updates"
+    dashboardMetricsUpdates(organizationId: ID!): DashboardMetrics
+        @subscription(class: "App\\Features\\Dashboard\\GraphQL\\Subscriptions\\DashboardMetricsUpdates")
+}
+
 "Account for mutations"
 type Mutation {
     # Inventory Mutations
@@ -318,6 +344,21 @@ type ProfitLoss {
     total_expenses: Float!
     gross_profit: Float!
     net_income: Float!
+}
+
+# Dashboard Metrics Type for Subscriptions
+type DashboardMetrics {
+    organization_id: ID!
+    metric_type: String!
+    total_revenue: Float
+    total_expenses: Float
+    net_income: Float
+    cash_flow: Float
+    total_products: Int
+    low_stock_items: Int
+    out_of_stock_items: Int
+    total_inventory_value: Float
+    updated_at: DateTime!
 }
 
 # Enums

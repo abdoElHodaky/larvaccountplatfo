@@ -29,7 +29,7 @@ return [
          */
         'middleware' => [
             \Nuwave\Lighthouse\Support\Http\Middleware\AcceptJson::class,
-            // 'auth:sanctum', // Uncomment to require authentication
+            'auth:sanctum', // Enable Sanctum authentication for GraphQL
         ],
 
         /*
