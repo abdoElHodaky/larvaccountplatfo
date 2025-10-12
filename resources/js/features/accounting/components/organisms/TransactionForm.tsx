@@ -17,6 +17,17 @@ interface TransactionFormData {
   notes?: string;
 }
 
+interface TransactionFormErrors {
+  date?: string;
+  description?: string;
+  account?: string;
+  amount?: string;
+  type?: string;
+  reference?: string;
+  category?: string;
+  notes?: string;
+}
+
 interface TransactionFormProps {
   initialData?: Partial<TransactionFormData>;
   onSubmit: (data: TransactionFormData) => void;
@@ -43,7 +54,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
     notes: initialData.notes || ''
   });
 
-  const [errors, setErrors] = useState<Partial<TransactionFormData>>({});
+  const [errors, setErrors] = useState<TransactionFormErrors>({});
 
   const accounts = [
     'Cash',
@@ -68,7 +79,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
   ];
 
   const validateForm = (): boolean => {
-    const newErrors: Partial<TransactionFormData> = {};
+    const newErrors: TransactionFormErrors = {};
 
     if (!formData.date) {
       newErrors.date = 'Date is required';
@@ -214,7 +225,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
                 <AnimatedFormInput
                   type="number"
                   label="Amount *"
-                  value={formData.amount.toString()}
+                  value={formData.amount?.toString() || ''}
                   onChange={(e) => handleInputChange('amount', parseFloat(e.target.value) || 0)}
                   min="0"
                   step="0.01"
