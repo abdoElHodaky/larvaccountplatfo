@@ -1,4 +1,4 @@
-import React, { Fragment, memo, useMemo, useState } from 'react';
+import { Fragment, memo, useMemo, useState } from 'react';
 import {
   Box,
   VStack,

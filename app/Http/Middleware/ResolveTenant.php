@@ -28,7 +28,7 @@ class ResolveTenant
         // Resolve tenant from request
         $tenant = $this->resolveTenantFromRequest($request);
 
-        if (!$tenant) {
+        if (! $tenant) {
             return $this->handleTenantNotFound($request);
         }
 
@@ -56,7 +56,6 @@ class ResolveTenant
 
         // Try to resolve from custom domain (if implemented)
         // This would be for tenants with custom domains
-        return null;
     }
 
     /**
@@ -66,7 +65,7 @@ class ResolveTenant
     {
         // Store tenant in app container
         app()->instance('tenant', $tenant);
-        
+
         // Store tenant strategy for models
         app()->instance('tenant_strategy', $tenant->database_strategy);
 
@@ -83,12 +82,12 @@ class ResolveTenant
     private function configureDatabaseConnection($tenant): void
     {
         $connectionName = $this->tenantResolver->getDatabaseConnection($tenant);
-        
+
         // Set the default database connection
         Config::set('database.default', $connectionName);
-        
+
         // Configure the specific connection if it doesn't exist
-        if (!Config::has("database.connections.{$connectionName}")) {
+        if (! Config::has("database.connections.{$connectionName}")) {
             $this->createDatabaseConnection($tenant, $connectionName);
         }
 
@@ -181,7 +180,7 @@ class ResolveTenant
         if ($request->expectsJson()) {
             return response()->json([
                 'error' => 'Tenant not found',
-                'message' => 'The requested tenant could not be found or is inactive.'
+                'message' => 'The requested tenant could not be found or is inactive.',
             ], 404);
         }
 
@@ -189,4 +188,3 @@ class ResolveTenant
         return redirect()->route('tenant.select');
     }
 }
-

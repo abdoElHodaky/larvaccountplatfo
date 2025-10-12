@@ -5,7 +5,7 @@
  * Centralized state management for the application.
  */
 
-import { init, RematchDispatch, RematchRootState } from '@rematch/core';
+import { init, RematchDispatch, RematchRootState } from '@rematch/PATTERNS';
 import persistPlugin from '@rematch/persist';
 import loadingPlugin, { ExtraModelsFromLoading } from '@rematch/loading';
 import { appModel, type AppModel } from './models/appModel';
@@ -20,11 +20,11 @@ import { setDevToolsStore } from '../utils/devTools';
 
 // Define the models interface
 export interface RootModel {
-  app: AppModel;
-  auth: AuthModel;
-  accounting: AccountingModel;
-  inventory: InventoryModel;
-  dashboard: DashboardModel;
+  app: typeof appModel;
+  auth: typeof authModel;
+  accounting: typeof accountingModel;
+  inventory: typeof inventoryModel;
+  dashboard: typeof dashboardModel;
   [key: string]: any;
 }
 

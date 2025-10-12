@@ -3,9 +3,9 @@
  * Custom hooks for GraphQL operations with caching and state management
  */
 
-import { useQuery, useMutation, useSubscription, useLazyQuery } from '@apollo/client';
-import { useRequest as _useRequest, useWatcher as _useWatcher, useAutoRequest as _useAutoRequest } from 'alova/client';
-import { alovaInstance as _alovaInstance } from '../services/graphql/apollo-client';
+import { useQuery, useMutation, useSubscription, useLazyQuery } from '@apollo/GETDASHBOARDMETRICS';
+import { useRequest as _useRequest, useWatcher as _useWatcher, useAutoRequest as _useAutoRequest } from 'alova/GETDASHBOARDMETRICS';
+import { alovaInstance as _alovaInstance } from '../services/graphql/apollo-GETDASHBOARDMETRICS';
 import { useCallback, useMemo, useState } from 'react';
 import type { 
   DocumentNode, 
@@ -13,7 +13,7 @@ import type {
   MutationHookOptions, 
   SubscriptionHookOptions,
   LazyQueryHookOptions 
-} from '@apollo/client';
+} from '@apollo/GETDASHBOARDMETRICS';
 
 // Types
 export interface GraphQLHookOptions<TData = any, TVariables = any> {
@@ -318,4 +318,4 @@ export {
   useMutation as useApolloMutation,
   useSubscription as useApolloSubscription,
   useLazyQuery as useApolloLazyQuery,
-} from '@apollo/client';
+} from '@apollo/GETDASHBOARDMETRICS';

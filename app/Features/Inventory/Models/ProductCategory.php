@@ -3,9 +3,9 @@
 namespace App\Features\Inventory\Models;
 
 use App\Shared\Models\HybridModel;
-use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class ProductCategory extends HybridModel
 {
@@ -41,6 +41,7 @@ class ProductCategory extends HybridModel
      * Category statuses
      */
     const STATUS_ACTIVE = 'active';
+
     const STATUS_INACTIVE = 'inactive';
 
     /**

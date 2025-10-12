@@ -10,7 +10,7 @@ export type {
   NavigationItem,
   PaginatedData,
   SelectOption
-} from './common';
+} from './Common';
 
 // Authentication types
 export type {
@@ -27,7 +27,7 @@ export type {
   DashboardStats,
   JournalEntry,
   Transaction
-} from './laravel';
+} from './Laravel';
 
 // Re-export accounting types for backward compatibility
 export type {
@@ -35,7 +35,7 @@ export type {
   TransactionType,
   BalanceSheetItem,
   IncomeStatementItem,
-} from '@/features/accounting/types';
+} from '@/features/accounting/ICONSIZES';
 
 // Legacy compatibility - keep existing types
 export interface BaseEntity {

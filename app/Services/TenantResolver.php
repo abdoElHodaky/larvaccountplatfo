@@ -9,8 +9,11 @@ use Illuminate\Support\Facades\DB;
 class TenantResolver
 {
     private const ENTERPRISE_USER_THRESHOLD = 1000;
+
     private const ENTERPRISE_TRANSACTION_THRESHOLD = 100000;
+
     private const HIGH_VOLUME_PLANS = ['enterprise', 'premium'];
+
     private const CACHE_TTL = 3600; // 1 hour
 
     /**
@@ -21,7 +24,7 @@ class TenantResolver
         return Cache::remember(
             "tenant:subdomain:{$subdomain}",
             self::CACHE_TTL,
-            fn() => Tenant::where('subdomain', $subdomain)
+            fn () => Tenant::where('subdomain', $subdomain)
                 ->where('is_active', true)
                 ->first()
         );
@@ -36,6 +39,7 @@ class TenantResolver
         $parts = explode('.', $domain);
         if (count($parts) >= 2) {
             $subdomain = $parts[0];
+
             return $this->resolveBySubdomain($subdomain);
         }
 
@@ -52,7 +56,7 @@ class TenantResolver
             return 'dedicated';
         }
 
-        // Rule 2: High user count → Dedicated database  
+        // Rule 2: High user count → Dedicated database
         if ($tenant->user_count >= self::ENTERPRISE_USER_THRESHOLD) {
             return 'dedicated';
         }
@@ -95,10 +99,10 @@ class TenantResolver
         switch ($tenant->database_strategy) {
             case 'dedicated':
                 return "tenant_{$tenant->id}";
-            
+
             case 'clustered':
                 return "cluster_{$tenant->region}";
-            
+
             case 'shared':
             default:
                 return $this->getSharedDatabaseConnection($tenant);
@@ -112,6 +116,7 @@ class TenantResolver
     {
         // Distribute tenants across 4 shared shards based on tenant ID
         $shardNumber = ($tenant->id % 4) + 1;
+
         return "shared_shard_{$shardNumber}";
     }
 
@@ -122,9 +127,9 @@ class TenantResolver
     {
         $supportedRegions = [
             'us-east-1',
-            'us-west-2', 
+            'us-west-2',
             'eu-west-1',
-            'ap-southeast-1'
+            'ap-southeast-1',
         ];
 
         return in_array($region, $supportedRegions);
@@ -136,7 +141,7 @@ class TenantResolver
     public function updateTenantStats(Tenant $tenant): void
     {
         $connection = $this->getDatabaseConnection($tenant);
-        
+
         // Update user count
         $userCount = DB::connection($connection)
             ->table('users')
@@ -198,9 +203,9 @@ class TenantResolver
         return Tenant::where('database_strategy', 'shared')
             ->where(function ($query) {
                 $query->where('user_count', '>=', self::ENTERPRISE_USER_THRESHOLD)
-                      ->orWhere('monthly_transaction_count', '>=', self::ENTERPRISE_TRANSACTION_THRESHOLD)
-                      ->orWhereIn('plan', self::HIGH_VOLUME_PLANS)
-                      ->orWhere('requires_data_isolation', true);
+                    ->orWhere('monthly_transaction_count', '>=', self::ENTERPRISE_TRANSACTION_THRESHOLD)
+                    ->orWhereIn('plan', self::HIGH_VOLUME_PLANS)
+                    ->orWhere('requires_data_isolation', true);
             })
             ->get();
     }
@@ -232,10 +237,11 @@ class TenantResolver
     protected function configureDedicatedDatabase(Tenant $tenant): void
     {
         $connectionName = "tenant_{$tenant->id}";
-        
+
         // Check if connection already exists
         if (array_key_exists($connectionName, config('database.connections', []))) {
             DB::setDefaultConnection($connectionName);
+
             return;
         }
 
@@ -273,16 +279,17 @@ class TenantResolver
     {
         $region = $tenant->region ?? 'us-east-1';
         $connectionName = "cluster_{$region}";
-        
+
         // Check if connection already exists
         if (array_key_exists($connectionName, config('database.connections', []))) {
             DB::setDefaultConnection($connectionName);
+
             return;
         }
 
         // Get regional database configuration
         $config = $this->getRegionalDatabaseConfig($region);
-        
+
         // Add the connection configuration
         config(["database.connections.{$connectionName}" => $config]);
 
@@ -301,10 +308,11 @@ class TenantResolver
         // Determine shard based on tenant ID
         $shardNumber = ($tenant->id % 4) + 1; // 4 shards: 1, 2, 3, 4
         $connectionName = "shared_shard_{$shardNumber}";
-        
+
         // Check if connection already exists
         if (array_key_exists($connectionName, config('database.connections', []))) {
             DB::setDefaultConnection($connectionName);
+
             return;
         }
 
@@ -313,7 +321,7 @@ class TenantResolver
             'driver' => env('DB_CONNECTION', 'mysql'),
             'host' => env('DB_HOST', '127.0.0.1'),
             'port' => env('DB_PORT', '3306'),
-            'database' => env('DB_DATABASE', 'laravel') . "_shard_{$shardNumber}",
+            'database' => env('DB_DATABASE', 'laravel')."_shard_{$shardNumber}",
             'username' => env('DB_USERNAME', 'forge'),
             'password' => env('DB_PASSWORD', ''),
             'unix_socket' => env('DB_SOCKET', ''),
@@ -343,19 +351,19 @@ class TenantResolver
         $regionConfigs = [
             'us-east-1' => [
                 'host' => env('DB_HOST_US_EAST', env('DB_HOST', '127.0.0.1')),
-                'database' => env('DB_DATABASE_US_EAST', env('DB_DATABASE', 'laravel') . '_us_east'),
+                'database' => env('DB_DATABASE_US_EAST', env('DB_DATABASE', 'laravel').'_us_east'),
             ],
             'us-west-2' => [
                 'host' => env('DB_HOST_US_WEST', env('DB_HOST', '127.0.0.1')),
-                'database' => env('DB_DATABASE_US_WEST', env('DB_DATABASE', 'laravel') . '_us_west'),
+                'database' => env('DB_DATABASE_US_WEST', env('DB_DATABASE', 'laravel').'_us_west'),
             ],
             'eu-west-1' => [
                 'host' => env('DB_HOST_EU_WEST', env('DB_HOST', '127.0.0.1')),
-                'database' => env('DB_DATABASE_EU_WEST', env('DB_DATABASE', 'laravel') . '_eu_west'),
+                'database' => env('DB_DATABASE_EU_WEST', env('DB_DATABASE', 'laravel').'_eu_west'),
             ],
             'ap-southeast-1' => [
                 'host' => env('DB_HOST_ASIA_PACIFIC', env('DB_HOST', '127.0.0.1')),
-                'database' => env('DB_DATABASE_ASIA_PACIFIC', env('DB_DATABASE', 'laravel') . '_asia_pacific'),
+                'database' => env('DB_DATABASE_ASIA_PACIFIC', env('DB_DATABASE', 'laravel').'_asia_pacific'),
             ],
         ];
 

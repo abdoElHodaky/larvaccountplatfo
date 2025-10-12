@@ -119,6 +119,22 @@ type Query {
     ): ProfitLoss @field(resolver: "App\\Features\\Accounting\\GraphQL\\Queries\\ProfitLoss")
 }
 
+"Real-time subscriptions"
+type Subscription {
+    # Real-time subscriptions (simplified)
+    "Subscribe to transaction updates"
+    transactionUpdates(organizationId: ID!): Transaction
+        @subscription(class: "App\\GraphQL\\Subscriptions\\TransactionUpdates")
+
+    "Subscribe to stock updates"
+    stockUpdates(organizationId: ID!): Product
+        @subscription(class: "App\\GraphQL\\Subscriptions\\StockUpdates")
+
+    "Subscribe to dashboard updates"
+    dashboardUpdates(organizationId: ID!): DashboardMetrics
+        @subscription(class: "App\\GraphQL\\Subscriptions\\DashboardUpdates")
+}
+
 "Account for mutations"
 type Mutation {
     # Inventory Mutations
@@ -318,6 +334,21 @@ type ProfitLoss {
     total_expenses: Float!
     gross_profit: Float!
     net_income: Float!
+}
+
+# Dashboard Metrics Type for Subscriptions
+type DashboardMetrics {
+    organization_id: ID!
+    metric_type: String!
+    total_revenue: Float
+    total_expenses: Float
+    net_income: Float
+    cash_flow: Float
+    total_products: Int
+    low_stock_items: Int
+    out_of_stock_items: Int
+    total_inventory_value: Float
+    updated_at: DateTime!
 }
 
 # Enums

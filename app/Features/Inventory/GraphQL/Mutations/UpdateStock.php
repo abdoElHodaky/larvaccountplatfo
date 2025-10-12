@@ -2,8 +2,8 @@
 
 namespace App\Features\Inventory\GraphQL\Mutations;
 
-use App\Features\Inventory\Services\InventoryService;
 use App\Features\Inventory\Models\StockMovement;
+use App\Features\Inventory\Services\InventoryService;
 
 class UpdateStock
 {
@@ -27,7 +27,7 @@ class UpdateStock
         );
 
         // Create a StockMovement object from the result
-        $stockMovement = new StockMovement();
+        $stockMovement = new StockMovement;
         $stockMovement->product_id = $result['product_id'];
         $stockMovement->quantity = $result['quantity'];
         $stockMovement->previous_quantity = $result['previous_quantity'];

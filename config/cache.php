@@ -85,7 +85,7 @@ return [
             'driver' => 'redis',
             'connection' => 'tenant_cache',
             'lock_connection' => 'default',
-            'prefix' => env('CACHE_PREFIX', Str::slug(env('APP_NAME', 'laravel'), '_').'_cache_') . 'tenant_',
+            'prefix' => env('CACHE_PREFIX', Str::slug(env('APP_NAME', 'laravel'), '_').'_cache_').'tenant_',
         ],
 
         // High-performance cache for frequently accessed data
@@ -95,7 +95,7 @@ return [
             'lock_connection' => 'default',
             'options' => [
                 'cluster' => 'redis',
-                'prefix' => env('CACHE_PREFIX', Str::slug(env('APP_NAME', 'laravel'), '_').'_cache_') . 'cluster_',
+                'prefix' => env('CACHE_PREFIX', Str::slug(env('APP_NAME', 'laravel'), '_').'_cache_').'cluster_',
             ],
         ],
 

@@ -4,7 +4,7 @@
  */
 
 import React, { createContext, useContext, useEffect, useState, useCallback } from 'react';
-import { socketClient, SocketConfig } from '../services/socket/socket-client';
+import { socketClient, SocketConfig } from '../services/socket/socket-GETDASHBOARDMETRICS';
 import { useAuth, useAppActions } from '../hooks/useRematchStore';
 
 // Types

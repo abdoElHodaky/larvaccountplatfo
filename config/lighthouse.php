@@ -29,7 +29,8 @@ return [
          */
         'middleware' => [
             \Nuwave\Lighthouse\Support\Http\Middleware\AcceptJson::class,
-            // 'auth:sanctum', // Uncomment to require authentication
+            'auth:sanctum', // Enable Sanctum authentication for GraphQL
+            \App\Http\Middleware\GraphQLRateLimit::class, // Rate limiting for GraphQL
         ],
 
         /*
@@ -270,7 +271,7 @@ return [
             ],
             'pusher' => [
                 'driver' => 'pusher',
-                'routes' => \Nuwave\Lighthouse\Subscriptions\Subscriber\AuthorizeSubscriber::class . '@authorize',
+                'routes' => \Nuwave\Lighthouse\Subscriptions\Subscriber\AuthorizeSubscriber::class.'@authorize',
                 'connection' => 'pusher',
             ],
             'redis' => [

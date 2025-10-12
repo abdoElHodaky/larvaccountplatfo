@@ -4,7 +4,7 @@
  */
 
 import React from 'react';
-import { performanceMonitor } from './performanceMonitor';
+import { performanceMonitor } from './PerformanceMonitor';
 
 // Bundle splitting utilities
 export class BundleSplitter {

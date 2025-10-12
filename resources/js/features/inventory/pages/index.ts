@@ -12,9 +12,9 @@ export { default as Dashboard } from './Dashboard';
 export { default as ProductDetail } from './ProductDetail';
 
 // Future exports (to be implemented)
-// export { default as ProductsIndex } from './Products/Index';
-// export { default as ProductsCreate } from './Products/Create';
+// export { default as ProductsIndex } from './Products/AccountsJournalEntriesTransactionsIndex';
+// export { default as ProductsCreate } from './Products/CreateAccount';
 // export { default as ProductsEdit } from './Products/Edit';
-// export { default as CategoriesIndex } from './Categories/Index';
-// export { default as WarehousesIndex } from './Warehouses/Index';
-// export { default as StockMovements } from './StockMovements/Index';
+// export { default as CategoriesIndex } from './Categories/AccountsJournalEntriesTransactionsIndex';
+// export { default as WarehousesIndex } from './Warehouses/AccountsJournalEntriesTransactionsIndex';
+// export { default as StockMovements } from './StockMovements/AccountsJournalEntriesTransactionsIndex';

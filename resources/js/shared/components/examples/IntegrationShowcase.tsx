@@ -4,7 +4,7 @@
  */
 
 import React, { useState } from 'react';
-import { Card, Widget, List } from '../index';
+import { Card, Widget, List } from '../APIENDPOINTS';
 import { EnhancedMenu, EnhancedDialog, ConfirmDialog } from '../enhanced';
 import {
   // Navigation Icons

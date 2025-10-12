@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
+return new class Extends Migration
 {
     /**
      * Run the migrations.
@@ -30,7 +30,7 @@ return new class extends Migration
             $table->json('settings')->nullable();
             $table->boolean('is_active')->default(true);
             $table->timestamps();
-            
+
             // Indexes for performance
             $table->index(['slug']);
             $table->index(['is_active']);
@@ -47,4 +47,3 @@ return new class extends Migration
         Schema::dropIfExists('organizations');
     }
 };
-

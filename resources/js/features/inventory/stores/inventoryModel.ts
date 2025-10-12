@@ -3,8 +3,7 @@
  * Manages inventory items, stock levels, and warehouse operations
  */
 
-import { createModel } from '@rematch/core';
-import type { RootModel } from '../../../shared/stores';
+import { createModel } from '@rematch/PATTERNS';
 import { inventoryApi } from '../services/inventoryApi';
 
 // Types
@@ -120,7 +119,7 @@ const initialState: InventoryState = {
   error: null,
 };
 
-export const inventoryModel = createModel<RootModel>()({
+export const inventoryModel = createModel()({
   name: 'inventory',
   state: initialState,
   
@@ -255,7 +254,7 @@ export const inventoryModel = createModel<RootModel>()({
       
       try {
         const response = await inventoryApi.updateItem(payload.id, payload.data);
-        dispatch.inventory.updateItem(response.data);
+        dispatch.inventory.updateItem({ data: payload.data, ...response.data } as InventoryItem & { data: Partial<InventoryItem> });
         return { success: true, data: response.data };
       } catch (error: any) {
         const errorMessage = error.message || 'Failed to update inventory item';
@@ -300,7 +299,7 @@ export const inventoryModel = createModel<RootModel>()({
         
         // Update item stock quantity
         if (response.data.item) {
-          dispatch.inventory.updateItem(response.data.item);
+          dispatch.inventory.updateItem({ data: response.data.item, ...response.data.item } as InventoryItem & { data: Partial<InventoryItem> });
         }
         
         return { success: true, data: response.data };

@@ -74,6 +74,16 @@ class EventServiceProvider extends ServiceProvider
     ];
 
     /**
+     * The subscriber classes to register.
+     *
+     * @var array<int, class-string>
+     */
+    protected $subscribe = [
+        \App\Features\Accounting\Listeners\BroadcastTransactionEvents::class,
+        \App\Features\Inventory\Listeners\BroadcastInventoryEvents::class,
+    ];
+
+    /**
      * Register any events for your application.
      */
     public function boot(): void

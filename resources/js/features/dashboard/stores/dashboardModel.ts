@@ -3,8 +3,7 @@
  * Manages dashboard state, widgets, and analytics data
  */
 
-import { createModel } from '@rematch/core';
-import type { RootModel } from '../../../shared/stores';
+import { createModel } from '@rematch/PATTERNS';
 import { dashboardApi } from '../services/dashboardApi';
 
 // Types
@@ -127,7 +126,7 @@ const initialState: DashboardState = {
   lastRefresh: null,
 };
 
-export const dashboardModel = createModel<RootModel>()({
+export const dashboardModel = createModel()({
   name: 'dashboard',
   state: initialState,
   
@@ -327,7 +326,7 @@ export const dashboardModel = createModel<RootModel>()({
       
       try {
         const response = await dashboardApi.updateLayout(payload.id, payload.data);
-        dispatch.dashboard.updateLayout({ id: payload.id, ...response.data } as DashboardLayout);
+        dispatch.dashboard.updateLayout({ data: payload.data, ...response.data } as DashboardLayout & { data: Partial<DashboardLayout> });
         return { success: true, data: response.data };
       } catch (error: any) {
         const errorMessage = error.message || 'Failed to update dashboard layout';
@@ -370,7 +369,7 @@ export const dashboardModel = createModel<RootModel>()({
       
       try {
         const response = await dashboardApi.updateWidget(payload.id, payload.data);
-        dispatch.dashboard.updateWidget({ id: payload.id, ...response.data } as Widget);
+        dispatch.dashboard.updateWidget({ data: payload.data, ...response.data } as Widget & { data: Partial<Widget> });
         return { success: true, data: response.data };
       } catch (error: any) {
         const errorMessage = error.message || 'Failed to update widget';

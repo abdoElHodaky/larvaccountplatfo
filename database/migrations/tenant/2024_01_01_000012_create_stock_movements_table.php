@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
+return new class Extends Migration
 {
     /**
      * Run the migrations.
@@ -23,8 +23,8 @@ return new class extends Migration
             $table->decimal('unit_cost', 15, 4)->nullable();
             $table->decimal('total_cost', 15, 4)->nullable();
             $table->enum('reason', [
-                'purchase', 'sale', 'return', 'adjustment', 'transfer', 
-                'production', 'damage', 'theft', 'expired', 'initial_stock'
+                'purchase', 'sale', 'return', 'adjustment', 'transfer',
+                'production', 'damage', 'theft', 'expired', 'initial_stock',
             ]);
             $table->text('notes')->nullable();
             $table->timestamp('movement_date');
@@ -61,4 +61,3 @@ return new class extends Migration
         Schema::dropIfExists('stock_movements');
     }
 };
-

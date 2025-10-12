@@ -9,11 +9,11 @@
 export { default as Dashboard } from './Dashboard';
 
 // Future exports (to be implemented)
-// export { default as CustomersIndex } from './Customers/Index';
-// export { default as CustomersCreate } from './Customers/Create';
-// export { default as CustomersShow } from './Customers/Show';
-// export { default as OrdersIndex } from './Orders/Index';
-// export { default as OrdersCreate } from './Orders/Create';
-// export { default as OrdersShow } from './Orders/Show';
-// export { default as InvoicesIndex } from './Invoices/Index';
-// export { default as QuotesIndex } from './Quotes/Index';
+// export { default as CustomersIndex } from './Customers/AccountsJournalEntriesTransactionsIndex';
+// export { default as CustomersCreate } from './Customers/CreateAccount';
+// export { default as CustomersShow } from './Customers/ShowAccount';
+// export { default as OrdersIndex } from './Orders/AccountsJournalEntriesTransactionsIndex';
+// export { default as OrdersCreate } from './Orders/CreateAccount';
+// export { default as OrdersShow } from './Orders/ShowAccount';
+// export { default as InvoicesIndex } from './Invoices/AccountsJournalEntriesTransactionsIndex';
+// export { default as QuotesIndex } from './Quotes/AccountsJournalEntriesTransactionsIndex';

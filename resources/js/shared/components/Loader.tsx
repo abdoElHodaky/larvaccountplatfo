@@ -3,7 +3,7 @@
  * Unified loading states with skeleton, spinner, and progress animations
  */
 
-import React, { useRef, useEffect, forwardRef } from 'react';
+import { useRef, useEffect, forwardRef } from 'react';
 import { animations, keyframes, animate, type AnimatedComponentProps } from '../animations';
 
 interface LoaderProps extends AnimatedComponentProps {

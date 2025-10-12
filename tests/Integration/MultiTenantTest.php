@@ -2,11 +2,11 @@
 
 namespace Tests\Integration;
 
-use Tests\Shared\TenantTestCase;
 use App\Models\Tenant;
 use App\Models\User;
-use Modules\Accounting\Models\Account;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Modules\Accounting\Models\Account;
+use Tests\Shared\TenantTestCase;
 
 class MultiTenantTest extends TenantTestCase
 {
@@ -15,7 +15,7 @@ class MultiTenantTest extends TenantTestCase
     /**
      * Test that tenant context is properly set.
      */
-    public function test_tenant_context_is_set(): void
+    public function testTenantContextIsSet(): void
     {
         $this->assertCurrentTenant($this->tenant);
         $this->assertEquals('test-tenant', $this->tenant->subdomain);
@@ -24,7 +24,7 @@ class MultiTenantTest extends TenantTestCase
     /**
      * Test tenant data isolation between different tenants.
      */
-    public function test_tenant_data_isolation(): void
+    public function testTenantDataIsolation(): void
     {
         // Create two different tenants
         $tenant1 = Tenant::factory()->create(['subdomain' => 'tenant1']);
@@ -36,7 +36,7 @@ class MultiTenantTest extends TenantTestCase
 
         // Switch to tenant1 context
         $this->switchTenant($tenant1);
-        
+
         // Verify only tenant1's user is visible
         $visibleUsers = User::all();
         $this->assertCount(1, $visibleUsers);
@@ -44,7 +44,7 @@ class MultiTenantTest extends TenantTestCase
 
         // Switch to tenant2 context
         $this->switchTenant($tenant2);
-        
+
         // Verify only tenant2's user is visible
         $visibleUsers = User::all();
         $this->assertCount(1, $visibleUsers);
@@ -54,10 +54,10 @@ class MultiTenantTest extends TenantTestCase
     /**
      * Test that module data is properly isolated between tenants.
      */
-    public function test_module_data_isolation(): void
+    public function testModuleDataIsolation(): void
     {
         // Skip if Account model doesn't exist yet
-        if (!class_exists(Account::class)) {
+        if (! class_exists(Account::class)) {
             $this->markTestSkipped('Account model not available yet');
         }
 
@@ -81,7 +81,7 @@ class MultiTenantTest extends TenantTestCase
     /**
      * Test database strategy switching.
      */
-    public function test_database_strategy_switching(): void
+    public function testDatabaseStrategySwitching(): void
     {
         // Test shared database strategy
         $sharedTenant = Tenant::factory()->create([
@@ -105,7 +105,7 @@ class MultiTenantTest extends TenantTestCase
     /**
      * Test tenant module enablement.
      */
-    public function test_tenant_module_enablement(): void
+    public function testTenantModuleEnablement(): void
     {
         $tenant = Tenant::factory()->create([
             'enabled_modules' => ['Accounting', 'Inventory'],
@@ -119,12 +119,12 @@ class MultiTenantTest extends TenantTestCase
     /**
      * Test tenant user authentication.
      */
-    public function test_tenant_user_authentication(): void
+    public function testTenantUserAuthentication(): void
     {
         $user = $this->createTestUser();
-        
+
         $this->actingAsTenantUser($user);
-        
+
         $this->assertAuthenticated();
         $this->assertEquals($user->id, auth()->id());
         $this->assertEquals($this->tenant->id, auth()->user()->tenant_id);
@@ -133,12 +133,12 @@ class MultiTenantTest extends TenantTestCase
     /**
      * Test global user authentication.
      */
-    public function test_global_user_authentication(): void
+    public function testGlobalUserAuthentication(): void
     {
         $globalUser = $this->createTestGlobalUser(['is_super_admin' => true]);
-        
+
         $this->actingAsGlobalUser($globalUser);
-        
+
         $this->assertAuthenticated('global');
         $this->assertEquals($globalUser->id, auth('global')->id());
         $this->assertTrue(auth('global')->user()->is_super_admin);

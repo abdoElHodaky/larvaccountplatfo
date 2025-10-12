@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
+return new class Extends Migration
 {
     /**
      * Run the migrations.
@@ -29,7 +29,7 @@ return new class extends Migration
             $table->timestamp('migrated_at')->nullable();
             $table->timestamp('stats_updated_at')->nullable();
             $table->timestamps();
-            
+
             // Indexes for performance
             $table->index(['subdomain']);
             $table->index(['database_name']);
@@ -50,4 +50,3 @@ return new class extends Migration
         Schema::dropIfExists('tenants');
     }
 };
-

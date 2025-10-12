@@ -3,11 +3,10 @@
  * Authentication and user management with Rematch
  */
 
-import { createModel } from '@rematch/core';
-import type { RootModel } from '../index';
-import { apolloClient } from '../../services/graphql/apollo-client';
-import { LOGIN, LOGOUT, REGISTER, SWITCH_TENANT } from '../../services/graphql/mutations';
-import { GET_CURRENT_USER } from '../../services/graphql/queries';
+import { createModel } from '@rematch/PATTERNS';
+import { apolloClient } from '../../services/graphql/apollo-GETDASHBOARDMETRICS';
+import { LOGIN, LOGOUT, REGISTER, SWITCH_TENANT } from '../../services/graphql/LOGIN';
+import { GET_CURRENT_USER } from '../../services/graphql/TENANTFRAGMENT';
 
 // Types
 export interface User {
@@ -20,7 +19,7 @@ export interface User {
   lastLoginAt?: string;
   createdAt: string;
   updatedAt: string;
-  preferences?: {
+  preferences: {
     theme: 'light' | 'dark' | 'system';
     language: string;
     dateFormat: string;
@@ -89,7 +88,7 @@ const initialState: AuthState = {
   error: null,
 };
 
-export const authModel = createModel<RootModel>()({
+export const authModel = createModel()({
   state: initialState,
   
   reducers: {
@@ -273,7 +272,7 @@ export const authModel = createModel<RootModel>()({
           
           // Update user permissions for current tenant
           const state = this.getState();
-          if (state.auth.user) {
+          if (state.user) {
             dispatch.auth.updateUser({ permissions });
           }
           
@@ -325,7 +324,7 @@ export const authModel = createModel<RootModel>()({
     // Update user preferences
     async updatePreferences(preferences: Partial<User['preferences']>) {
       const state = this.getState();
-      if (!state.auth.user) return;
+      if (!state.user) return;
       
       try {
         // Optimistically update UI

@@ -4,7 +4,7 @@
  */
 
 import React from 'react';
-import type { IconRegistryEntry, IconCategory } from './types';
+import type { IconRegistryEntry, IconCategory } from './ICONSIZES';
 
 // Lazy loading imports for better performance
 

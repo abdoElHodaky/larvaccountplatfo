@@ -3,10 +3,9 @@
 namespace App\Features\Purchase\Models;
 
 use App\Shared\Models\HybridModel;
-use App\Features\Inventory\Models\Product;
-use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class PurchaseOrder extends HybridModel
 {
@@ -56,11 +55,17 @@ class PurchaseOrder extends HybridModel
     ];
 
     const STATUS_DRAFT = 'draft';
+
     const STATUS_PENDING = 'pending';
+
     const STATUS_APPROVED = 'approved';
+
     const STATUS_SENT = 'sent';
+
     const STATUS_RECEIVED = 'received';
+
     const STATUS_COMPLETED = 'completed';
+
     const STATUS_CANCELLED = 'cancelled';
 
     public function supplier(): BelongsTo
@@ -95,7 +100,7 @@ class PurchaseOrder extends HybridModel
 
     public function getFormattedPoNumberAttribute(): string
     {
-        return $this->po_number ?: 'PO-' . str_pad($this->id, 8, '0', STR_PAD_LEFT);
+        return $this->po_number ?: 'PO-'.str_pad($this->id, 8, '0', STR_PAD_LEFT);
     }
 
     public function calculateTotals(): void
@@ -120,13 +125,14 @@ class PurchaseOrder extends HybridModel
 
     public function approve(): bool
     {
-        if (!$this->canBeApproved()) {
+        if (! $this->canBeApproved()) {
             return false;
         }
 
         $this->status = self::STATUS_APPROVED;
         $this->approved_by = auth()->id();
         $this->approved_at = now();
+
         return $this->save();
     }
 
@@ -138,6 +144,7 @@ class PurchaseOrder extends HybridModel
 
         $this->status = self::STATUS_RECEIVED;
         $this->actual_delivery_date = now();
+
         return $this->save();
     }
 

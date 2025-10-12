@@ -15,7 +15,7 @@ import {
   LiveCopyIcon, 
   LiveShareIcon, 
   LiveDeleteIcon 
-} from '../../icons/ActionIcons';
+} from '../../icons/ActionConnectionIcon';
 
 interface MenuItem {
   label: string;

@@ -33,7 +33,7 @@ Route::prefix('inventory')
     ->middleware(['auth:sanctum'])
     ->group(base_path('app/Features/Inventory/Routes/inventory.php'));
 
-// Accounting Module Routes  
+// Accounting Module Routes
 Route::prefix('accounting')
     ->middleware(['auth:sanctum'])
     ->group(base_path('app/Features/Accounting/Routes/accounting.php'));

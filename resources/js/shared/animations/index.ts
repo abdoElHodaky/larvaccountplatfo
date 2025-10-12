@@ -23,55 +23,55 @@ export const animations = {
   bounce: { duration: 600, easing: 'cubic-bezier(0.68, -0.55, 0.265, 1.55)' },
 } as const;
 
-// Unified keyframes for all components
+// Unified keyframes for all components (mutable for Web Animations API)
 export const keyframes = {
   // Card animations
   cardHover: [
     { transform: 'translateY(0) scale(1)', boxShadow: '0 1px 3px rgba(0,0,0,0.12)' },
     { transform: 'translateY(-4px) scale(1.02)', boxShadow: '0 10px 25px rgba(0,0,0,0.15)' }
-  ],
+  ] as Keyframe[],
   cardLoad: [
     { opacity: 0.6, transform: 'scale(0.98)' },
     { opacity: 1, transform: 'scale(1)' }
-  ],
+  ] as Keyframe[],
   
   // Widget animations
   widgetResize: [
     { transform: 'scale(1)', opacity: 1 },
     { transform: 'scale(1.02)', opacity: 0.9 },
     { transform: 'scale(1)', opacity: 1 }
-  ],
+  ] as Keyframe[],
   widgetEnter: [
     { opacity: 0, transform: 'translateY(20px) scale(0.95)' },
     { opacity: 1, transform: 'translateY(0) scale(1)' }
-  ],
+  ] as Keyframe[],
   
   // List animations
   listEnter: [
     { opacity: 0, transform: 'translateY(20px)' },
     { opacity: 1, transform: 'translateY(0)' }
-  ],
+  ] as Keyframe[],
   listExit: [
     { opacity: 1, transform: 'translateX(0)' },
     { opacity: 0, transform: 'translateX(-100%)' }
-  ],
+  ] as Keyframe[],
   
   // Loader animations
   loaderSkeleton: [
     { opacity: 0.4 },
     { opacity: 0.8 },
     { opacity: 0.4 }
-  ],
+  ] as Keyframe[],
   loaderSpin: [
     { transform: 'rotate(0deg)' },
     { transform: 'rotate(360deg)' }
-  ],
+  ] as Keyframe[],
   loaderPulse: [
     { transform: 'scale(1)', opacity: 1 },
     { transform: 'scale(1.05)', opacity: 0.7 },
     { transform: 'scale(1)', opacity: 1 }
-  ]
-} as const;
+  ] as Keyframe[]
+};
 
 // Unified animation utilities
 export const animate = {
@@ -117,4 +117,3 @@ export interface AnimatedComponentProps {
   disabled?: boolean;
   children?: React.ReactNode;
 }
-

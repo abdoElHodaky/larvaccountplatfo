@@ -3,10 +3,10 @@
 namespace App\Features\Inventory\Models;
 
 use App\Shared\Models\HybridModel;
-use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Product extends HybridModel
 {
@@ -66,21 +66,27 @@ class Product extends HybridModel
      * Product types
      */
     const TYPE_PHYSICAL = 'physical';
+
     const TYPE_DIGITAL = 'digital';
+
     const TYPE_SERVICE = 'service';
 
     /**
      * Product statuses
      */
     const STATUS_ACTIVE = 'active';
+
     const STATUS_INACTIVE = 'inactive';
+
     const STATUS_DISCONTINUED = 'discontinued';
 
     /**
      * Valuation methods
      */
     const VALUATION_FIFO = 'fifo';
+
     const VALUATION_LIFO = 'lifo';
+
     const VALUATION_AVERAGE = 'average';
 
     /**
@@ -113,8 +119,8 @@ class Product extends HybridModel
     public function suppliers(): BelongsToMany
     {
         return $this->belongsToMany(Supplier::class, 'product_suppliers')
-                    ->withPivot(['supplier_sku', 'cost_price', 'lead_time', 'minimum_order_quantity'])
-                    ->withTimestamps();
+            ->withPivot(['supplier_sku', 'cost_price', 'lead_time', 'minimum_order_quantity'])
+            ->withTimestamps();
     }
 
     /**

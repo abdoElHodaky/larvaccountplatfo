@@ -119,7 +119,7 @@ export const OrganizationSettings: React.FC<OrganizationSettingsProps> = ({
       setFormData(prev => ({
         ...prev,
         [parent]: {
-          ...prev[parent as keyof OrganizationSettings],
+          ...(prev[parent as keyof OrganizationSettings] as object),
           [child]: value
         }
       }));
