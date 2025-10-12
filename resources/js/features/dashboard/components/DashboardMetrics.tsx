@@ -21,13 +21,19 @@ interface DashboardMetricsProps {
   loading?: boolean;
   error?: string | null;
   className?: string;
+  dateRange?: { start: string; end: string };
+  enableRealtime?: boolean;
+  socketConnected?: boolean;
 }
 
 export const DashboardMetrics: React.FC<DashboardMetricsProps> = ({
   metrics = [],
   loading = false,
   error = null,
-  className = ''
+  className = '',
+  dateRange: _dateRange,
+  enableRealtime: _enableRealtime = false,
+  socketConnected: _socketConnected = false
 }) => {
   if (loading) {
     return (

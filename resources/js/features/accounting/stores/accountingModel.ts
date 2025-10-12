@@ -272,7 +272,7 @@ export const accountingModel = createModel<RootModel>()({
     }),
   },
   
-  effects: (dispatch: any, rootState: any) => ({
+  effects: (dispatch) => ({
     // Account effects
     async fetchAccounts(filters?: Partial<AccountingFilters>) {
       dispatch.accounting.setAccountsLoading(true);
@@ -309,20 +309,14 @@ export const accountingModel = createModel<RootModel>()({
         // const response = await accountingApi.updateAccount(payload.id, payload.data);
         // dispatch.accounting.updateAccount(response.data);
         
-        // Mock implementation
-        const state = rootState();
-        const existingAccount = state.accounting.accounts.find((a: Account) => a.id === payload.id);
-        if (existingAccount) {
-          const updatedAccount = {
-            ...existingAccount,
-            ...payload.data,
-            updatedAt: new Date().toISOString(),
-          };
-          dispatch.accounting.updateAccount(updatedAccount);
-          return { success: true, data: updatedAccount };
-        }
-        
-        throw new Error('Account not found');
+        // Mock implementation - update account directly
+        const updatedAccount = {
+          id: payload.id,
+          ...payload.data,
+          updatedAt: new Date().toISOString(),
+        } as Account;
+        dispatch.accounting.updateAccount(updatedAccount);
+        return { success: true, data: updatedAccount };
         
       } catch (error: any) {
         const errorMessage = error.message || 'Failed to update account';

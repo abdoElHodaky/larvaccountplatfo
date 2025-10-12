@@ -131,7 +131,7 @@ export const DashboardContainer: React.FC<DashboardContainerProps> = ({
     if (!enableRealtime) return widgets;
     
     // Merge static widgets with real-time updates
-    const widgetsMap = new Map(widgets.map(w => [w.id, w]));
+    const widgetsMap = new Map(widgets.map((w: any) => [w.id, w]));
     
     realtimeWidgets.forEach(rtWidget => {
       const existingWidget = widgetsMap.get(rtWidget.id);

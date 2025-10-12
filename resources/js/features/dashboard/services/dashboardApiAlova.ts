@@ -376,7 +376,7 @@ export function useDashboardMetrics(filters?: DashboardFilters, options?: {
   );
 
   return {
-    metrics: data?.data?.dashboardMetrics || [],
+    metrics: (data as any)?.data?.dashboardMetrics || [],
     loading,
     error,
     refetch: send,
@@ -396,7 +396,7 @@ export function useDashboardWidgets(organizationId: number, userId?: number, opt
   );
 
   return {
-    widgets: data?.data?.dashboardWidgets || [],
+    widgets: (data as any)?.data?.dashboardWidgets || [],
     loading,
     error,
     refetch: send,
@@ -417,7 +417,7 @@ export function useWidgetData(widgetId: string, filters?: Record<string, any>, o
   );
 
   return {
-    widgetData: data?.data?.widgetData,
+    widgetData: (data as any)?.data?.widgetData,
     loading,
     error,
     refetch: send,
@@ -434,7 +434,7 @@ export function useDashboardLayout(organizationId: number, userId?: number) {
   );
 
   return {
-    layout: data?.data?.dashboardLayout,
+    layout: (data as any)?.data?.dashboardLayout,
     loading,
     error,
     refetch: send,
