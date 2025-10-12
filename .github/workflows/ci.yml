@@ -68,6 +68,18 @@ jobs:
         extensions: mbstring, dom, fileinfo, mysql, redis
         coverage: none
     
+    - name: Create .env file
+      run: |
+        cp .env.example .env
+        php -r "echo 'APP_KEY=base64:' . base64_encode(random_bytes(32)) . PHP_EOL;" >> .env
+        sed -i 's/APP_ENV=local/APP_ENV=testing/' .env
+        sed -i 's/DB_CONNECTION=landlord/DB_CONNECTION=sqlite/' .env
+        sed -i 's/DB_DATABASE=accounting_landlord/DB_DATABASE=:memory:/' .env
+        echo "SESSION_DRIVER=array" >> .env
+        echo "CACHE_STORE=array" >> .env
+        echo "QUEUE_CONNECTION=sync" >> .env
+        echo "MAIL_MAILER=array" >> .env
+    
     - name: Cache Composer packages
       id: composer-cache
       uses: actions/cache@v3
