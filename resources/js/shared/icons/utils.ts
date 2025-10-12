@@ -63,7 +63,7 @@ export const createLiveIcon = (
 
         const setupAnimation = () => {
           switch (trigger) {
-            case 'hover':
+            case 'hover': {
               const handleMouseEnter = () => {
                 animationRef.current = animate.run(icon, animationKeyframes, config);
               };
@@ -81,19 +81,22 @@ export const createLiveIcon = (
                 icon.removeEventListener('mouseenter', handleMouseEnter);
                 icon.removeEventListener('mouseleave', handleMouseLeave);
               };
+            }
 
-            case 'click':
+            case 'click': {
               const handleClick = () => {
                 animationRef.current = animate.run(icon, animationKeyframes, animations.fast);
               };
               icon.addEventListener('click', handleClick);
               return () => icon.removeEventListener('click', handleClick);
+            }
 
-            case 'visible':
+            case 'visible': {
               const observer = animate.onVisible(icon, animationKeyframes, config);
               return () => observer.disconnect();
+            }
 
-            case 'always':
+            case 'always': {
               const runContinuousAnimation = () => {
                 animationRef.current = animate.run(icon, animationKeyframes, { 
                   ...config, 
@@ -107,6 +110,7 @@ export const createLiveIcon = (
                   animationRef.current.cancel();
                 }
               };
+            }
           }
         };
 

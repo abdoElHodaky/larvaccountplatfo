@@ -66,7 +66,7 @@ export const DashboardMetrics: React.FC<DashboardMetricsProps> = ({
     );
   }
 
-  const formatChange = (change: number, changeType: string) => {
+  const formatChange = (change: number, _changeType: string) => {
     const sign = change > 0 ? '+' : '';
     return `${sign}${change}%`;
   };

@@ -4,10 +4,9 @@
  */
 
 import React from 'react';
-import type { IconRegistry, IconRegistryEntry, IconCategory } from './types';
+import type { IconRegistryEntry, IconCategory } from './types';
 
 // Lazy loading imports for better performance
-const lazyImport = (importFn: () => Promise<any>) => React.lazy(importFn);
 
 // Navigation Icons Registry
 const NAV_ICONS: Record<string, Omit<IconRegistryEntry, 'component'> & { import: () => Promise<any> }> = {

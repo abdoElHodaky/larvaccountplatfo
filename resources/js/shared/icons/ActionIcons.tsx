@@ -14,14 +14,13 @@ import {
   StarIcon,
   ThumbUpIcon,
   ThumbDownIcon,
-  ChatBubbleLeftIcon,
   PaperAirplaneIcon,
   DownloadIcon,
   UploadIcon,
   PrinterIcon,
   Cog6ToothIcon
 } from '@heroicons/react/24/outline';
-import { createLiveIcon, iconAnimations, type LiveIconProps } from './index';
+import { createLiveIcon, type LiveIconProps } from './index';
 
 // Action-specific animations
 export const actionAnimations = {
@@ -329,4 +328,3 @@ export const ActionButton: React.FC<LiveIconProps & {
     </button>
   );
 };
-

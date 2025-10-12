@@ -56,7 +56,7 @@ const animationPresets = {
 };
 
 export const AnimatedListItem = forwardRef<HTMLDivElement, AnimatedListItemProps>(({
-  index = 0,
+  index: _index = 0,
   delay = 0,
   className,
   children,
@@ -98,8 +98,8 @@ export const AnimatedList = forwardRef<HTMLDivElement, AnimatedListProps>(({
   ...props
 }, ref) => {
   const listRef = useRef<HTMLDivElement>(null);
-  const [isAnimating, setIsAnimating] = useState(true);
-  const [animatedCount, setAnimatedCount] = useState(0);
+  const [_isAnimating, _setIsAnimating] = useState(true);
+  const [_animatedCount, _setAnimatedCount] = useState(0);
 
   const childrenArray = useMemo(() => 
     React.Children.toArray(children), [children]

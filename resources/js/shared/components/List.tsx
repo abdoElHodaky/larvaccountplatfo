@@ -78,7 +78,7 @@ export const List = forwardRef<HTMLDivElement, ListProps>(({
   }, [onItemRemove, disabled]);
 
   // Item addition animation
-  const handleAdd = useCallback((item: ListItem) => {
+  const _handleAdd = useCallback((item: ListItem) => {
     if (!onItemAdd || disabled) return;
 
     onItemAdd(item);
@@ -167,4 +167,3 @@ export const List = forwardRef<HTMLDivElement, ListProps>(({
 });
 
 List.displayName = 'List';
-

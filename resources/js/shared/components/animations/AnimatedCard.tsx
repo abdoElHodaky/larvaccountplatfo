@@ -60,7 +60,7 @@ export const AnimatedCard = forwardRef<HTMLDivElement, AnimatedCardProps>(({
   ...props
 }, ref) => {
   const cardRef = useRef<HTMLDivElement>(null);
-  const [isAnimating, setIsAnimating] = useState(true);
+  const [_isAnimating, _setIsAnimating] = useState(true);
 
   useEffect(() => {
     const element = cardRef.current;

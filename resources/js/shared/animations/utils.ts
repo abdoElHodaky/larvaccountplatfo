@@ -3,7 +3,7 @@
  * Helper functions for complex animations and performance optimization
  */
 
-import { ANIMATION_PRESETS, STAGGER_CONFIGS, type StaggerConfig } from './presets';
+import { STAGGER_CONFIGS, type StaggerConfig } from './presets';
 
 export interface IntersectionAnimationOptions {
   threshold?: number;
@@ -156,25 +156,23 @@ export function createAccessibleAnimation(
 /**
  * Measures animation performance
  */
-export function measureAnimationPerformance(
+export async function measureAnimationPerformance(
   animationName: string,
   animationFn: () => Promise<void>
 ): Promise<number> {
-  return new Promise(async (resolve) => {
-    const startTime = performance.now();
-    
-    await animationFn();
-    
-    const endTime = performance.now();
-    const duration = endTime - startTime;
-    
-    // Log performance in development
-    if (process.env.NODE_ENV === 'development') {
-      console.log(`Animation "${animationName}" took ${duration.toFixed(2)}ms`);
-    }
-    
-    resolve(duration);
-  });
+  const startTime = performance.now();
+  
+  await animationFn();
+  
+  const endTime = performance.now();
+  const duration = endTime - startTime;
+  
+  // Log performance in development
+  if (process.env.NODE_ENV === 'development') {
+    console.log(`Animation "${animationName}" took ${duration.toFixed(2)}ms`);
+  }
+  
+  return duration;
 }
 
 /**
@@ -259,4 +257,3 @@ export class AnimationBatcher {
 
 // Global animation batcher instance
 export const animationBatcher = new AnimationBatcher();
-

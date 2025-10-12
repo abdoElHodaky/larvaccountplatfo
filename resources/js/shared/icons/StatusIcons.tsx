@@ -16,7 +16,7 @@ import {
   WifiIcon,
   BatteryIcon
 } from '@heroicons/react/24/outline';
-import { createLiveIcon, iconAnimations, type LiveIconProps } from './index';
+import { createLiveIcon, type LiveIconProps } from './index';
 
 // Status-specific animations
 export const statusAnimations = {
@@ -241,7 +241,7 @@ export const ProgressStatus: React.FC<LiveIconProps & {
   label,
   size = 'md',
   className = '',
-  ...props 
+  ..._props 
 }) => {
   const getStatusIcon = () => {
     switch (status) {
@@ -279,4 +279,3 @@ export const ProgressStatus: React.FC<LiveIconProps & {
     </div>
   );
 };
-

@@ -5,12 +5,17 @@
 
 import React, { Fragment } from 'react';
 import { Menu, Transition } from '@headlessui/react';
-import { NavChevronDownIcon } from '@/shared/icons';
+
 import { 
   LiveChevronDownIcon, 
-  LiveMenuToggleIcon,
   type LiveIconProps 
 } from '../../icons';
+import { 
+  LiveEditIcon, 
+  LiveCopyIcon, 
+  LiveShareIcon, 
+  LiveDeleteIcon 
+} from '../../icons/ActionIcons';
 
 interface MenuItem {
   label: string;
@@ -132,7 +137,7 @@ export const ActionMenu: React.FC<Omit<EnhancedMenuProps, 'items'> & {
     items.push({
       label: 'Edit',
       onClick: onEdit,
-      icon: require('../../icons/ActionIcons').LiveEditIcon
+      icon: LiveEditIcon
     });
   }
 
@@ -140,7 +145,7 @@ export const ActionMenu: React.FC<Omit<EnhancedMenuProps, 'items'> & {
     items.push({
       label: 'Copy',
       onClick: onCopy,
-      icon: require('../../icons/ActionIcons').LiveCopyIcon
+      icon: LiveCopyIcon
     });
   }
 
@@ -148,7 +153,7 @@ export const ActionMenu: React.FC<Omit<EnhancedMenuProps, 'items'> & {
     items.push({
       label: 'Share',
       onClick: onShare,
-      icon: require('../../icons/ActionIcons').LiveShareIcon
+      icon: LiveShareIcon
     });
   }
 
@@ -156,7 +161,7 @@ export const ActionMenu: React.FC<Omit<EnhancedMenuProps, 'items'> & {
     items.push({
       label: 'Delete',
       onClick: onDelete,
-      icon: require('../../icons/ActionIcons').LiveDeleteIcon,
+      icon: LiveDeleteIcon,
       danger: true
     });
   }

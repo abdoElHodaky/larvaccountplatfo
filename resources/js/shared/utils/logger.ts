@@ -92,7 +92,7 @@ class Logger {
     }
   }
 
-  private sendToLoggingService(entry: LogEntry): void {
+  private sendToLoggingService(_entry: LogEntry): void {
     // Placeholder for external logging service integration
     // Could integrate with services like Sentry, LogRocket, etc.
     try {

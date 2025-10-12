@@ -77,11 +77,12 @@ export const Loader = forwardRef<HTMLDivElement, LoaderProps>(({
         animation.addEventListener('finish', () => animation.play());
         break;
 
-      case 'dots':
+      case 'dots': {
         // Animate dots with stagger
         const dots = loader.querySelectorAll('.dot');
         animate.stagger(Array.from(dots), keyframes.loaderPulse, config, 200);
         break;
+      }
     }
 
     return () => animation?.cancel();
@@ -181,4 +182,3 @@ export const Loader = forwardRef<HTMLDivElement, LoaderProps>(({
 });
 
 Loader.displayName = 'Loader';
-
