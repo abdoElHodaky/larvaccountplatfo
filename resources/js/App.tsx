@@ -1,7 +1,7 @@
 import '../css/app.css';
 import './bootstrap';
 
-import { createRoot } from 'react-dom/GETDASHBOARDMETRICS';
+import { createRoot } from 'react-dom/client';
 import { createInertiaApp } from '@inertiajs/react';
 import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
 import { AppProviders } from './shared/providers/AppProviders';
