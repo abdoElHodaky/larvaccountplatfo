@@ -3,6 +3,7 @@
 namespace App\Features\Accounting\Models;
 
 use App\Shared\Models\HybridModel;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -51,61 +52,38 @@ class Transaction extends HybridModel
         'deleted_at' => 'datetime',
     ];
 
-    protected $dates = [
-        'transaction_date',
-        'next_occurrence',
-        'approved_at',
-        'created_at',
-        'updated_at',
-        'deleted_at',
-    ];
+
 
     /**
      * Transaction statuses
      */
-    const STATUS_DRAFT = 'draft';
-
-    const STATUS_PENDING = 'pending';
-
-    const STATUS_APPROVED = 'approved';
-
-    const STATUS_POSTED = 'posted';
-
-    const STATUS_CANCELLED = 'cancelled';
-
-    const STATUS_REVERSED = 'reversed';
+    public const STATUS_DRAFT = 'draft';
+    public const STATUS_PENDING = 'pending';
+    public const STATUS_APPROVED = 'approved';
+    public const STATUS_POSTED = 'posted';
+    public const STATUS_CANCELLED = 'cancelled';
+    public const STATUS_REVERSED = 'reversed';
 
     /**
      * Transaction types
      */
-    const TYPE_JOURNAL_ENTRY = 'journal_entry';
-
-    const TYPE_PAYMENT = 'payment';
-
-    const TYPE_RECEIPT = 'receipt';
-
-    const TYPE_TRANSFER = 'transfer';
-
-    const TYPE_ADJUSTMENT = 'adjustment';
-
-    const TYPE_ACCRUAL = 'accrual';
-
-    const TYPE_DEPRECIATION = 'depreciation';
-
-    const TYPE_PAYROLL = 'payroll';
+    public const TYPE_JOURNAL_ENTRY = 'journal_entry';
+    public const TYPE_PAYMENT = 'payment';
+    public const TYPE_RECEIPT = 'receipt';
+    public const TYPE_TRANSFER = 'transfer';
+    public const TYPE_ADJUSTMENT = 'adjustment';
+    public const TYPE_ACCRUAL = 'accrual';
+    public const TYPE_DEPRECIATION = 'depreciation';
+    public const TYPE_PAYROLL = 'payroll';
 
     /**
      * Recurring frequencies
      */
-    const FREQUENCY_DAILY = 'daily';
-
-    const FREQUENCY_WEEKLY = 'weekly';
-
-    const FREQUENCY_MONTHLY = 'monthly';
-
-    const FREQUENCY_QUARTERLY = 'quarterly';
-
-    const FREQUENCY_ANNUALLY = 'annually';
+    public const FREQUENCY_DAILY = 'daily';
+    public const FREQUENCY_WEEKLY = 'weekly';
+    public const FREQUENCY_MONTHLY = 'monthly';
+    public const FREQUENCY_QUARTERLY = 'quarterly';
+    public const FREQUENCY_ANNUALLY = 'annually';
 
     /**
      * Get the journal entries for this transaction
@@ -142,7 +120,7 @@ class Transaction extends HybridModel
     /**
      * Scope for transactions by status
      */
-    public function scopeByStatus($query, string $status)
+    public function scopeByStatus(Builder $query, string $status): Builder
     {
         return $query->where('status', $status);
     }
@@ -150,7 +128,7 @@ class Transaction extends HybridModel
     /**
      * Scope for draft transactions
      */
-    public function scopeDraft($query)
+    public function scopeDraft(Builder $query): Builder
     {
         return $query->where('status', self::STATUS_DRAFT);
     }
@@ -158,7 +136,7 @@ class Transaction extends HybridModel
     /**
      * Scope for pending transactions
      */
-    public function scopePending($query)
+    public function scopePending(Builder $query): Builder
     {
         return $query->where('status', self::STATUS_PENDING);
     }
@@ -166,7 +144,7 @@ class Transaction extends HybridModel
     /**
      * Scope for approved transactions
      */
-    public function scopeApproved($query)
+    public function scopeApproved(Builder $query): Builder
     {
         return $query->where('status', self::STATUS_APPROVED);
     }
@@ -174,7 +152,7 @@ class Transaction extends HybridModel
     /**
      * Scope for posted transactions
      */
-    public function scopePosted($query)
+    public function scopePosted(Builder $query): Builder
     {
         return $query->where('status', self::STATUS_POSTED);
     }
@@ -182,7 +160,7 @@ class Transaction extends HybridModel
     /**
      * Scope for transactions by date range
      */
-    public function scopeDateRange($query, $startDate, $endDate)
+    public function scopeDateRange(Builder $query, $startDate, $endDate): Builder
     {
         return $query->whereBetween('transaction_date', [$startDate, $endDate]);
     }
@@ -190,7 +168,7 @@ class Transaction extends HybridModel
     /**
      * Scope for transactions by fiscal year
      */
-    public function scopeFiscalYear($query, int $year)
+    public function scopeFiscalYear(Builder $query, int $year): Builder
     {
         return $query->where('fiscal_year', $year);
     }
@@ -198,7 +176,7 @@ class Transaction extends HybridModel
     /**
      * Scope for transactions by type
      */
-    public function scopeByType($query, string $type)
+    public function scopeByType(Builder $query, string $type): Builder
     {
         return $query->where('type', $type);
     }
@@ -206,7 +184,7 @@ class Transaction extends HybridModel
     /**
      * Scope for recurring transactions
      */
-    public function scopeRecurring($query)
+    public function scopeRecurring(Builder $query): Builder
     {
         return $query->where('is_recurring', true);
     }

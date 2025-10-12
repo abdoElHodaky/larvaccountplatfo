@@ -855,99 +855,255 @@ graph TB
 
 ## 🎨 **LiveIcons System Architecture**
 
-### **Unified Icon Management System**
+### **Advanced Dynamic Icon Management System**
 
-Our enhanced LiveIcons system provides a centralized, performant, and developer-friendly approach to icon management with advanced animation capabilities.
+Our enhanced LiveIcons system provides a centralized, performant, and developer-friendly approach to icon management with advanced animation capabilities, real-time updates, and intelligent caching.
 
 ```mermaid
 graph TB
-    subgraph "LiveIcons System Architecture"
-        subgraph "Entry Points"
-            A[index.ts<br/>Main Export] --> B[exports.ts<br/>Unified Exports]
-            B --> C[Individual Icons]
-            B --> D[Icon Sets]
-            B --> E[Dynamic Icons]
+    subgraph "🚀 LiveIcons Ecosystem"
+        subgraph "📦 Entry Points & Distribution"
+            MAIN[🎯 index.ts<br/>Main Entry Point]
+            EXPORTS[📋 exports.ts<br/>Unified Exports]
+            BUNDLES[📦 Bundle Manager<br/>Tree-shaking Optimization]
+            CDN[🌐 CDN Distribution<br/>Global Delivery]
+            
+            MAIN --> EXPORTS
+            EXPORTS --> BUNDLES
+            BUNDLES --> CDN
         end
-
-        subgraph "Core System"
-            F[IconRegistry.ts<br/>Centralized Registry] --> G[Lazy Loading]
-            F --> H[Caching Layer]
-            F --> I[Metadata Management]
+        
+        subgraph "🧠 Core Management System"
+            REGISTRY[🗂️ IconRegistry.ts<br/>Centralized Registry]
+            CACHE[⚡ CacheManager.ts<br/>Multi-layer Caching]
+            LOADER[🔄 LazyLoader.ts<br/>Dynamic Loading]
+            METADATA[📊 MetadataManager.ts<br/>Icon Intelligence]
             
-            J[types.ts<br/>Type System] --> K[IconProps Interface]
-            J --> L[Category Types]
-            J --> M[Constants]
-            
-            N[utils.ts<br/>Utilities] --> O[createLiveIcon]
-            N --> P[DynamicIcon]
-            N --> Q[Performance Monitor]
+            REGISTRY --> CACHE
+            REGISTRY --> LOADER
+            REGISTRY --> METADATA
         end
-
-        subgraph "Icon Categories"
-            R[Navigation Icons<br/>nav-*] --> R1[nav-home]
-            R --> R2[nav-back]
-            R --> R3[nav-menu]
+        
+        subgraph "🎭 Type System & Validation"
+            TYPES[📝 types.ts<br/>TypeScript Definitions]
+            VALIDATOR[✅ validator.ts<br/>Runtime Validation]
+            SCHEMA[📋 schema.ts<br/>Icon Schema]
+            CONSTANTS[🔧 constants.ts<br/>System Constants]
             
-            S[Action Icons<br/>action-*] --> S1[action-edit]
-            S --> S2[action-delete]
-            S --> S3[action-add]
-            
-            T[Form Icons<br/>form-*] --> T1[form-search]
-            T --> T2[form-filter]
-            T --> T3[form-calendar]
-            
-            U[Status Icons<br/>status-*] --> U1[status-success]
-            U --> U2[status-error]
-            U --> U3[status-loading]
+            TYPES --> VALIDATOR
+            TYPES --> SCHEMA
+            TYPES --> CONSTANTS
         end
-
-        subgraph "Animation System"
-            V[Animation Engine] --> W[Hardware Acceleration]
-            V --> X[Reduced Motion Support]
-            V --> Y[Cleanup Management]
+        
+        subgraph "🛠️ Utility Layer"
+            UTILS[🔧 utils.ts<br/>Core Utilities]
+            FACTORY[🏭 IconFactory.ts<br/>Icon Creation]
+            TRANSFORMER[🔄 transformer.ts<br/>Icon Processing]
+            OPTIMIZER[⚡ optimizer.ts<br/>Performance Optimization]
             
-            Z[Animation Types] --> Z1[bounce]
-            Z --> Z2[pulse]
-            Z --> Z3[rotate]
-            Z --> Z4[shake]
-            Z --> Z5[loading]
-            Z --> Z6[success]
-            Z --> Z7[error]
+            UTILS --> FACTORY
+            UTILS --> TRANSFORMER
+            UTILS --> OPTIMIZER
         end
-
-        subgraph "Performance Layer"
-            AA[Tree Shaking] --> BB[Bundle Optimization]
-            CC[Parallel Processing] --> DD[Batch Loading]
-            EE[Caching Strategy] --> FF[Memory Management]
+        
+        subgraph "📂 Icon Categories & Collections"
+            subgraph "🧭 Navigation Icons"
+                NAV[nav-* Collection]
+                NAV_HOME[🏠 nav-home]
+                NAV_BACK[⬅️ nav-back]
+                NAV_MENU[☰ nav-menu]
+                NAV_BREADCRUMB[🍞 nav-breadcrumb]
+                
+                NAV --> NAV_HOME
+                NAV --> NAV_BACK
+                NAV --> NAV_MENU
+                NAV --> NAV_BREADCRUMB
+            end
+            
+            subgraph "⚡ Action Icons"
+                ACTION[action-* Collection]
+                ACTION_EDIT[✏️ action-edit]
+                ACTION_DELETE[🗑️ action-delete]
+                ACTION_ADD[➕ action-add]
+                ACTION_SAVE[💾 action-save]
+                
+                ACTION --> ACTION_EDIT
+                ACTION --> ACTION_DELETE
+                ACTION --> ACTION_ADD
+                ACTION --> ACTION_SAVE
+            end
+            
+            subgraph "📝 Form Icons"
+                FORM[form-* Collection]
+                FORM_SEARCH[🔍 form-search]
+                FORM_FILTER[🔽 form-filter]
+                FORM_CALENDAR[📅 form-calendar]
+                FORM_INPUT[📝 form-input]
+                
+                FORM --> FORM_SEARCH
+                FORM --> FORM_FILTER
+                FORM --> FORM_CALENDAR
+                FORM --> FORM_INPUT
+            end
+            
+            subgraph "📊 Status Icons"
+                STATUS[status-* Collection]
+                STATUS_SUCCESS[✅ status-success]
+                STATUS_ERROR[❌ status-error]
+                STATUS_WARNING[⚠️ status-warning]
+                STATUS_LOADING[⏳ status-loading]
+                
+                STATUS --> STATUS_SUCCESS
+                STATUS --> STATUS_ERROR
+                STATUS --> STATUS_WARNING
+                STATUS --> STATUS_LOADING
+            end
+            
+            subgraph "💼 Business Icons"
+                BUSINESS[business-* Collection]
+                BIZ_CHART[📈 business-chart]
+                BIZ_REPORT[📊 business-report]
+                BIZ_MONEY[💰 business-money]
+                BIZ_INVOICE[🧾 business-invoice]
+                
+                BUSINESS --> BIZ_CHART
+                BUSINESS --> BIZ_REPORT
+                BUSINESS --> BIZ_MONEY
+                BUSINESS --> BIZ_INVOICE
+            end
         end
-
-        subgraph "External Dependencies"
-            GG[@heroicons/react] --> HH[Icon Components]
-            II[React] --> JJ[Component System]
-            KK[Animation API] --> LL[Web Animations]
+        
+        subgraph "🎬 Advanced Animation System"
+            ANIM_ENGINE[🎭 AnimationEngine.ts<br/>Core Animation System]
+            ANIM_SCHEDULER[⏰ AnimationScheduler.ts<br/>Timeline Management]
+            ANIM_PHYSICS[🌊 PhysicsEngine.ts<br/>Realistic Motion]
+            ANIM_PRESETS[🎨 AnimationPresets.ts<br/>Predefined Animations]
+            
+            subgraph "🎪 Animation Types"
+                BOUNCE[🏀 bounce]
+                PULSE[💓 pulse]
+                ROTATE[🔄 rotate]
+                SHAKE[📳 shake]
+                LOADING[⏳ loading]
+                SUCCESS[✨ success]
+                ERROR[💥 error]
+                MORPH[🔄 morph]
+                ELASTIC[🎈 elastic]
+            end
+            
+            ANIM_ENGINE --> ANIM_SCHEDULER
+            ANIM_ENGINE --> ANIM_PHYSICS
+            ANIM_ENGINE --> ANIM_PRESETS
+            
+            ANIM_PRESETS --> BOUNCE
+            ANIM_PRESETS --> PULSE
+            ANIM_PRESETS --> ROTATE
+            ANIM_PRESETS --> SHAKE
+            ANIM_PRESETS --> LOADING
+            ANIM_PRESETS --> SUCCESS
+            ANIM_PRESETS --> ERROR
+            ANIM_PRESETS --> MORPH
+            ANIM_PRESETS --> ELASTIC
+        end
+        
+        subgraph "⚡ Performance & Optimization"
+            PERF_MONITOR[📊 PerformanceMonitor.ts<br/>Real-time Metrics]
+            TREE_SHAKE[🌳 TreeShaker.ts<br/>Bundle Optimization]
+            BATCH_LOADER[📦 BatchLoader.ts<br/>Parallel Loading]
+            MEMORY_MGR[🧠 MemoryManager.ts<br/>Memory Optimization]
+            PRELOADER[🚀 Preloader.ts<br/>Predictive Loading]
+            
+            PERF_MONITOR --> TREE_SHAKE
+            PERF_MONITOR --> BATCH_LOADER
+            PERF_MONITOR --> MEMORY_MGR
+            PERF_MONITOR --> PRELOADER
+        end
+        
+        subgraph "🔌 Integration Layer"
+            REACT_ADAPTER[⚛️ ReactAdapter.ts<br/>React Integration]
+            VUE_ADAPTER[💚 VueAdapter.ts<br/>Vue Integration]
+            ANGULAR_ADAPTER[🅰️ AngularAdapter.ts<br/>Angular Integration]
+            VANILLA_ADAPTER[🍦 VanillaAdapter.ts<br/>Pure JS Integration]
+            
+            REACT_ADAPTER --> FACTORY
+            VUE_ADAPTER --> FACTORY
+            ANGULAR_ADAPTER --> FACTORY
+            VANILLA_ADAPTER --> FACTORY
+        end
+        
+        subgraph "🌐 External Dependencies"
+            HEROICONS[🦸 @heroicons/react<br/>Icon Library]
+            LUCIDE[🎨 lucide-react<br/>Alternative Icons]
+            FRAMER[🎬 framer-motion<br/>Advanced Animations]
+            LOTTIE[🎭 lottie-react<br/>Complex Animations]
+            
+            HEROICONS --> FACTORY
+            LUCIDE --> FACTORY
+            FRAMER --> ANIM_ENGINE
+            LOTTIE --> ANIM_ENGINE
+        end
+        
+        subgraph "🔧 Development Tools"
+            DEVTOOLS[🛠️ DevTools.ts<br/>Development Utilities]
+            INSPECTOR[🔍 IconInspector.ts<br/>Runtime Inspection]
+            DEBUGGER[🐛 Debugger.ts<br/>Animation Debugging]
+            PROFILER[📊 Profiler.ts<br/>Performance Profiling]
+            
+            DEVTOOLS --> INSPECTOR
+            DEVTOOLS --> DEBUGGER
+            DEVTOOLS --> PROFILER
         end
     end
-
-    %% Connections
-    B --> F
-    B --> J
-    B --> N
     
-    F --> R
-    F --> S
-    F --> T
-    F --> U
+    %% Core System Connections
+    EXPORTS --> REGISTRY
+    EXPORTS --> TYPES
+    EXPORTS --> UTILS
     
-    N --> V
-    V --> Z
+    %% Registry to Categories
+    REGISTRY --> NAV
+    REGISTRY --> ACTION
+    REGISTRY --> FORM
+    REGISTRY --> STATUS
+    REGISTRY --> BUSINESS
     
-    O --> GG
-    O --> II
-    O --> KK
+    %% Utility Connections
+    FACTORY --> ANIM_ENGINE
+    OPTIMIZER --> PERF_MONITOR
     
-    AA --> B
-    CC --> F
-    EE --> H
+    %% Performance Connections
+    CACHE --> MEMORY_MGR
+    LOADER --> BATCH_LOADER
+    METADATA --> PRELOADER
+    
+    %% Development Connections
+    REGISTRY -.-> DEVTOOLS
+    ANIM_ENGINE -.-> DEBUGGER
+    PERF_MONITOR -.-> PROFILER
+    
+    %% Styling
+    classDef entry fill:#e3f2fd,stroke:#1976d2,stroke-width:3px,color:#000
+    classDef core fill:#f3e5f5,stroke:#7b1fa2,stroke-width:3px,color:#000
+    classDef types fill:#e8f5e8,stroke:#388e3c,stroke-width:3px,color:#000
+    classDef utils fill:#fff3e0,stroke:#f57c00,stroke-width:3px,color:#000
+    classDef icons fill:#fce4ec,stroke:#c2185b,stroke-width:3px,color:#000
+    classDef animation fill:#f1f8e9,stroke:#689f38,stroke-width:3px,color:#000
+    classDef performance fill:#fff8e1,stroke:#fbc02d,stroke-width:3px,color:#000
+    classDef integration fill:#f3e5f5,stroke:#8e24aa,stroke-width:3px,color:#000
+    classDef external fill:#e0f2f1,stroke:#00695c,stroke-width:3px,color:#000
+    classDef dev fill:#fafafa,stroke:#424242,stroke-width:3px,color:#000
+    
+    class MAIN,EXPORTS,BUNDLES,CDN entry
+    class REGISTRY,CACHE,LOADER,METADATA core
+    class TYPES,VALIDATOR,SCHEMA,CONSTANTS types
+    class UTILS,FACTORY,TRANSFORMER,OPTIMIZER utils
+    class NAV,ACTION,FORM,STATUS,BUSINESS,NAV_HOME,NAV_BACK,ACTION_EDIT,FORM_SEARCH,STATUS_SUCCESS,BIZ_CHART icons
+    class ANIM_ENGINE,ANIM_SCHEDULER,ANIM_PHYSICS,ANIM_PRESETS,BOUNCE,PULSE,ROTATE,SHAKE,LOADING animation
+    class PERF_MONITOR,TREE_SHAKE,BATCH_LOADER,MEMORY_MGR,PRELOADER performance
+    class REACT_ADAPTER,VUE_ADAPTER,ANGULAR_ADAPTER,VANILLA_ADAPTER integration
+    class HEROICONS,LUCIDE,FRAMER,LOTTIE external
+    class DEVTOOLS,INSPECTOR,DEBUGGER,PROFILER dev
+```
 
     %% Styling
     classDef entryPoint fill:#e1f5fe,stroke:#01579b,stroke-width:2px

@@ -8,7 +8,7 @@ use App\Models\Tenant;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
-use Modules\Shared\Models\User;
+use App\Shared\Models\User;
 
 class AuthService
 {

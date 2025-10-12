@@ -3,6 +3,7 @@
 namespace App\Features\Accounting\Models;
 
 use App\Shared\Models\HybridModel;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -46,44 +47,28 @@ class JournalEntry extends HybridModel
         'deleted_at' => 'datetime',
     ];
 
-    protected $dates = [
-        'entry_date',
-        'created_at',
-        'updated_at',
-        'deleted_at',
-    ];
+
 
     /**
      * Entry types
      */
-    const TYPE_REGULAR = 'regular';
-
-    const TYPE_ADJUSTING = 'adjusting';
-
-    const TYPE_CLOSING = 'closing';
-
-    const TYPE_OPENING = 'opening';
-
-    const TYPE_REVERSING = 'reversing';
+    public const TYPE_REGULAR = 'regular';
+    public const TYPE_ADJUSTING = 'adjusting';
+    public const TYPE_CLOSING = 'closing';
+    public const TYPE_OPENING = 'opening';
+    public const TYPE_REVERSING = 'reversing';
 
     /**
      * Source types
      */
-    const SOURCE_MANUAL = 'manual';
-
-    const SOURCE_INVOICE = 'invoice';
-
-    const SOURCE_PAYMENT = 'payment';
-
-    const SOURCE_PURCHASE = 'purchase';
-
-    const SOURCE_PAYROLL = 'payroll';
-
-    const SOURCE_INVENTORY = 'inventory';
-
-    const SOURCE_DEPRECIATION = 'depreciation';
-
-    const SOURCE_BANK_RECONCILIATION = 'bank_reconciliation';
+    public const SOURCE_MANUAL = 'manual';
+    public const SOURCE_INVOICE = 'invoice';
+    public const SOURCE_PAYMENT = 'payment';
+    public const SOURCE_PURCHASE = 'purchase';
+    public const SOURCE_PAYROLL = 'payroll';
+    public const SOURCE_INVENTORY = 'inventory';
+    public const SOURCE_DEPRECIATION = 'depreciation';
+    public const SOURCE_BANK_RECONCILIATION = 'bank_reconciliation';
 
     /**
      * Get the account that owns the journal entry
@@ -112,7 +97,7 @@ class JournalEntry extends HybridModel
     /**
      * Scope for debit entries
      */
-    public function scopeDebits($query)
+    public function scopeDebits(Builder $query): Builder
     {
         return $query->where('debit_amount', '>', 0);
     }
@@ -120,7 +105,7 @@ class JournalEntry extends HybridModel
     /**
      * Scope for credit entries
      */
-    public function scopeCredits($query)
+    public function scopeCredits(Builder $query): Builder
     {
         return $query->where('credit_amount', '>', 0);
     }
@@ -128,7 +113,7 @@ class JournalEntry extends HybridModel
     /**
      * Scope for entries by date range
      */
-    public function scopeDateRange($query, $startDate, $endDate)
+    public function scopeDateRange(Builder $query, $startDate, $endDate): Builder
     {
         return $query->whereBetween('entry_date', [$startDate, $endDate]);
     }
@@ -136,7 +121,7 @@ class JournalEntry extends HybridModel
     /**
      * Scope for entries by fiscal year
      */
-    public function scopeFiscalYear($query, int $year)
+    public function scopeFiscalYear(Builder $query, int $year): Builder
     {
         return $query->where('fiscal_year', $year);
     }
@@ -144,7 +129,7 @@ class JournalEntry extends HybridModel
     /**
      * Scope for entries by fiscal period
      */
-    public function scopeFiscalPeriod($query, int $period)
+    public function scopeFiscalPeriod(Builder $query, int $period): Builder
     {
         return $query->where('fiscal_period', $period);
     }
@@ -152,7 +137,7 @@ class JournalEntry extends HybridModel
     /**
      * Scope for adjusting entries
      */
-    public function scopeAdjusting($query)
+    public function scopeAdjusting(Builder $query): Builder
     {
         return $query->where('is_adjusting', true);
     }
@@ -160,7 +145,7 @@ class JournalEntry extends HybridModel
     /**
      * Scope for closing entries
      */
-    public function scopeClosing($query)
+    public function scopeClosing(Builder $query): Builder
     {
         return $query->where('is_closing', true);
     }
@@ -168,7 +153,7 @@ class JournalEntry extends HybridModel
     /**
      * Scope for regular entries (non-adjusting, non-closing)
      */
-    public function scopeRegular($query)
+    public function scopeRegular(Builder $query): Builder
     {
         return $query->where('is_adjusting', false)
             ->where('is_closing', false);
