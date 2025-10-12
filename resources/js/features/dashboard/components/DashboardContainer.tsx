@@ -71,7 +71,7 @@ export const DashboardContainer: React.FC<DashboardContainerProps> = ({
     refetch: refetchMetrics,
   } = useDashboardMetrics(
     {
-      organizationId: orgId,
+      organizationId: orgId || undefined,
       dateRange: state.selectedDateRange,
       metricTypes: state.selectedMetricTypes,
     },
@@ -86,7 +86,7 @@ export const DashboardContainer: React.FC<DashboardContainerProps> = ({
     loading: widgetsLoading,
     error: widgetsError,
     refetch: refetchWidgets,
-  } = useDashboardWidgets(orgId, undefined, {
+  } = useDashboardWidgets(orgId!, undefined, {
     enabled: !!orgId,
   });
 
@@ -96,7 +96,7 @@ export const DashboardContainer: React.FC<DashboardContainerProps> = ({
     widgets: realtimeWidgets,
     lastUpdate: realtimeLastUpdate,
     isConnected: socketConnected,
-  } = useRealtimeDashboard(orgId);
+  } = useRealtimeDashboard(orgId || undefined);
 
   // Collaboration hooks
   const {
@@ -113,7 +113,7 @@ export const DashboardContainer: React.FC<DashboardContainerProps> = ({
     if (!enableRealtime) return metrics;
     
     // Merge static metrics with real-time updates
-    const metricsMap = new Map(metrics.map(m => [m.id, m]));
+    const metricsMap = new Map(metrics.map((m: any) => [m.id, m]));
     
     realtimeMetrics.forEach(rtMetric => {
       metricsMap.set(rtMetric.id, {
