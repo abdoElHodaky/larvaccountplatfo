@@ -39,7 +39,7 @@ class StockUpdated extends BroadcastableDomainEvent
     protected function getChannelNames(): array
     {
         $organizationId = $this->product->organization_id ?? 'default';
-        
+
         return [
             'inventory',
             'dashboard',
@@ -82,7 +82,7 @@ class StockUpdated extends BroadcastableDomainEvent
     protected function getPrivateChannels(): array
     {
         $organizationId = $this->product->organization_id ?? 'default';
-        
+
         return [
             'inventory',
             "organization.{$organizationId}",

@@ -19,7 +19,7 @@ class BalanceSheet
     public function __invoke($rootValue, array $args, $context, $resolveInfo)
     {
         $asOfDate = $args['as_of_date'] ?? now();
-        
+
         return $this->accountingService->getBalanceSheet($asOfDate);
     }
 }

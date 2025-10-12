@@ -103,12 +103,12 @@ class MetricsUpdated extends BroadcastableDomainEvent
     {
         // Format currency values
         if (str_contains($key, 'revenue') || str_contains($key, 'expense') || str_contains($key, 'income') || str_contains($key, 'balance')) {
-            return '$' . number_format($value, 2);
+            return '$'.number_format($value, 2);
         }
 
         // Format percentage values
         if (str_contains($key, 'percent') || str_contains($key, 'rate')) {
-            return number_format($value, 2) . '%';
+            return number_format($value, 2).'%';
         }
 
         // Format count values
@@ -218,7 +218,7 @@ class MetricsUpdated extends BroadcastableDomainEvent
     private function hasFinancialMetrics(): bool
     {
         $financialKeys = ['revenue', 'expense', 'income', 'balance', 'cash'];
-        
+
         foreach ($this->metrics as $key => $value) {
             foreach ($financialKeys as $financialKey) {
                 if (str_contains(strtolower($key), $financialKey)) {
@@ -236,7 +236,7 @@ class MetricsUpdated extends BroadcastableDomainEvent
     private function hasInventoryMetrics(): bool
     {
         $inventoryKeys = ['product', 'stock', 'inventory', 'item'];
-        
+
         foreach ($this->metrics as $key => $value) {
             foreach ($inventoryKeys as $inventoryKey) {
                 if (str_contains(strtolower($key), $inventoryKey)) {

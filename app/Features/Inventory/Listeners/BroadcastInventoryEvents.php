@@ -2,8 +2,8 @@
 
 namespace App\Features\Inventory\Listeners;
 
-use App\Features\Inventory\Events\StockUpdated;
 use App\Features\Dashboard\Events\MetricsUpdated;
+use App\Features\Inventory\Events\StockUpdated;
 use Illuminate\Events\Dispatcher;
 
 class BroadcastInventoryEvents
@@ -155,8 +155,8 @@ class BroadcastInventoryEvents
         $topProductsByValue = \DB::table('products')
             ->where('organization_id', $organizationId)
             ->where('status', 'active')
-            ->select('id', 'name', 'sku', 'stock_quantity', 'cost_price', 
-                    \DB::raw('stock_quantity * cost_price as total_value'))
+            ->select('id', 'name', 'sku', 'stock_quantity', 'cost_price',
+                \DB::raw('stock_quantity * cost_price as total_value'))
             ->orderByDesc('total_value')
             ->limit(5)
             ->get()
@@ -188,7 +188,7 @@ class BroadcastInventoryEvents
     {
         // Get stock movements for the last 30 days
         $thirtyDaysAgo = now()->subDays(30);
-        
+
         $totalMovements = \DB::table('stock_movements')
             ->join('products', 'stock_movements.product_id', '=', 'products.id')
             ->where('products.organization_id', $organizationId)

@@ -16,12 +16,12 @@ return new class extends Migration
             $table->unsignedBigInteger('organization_id');
             $table->enum('report_type', [
                 'balance_sheet',
-                'income_statement', 
+                'income_statement',
                 'cash_flow',
                 'trial_balance',
                 'general_ledger',
                 'account_aging',
-                'custom'
+                'custom',
             ]);
             $table->string('report_name');
             $table->enum('period_type', ['monthly', 'quarterly', 'yearly', 'custom'])->default('custom');
@@ -57,4 +57,3 @@ return new class extends Migration
         Schema::dropIfExists('financial_reports');
     }
 };
-

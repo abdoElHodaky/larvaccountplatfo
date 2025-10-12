@@ -2,17 +2,17 @@
 
 namespace Tests\Feature\Integration;
 
-use Tests\TestCase;
+use App\Features\Accounting\Events\TransactionCreated;
+use App\Features\Accounting\Models\Account;
+use App\Features\Accounting\Models\Transaction;
+use App\Features\Dashboard\Events\MetricsUpdated;
+use App\Features\Inventory\Events\StockUpdated;
+use App\Features\Inventory\Models\Product;
+use App\Features\Inventory\Models\ProductCategory;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Queue;
-use App\Features\Accounting\Models\Account;
-use App\Features\Accounting\Models\Transaction;
-use App\Features\Accounting\Events\TransactionCreated;
-use App\Features\Dashboard\Events\MetricsUpdated;
-use App\Features\Inventory\Models\Product;
-use App\Features\Inventory\Models\ProductCategory;
-use App\Features\Inventory\Events\StockUpdated;
+use Tests\TestCase;
 
 class AlovaGraphQLSocketIntegrationTest extends TestCase
 {
@@ -21,15 +21,15 @@ class AlovaGraphQLSocketIntegrationTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        
+
         // Set up test environment
         Event::fake();
         Queue::fake();
-        
+
         // Create test user and organization
         $this->user = \App\Models\User::factory()->create();
         $this->organization = \App\Models\Organization::factory()->create();
-        
+
         // Authenticate user
         $this->actingAs($this->user);
     }
@@ -64,17 +64,17 @@ class AlovaGraphQLSocketIntegrationTest extends TestCase
         ]);
 
         $response->assertStatus(200)
-                ->assertJsonStructure([
-                    'data' => [
-                        'account' => [
-                            'id',
-                            'name',
-                            'code',
-                            'type',
-                            'balance',
-                        ],
+            ->assertJsonStructure([
+                'data' => [
+                    'account' => [
+                        'id',
+                        'name',
+                        'code',
+                        'type',
+                        'balance',
                     ],
-                ]);
+                ],
+            ]);
 
         $this->assertEquals($account->name, $response->json('data.account.name'));
     }
@@ -197,16 +197,16 @@ class AlovaGraphQLSocketIntegrationTest extends TestCase
         ]);
 
         $response->assertStatus(200)
-                ->assertJsonStructure([
-                    'data' => [
-                        'accountingDashboard' => [
-                            'total_revenue',
-                            'total_expenses',
-                            'net_income',
-                            'cash_flow',
-                        ],
+            ->assertJsonStructure([
+                'data' => [
+                    'accountingDashboard' => [
+                        'total_revenue',
+                        'total_expenses',
+                        'net_income',
+                        'cash_flow',
                     ],
-                ]);
+                ],
+            ]);
     }
 
     /** @test */
@@ -239,16 +239,16 @@ class AlovaGraphQLSocketIntegrationTest extends TestCase
         ]);
 
         $response->assertStatus(200)
-                ->assertJsonStructure([
-                    'data' => [
-                        'inventoryDashboard' => [
-                            'total_products',
-                            'low_stock_items',
-                            'out_of_stock_items',
-                            'total_value',
-                        ],
+            ->assertJsonStructure([
+                'data' => [
+                    'inventoryDashboard' => [
+                        'total_products',
+                        'low_stock_items',
+                        'out_of_stock_items',
+                        'total_value',
                     ],
-                ]);
+                ],
+            ]);
 
         $this->assertEquals(5, $response->json('data.inventoryDashboard.total_products'));
     }
@@ -336,7 +336,7 @@ class AlovaGraphQLSocketIntegrationTest extends TestCase
         ]);
 
         $response->assertStatus(200);
-        
+
         $data = $response->json('data.accounts');
         $this->assertCount(10, $data['data']);
         $this->assertEquals(1, $data['paginatorInfo']['currentPage']);
@@ -379,7 +379,7 @@ class AlovaGraphQLSocketIntegrationTest extends TestCase
         ]);
 
         $response->assertStatus(200);
-        
+
         $accounts = $response->json('data.accounts.data');
         $this->assertCount(1, $accounts);
         $this->assertEquals('ASSET', $accounts[0]['type']);

@@ -2,21 +2,24 @@
 
 namespace App\Features\Dashboard\Services;
 
-use App\Features\Dashboard\Models\DashboardWidget;
-use App\Features\Dashboard\Services\AdvancedDashboardService;
 use App\Features\Accounting\Services\AccountingService;
 use App\Features\Accounting\Services\BudgetService;
 use App\Features\Accounting\Services\ForecastingService;
 use App\Features\Accounting\Services\TaxService;
-use Illuminate\Support\Facades\Cache;
+use App\Features\Dashboard\Models\DashboardWidget;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Cache;
 
 class WidgetService
 {
     protected AdvancedDashboardService $dashboardService;
+
     protected AccountingService $accountingService;
+
     protected BudgetService $budgetService;
+
     protected ForecastingService $forecastingService;
+
     protected TaxService $taxService;
 
     public function __construct(
@@ -80,7 +83,7 @@ class WidgetService
     protected function getFinancialSummaryData(int $organizationId, array $config): array
     {
         $summary = $this->dashboardService->getFinancialSummary($organizationId);
-        
+
         return [
             'type' => 'financial_summary',
             'data' => [
@@ -101,10 +104,10 @@ class WidgetService
     {
         $period = $config['period'] ?? 'last_12_months';
         $chartType = $config['chart_type'] ?? 'line';
-        
+
         // Generate sample data based on period
         $data = $this->generateTimeSeriesData($organizationId, 'revenue', $period);
-        
+
         $chartData = [
             'type' => 'chart',
             'chart_type' => $chartType,
@@ -169,14 +172,14 @@ class WidgetService
         $period = $config['period'] ?? 'last_12_months';
         $chartType = $config['chart_type'] ?? 'bar';
         $groupBy = $config['group_by'] ?? 'category';
-        
+
         if ($groupBy === 'category') {
             return $this->getExpensesByCategoryData($organizationId, $config);
         }
-        
+
         // Time series expense data
         $data = $this->generateTimeSeriesData($organizationId, 'expenses', $period);
-        
+
         return [
             'type' => 'chart',
             'chart_type' => $chartType,
@@ -254,10 +257,10 @@ class WidgetService
     protected function getCashFlowData(int $organizationId, array $config): array
     {
         $period = $config['period'] ?? 'last_6_months';
-        
+
         // Generate cash flow data
         $data = $this->generateCashFlowData($organizationId, $period);
-        
+
         return [
             'type' => 'chart',
             'chart_type' => 'area',
@@ -312,7 +315,7 @@ class WidgetService
     protected function getBudgetOverviewData(int $organizationId, array $config): array
     {
         $budgetOverview = $this->dashboardService->getBudgetOverview($organizationId);
-        
+
         return [
             'type' => 'budget_overview',
             'data' => [
@@ -332,12 +335,12 @@ class WidgetService
     {
         $metrics = $config['metrics'] ?? ['revenue', 'expenses', 'profit_margin', 'cash_flow'];
         $performanceMetrics = $this->dashboardService->getPerformanceMetrics($organizationId);
-        
+
         $kpiData = [];
         foreach ($metrics as $metric) {
             $kpiData[] = $this->getKpiMetric($metric, $performanceMetrics, $config);
         }
-        
+
         return [
             'type' => 'kpi_metrics',
             'data' => $kpiData,
@@ -352,7 +355,7 @@ class WidgetService
     {
         $limit = $config['limit'] ?? 10;
         $activities = $this->dashboardService->getRecentActivity($organizationId, $limit);
-        
+
         return [
             'type' => 'recent_activity',
             'data' => $activities,
@@ -366,7 +369,7 @@ class WidgetService
     protected function getAlertsData(int $organizationId, array $config): array
     {
         $alerts = $this->dashboardService->getAlertsAndNotifications($organizationId);
-        
+
         return [
             'type' => 'alerts',
             'data' => $alerts,
@@ -380,7 +383,7 @@ class WidgetService
     protected function getQuickStatsData(int $organizationId, array $config): array
     {
         $stats = $this->dashboardService->getQuickStats($organizationId);
-        
+
         return [
             'type' => 'quick_stats',
             'data' => $stats,
@@ -402,24 +405,24 @@ class WidgetService
 
         $labels = [];
         $values = [];
-        
+
         for ($i = $months - 1; $i >= 0; $i--) {
             $date = Carbon::now()->subMonths($i);
             $labels[] = $date->format('M Y');
-            
+
             // Generate realistic sample data
             $baseValue = match ($type) {
                 'revenue' => 45000,
                 'expenses' => 32000,
                 default => 25000,
             };
-            
+
             $seasonalFactor = 1 + (sin(($date->month - 1) * pi() / 6) * 0.2);
             $randomFactor = 1 + ((rand(-15, 15) / 100));
-            
+
             $values[] = round($baseValue * $seasonalFactor * $randomFactor, 2);
         }
-        
+
         return ['labels' => $labels, 'values' => $values];
     }
 
@@ -439,16 +442,16 @@ class WidgetService
         $operating = [];
         $investing = [];
         $financing = [];
-        
+
         for ($i = $months - 1; $i >= 0; $i--) {
             $date = Carbon::now()->subMonths($i);
             $labels[] = $date->format('M Y');
-            
+
             $operating[] = rand(15000, 35000);
             $investing[] = rand(-8000, 5000);
             $financing[] = rand(-5000, 10000);
         }
-        
+
         return [
             'labels' => $labels,
             'operating' => $operating,
@@ -465,14 +468,14 @@ class WidgetService
         $labels = [];
         $utilized = [];
         $remaining = [];
-        
+
         foreach ($budgets as $budget) {
             $labels[] = $budget['budget_name'];
             $utilization = $budget['utilization'];
             $utilized[] = $utilization;
             $remaining[] = 100 - $utilization;
         }
-        
+
         return [
             'type' => 'bar',
             'data' => [
@@ -551,12 +554,43 @@ class WidgetService
     }
 
     // Placeholder methods for additional widget types
-    protected function getForecastChartData(int $organizationId, array $config): array { return ['type' => 'forecast_chart', 'data' => []]; }
-    protected function getTaxSummaryData(int $organizationId, array $config): array { return ['type' => 'tax_summary', 'data' => []]; }
-    protected function getBalanceSheetData(int $organizationId, array $config): array { return ['type' => 'balance_sheet', 'data' => []]; }
-    protected function getProfitLossData(int $organizationId, array $config): array { return ['type' => 'profit_loss', 'data' => []]; }
-    protected function getAccountsAgingData(int $organizationId, array $config): array { return ['type' => 'accounts_aging', 'data' => []]; }
-    protected function getInventoryStatusData(int $organizationId, array $config): array { return ['type' => 'inventory_status', 'data' => []]; }
-    protected function generateForecastData(int $organizationId, string $type, int $months): array { return ['values' => []]; }
-    protected function generateBudgetData(int $organizationId, string $type, string $period): array { return ['values' => []]; }
+    protected function getForecastChartData(int $organizationId, array $config): array
+    {
+        return ['type' => 'forecast_chart', 'data' => []];
+    }
+
+    protected function getTaxSummaryData(int $organizationId, array $config): array
+    {
+        return ['type' => 'tax_summary', 'data' => []];
+    }
+
+    protected function getBalanceSheetData(int $organizationId, array $config): array
+    {
+        return ['type' => 'balance_sheet', 'data' => []];
+    }
+
+    protected function getProfitLossData(int $organizationId, array $config): array
+    {
+        return ['type' => 'profit_loss', 'data' => []];
+    }
+
+    protected function getAccountsAgingData(int $organizationId, array $config): array
+    {
+        return ['type' => 'accounts_aging', 'data' => []];
+    }
+
+    protected function getInventoryStatusData(int $organizationId, array $config): array
+    {
+        return ['type' => 'inventory_status', 'data' => []];
+    }
+
+    protected function generateForecastData(int $organizationId, string $type, int $months): array
+    {
+        return ['values' => []];
+    }
+
+    protected function generateBudgetData(int $organizationId, string $type, string $period): array
+    {
+        return ['values' => []];
+    }
 }

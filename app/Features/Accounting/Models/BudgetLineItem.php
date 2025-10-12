@@ -39,8 +39,11 @@ class BudgetLineItem extends HybridModel
      * Budget categories
      */
     const CATEGORY_REVENUE = 'revenue';
+
     const CATEGORY_EXPENSE = 'expense';
+
     const CATEGORY_CAPITAL = 'capital';
+
     const CATEGORY_OTHER = 'other';
 
     /**
@@ -74,11 +77,11 @@ class BudgetLineItem extends HybridModel
     {
         return $query->where(function ($q) use ($startDate, $endDate) {
             $q->whereBetween('period_start', [$startDate, $endDate])
-              ->orWhereBetween('period_end', [$startDate, $endDate])
-              ->orWhere(function ($q2) use ($startDate, $endDate) {
-                  $q2->where('period_start', '<=', $startDate)
-                     ->where('period_end', '>=', $endDate);
-              });
+                ->orWhereBetween('period_end', [$startDate, $endDate])
+                ->orWhere(function ($q2) use ($startDate, $endDate) {
+                    $q2->where('period_start', '<=', $startDate)
+                        ->where('period_end', '>=', $endDate);
+                });
         });
     }
 
@@ -121,6 +124,7 @@ class BudgetLineItem extends HybridModel
     public function updateActualAmount(float $amount): bool
     {
         $this->actual_amount = $amount;
+
         return $this->save();
     }
 
@@ -144,7 +148,7 @@ class BudgetLineItem extends HybridModel
     public function getVarianceStatusColorAttribute(): string
     {
         $variance = $this->calculateVariance();
-        
+
         return match ($variance['status']) {
             'over_budget' => 'red',
             'under_budget' => 'green',

@@ -36,7 +36,7 @@ class RouteServiceProvider extends ServiceProvider
         RateLimiter::for('tenant-api', function (Request $request) {
             $tenant = app('tenant');
             $key = $tenant ? "tenant:{$tenant->id}:{$request->ip()}" : $request->ip();
-            
+
             return Limit::perMinute(100)->by($key);
         });
 
@@ -44,10 +44,10 @@ class RouteServiceProvider extends ServiceProvider
         RateLimiter::for('module-api', function (Request $request) {
             $tenant = app('tenant');
             $module = $request->route('module');
-            $key = $tenant && $module 
-                ? "tenant:{$tenant->id}:module:{$module}:{$request->ip()}" 
+            $key = $tenant && $module
+                ? "tenant:{$tenant->id}:module:{$module}:{$request->ip()}"
                 : $request->ip();
-            
+
             return Limit::perMinute(200)->by($key);
         });
 
@@ -77,33 +77,33 @@ class RouteServiceProvider extends ServiceProvider
     protected function loadModuleRoutes(): void
     {
         $featuresPath = app_path('Features');
-        
-        if (!is_dir($featuresPath)) {
+
+        if (! is_dir($featuresPath)) {
             return;
         }
-        
+
         // Get all feature directories
         $features = array_filter(scandir($featuresPath), function ($item) use ($featuresPath) {
-            return is_dir($featuresPath . '/' . $item) && !in_array($item, ['.', '..']);
+            return is_dir($featuresPath.'/'.$item) && ! in_array($item, ['.', '..']);
         });
-        
+
         foreach ($features as $feature) {
             $featureRoutePath = app_path("Features/{$feature}/Routes");
-            
+
             // Load feature-specific route files
             if (is_dir($featureRoutePath)) {
                 $routeFiles = glob("{$featureRoutePath}/*.php");
-                
+
                 foreach ($routeFiles as $routeFile) {
                     $routeName = basename($routeFile, '.php');
-                    
+
                     // Determine if it's an API route based on filename or directory structure
-                    $isApiRoute = strpos($routeName, 'api') !== false || 
+                    $isApiRoute = strpos($routeName, 'api') !== false ||
                                  strpos($routeFile, '/api/') !== false;
-                    
+
                     if ($isApiRoute) {
                         Route::middleware(['api', 'tenant'])
-                            ->prefix("api/" . strtolower($feature))
+                            ->prefix('api/'.strtolower($feature))
                             ->name("api.{$feature}.")
                             ->group($routeFile);
                     } else {

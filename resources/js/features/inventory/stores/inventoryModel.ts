@@ -255,7 +255,7 @@ export const inventoryModel = createModel<RootModel>()({
       
       try {
         const response = await inventoryApi.updateItem(payload.id, payload.data);
-        dispatch.inventory.updateItem(response.data);
+        dispatch.inventory.updateItem({ id: payload.id, data: payload.data, ...response.data } as InventoryItem & { id: string; data: Partial<InventoryItem> });
         return { success: true, data: response.data };
       } catch (error: any) {
         const errorMessage = error.message || 'Failed to update inventory item';
@@ -300,7 +300,7 @@ export const inventoryModel = createModel<RootModel>()({
         
         // Update item stock quantity
         if (response.data.item) {
-          dispatch.inventory.updateItem(response.data.item);
+          dispatch.inventory.updateItem({ id: response.data.item.id, data: response.data.item, ...response.data.item } as InventoryItem & { id: string; data: Partial<InventoryItem> });
         }
         
         return { success: true, data: response.data };

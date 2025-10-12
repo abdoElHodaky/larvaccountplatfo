@@ -7,7 +7,6 @@ use App\Models\Tenant;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\Config;
 use Tests\TestCase;
 
 class TenantResolverTest extends TestCase
@@ -28,7 +27,7 @@ class TenantResolverTest extends TestCase
         $tenant = Tenant::factory()->create([
             'plan' => 'enterprise',
             'user_count' => 500,
-            'monthly_transaction_count' => 50000
+            'monthly_transaction_count' => 50000,
         ]);
 
         $strategy = $this->tenantResolver->determineDatabaseStrategy($tenant);
@@ -42,7 +41,7 @@ class TenantResolverTest extends TestCase
         $tenant = Tenant::factory()->create([
             'plan' => 'standard',
             'user_count' => 1500,
-            'monthly_transaction_count' => 50000
+            'monthly_transaction_count' => 50000,
         ]);
 
         $strategy = $this->tenantResolver->determineDatabaseStrategy($tenant);
@@ -56,7 +55,7 @@ class TenantResolverTest extends TestCase
         $tenant = Tenant::factory()->create([
             'plan' => 'standard',
             'user_count' => 500,
-            'monthly_transaction_count' => 150000
+            'monthly_transaction_count' => 150000,
         ]);
 
         $strategy = $this->tenantResolver->determineDatabaseStrategy($tenant);
@@ -71,7 +70,7 @@ class TenantResolverTest extends TestCase
             'plan' => 'standard',
             'user_count' => 100,
             'monthly_transaction_count' => 10000,
-            'requires_data_isolation' => true
+            'requires_data_isolation' => true,
         ]);
 
         $strategy = $this->tenantResolver->determineDatabaseStrategy($tenant);
@@ -87,7 +86,7 @@ class TenantResolverTest extends TestCase
             'user_count' => 100,
             'monthly_transaction_count' => 10000,
             'region' => 'us-east-1',
-            'requires_data_isolation' => false
+            'requires_data_isolation' => false,
         ]);
 
         $strategy = $this->tenantResolver->determineDatabaseStrategy($tenant);
@@ -103,7 +102,7 @@ class TenantResolverTest extends TestCase
             'user_count' => 50,
             'monthly_transaction_count' => 5000,
             'region' => null,
-            'requires_data_isolation' => false
+            'requires_data_isolation' => false,
         ]);
 
         $strategy = $this->tenantResolver->determineDatabaseStrategy($tenant);
@@ -138,7 +137,7 @@ class TenantResolverTest extends TestCase
         $tenant = Tenant::factory()->create([
             'plan' => 'standard',
             'user_count' => 100,
-            'region' => 'eu-west-1'
+            'region' => 'eu-west-1',
         ]);
 
         $connectionName = $this->tenantResolver->getConnectionName($tenant);
@@ -161,7 +160,7 @@ class TenantResolverTest extends TestCase
     {
         $tenant = Tenant::factory()->create();
         $user = User::factory()->create(['current_tenant_id' => $tenant->id]);
-        
+
         $this->actingAs($user);
 
         $resolvedTenant = $this->tenantResolver->resolveTenantFromRequest();
@@ -197,7 +196,7 @@ class TenantResolverTest extends TestCase
     public function it_caches_tenant_resolution_results()
     {
         $tenant = Tenant::factory()->create();
-        
+
         Cache::shouldReceive('remember')
             ->once()
             ->with("tenant_db_strategy_{$tenant->id}", 300, \Closure::class)

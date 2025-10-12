@@ -38,7 +38,7 @@ class TenantMiddleware
 
         $tenant = $this->resolveTenant($request);
 
-        if (!$tenant) {
+        if (! $tenant) {
             return $this->handleMissingTenant($request);
         }
 
@@ -69,7 +69,7 @@ class TenantMiddleware
         if (Auth::check()) {
             $user = Auth::user();
             $activeTenantId = session('active_tenant_id');
-            
+
             if ($activeTenantId) {
                 $tenant = $user->tenants()->where('tenant_id', $activeTenantId)->first();
                 if ($tenant && $user->hasAccessToTenant($tenant)) {

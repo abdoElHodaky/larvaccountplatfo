@@ -3,8 +3,7 @@
 /**
  * Global helper functions for the Laravel Modular Accounting Platform
  */
-
-if (!function_exists('current_tenant')) {
+if (! function_exists('current_tenant')) {
     /**
      * Get the current tenant from the application context
      */
@@ -14,7 +13,7 @@ if (!function_exists('current_tenant')) {
     }
 }
 
-if (!function_exists('current_organization')) {
+if (! function_exists('current_organization')) {
     /**
      * Get the current organization from the application context
      */
@@ -24,28 +23,28 @@ if (!function_exists('current_organization')) {
     }
 }
 
-if (!function_exists('tenant_database')) {
+if (! function_exists('tenant_database')) {
     /**
      * Get the current tenant's database connection name
      */
     function tenant_database(): string
     {
         $tenant = current_tenant();
-        
-        if (!$tenant) {
+
+        if (! $tenant) {
             return config('database.default');
         }
 
         return match ($tenant->database_strategy) {
             'dedicated' => "tenant_{$tenant->id}",
             'clustered' => "cluster_{$tenant->region}",
-            'shared' => "shared_shard_" . (($tenant->id % 4) + 1),
+            'shared' => 'shared_shard_'.(($tenant->id % 4) + 1),
             default => config('database.default'),
         };
     }
 }
 
-if (!function_exists('format_currency')) {
+if (! function_exists('format_currency')) {
     /**
      * Format a number as currency for the current organization
      */
@@ -53,22 +52,22 @@ if (!function_exists('format_currency')) {
     {
         $organization = current_organization();
         $currency = $currency ?? $organization?->currency ?? 'USD';
-        
-        return number_format($amount, 2) . ' ' . $currency;
+
+        return number_format($amount, 2).' '.$currency;
     }
 }
 
-if (!function_exists('format_percentage')) {
+if (! function_exists('format_percentage')) {
     /**
      * Format a number as percentage
      */
     function format_percentage(float $value, int $decimals = 2): string
     {
-        return number_format($value, $decimals) . '%';
+        return number_format($value, $decimals).'%';
     }
 }
 
-if (!function_exists('generate_account_code')) {
+if (! function_exists('generate_account_code')) {
     /**
      * Generate a unique account code
      */
@@ -84,12 +83,12 @@ if (!function_exists('generate_account_code')) {
 
         $prefix = $prefixes[$type] ?? '9';
         $timestamp = now()->format('mdHis');
-        
-        return $prefix . $timestamp;
+
+        return $prefix.$timestamp;
     }
 }
 
-if (!function_exists('generate_journal_entry_number')) {
+if (! function_exists('generate_journal_entry_number')) {
     /**
      * Generate a unique journal entry number
      */
@@ -97,8 +96,8 @@ if (!function_exists('generate_journal_entry_number')) {
     {
         $organization = current_organization();
         $prefix = $organization ? strtoupper(substr($organization->name, 0, 3)) : 'JE';
-        
-        return $prefix . '-' . now()->format('Y') . '-' . str_pad(
+
+        return $prefix.'-'.now()->format('Y').'-'.str_pad(
             \App\Features\Accounting\Models\JournalEntry::whereYear('created_at', now()->year)->count() + 1,
             6,
             '0',
@@ -107,7 +106,7 @@ if (!function_exists('generate_journal_entry_number')) {
     }
 }
 
-if (!function_exists('generate_purchase_order_number')) {
+if (! function_exists('generate_purchase_order_number')) {
     /**
      * Generate a unique purchase order number
      */
@@ -115,8 +114,8 @@ if (!function_exists('generate_purchase_order_number')) {
     {
         $organization = current_organization();
         $prefix = $organization ? strtoupper(substr($organization->name, 0, 3)) : 'PO';
-        
-        return $prefix . '-' . now()->format('Y') . '-' . str_pad(
+
+        return $prefix.'-'.now()->format('Y').'-'.str_pad(
             \App\Features\Purchase\Models\PurchaseOrder::whereYear('created_at', now()->year)->count() + 1,
             6,
             '0',
@@ -125,40 +124,43 @@ if (!function_exists('generate_purchase_order_number')) {
     }
 }
 
-if (!function_exists('is_shared_database')) {
+if (! function_exists('is_shared_database')) {
     /**
      * Check if the current tenant is using a shared database
      */
     function is_shared_database(): bool
     {
         $tenant = current_tenant();
+
         return $tenant && $tenant->database_strategy === 'shared';
     }
 }
 
-if (!function_exists('is_dedicated_database')) {
+if (! function_exists('is_dedicated_database')) {
     /**
      * Check if the current tenant is using a dedicated database
      */
     function is_dedicated_database(): bool
     {
         $tenant = current_tenant();
+
         return $tenant && $tenant->database_strategy === 'dedicated';
     }
 }
 
-if (!function_exists('is_clustered_database')) {
+if (! function_exists('is_clustered_database')) {
     /**
      * Check if the current tenant is using a clustered database
      */
     function is_clustered_database(): bool
     {
         $tenant = current_tenant();
+
         return $tenant && $tenant->database_strategy === 'clustered';
     }
 }
 
-if (!function_exists('audit_log')) {
+if (! function_exists('audit_log')) {
     /**
      * Create an audit log entry
      */
@@ -183,7 +185,7 @@ if (!function_exists('audit_log')) {
     }
 }
 
-if (!function_exists('broadcast_inventory_update')) {
+if (! function_exists('broadcast_inventory_update')) {
     /**
      * Broadcast inventory update to real-time channels
      */
@@ -195,23 +197,23 @@ if (!function_exists('broadcast_inventory_update')) {
     }
 }
 
-if (!function_exists('calculate_account_balance')) {
+if (! function_exists('calculate_account_balance')) {
     /**
      * Calculate account balance based on account type
      */
     function calculate_account_balance(string $accountType, float $debits, float $credits): float
     {
         $debitTypes = ['asset', 'expense'];
-        
+
         if (in_array($accountType, $debitTypes)) {
             return $debits - $credits;
         }
-        
+
         return $credits - $debits;
     }
 }
 
-if (!function_exists('get_financial_year_start')) {
+if (! function_exists('get_financial_year_start')) {
     /**
      * Get the financial year start date for the current organization
      */
@@ -219,20 +221,20 @@ if (!function_exists('get_financial_year_start')) {
     {
         $organization = current_organization();
         $fiscalYearStart = $organization?->settings['fiscal_year_start'] ?? '01-01';
-        
+
         [$month, $day] = explode('-', $fiscalYearStart);
-        
-        $startDate = \Carbon\Carbon::create(now()->year, (int)$month, (int)$day);
-        
+
+        $startDate = \Carbon\Carbon::create(now()->year, (int) $month, (int) $day);
+
         if ($startDate->isFuture()) {
             $startDate->subYear();
         }
-        
+
         return $startDate;
     }
 }
 
-if (!function_exists('get_financial_year_end')) {
+if (! function_exists('get_financial_year_end')) {
     /**
      * Get the financial year end date for the current organization
      */
@@ -242,7 +244,7 @@ if (!function_exists('get_financial_year_end')) {
     }
 }
 
-if (!function_exists('is_within_financial_year')) {
+if (! function_exists('is_within_financial_year')) {
     /**
      * Check if a date is within the current financial year
      */
@@ -250,43 +252,44 @@ if (!function_exists('is_within_financial_year')) {
     {
         $start = get_financial_year_start();
         $end = get_financial_year_end();
-        
+
         return $date->between($start, $end);
     }
 }
 
-if (!function_exists('module_enabled')) {
+if (! function_exists('module_enabled')) {
     /**
      * Check if a module is enabled
      */
     function module_enabled(string $module): bool
     {
         $enabledModules = config('modules.enabled', []);
+
         return in_array($module, $enabledModules);
     }
 }
 
-if (!function_exists('get_module_service')) {
+if (! function_exists('get_module_service')) {
     /**
      * Get a service from a specific module
      */
     function get_module_service(string $module, string $service)
     {
-        if (!module_enabled($module)) {
+        if (! module_enabled($module)) {
             throw new \Exception("Module {$module} is not enabled");
         }
-        
+
         $serviceClass = "App\\Features\\{$module}\\Services\\{$service}";
-        
-        if (!class_exists($serviceClass)) {
+
+        if (! class_exists($serviceClass)) {
             throw new \Exception("Service {$service} not found in module {$module}");
         }
-        
+
         return app($serviceClass);
     }
 }
 
-if (!function_exists('tenant_cache_key')) {
+if (! function_exists('tenant_cache_key')) {
     /**
      * Generate a tenant-specific cache key
      */
@@ -294,12 +297,12 @@ if (!function_exists('tenant_cache_key')) {
     {
         $tenant = current_tenant();
         $tenantId = $tenant ? $tenant->id : 'global';
-        
+
         return "tenant_{$tenantId}_{$key}";
     }
 }
 
-if (!function_exists('organization_cache_key')) {
+if (! function_exists('organization_cache_key')) {
     /**
      * Generate an organization-specific cache key
      */
@@ -307,7 +310,7 @@ if (!function_exists('organization_cache_key')) {
     {
         $organization = current_organization();
         $orgId = $organization ? $organization->id : 'global';
-        
+
         return "org_{$orgId}_{$key}";
     }
 }

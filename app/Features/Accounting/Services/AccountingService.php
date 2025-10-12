@@ -3,14 +3,14 @@
 namespace App\Features\Accounting\Services;
 
 use App\Features\Accounting\Models\Account;
-use App\Features\Accounting\Models\Transaction;
-use App\Features\Accounting\Models\JournalEntry;
 use App\Features\Accounting\Models\AccountBalance;
-use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\Log;
+use App\Features\Accounting\Models\JournalEntry;
+use App\Features\Accounting\Models\Transaction;
 use Carbon\Carbon;
+use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class AccountingService
 {
@@ -20,7 +20,7 @@ class AccountingService
     public function getDashboardOverview(int $organizationId): array
     {
         $cacheKey = "accounting_overview_{$organizationId}";
-        
+
         return Cache::remember($cacheKey, 300, function () use ($organizationId) {
             $currentYear = now()->year;
             $currentMonth = now()->month;
@@ -34,15 +34,15 @@ class AccountingService
 
             // Recent transactions
             $recentTransactions = Transaction::where('organization_id', $organizationId)
-                                           ->with(['journalEntries.account'])
-                                           ->orderBy('transaction_date', 'desc')
-                                           ->limit(10)
-                                           ->get();
+                ->with(['journalEntries.account'])
+                ->orderBy('transaction_date', 'desc')
+                ->limit(10)
+                ->get();
 
             // Pending transactions
             $pendingTransactions = Transaction::where('organization_id', $organizationId)
-                                            ->pending()
-                                            ->count();
+                ->pending()
+                ->count();
 
             // Monthly revenue trend
             $monthlyRevenue = $this->getMonthlyRevenueTrend($organizationId, $currentYear);
@@ -71,22 +71,22 @@ class AccountingService
     public function getChartOfAccounts(int $organizationId, array $filters = []): Collection
     {
         $query = Account::where('organization_id', $organizationId)
-                       ->with(['parent', 'children'])
-                       ->orderBy('code')
-                       ->orderBy('name');
+            ->with(['parent', 'children'])
+            ->orderBy('code')
+            ->orderBy('name');
 
         // Apply filters
-        if (!empty($filters['type'])) {
+        if (! empty($filters['type'])) {
             $query->where('type', $filters['type']);
         }
 
-        if (!empty($filters['active_only'])) {
+        if (! empty($filters['active_only'])) {
             $query->active();
         }
 
-        if (!empty($filters['parent_id'])) {
+        if (! empty($filters['parent_id'])) {
             $query->where('parent_id', $filters['parent_id']);
-        } elseif (!empty($filters['root_only'])) {
+        } elseif (! empty($filters['root_only'])) {
             $query->root();
         }
 
@@ -117,7 +117,7 @@ class AccountingService
             $account = Account::create($data);
 
             // Create initial balance record if opening balance provided
-            if (!empty($data['opening_balance'])) {
+            if (! empty($data['opening_balance'])) {
                 AccountBalance::create([
                     'organization_id' => $organizationId,
                     'account_id' => $account->id,
@@ -139,7 +139,6 @@ class AccountingService
             Log::info('Account created', ['account_id' => $account->id, 'organization_id' => $organizationId]);
 
             return $account;
-
         } catch (\Exception $e) {
             DB::rollBack();
             Log::error('Failed to create account', ['error' => $e->getMessage(), 'data' => $data]);
@@ -188,7 +187,7 @@ class AccountingService
             }
 
             // Validate that transaction is balanced
-            if (!$transaction->isBalanced()) {
+            if (! $transaction->isBalanced()) {
                 throw new \Exception('Transaction is not balanced. Debits must equal credits.');
             }
 
@@ -200,7 +199,6 @@ class AccountingService
             Log::info('Journal entry created', ['transaction_id' => $transaction->id]);
 
             return $transaction->load('journalEntries.account');
-
         } catch (\Exception $e) {
             DB::rollBack();
             Log::error('Failed to create journal entry', ['error' => $e->getMessage(), 'data' => $data]);
@@ -211,16 +209,16 @@ class AccountingService
     /**
      * Get trial balance
      */
-    public function getTrialBalance(int $organizationId, Carbon $asOfDate = null): array
+    public function getTrialBalance(int $organizationId, ?Carbon $asOfDate = null): array
     {
         $asOfDate = $asOfDate ?: now();
-        
+
         $accounts = Account::where('organization_id', $organizationId)
-                          ->active()
-                          ->with(['journalEntries' => function ($query) use ($asOfDate) {
-                              $query->where('entry_date', '<=', $asOfDate);
-                          }])
-                          ->get();
+            ->active()
+            ->with(['journalEntries' => function ($query) use ($asOfDate) {
+                $query->where('entry_date', '<=', $asOfDate);
+            }])
+            ->get();
 
         $trialBalance = [];
         $totalDebits = 0;
@@ -229,9 +227,9 @@ class AccountingService
         foreach ($accounts as $account) {
             $debitTotal = $account->journalEntries->sum('debit_amount');
             $creditTotal = $account->journalEntries->sum('credit_amount');
-            
-            $balance = $account->isDebitAccount() 
-                ? ($debitTotal - $creditTotal) 
+
+            $balance = $account->isDebitAccount()
+                ? ($debitTotal - $creditTotal)
                 : ($creditTotal - $debitTotal);
 
             if ($balance != 0) {
@@ -264,18 +262,18 @@ class AccountingService
     /**
      * Get general ledger for an account
      */
-    public function getGeneralLedger(int $accountId, Carbon $startDate = null, Carbon $endDate = null): array
+    public function getGeneralLedger(int $accountId, ?Carbon $startDate = null, ?Carbon $endDate = null): array
     {
         $account = Account::findOrFail($accountId);
         $startDate = $startDate ?: now()->startOfYear();
         $endDate = $endDate ?: now();
 
         $entries = JournalEntry::where('account_id', $accountId)
-                              ->dateRange($startDate, $endDate)
-                              ->with(['transaction'])
-                              ->orderBy('entry_date')
-                              ->orderBy('id')
-                              ->get();
+            ->dateRange($startDate, $endDate)
+            ->with(['transaction'])
+            ->orderBy('entry_date')
+            ->orderBy('id')
+            ->get();
 
         $runningBalance = $account->opening_balance;
         $ledgerEntries = [];
@@ -312,27 +310,27 @@ class AccountingService
     /**
      * Get total by account type
      */
-    private function getTotalByAccountType(int $organizationId, string $type, int $year = null): float
+    private function getTotalByAccountType(int $organizationId, string $type, ?int $year = null): float
     {
         $query = Account::where('organization_id', $organizationId)
-                       ->where('type', $type)
-                       ->active();
+            ->where('type', $type)
+            ->active();
 
         if ($year) {
             return $query->withSum(['journalEntries as total_debits' => function ($q) use ($year) {
-                        $q->fiscalYear($year);
-                    }], 'debit_amount')
-                    ->withSum(['journalEntries as total_credits' => function ($q) use ($year) {
-                        $q->fiscalYear($year);
-                    }], 'credit_amount')
-                    ->get()
-                    ->sum(function ($account) {
-                        if ($account->isDebitAccount()) {
-                            return ($account->total_debits ?? 0) - ($account->total_credits ?? 0);
-                        } else {
-                            return ($account->total_credits ?? 0) - ($account->total_debits ?? 0);
-                        }
-                    });
+                $q->fiscalYear($year);
+            }], 'debit_amount')
+                ->withSum(['journalEntries as total_credits' => function ($q) use ($year) {
+                    $q->fiscalYear($year);
+                }], 'credit_amount')
+                ->get()
+                ->sum(function ($account) {
+                    if ($account->isDebitAccount()) {
+                        return ($account->total_debits ?? 0) - ($account->total_credits ?? 0);
+                    } else {
+                        return ($account->total_credits ?? 0) - ($account->total_debits ?? 0);
+                    }
+                });
         }
 
         return $query->sum('current_balance');
@@ -344,20 +342,20 @@ class AccountingService
     private function getMonthlyRevenueTrend(int $organizationId, int $year): array
     {
         $revenueAccounts = Account::where('organization_id', $organizationId)
-                                 ->where('type', Account::TYPE_REVENUE)
-                                 ->active()
-                                 ->pluck('id');
+            ->where('type', Account::TYPE_REVENUE)
+            ->active()
+            ->pluck('id');
 
         $monthlyData = [];
         for ($month = 1; $month <= 12; $month++) {
             $revenue = JournalEntry::whereIn('account_id', $revenueAccounts)
-                                  ->where('fiscal_year', $year)
-                                  ->where('fiscal_period', $month)
-                                  ->sum('credit_amount') - 
+                ->where('fiscal_year', $year)
+                ->where('fiscal_period', $month)
+                ->sum('credit_amount') -
                       JournalEntry::whereIn('account_id', $revenueAccounts)
-                                  ->where('fiscal_year', $year)
-                                  ->where('fiscal_period', $month)
-                                  ->sum('debit_amount');
+                          ->where('fiscal_year', $year)
+                          ->where('fiscal_period', $month)
+                          ->sum('debit_amount');
 
             $monthlyData[] = [
                 'month' => $month,
@@ -376,10 +374,10 @@ class AccountingService
     {
         // This is a simplified cash flow calculation
         // In a real implementation, you'd want more sophisticated cash flow analysis
-        
+
         $operatingRevenue = $this->getTotalByAccountType($organizationId, Account::TYPE_REVENUE, $year);
         $operatingExpenses = $this->getTotalByAccountType($organizationId, Account::TYPE_EXPENSE, $year);
-        
+
         return [
             'operating_cash_flow' => $operatingRevenue - $operatingExpenses,
             'investing_cash_flow' => 0, // Would need specific account mapping
@@ -402,12 +400,12 @@ class AccountingService
         ];
 
         $prefix = $prefixes[$type] ?? '9';
-        
+
         $lastAccount = Account::where('organization_id', $organizationId)
-                             ->where('type', $type)
-                             ->where('code', 'like', $prefix . '%')
-                             ->orderBy('code', 'desc')
-                             ->first();
+            ->where('type', $type)
+            ->where('code', 'like', $prefix.'%')
+            ->orderBy('code', 'desc')
+            ->first();
 
         if ($lastAccount) {
             $lastNumber = (int) substr($lastAccount->code, 1);
@@ -416,7 +414,7 @@ class AccountingService
             $nextNumber = 1000; // Start from 1000
         }
 
-        return $prefix . str_pad($nextNumber, 3, '0', STR_PAD_LEFT);
+        return $prefix.str_pad($nextNumber, 3, '0', STR_PAD_LEFT);
     }
 
     /**
@@ -425,6 +423,7 @@ class AccountingService
     private function getDefaultNormalBalance(string $type): string
     {
         $debitTypes = [Account::TYPE_ASSET, Account::TYPE_EXPENSE];
+
         return in_array($type, $debitTypes) ? Account::NORMAL_BALANCE_DEBIT : Account::NORMAL_BALANCE_CREDIT;
     }
 

@@ -48,7 +48,7 @@ class BroadcastTransactionEvents
         $changes = $transaction->getChanges();
 
         // Only broadcast if there are meaningful changes
-        if (!empty($changes)) {
+        if (! empty($changes)) {
             TransactionUpdated::dispatch($transaction, $changes);
 
             // Update dashboard metrics if amount or account changed

@@ -2,19 +2,21 @@
 
 namespace Tests\Shared;
 
-use Tests\TestCase;
+use App\Models\GlobalUser;
 use App\Models\Tenant;
 use App\Models\User;
-use App\Models\GlobalUser;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\DB;
+use Tests\TestCase;
 
 abstract class TenantTestCase extends TestCase
 {
     use RefreshDatabase;
 
     protected ?Tenant $tenant = null;
+
     protected ?User $user = null;
+
     protected ?GlobalUser $globalUser = null;
 
     /**
@@ -23,13 +25,13 @@ abstract class TenantTestCase extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        
+
         // Set up test databases
         $this->setUpTestDatabases();
-        
+
         // Create default tenant for testing
         $this->createTestTenant();
-        
+
         // Set tenant context
         $this->setTenantContext();
     }
@@ -99,7 +101,7 @@ abstract class TenantTestCase extends TestCase
     {
         if ($this->tenant) {
             app()->instance('tenant', $this->tenant);
-            
+
             // Set the default database connection for tenant data
             DB::setDefaultConnection($this->tenant->database_name);
         }
@@ -111,7 +113,7 @@ abstract class TenantTestCase extends TestCase
     protected function actingAsTenantUser(?User $user = null): self
     {
         $user = $user ?: $this->createTestUser();
-        
+
         return $this->actingAs($user);
     }
 
@@ -121,7 +123,7 @@ abstract class TenantTestCase extends TestCase
     protected function actingAsGlobalUser(?GlobalUser $user = null): self
     {
         $user = $user ?: $this->createTestGlobalUser();
-        
+
         return $this->actingAs($user, 'global');
     }
 
@@ -140,7 +142,7 @@ abstract class TenantTestCase extends TestCase
     protected function assertCurrentTenant(Tenant $expectedTenant): void
     {
         $currentTenant = app('tenant');
-        
+
         $this->assertNotNull($currentTenant, 'No tenant is currently set');
         $this->assertEquals($expectedTenant->id, $currentTenant->id);
     }
@@ -196,7 +198,7 @@ abstract class TenantTestCase extends TestCase
         // Reset tenant context
         app()->forgetInstance('tenant');
         DB::setDefaultConnection('testing');
-        
+
         parent::tearDown();
     }
 }

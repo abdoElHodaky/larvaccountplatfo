@@ -7,14 +7,17 @@ use DateTimeImmutable;
 abstract class DomainEvent
 {
     private string $eventId;
+
     private DateTimeImmutable $occurredAt;
+
     private string $eventType;
+
     private int $version;
 
     public function __construct()
     {
         $this->eventId = $this->generateEventId();
-        $this->occurredAt = new DateTimeImmutable();
+        $this->occurredAt = new DateTimeImmutable;
         $this->eventType = static::class;
         $this->version = $this->getEventVersion();
     }
@@ -83,12 +86,12 @@ abstract class DomainEvent
      */
     public static function fromArray(array $data): static
     {
-        $event = new static();
+        $event = new static;
         $event->eventId = $data['event_id'];
         $event->eventType = $data['event_type'];
         $event->version = $data['version'];
         $event->occurredAt = new DateTimeImmutable($data['occurred_at']);
-        
+
         return $event;
     }
 
@@ -96,11 +99,11 @@ abstract class DomainEvent
     {
         return sprintf(
             '%04x%04x-%04x-%04x-%04x-%04x%04x%04x',
-            mt_rand(0, 0xffff), mt_rand(0, 0xffff),
-            mt_rand(0, 0xffff),
-            mt_rand(0, 0x0fff) | 0x4000,
-            mt_rand(0, 0x3fff) | 0x8000,
-            mt_rand(0, 0xffff), mt_rand(0, 0xffff), mt_rand(0, 0xffff)
+            mt_rand(0, 0xFFFF), mt_rand(0, 0xFFFF),
+            mt_rand(0, 0xFFFF),
+            mt_rand(0, 0x0FFF) | 0x4000,
+            mt_rand(0, 0x3FFF) | 0x8000,
+            mt_rand(0, 0xFFFF), mt_rand(0, 0xFFFF), mt_rand(0, 0xFFFF)
         );
     }
 }

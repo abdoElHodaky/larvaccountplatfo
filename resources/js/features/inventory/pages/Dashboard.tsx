@@ -26,10 +26,7 @@ export default function Dashboard({
     if (error) {
         return (
             <AppLayout>
-                <Head 
-                    title="Inventory Dashboard" 
-                    description="Inventory dashboard error page"
-                />
+                <Head title="Inventory Dashboard" />
                 <div className="bg-red-50 border border-red-200 rounded-md p-4">
                     <div className="flex">
                         <div className="ml-3">
@@ -50,10 +47,7 @@ export default function Dashboard({
 
     return (
         <AppLayout>
-            <Head 
-                title="Inventory Dashboard" 
-                description="Inventory management dashboard with stock levels and product overview"
-            />
+            <Head title="Inventory Dashboard" />
             
             <div className="space-y-6">
                 {/* Header */}
