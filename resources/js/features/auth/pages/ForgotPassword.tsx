@@ -41,11 +41,10 @@ export default function ForgotPassword({ status }: ForgotPasswordProps) {
                     <FormInput
                         label="Email address"
                         type="email"
-                        name="email"
                         value={data.email}
-                        onChange={(e) => setData('email', e.target.value)}
+                        onChange={(value) => setData('email', value as string)}
                         error={errors.email}
-                        required
+                        isRequired
                         autoComplete="email"
                         autoFocus
                     />

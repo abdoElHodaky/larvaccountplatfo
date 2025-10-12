@@ -39,11 +39,10 @@ export default function ResetPassword({ token, email }: ResetPasswordProps) {
                     <FormInput
                         label="Email address"
                         type="email"
-                        name="email"
                         value={data.email}
-                        onChange={(e) => setData('email', e.target.value)}
+                        onChange={(value) => setData('email', value as string)}
                         error={errors.email}
-                        required
+                        isRequired
                         autoComplete="email"
                         readOnly
                     />
@@ -51,11 +50,10 @@ export default function ResetPassword({ token, email }: ResetPasswordProps) {
                     <FormInput
                         label="New Password"
                         type="password"
-                        name="password"
                         value={data.password}
-                        onChange={(e) => setData('password', e.target.value)}
+                        onChange={(value) => setData('password', value as string)}
                         error={errors.password}
-                        required
+                        isRequired
                         autoComplete="new-password"
                         autoFocus
                     />
@@ -63,11 +61,10 @@ export default function ResetPassword({ token, email }: ResetPasswordProps) {
                     <FormInput
                         label="Confirm Password"
                         type="password"
-                        name="password_confirmation"
                         value={data.password_confirmation}
-                        onChange={(e) => setData('password_confirmation', e.target.value)}
+                        onChange={(value) => setData('password_confirmation', value as string)}
                         error={errors.password_confirmation}
-                        required
+                        isRequired
                         autoComplete="new-password"
                     />
 
