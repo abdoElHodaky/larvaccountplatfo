@@ -26,3 +26,10 @@ export { Card } from './Card';
 export { Widget } from './Widget';
 export { List } from './List';
 export { Loader } from './Loader';
+
+// Phase 5 Enhanced Components - HeadlessUI + LiveIcons Integration
+export { EnhancedMenu, ActionMenu } from './enhanced/EnhancedMenu';
+export { EnhancedDialog, ConfirmDialog } from './enhanced/EnhancedDialog';
+
+// Phase 5 Integration Showcase
+export { IntegrationShowcase } from './examples/IntegrationShowcase';

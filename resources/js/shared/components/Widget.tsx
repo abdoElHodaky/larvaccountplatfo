@@ -1,10 +1,11 @@
 /**
- * Animated Widget Component - Phase 4
- * Unified dashboard widget with resize, data update, and entrance animations
+ * Animated Widget Component - Phase 4 + Phase 5 Integration
+ * Unified dashboard widget with resize, data update, and entrance animations + LiveIcons support
  */
 
 import React, { useRef, useEffect, forwardRef, useState } from 'react';
 import { animations, keyframes, animate, type AnimatedComponentProps } from '../animations';
+import { type LiveIconProps } from '../icons';
 
 interface WidgetProps extends AnimatedComponentProps {
   title?: string;
@@ -14,6 +15,11 @@ interface WidgetProps extends AnimatedComponentProps {
   resizable?: boolean;
   onResize?: (size: string) => void;
   refreshing?: boolean;
+  // Phase 5: LiveIcons integration
+  icon?: React.ComponentType<LiveIconProps>;
+  iconProps?: LiveIconProps;
+  statusIcon?: React.ComponentType<LiveIconProps>;
+  statusIconProps?: LiveIconProps;
 }
 
 export const Widget = forwardRef<HTMLDivElement, WidgetProps>(({
@@ -138,4 +144,3 @@ export const Widget = forwardRef<HTMLDivElement, WidgetProps>(({
 });
 
 Widget.displayName = 'Widget';
-

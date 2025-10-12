@@ -1,10 +1,11 @@
 /**
- * Animated Card Component - Phase 4
- * Unified card with hover, loading, and interaction animations
+ * Animated Card Component - Phase 4 + Phase 5 Integration
+ * Unified card with hover, loading, and interaction animations + LiveIcons support
  */
 
 import React, { useRef, useEffect, forwardRef } from 'react';
 import { animations, keyframes, animate, type AnimatedComponentProps } from '../animations';
+import { type LiveIconProps } from '../icons';
 
 interface CardProps extends AnimatedComponentProps {
   hover?: boolean;
@@ -12,6 +13,10 @@ interface CardProps extends AnimatedComponentProps {
   interactive?: boolean;
   variant?: 'default' | 'elevated' | 'outlined';
   onClick?: () => void;
+  // Phase 5: LiveIcons integration
+  icon?: React.ComponentType<LiveIconProps>;
+  iconProps?: LiveIconProps;
+  iconPosition?: 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right' | 'center';
 }
 
 export const Card = forwardRef<HTMLDivElement, CardProps>(({
@@ -24,6 +29,10 @@ export const Card = forwardRef<HTMLDivElement, CardProps>(({
   variant = 'default',
   disabled = false,
   onClick,
+  // Phase 5: LiveIcons props
+  icon: Icon,
+  iconProps = {},
+  iconPosition = 'top-right',
   ...props
 }, ref) => {
   const cardRef = useRef<HTMLDivElement>(null);
@@ -90,17 +99,35 @@ export const Card = forwardRef<HTMLDivElement, CardProps>(({
     ${className}
   `.trim();
 
+  // Icon positioning classes
+  const iconPositionClasses = {
+    'top-left': 'absolute top-2 left-2',
+    'top-right': 'absolute top-2 right-2',
+    'bottom-left': 'absolute bottom-2 left-2',
+    'bottom-right': 'absolute bottom-2 right-2',
+    'center': 'absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2'
+  };
+
   return (
     <div
       ref={ref || cardRef}
-      className={baseClasses}
+      className={`${baseClasses} ${Icon ? 'relative' : ''}`}
       onClick={handleClick}
       {...props}
     >
+      {Icon && (
+        <div className={iconPositionClasses[iconPosition]}>
+          <Icon
+            size="sm"
+            color="secondary"
+            trigger="hover"
+            {...iconProps}
+          />
+        </div>
+      )}
       {children}
     </div>
   );
 });
 
 Card.displayName = 'Card';
-
