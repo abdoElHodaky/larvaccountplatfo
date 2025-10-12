@@ -417,6 +417,7 @@ export const IntegrationSettings = memo<IntegrationSettingsProps>(({
                     variant="ghost"
                     onClick={() => handleSyncIntegration(integration.id)}
                     title="Sync"
+                    aria-label="Sync integration"
                   />
                   <IconButton
                     icon={<FiCheck />}
@@ -425,6 +426,7 @@ export const IntegrationSettings = memo<IntegrationSettingsProps>(({
                     colorScheme="green"
                     onClick={() => handleTestIntegration(integration.id)}
                     title="Test Connection"
+                    aria-label="Test connection"
                   />
                   <IconButton
                     icon={<FiEdit2 />}
@@ -432,6 +434,7 @@ export const IntegrationSettings = memo<IntegrationSettingsProps>(({
                     variant="ghost"
                     onClick={() => openEditModal(integration)}
                     title="Edit"
+                    aria-label="Edit integration"
                   />
                   <IconButton
                     icon={<FiTrash2 />}
@@ -440,6 +443,7 @@ export const IntegrationSettings = memo<IntegrationSettingsProps>(({
                     colorScheme="red"
                     onClick={() => handleDeleteIntegration(integration.id)}
                     title="Delete"
+                    aria-label="Delete integration"
                   />
                 </HStack>
               </VStack>

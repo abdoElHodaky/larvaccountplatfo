@@ -9,7 +9,7 @@ export type {
   FormErrors,
   NavigationItem,
   PaginatedData,
-  SelectOption,
+  SelectOption
 } from './common';
 
 // Authentication types
@@ -17,7 +17,7 @@ export type {
   User,
   Organization,
   Tenant,
-  PageProps,
+  PageProps
 } from './auth';
 
 // Laravel/Inertia types
@@ -26,7 +26,7 @@ export type {
   AccountBalance,
   DashboardStats,
   JournalEntry,
-  Transaction,
+  Transaction
 } from './laravel';
 
 // Re-export accounting types for backward compatibility

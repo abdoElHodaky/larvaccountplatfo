@@ -1,4 +1,4 @@
-// React import removed - not needed for this component
+
 import { Head, Link } from '@inertiajs/react';
 import AppLayout from '@/shared/components/layouts/AppLayout';
 import { Product, ProductCategory } from '../types';

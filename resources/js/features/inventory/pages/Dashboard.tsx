@@ -1,6 +1,4 @@
-// React import removed - not needed for this component
-import { Link } from '@inertiajs/react';
-import { DocumentHead } from '@/shared/components/seo/DocumentHead';
+import { Head, Link } from '@inertiajs/react';
 import AppLayout from '@/shared/components/layouts/AppLayout';
 import { formatCurrency, formatDate, formatNumber } from '@/shared/utils';
 import { Product, StockMovement, InventoryStats } from '../types';
