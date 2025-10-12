@@ -1,0 +1,63 @@
+sequenceDiagram
+    participant User
+    participant Component
+    participant LiveIcon
+    participant Registry
+    participant AnimationEngine
+    participant Browser
+
+    Note over User,Browser: LiveIcon Animation Flow
+
+    User->>Component: Render component with icon
+    Component->>LiveIcon: Create LiveIcon instance
+    
+    LiveIcon->>Registry: Request icon component
+    alt Icon not cached
+        Registry->>Registry: Load icon from @heroicons
+        Registry->>Registry: Cache icon component
+    end
+    Registry-->>LiveIcon: Return icon component
+    
+    LiveIcon->>LiveIcon: Setup animation listeners
+    LiveIcon->>Browser: Render icon with base styles
+    
+    alt Trigger: hover
+        User->>LiveIcon: Mouse enter
+        LiveIcon->>AnimationEngine: Check reduced motion
+        alt Motion allowed
+            AnimationEngine->>Browser: Start animation
+            Browser-->>User: Visual feedback
+        end
+        
+        User->>LiveIcon: Mouse leave
+        LiveIcon->>AnimationEngine: Reverse animation
+        AnimationEngine->>Browser: Reverse animation
+    end
+    
+    alt Trigger: click
+        User->>LiveIcon: Click icon
+        LiveIcon->>AnimationEngine: Trigger click animation
+        AnimationEngine->>Browser: Execute animation
+        Browser-->>User: Click feedback
+    end
+    
+    alt Trigger: visible
+        Browser->>LiveIcon: Intersection observed
+        LiveIcon->>AnimationEngine: Trigger visibility animation
+        AnimationEngine->>Browser: Execute animation
+        Browser-->>User: Entrance animation
+    end
+    
+    alt Trigger: always
+        LiveIcon->>AnimationEngine: Start continuous animation
+        loop Continuous
+            AnimationEngine->>Browser: Execute animation cycle
+            Browser-->>User: Continuous animation
+        end
+    end
+    
+    Note over LiveIcon,AnimationEngine: Cleanup on unmount
+    Component->>LiveIcon: Component unmounting
+    LiveIcon->>AnimationEngine: Cancel all animations
+    LiveIcon->>Registry: Release references
+    AnimationEngine->>Browser: Cleanup animation resources

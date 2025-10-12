@@ -1,0 +1,103 @@
+graph TB
+    subgraph "LiveIcons System Architecture"
+        subgraph "Entry Points"
+            A[index.ts<br/>Main Export] --> B[exports.ts<br/>Unified Exports]
+            B --> C[Individual Icons]
+            B --> D[Icon Sets]
+            B --> E[Dynamic Icons]
+        end
+
+        subgraph "Core System"
+            F[IconRegistry.ts<br/>Centralized Registry] --> G[Lazy Loading]
+            F --> H[Caching Layer]
+            F --> I[Metadata Management]
+            
+            J[types.ts<br/>Type System] --> K[IconProps Interface]
+            J --> L[Category Types]
+            J --> M[Constants]
+            
+            N[utils.ts<br/>Utilities] --> O[createLiveIcon]
+            N --> P[DynamicIcon]
+            N --> Q[Performance Monitor]
+        end
+
+        subgraph "Icon Categories"
+            R[Navigation Icons<br/>nav-*] --> R1[nav-home]
+            R --> R2[nav-back]
+            R --> R3[nav-menu]
+            
+            S[Action Icons<br/>action-*] --> S1[action-edit]
+            S --> S2[action-delete]
+            S --> S3[action-add]
+            
+            T[Form Icons<br/>form-*] --> T1[form-search]
+            T --> T2[form-filter]
+            T --> T3[form-calendar]
+            
+            U[Status Icons<br/>status-*] --> U1[status-success]
+            U --> U2[status-error]
+            U --> U3[status-loading]
+        end
+
+        subgraph "Animation System"
+            V[Animation Engine] --> W[Hardware Acceleration]
+            V --> X[Reduced Motion Support]
+            V --> Y[Cleanup Management]
+            
+            Z[Animation Types] --> Z1[bounce]
+            Z --> Z2[pulse]
+            Z --> Z3[rotate]
+            Z --> Z4[shake]
+            Z --> Z5[loading]
+            Z --> Z6[success]
+            Z --> Z7[error]
+        end
+
+        subgraph "Performance Layer"
+            AA[Tree Shaking] --> BB[Bundle Optimization]
+            CC[Parallel Processing] --> DD[Batch Loading]
+            EE[Caching Strategy] --> FF[Memory Management]
+        end
+
+        subgraph "External Dependencies"
+            GG[@heroicons/react] --> HH[Icon Components]
+            II[React] --> JJ[Component System]
+            KK[Animation API] --> LL[Web Animations]
+        end
+    end
+
+    %% Connections
+    B --> F
+    B --> J
+    B --> N
+    
+    F --> R
+    F --> S
+    F --> T
+    F --> U
+    
+    N --> V
+    V --> Z
+    
+    O --> GG
+    O --> II
+    O --> KK
+    
+    AA --> B
+    CC --> F
+    EE --> H
+
+    %% Styling
+    classDef entryPoint fill:#e1f5fe,stroke:#01579b,stroke-width:2px
+    classDef coreSystem fill:#f3e5f5,stroke:#4a148c,stroke-width:2px
+    classDef iconCategory fill:#e8f5e8,stroke:#1b5e20,stroke-width:2px
+    classDef animation fill:#fff3e0,stroke:#e65100,stroke-width:2px
+    classDef performance fill:#fce4ec,stroke:#880e4f,stroke-width:2px
+    classDef external fill:#f1f8e9,stroke:#33691e,stroke-width:2px
+
+    class A,B,C,D,E entryPoint
+    class F,G,H,I,J,K,L,M,N,O,P,Q coreSystem
+    class R,R1,R2,R3,S,S1,S2,S3,T,T1,T2,T3,U,U1,U2,U3 iconCategory
+    class V,W,X,Y,Z,Z1,Z2,Z3,Z4,Z5,Z6,Z7 animation
+    class AA,BB,CC,DD,EE,FF performance
+    class GG,HH,II,JJ,KK,LL external
