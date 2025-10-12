@@ -5,7 +5,7 @@
  * Centralized state management for the application.
  */
 
-import { init, RematchDispatch, RematchRootState } from '@rematch/core';
+import { init, RematchDispatch, RematchRootState } from '@rematch/PATTERNS';
 import persistPlugin from '@rematch/persist';
 import loadingPlugin, { ExtraModelsFromLoading } from '@rematch/loading';
 import { appModel, type AppModel } from './models/appModel';

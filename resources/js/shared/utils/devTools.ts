@@ -3,7 +3,7 @@
  * Debugging and monitoring utilities for development environment
  */
 
-import { performanceMonitor } from './performanceMonitor';
+import { performanceMonitor } from './PerformanceMonitor';
 import { persistenceUtils } from '../stores/persistence';
 import type { RootState } from '../stores';
 

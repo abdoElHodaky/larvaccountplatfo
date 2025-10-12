@@ -220,9 +220,9 @@ class ModuleDiscoveryService
             $errors[] = "Module path does not exist: {$moduleConfig['path']}";
         }
 
-        // Validate provider class exists
+        // Validate provider class Exists
         if (! empty($moduleConfig['provider']) && ! class_exists($moduleConfig['provider'])) {
-            $errors[] = "Provider class does not exist: {$moduleConfig['provider']}";
+            $errors[] = "Provider class Does not exist: {$moduleConfig['provider']}";
         }
 
         // Validate database strategies

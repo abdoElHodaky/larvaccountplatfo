@@ -4,7 +4,7 @@
  */
 
 import React, { Component, ErrorInfo, ReactNode } from 'react';
-import { performanceMonitor } from '../utils/performanceMonitor';
+import { performanceMonitor } from '../utils/PerformanceMonitor';
 
 interface ErrorBoundaryState {
   hasError: boolean;

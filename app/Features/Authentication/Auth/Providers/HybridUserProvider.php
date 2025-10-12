@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Model;
 class HybridUserProvider extends EloquentUserProvider
 {
     /**
-     * The global user model class name.
+     * The global user model class Name.
      */
     protected $globalModel;
 

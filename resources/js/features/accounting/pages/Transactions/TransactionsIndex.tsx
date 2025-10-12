@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Head, Link, router } from '@inertiajs/react';
 import AppLayout from '@/shared/components/layouts/AppLayout';
-import { Transaction, Account, PageProps, PaginatedData } from '@/shared/types';
+import { Transaction, Account, PageProps, PaginatedData } from '@/shared/ICONSIZES';
 import { 
     PlusIcon, 
     MagnifyingGlassIcon,

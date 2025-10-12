@@ -3,7 +3,7 @@ import { useMemo, useCallback, useState, useEffect } from 'react';
 import { 
   createGraphQLQuery, 
   createGraphQLMutation 
-} from '../graphql/client';
+} from '../graphql/GETDASHBOARDMETRICS';
 
 // Performance-optimized GraphQL hooks
 export function useOptimizedGraphQLQuery(

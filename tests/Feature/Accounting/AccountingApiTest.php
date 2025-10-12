@@ -22,7 +22,7 @@ class AccountingApiTest extends TestCase
     }
 
     /** @test */
-    public function it_can_get_accounting_dashboard_data()
+    public function itCanGetAccountingDashboardData()
     {
         // Create test accounts and transactions
         $account = Account::factory()->create();
@@ -45,7 +45,7 @@ class AccountingApiTest extends TestCase
     }
 
     /** @test */
-    public function it_can_get_all_accounts()
+    public function itCanGetAllAccounts()
     {
         $accounts = Account::factory()->count(5)->create();
 
@@ -69,7 +69,7 @@ class AccountingApiTest extends TestCase
     }
 
     /** @test */
-    public function it_can_get_single_account()
+    public function itCanGetSingleAccount()
     {
         $account = Account::factory()->create();
         $transactions = Transaction::factory()->count(3)->create(['account_id' => $account->id]);
@@ -93,7 +93,7 @@ class AccountingApiTest extends TestCase
     }
 
     /** @test */
-    public function it_can_create_new_account()
+    public function itCanCreateNewAccount()
     {
         $accountData = [
             'name' => 'Test Account',
@@ -125,7 +125,7 @@ class AccountingApiTest extends TestCase
     }
 
     /** @test */
-    public function it_can_update_account()
+    public function itCanUpdateAccount()
     {
         $account = Account::factory()->create();
 
@@ -153,7 +153,7 @@ class AccountingApiTest extends TestCase
     }
 
     /** @test */
-    public function it_can_get_all_transactions()
+    public function itCanGetAllTransactions()
     {
         $account = Account::factory()->create();
         $transactions = Transaction::factory()->count(5)->create(['account_id' => $account->id]);
@@ -179,7 +179,7 @@ class AccountingApiTest extends TestCase
     }
 
     /** @test */
-    public function it_can_create_new_transaction()
+    public function itCanCreateNewTransaction()
     {
         $account = Account::factory()->create();
 
@@ -216,7 +216,7 @@ class AccountingApiTest extends TestCase
     }
 
     /** @test */
-    public function it_can_get_journal_entries()
+    public function itCanGetJournalEntries()
     {
         $journalEntries = JournalEntry::factory()->count(3)->create();
 
@@ -240,7 +240,7 @@ class AccountingApiTest extends TestCase
     }
 
     /** @test */
-    public function it_can_create_journal_entry()
+    public function itCanCreateJournalEntry()
     {
         $debitAccount = Account::factory()->create(['type' => 'asset']);
         $creditAccount = Account::factory()->create(['type' => 'liability']);
@@ -288,7 +288,7 @@ class AccountingApiTest extends TestCase
     }
 
     /** @test */
-    public function it_can_get_financial_reports()
+    public function itCanGetFinancialReports()
     {
         // Create test data
         $assetAccount = Account::factory()->create(['type' => 'asset']);
@@ -323,7 +323,7 @@ class AccountingApiTest extends TestCase
     }
 
     /** @test */
-    public function it_can_get_profit_loss_report()
+    public function itCanGetProfitLossReport()
     {
         $revenueAccount = Account::factory()->create(['type' => 'revenue']);
         $expenseAccount = Account::factory()->create(['type' => 'expense']);
@@ -355,7 +355,7 @@ class AccountingApiTest extends TestCase
     }
 
     /** @test */
-    public function it_validates_required_fields_when_creating_account()
+    public function itValidatesRequiredFieldsWhenCreatingAccount()
     {
         $response = $this->postJson('/api/accounting/accounts', []);
 
@@ -364,7 +364,7 @@ class AccountingApiTest extends TestCase
     }
 
     /** @test */
-    public function it_prevents_duplicate_account_codes()
+    public function itPreventsDuplicateAccountCodes()
     {
         $existingAccount = Account::factory()->create(['code' => 'DUPLICATE-CODE']);
 
@@ -381,7 +381,7 @@ class AccountingApiTest extends TestCase
     }
 
     /** @test */
-    public function it_validates_journal_entry_balance()
+    public function itValidatesJournalEntryBalance()
     {
         $account = Account::factory()->create();
 
@@ -412,7 +412,7 @@ class AccountingApiTest extends TestCase
     }
 
     /** @test */
-    public function it_can_filter_transactions_by_date_range()
+    public function itCanFilterTransactionsByDateRange()
     {
         $account = Account::factory()->create();
 
@@ -432,7 +432,7 @@ class AccountingApiTest extends TestCase
     }
 
     /** @test */
-    public function it_can_filter_transactions_by_account()
+    public function itCanFilterTransactionsByAccount()
     {
         $account1 = Account::factory()->create();
         $account2 = Account::factory()->create();

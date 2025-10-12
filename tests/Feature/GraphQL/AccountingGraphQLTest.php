@@ -23,7 +23,7 @@ class AccountingGraphQLTest extends TestCase
     }
 
     /** @test */
-    public function it_can_query_accounting_dashboard()
+    public function itCanQueryAccountingDashboard()
     {
         // Create test accounts
         $revenueAccount = Account::factory()->create(['type' => 'revenue']);
@@ -95,7 +95,7 @@ class AccountingGraphQLTest extends TestCase
     }
 
     /** @test */
-    public function it_can_query_accounts_with_filtering()
+    public function itCanQueryAccountsWithFiltering()
     {
         // Create accounts of different types
         Account::factory()->count(3)->create(['type' => 'asset']);
@@ -155,7 +155,7 @@ class AccountingGraphQLTest extends TestCase
     }
 
     /** @test */
-    public function it_can_create_an_account()
+    public function itCanCreateAnAccount()
     {
         $mutation = '
             mutation CreateAccount($input: CreateAccountInput!) {
@@ -208,7 +208,7 @@ class AccountingGraphQLTest extends TestCase
     }
 
     /** @test */
-    public function it_can_create_a_journal_entry()
+    public function itCanCreateAJournalEntry()
     {
         // Create test accounts
         $cashAccount = Account::factory()->create(['code' => '1001', 'type' => 'asset']);
@@ -304,7 +304,7 @@ class AccountingGraphQLTest extends TestCase
     }
 
     /** @test */
-    public function it_validates_journal_entry_balance()
+    public function itValidatesJournalEntryBalance()
     {
         $cashAccount = Account::factory()->create(['type' => 'asset']);
         $revenueAccount = Account::factory()->create(['type' => 'revenue']);
@@ -346,7 +346,7 @@ class AccountingGraphQLTest extends TestCase
     }
 
     /** @test */
-    public function it_can_query_balance_sheet()
+    public function itCanQueryBalanceSheet()
     {
         // Create test accounts
         $assetAccount = Account::factory()->create(['type' => 'asset', 'balance' => 10000]);
@@ -437,7 +437,7 @@ class AccountingGraphQLTest extends TestCase
     }
 
     /** @test */
-    public function it_can_query_profit_loss_report()
+    public function itCanQueryProfitLossReport()
     {
         // Create test accounts
         $revenueAccount = Account::factory()->create(['type' => 'revenue', 'balance' => 15000]);
@@ -516,7 +516,7 @@ class AccountingGraphQLTest extends TestCase
     }
 
     /** @test */
-    public function it_can_query_transactions_with_filtering()
+    public function itCanQueryTransactionsWithFiltering()
     {
         $account = Account::factory()->create();
 

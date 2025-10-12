@@ -14,7 +14,7 @@ import {
   useColorModeValue,
 } from '@chakra-ui/react';
 import { CardContainer } from '@/shared/components/molecules/Container';
-import { FinancialPerformanceUtils } from '@/shared/utils/performance';
+import { FinancialPerformanceUtils } from '@/shared/utils/Debounce';
 
 /**
  * Performance-Optimized Account Card Component
@@ -22,7 +22,7 @@ import { FinancialPerformanceUtils } from '@/shared/utils/performance';
  */
 
 // Import consolidated types
-import { Account, AccountCardProps } from '@/shared/types/accounting';
+import { Account, AccountCardProps } from '@/shared/types/ACCOUNTTYPES';
 
 export const AccountCard: React.FC<AccountCardProps> = memo(({
   account,

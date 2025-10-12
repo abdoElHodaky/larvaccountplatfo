@@ -2,8 +2,8 @@
 import { Link } from '@inertiajs/react';
 import { DocumentHead } from '@/shared/components/seo/DocumentHead';
 import AppLayout from '@/shared/components/layouts/AppLayout';
-import { formatCurrency, formatDate, formatNumber } from '@/shared/utils';
-import { SalesOrder, Customer, SalesStats, SalesTrends } from '../types';
+import { formatCurrency, formatDate, formatNumber } from '@/shared/CreateLiveIcon';
+import { SalesOrder, Customer, SalesStats, SalesTrends } from '../ICONSIZES';
 
 interface DashboardProps {
     overview: SalesStats;

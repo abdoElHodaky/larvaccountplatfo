@@ -13,7 +13,7 @@ use Illuminate\Database\Eloquent\Collection;
 class AccountRepository extends BaseRepository implements AccountRepositoryInterface
 {
     /**
-     * Specify Model class name
+     * Specify Model class Name
      */
     public function model(): string
     {

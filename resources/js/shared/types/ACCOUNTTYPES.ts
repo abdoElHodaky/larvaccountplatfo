@@ -14,7 +14,7 @@ import {
   Money,
   DateRange,
   ID 
-} from './core';
+} from './PATTERNS';
 
 // Account types
 export type AccountType = 'asset' | 'liability' | 'equity' | 'revenue' | 'expense';

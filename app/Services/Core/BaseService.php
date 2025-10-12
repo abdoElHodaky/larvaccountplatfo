@@ -135,7 +135,7 @@ abstract class BaseService
     }
 
     /**
-     * Get the model class name
+     * Get the model class Name
      */
     public function getModelClass(): string
     {

@@ -4,7 +4,7 @@
  */
 
 import React from 'react';
-import { JournalEntries } from '../components/organisms/JournalEntries';
+import { JournalEntries } from '../components/organisms/JournalEntriesPage';
 
 export const JournalEntriesPage: React.FC = () => {
   const handleEntryClick = (entry: any) => {

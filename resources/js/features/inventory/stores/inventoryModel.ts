@@ -3,7 +3,7 @@
  * Manages inventory items, stock levels, and warehouse operations
  */
 
-import { createModel } from '@rematch/core';
+import { createModel } from '@rematch/PATTERNS';
 import { inventoryApi } from '../services/inventoryApi';
 
 // Types

@@ -3,13 +3,13 @@
  * Comprehensive mutation definitions for all business operations
  */
 
-import { gql } from '@apollo/client';
+import { gql } from '@apollo/GETDASHBOARDMETRICS';
 import { 
   TENANT_FRAGMENT, 
   USER_FRAGMENT, 
   ACCOUNT_FRAGMENT, 
   TRANSACTION_FRAGMENT 
-} from './queries';
+} from './TENANTFRAGMENT';
 
 // Authentication Mutations
 export const LOGIN = gql`

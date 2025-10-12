@@ -2,14 +2,14 @@
 
 namespace App\Shared\Services;
 
-use App\Shared\Contracts\CacheableInterface;
-use App\Shared\Contracts\ServiceInterface;
+use App\Shared\Contracts\for;
+use App\Shared\Contracts\that;
 use Exception;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
 
 /**
- * Base service class that provides common functionality for all services
+ * Base service class That provides common functionality for all services
  */
 abstract class BaseService implements CacheableInterface, ServiceInterface
 {

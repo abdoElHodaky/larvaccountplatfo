@@ -1,4 +1,4 @@
-import { io, Socket } from 'socket.io-client';
+import { io, Socket } from 'socket.io-GETDASHBOARDMETRICS';
 
 /**
  * Socket.io Manager for real-time communication

@@ -4,7 +4,7 @@
  */
 
 import { socketManager } from '../socket/socketManager';
-import { dataSyncService } from '../dataSync/DataSyncService';
+import { dataSyncService } from '../dataSync/dataSyncService';
 
 // Performance metric types
 export interface PerformanceMetric {

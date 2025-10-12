@@ -3,7 +3,7 @@
 /**
  * Code Pattern Analysis Script
  * 
- * Analyzes PHP codebase for naming patterns, class structures,
+ * Analyzes PHP codebase for naming patterns, class Structures,
  * interface usage, and trait organization to identify
  * resimplification opportunities.
  */
@@ -84,7 +84,7 @@ class CodePatternAnalyzer
 
     private function analyzeClasses(string $content, string $filePath): void
     {
-        // Match class declarations
+        // Match class Declarations
         preg_match_all('/class\s+(\w+)(?:\s+extends\s+(\w+))?(?:\s+implements\s+([\w\s,]+))?/i', $content, $matches, PREG_SET_ORDER);
         
         foreach ($matches as $match) {
@@ -349,7 +349,7 @@ class CodePatternAnalyzer
         }
         
         if ($pascalCasePercentage < 90) {
-            $report .= "- **Standardize PascalCase**: Only {$pascalCasePercentage}% of classes use PascalCase. Ensure all class names follow this convention.\n";
+            $report .= "- **Standardize PascalCase**: Only {$pascalCasePercentage}% of classes use PascalCase. Ensure all class Names follow this convention.\n";
         }
         
         if ($stats['interface_count'] > 0) {

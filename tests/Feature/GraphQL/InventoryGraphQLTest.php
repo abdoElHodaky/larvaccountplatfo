@@ -24,7 +24,7 @@ class InventoryGraphQLTest extends TestCase
     }
 
     /** @test */
-    public function it_can_query_inventory_dashboard()
+    public function itCanQueryInventoryDashboard()
     {
         // Create test data
         $category = ProductCategory::factory()->create();
@@ -68,7 +68,7 @@ class InventoryGraphQLTest extends TestCase
     }
 
     /** @test */
-    public function it_can_query_products_with_pagination()
+    public function itCanQueryProductsWithPagination()
     {
         $category = ProductCategory::factory()->create();
         Product::factory()->count(20)->create(['category_id' => $category->id]);
@@ -127,7 +127,7 @@ class InventoryGraphQLTest extends TestCase
     }
 
     /** @test */
-    public function it_can_query_low_stock_products()
+    public function itCanQueryLowStockProducts()
     {
         $category = ProductCategory::factory()->create();
 
@@ -187,7 +187,7 @@ class InventoryGraphQLTest extends TestCase
     }
 
     /** @test */
-    public function it_can_create_a_product()
+    public function itCanCreateAProduct()
     {
         $category = ProductCategory::factory()->create();
 
@@ -251,7 +251,7 @@ class InventoryGraphQLTest extends TestCase
     }
 
     /** @test */
-    public function it_can_update_stock_levels()
+    public function itCanUpdateStockLevels()
     {
         $category = ProductCategory::factory()->create();
         $product = Product::factory()->create(['category_id' => $category->id]);
@@ -306,7 +306,7 @@ class InventoryGraphQLTest extends TestCase
     }
 
     /** @test */
-    public function it_validates_product_creation_input()
+    public function itValidatesProductCreationInput()
     {
         $mutation = '
             mutation CreateProduct($input: CreateProductInput!) {
@@ -332,7 +332,7 @@ class InventoryGraphQLTest extends TestCase
     }
 
     /** @test */
-    public function it_can_search_products()
+    public function itCanSearchProducts()
     {
         $category = ProductCategory::factory()->create();
 

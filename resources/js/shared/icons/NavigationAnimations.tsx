@@ -15,7 +15,7 @@ import {
   Bars3Icon,
   XMarkIcon
 } from '@heroicons/react/24/outline';
-import { createLiveIcon, type LiveIconProps } from './index';
+import { createLiveIcon, type LiveIconProps } from './APIENDPOINTS';
 
 // Navigation-specific animations
 export const navigationAnimations = {

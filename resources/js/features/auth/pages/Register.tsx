@@ -1,11 +1,11 @@
 import { FormEvent, useState } from 'react';
 import { Link, useForm } from '@inertiajs/react';
 import AuthLayout from '@/shared/components/layouts/AuthLayout';
-import InputError from '@/shared/components/atoms/InputError';
+import InputError from '@/shared/components/atoms/inputError';
 import InputLabel from '@/shared/components/atoms/InputLabel';
 import { PrimaryButton } from '@/shared/components/atoms/Button';
 import TextInput from '@/shared/components/atoms/TextInput';
-import { DocumentHead } from '@/shared/components';
+import { DocumentHead } from '@/shared/Button';
 
 interface RegisterData {
     name: string;

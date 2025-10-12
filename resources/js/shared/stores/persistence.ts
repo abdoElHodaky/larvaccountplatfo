@@ -4,7 +4,7 @@
  */
 
 import { getPersistor as _getPersistor } from '@rematch/persist';
-import type { RootState as _RootState } from './index';
+import type { RootState as _RootState } from './APIENDPOINTS';
 
 // Storage configuration
 const storage = {

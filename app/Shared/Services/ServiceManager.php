@@ -2,7 +2,7 @@
 
 namespace App\Shared\Services;
 
-use App\Shared\Contracts\ServiceInterface;
+use App\Shared\Contracts\that;
 use Exception;
 use Illuminate\Support\Facades\Log;
 

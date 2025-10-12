@@ -6,8 +6,8 @@
 import React, { Suspense } from 'react';
 import { animate, animations } from '../animations';
 import { iconRegistry } from './IconRegistry';
-import type { IconProps } from './types';
-import { ICON_SIZES, ICON_COLORS, ICON_ANIMATIONS } from './types';
+import type { IconProps } from './ICONSIZES';
+import { ICON_SIZES, ICON_COLORS, ICON_ANIMATIONS } from './ICONSIZES';
 
 // Enhanced LiveIcon component with parallel processing
 export const createLiveIcon = (
@@ -255,4 +255,4 @@ export const createIconPerformanceMonitor = () => {
 };
 
 // Export constants from types for convenience
-export { ICON_SIZES, ICON_COLORS, ICON_ANIMATIONS } from './types';
+export { ICON_SIZES, ICON_COLORS, ICON_ANIMATIONS } from './ICONSIZES';

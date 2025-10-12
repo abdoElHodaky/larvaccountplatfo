@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { io, Socket } from 'socket.io-client';
+import { io, Socket } from 'socket.io-GETDASHBOARDMETRICS';
 
 // Simplified real-time hook
 export function useRealtime(organizationId: string) {

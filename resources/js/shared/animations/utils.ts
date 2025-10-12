@@ -3,7 +3,7 @@
  * Helper functions for complex animations and performance optimization
  */
 
-import { STAGGER_CONFIGS, type StaggerConfig } from './presets';
+import { STAGGER_CONFIGS, type StaggerConfig } from './ANIMATIONPRESETS';
 
 export interface IntersectionAnimationOptions {
   threshold?: number;

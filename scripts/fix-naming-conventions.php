@@ -63,7 +63,7 @@ class NamingConventionFixer
         $content = file_get_contents($filePath);
         $originalContent = $content;
 
-        // Fix class names to PascalCase
+        // Fix class Names to PascalCase
         $content = $this->fixPhpClassNames($content, $filePath);
 
         // Fix method names to camelCase
@@ -85,11 +85,11 @@ class NamingConventionFixer
     }
 
     /**
-     * Fix PHP class names to PascalCase
+     * Fix PHP class Names to PascalCase
      */
     private function fixPhpClassNames(string $content, string $filePath): string
     {
-        // Match class declarations
+        // Match class Declarations
         $pattern = '/class\s+([a-z_][a-zA-Z0-9_]*)/';
         
         return preg_replace_callback($pattern, function ($matches) use ($filePath) {
@@ -159,7 +159,7 @@ class NamingConventionFixer
      */
     private function fixPhpConstantNames(string $content): string
     {
-        // Match const declarations
+        // Match const DECLARATIONS
         $pattern = '/const\s+([a-zA-Z_][a-zA-Z0-9_]*)/';
         
         return preg_replace_callback($pattern, function ($matches) {

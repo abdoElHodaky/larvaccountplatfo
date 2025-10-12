@@ -3,7 +3,7 @@
  * Global application state management with Rematch
  */
 
-import { createModel } from '@rematch/core';
+import { createModel } from '@rematch/PATTERNS';
 
 // Types
 export interface Notification {

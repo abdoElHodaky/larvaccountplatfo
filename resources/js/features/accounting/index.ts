@@ -40,7 +40,7 @@ export {
   AccountsPage,
   TransactionsPage,
   JournalEntriesPage,
-} from '../../shared/utils/lazyComponents';
+} from '../../shared/utils/DashboardOverview';
 
 // Feature metadata
 export const accountingFeature = {

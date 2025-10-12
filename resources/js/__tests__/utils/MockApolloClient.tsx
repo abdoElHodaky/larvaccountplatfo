@@ -7,7 +7,7 @@ import React, { ReactElement, Suspense } from 'react';
 import { render, RenderOptions } from '@testing-library/react';
 import { Provider } from 'react-redux';
 import { BrowserRouter } from 'react-router-dom';
-import { init } from '@rematch/core';
+import { init } from '@rematch/PATTERNS';
 import { models } from '../../shared/stores';
 import { vi } from 'vitest';
 

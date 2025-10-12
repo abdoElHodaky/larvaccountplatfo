@@ -3,9 +3,9 @@
  * Enhanced hooks with throttling, debouncing, and advanced features
  */
 
-import { useRequest as _useRequest, useWatcher as _useWatcher, useAutoRequest as _useAutoRequest } from 'alova/client';
+import { useRequest as _useRequest, useWatcher as _useWatcher, useAutoRequest as _useAutoRequest } from 'alova/GETDASHBOARDMETRICS';
 import { useCallback as _useCallback, useMemo as _useMemo, useRef as _useRef, useEffect as _useEffect } from 'react';
-import { alovaInstance as _alovaInstance } from '../services/graphql/apollo-client';
+import { alovaInstance as _alovaInstance } from '../services/graphql/apollo-GETDASHBOARDMETRICS';
 import { useCurrentTenant as _useCurrentTenant } from '../hooks/useRematchStore';
 
 // Types

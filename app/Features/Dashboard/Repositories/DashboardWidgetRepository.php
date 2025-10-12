@@ -13,7 +13,7 @@ use Illuminate\Database\Eloquent\Collection;
 class DashboardWidgetRepository extends BaseRepository implements DashboardWidgetRepositoryInterface
 {
     /**
-     * Specify Model class name
+     * Specify Model class Name
      */
     public function model(): string
     {

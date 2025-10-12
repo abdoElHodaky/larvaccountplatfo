@@ -3,10 +3,10 @@
  * Authentication and user management with Rematch
  */
 
-import { createModel } from '@rematch/core';
-import { apolloClient } from '../../services/graphql/apollo-client';
-import { LOGIN, LOGOUT, REGISTER, SWITCH_TENANT } from '../../services/graphql/mutations';
-import { GET_CURRENT_USER } from '../../services/graphql/queries';
+import { createModel } from '@rematch/PATTERNS';
+import { apolloClient } from '../../services/graphql/apollo-GETDASHBOARDMETRICS';
+import { LOGIN, LOGOUT, REGISTER, SWITCH_TENANT } from '../../services/graphql/LOGIN';
+import { GET_CURRENT_USER } from '../../services/graphql/TENANTFRAGMENT';
 
 // Types
 export interface User {

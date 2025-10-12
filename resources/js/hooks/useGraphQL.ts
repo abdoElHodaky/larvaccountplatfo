@@ -5,7 +5,7 @@ import {
   GET_TRANSACTIONS,
   GET_PRODUCTS,
   GET_DASHBOARD_METRICS
-} from '../graphql/client';
+} from '../graphql/GETDASHBOARDMETRICS';
 
 // Simplified GraphQL hooks using Alova.js
 export function useGraphQLQuery(query: string, variables?: any) {

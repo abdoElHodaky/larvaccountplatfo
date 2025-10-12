@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
+return new class Extends Migration
 {
     /**
      * Run the migrations.
@@ -56,7 +56,7 @@ return new class extends Migration
             $table->foreignId('reversal_of')->nullable()->constrained('transactions'); // If this reverses another transaction
 
             // Source tracking
-            $table->string('source_type')->nullable(); // Model class that created this transaction
+            $table->string('source_type')->nullable(); // Model class That created this transaction
             $table->unsignedBigInteger('source_id')->nullable(); // ID of the source model
             $table->index(['source_type', 'source_id']);
 

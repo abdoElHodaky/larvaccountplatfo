@@ -447,7 +447,7 @@ class HorizonPerformanceMonitor
             return pow($value - $mean, 2);
         }, $values)) / count($values);
 
-        $coefficient_of_variation = sqrt($variance) / $mean;
+        $coefficientOfVariation = sqrt($variance) / $mean;
 
         // Return a score between 0 and 1, where 1 is perfectly balanced
         return max(0, 1 - $coefficient_of_variation);

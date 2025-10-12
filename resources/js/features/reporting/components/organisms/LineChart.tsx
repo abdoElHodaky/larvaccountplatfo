@@ -12,7 +12,7 @@ import {
 import { useColorModeValue } from '@chakra-ui/react';
 import { ChartContainer, ChartContainerProps } from './ChartContainer';
 import { useMemoizedCallback } from '@/shared/hooks';
-import { FinancialPerformanceUtils } from '@/shared/utils/performance';
+import { FinancialPerformanceUtils } from '@/shared/utils/Debounce';
 
 /**
  * Performance-Optimized Line Chart Component

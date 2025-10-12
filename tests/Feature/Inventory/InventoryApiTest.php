@@ -22,7 +22,7 @@ class InventoryApiTest extends TestCase
     }
 
     /** @test */
-    public function it_can_get_inventory_dashboard_data()
+    public function itCanGetInventoryDashboardData()
     {
         // Create test data
         $category = ProductCategory::factory()->create();
@@ -48,7 +48,7 @@ class InventoryApiTest extends TestCase
     }
 
     /** @test */
-    public function it_can_get_all_products()
+    public function itCanGetAllProducts()
     {
         $category = ProductCategory::factory()->create();
         $products = Product::factory()->count(5)->create(['category_id' => $category->id]);
@@ -76,7 +76,7 @@ class InventoryApiTest extends TestCase
     }
 
     /** @test */
-    public function it_can_get_single_product()
+    public function itCanGetSingleProduct()
     {
         $category = ProductCategory::factory()->create();
         $product = Product::factory()->create(['category_id' => $category->id]);
@@ -106,7 +106,7 @@ class InventoryApiTest extends TestCase
     }
 
     /** @test */
-    public function it_can_create_new_product()
+    public function itCanCreateNewProduct()
     {
         $category = ProductCategory::factory()->create();
 
@@ -146,7 +146,7 @@ class InventoryApiTest extends TestCase
     }
 
     /** @test */
-    public function it_can_update_product()
+    public function itCanUpdateProduct()
     {
         $category = ProductCategory::factory()->create();
         $product = Product::factory()->create(['category_id' => $category->id]);
@@ -178,7 +178,7 @@ class InventoryApiTest extends TestCase
     }
 
     /** @test */
-    public function it_can_delete_product()
+    public function itCanDeleteProduct()
     {
         $category = ProductCategory::factory()->create();
         $product = Product::factory()->create(['category_id' => $category->id]);
@@ -195,7 +195,7 @@ class InventoryApiTest extends TestCase
     }
 
     /** @test */
-    public function it_can_get_categories()
+    public function itCanGetCategories()
     {
         $categories = ProductCategory::factory()->count(3)->create();
 
@@ -217,7 +217,7 @@ class InventoryApiTest extends TestCase
     }
 
     /** @test */
-    public function it_can_update_stock_level()
+    public function itCanUpdateStockLevel()
     {
         $category = ProductCategory::factory()->create();
         $product = Product::factory()->create(['category_id' => $category->id]);
@@ -245,7 +245,7 @@ class InventoryApiTest extends TestCase
     }
 
     /** @test */
-    public function it_validates_required_fields_when_creating_product()
+    public function itValidatesRequiredFieldsWhenCreatingProduct()
     {
         $response = $this->postJson('/api/inventory/products', []);
 
@@ -254,7 +254,7 @@ class InventoryApiTest extends TestCase
     }
 
     /** @test */
-    public function it_prevents_duplicate_sku()
+    public function itPreventsDuplicateSku()
     {
         $category = ProductCategory::factory()->create();
         $existingProduct = Product::factory()->create([
@@ -276,7 +276,7 @@ class InventoryApiTest extends TestCase
     }
 
     /** @test */
-    public function it_can_search_products()
+    public function itCanSearchProducts()
     {
         $category = ProductCategory::factory()->create();
         $product1 = Product::factory()->create([
@@ -298,7 +298,7 @@ class InventoryApiTest extends TestCase
     }
 
     /** @test */
-    public function it_can_filter_products_by_category()
+    public function itCanFilterProductsByCategory()
     {
         $category1 = ProductCategory::factory()->create(['name' => 'Electronics']);
         $category2 = ProductCategory::factory()->create(['name' => 'Clothing']);
@@ -313,7 +313,7 @@ class InventoryApiTest extends TestCase
     }
 
     /** @test */
-    public function it_can_get_low_stock_products()
+    public function itCanGetLowStockProducts()
     {
         $category = ProductCategory::factory()->create();
         $product = Product::factory()->create([

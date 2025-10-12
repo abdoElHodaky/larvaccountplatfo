@@ -5,7 +5,7 @@
  * These provide consistent patterns for all API interactions.
  */
 
-import { HttpMethod, ID, AsyncState, Filter, Sort, Search, DateRange } from './core';
+import { HttpMethod, ID, AsyncState, Filter, Sort, Search, DateRange } from './PATTERNS';
 
 // Base API response structure
 export interface BaseApiResponse<T = any> {

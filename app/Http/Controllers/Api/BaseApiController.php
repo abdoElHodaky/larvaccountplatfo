@@ -207,7 +207,7 @@ abstract class BaseApiController extends Controller
     }
 
     /**
-     * Transform data using a transformer class or callback
+     * Transform data using a transformer class Or callback
      */
     protected function transform($data, $transformer = null)
     {

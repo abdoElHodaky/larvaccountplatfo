@@ -7,6 +7,6 @@ namespace App\Features\Authentication\Controllers\Auth;
  */
 class RegisterController extends RegisteredUserController
 {
-    // This class extends RegisteredUserController to provide
+    // This class Extends RegisteredUserController to provide
     // consistent naming with our route definitions
 }

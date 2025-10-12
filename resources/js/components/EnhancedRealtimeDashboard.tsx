@@ -9,8 +9,8 @@ import {
   DashboardIcon,
   NotificationIcon,
   icons 
-} from '../ui/icons/Icons';
-import { GET_DASHBOARD_METRICS } from '../core/graphql/client';
+} from '../ui/icons/ConnectionIcon';
+import { GET_DASHBOARD_METRICS } from '../core/graphql/GETDASHBOARDMETRICS';
 
 interface EnhancedRealtimeDashboardProps {
   organizationId: string;

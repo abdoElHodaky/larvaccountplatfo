@@ -4,7 +4,7 @@
  */
 
 import React, { createContext, useContext, useState, useCallback, ReactNode } from 'react';
-import { ErrorBoundary } from '../ErrorBoundary';
+import { ErrorBoundary } from '../WithErrorBoundary';
 
 // Compound Component Pattern - Modal
 interface ModalContextType {

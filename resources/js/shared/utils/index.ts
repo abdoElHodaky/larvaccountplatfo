@@ -57,7 +57,7 @@ export {
   memoize,
   deepEqual,
   shallowEqual,
-} from './performance';
+} from './Debounce';
 
 // Formatting utilities
 export const formatCurrency = (amount: number, currency = 'USD'): string => {
@@ -90,7 +90,7 @@ export const classNames = (...classes: (string | undefined | null | false)[]): s
 };
 
 // Lazy Components & Service Worker
-export * from './lazyComponents';
+export * from './DashboardOverview';
 export * from './serviceWorker';
 
 // Note: Default exports are already handled above in the named exports

@@ -3,7 +3,7 @@
  * Manages dashboard state, widgets, and analytics data
  */
 
-import { createModel } from '@rematch/core';
+import { createModel } from '@rematch/PATTERNS';
 import { dashboardApi } from '../services/dashboardApi';
 
 // Types

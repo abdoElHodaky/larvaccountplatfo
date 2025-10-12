@@ -3,7 +3,7 @@
  * Domain-specific state management for accounting features
  */
 
-import { createModel } from '@rematch/core';
+import { createModel } from '@rematch/PATTERNS';
 import { accountingApi } from '../services/accountingApi';
 
 // Types

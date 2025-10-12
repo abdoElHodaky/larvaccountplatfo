@@ -4,7 +4,7 @@
  */
 
 import React, { useEffect } from 'react';
-import { ChartOfAccounts } from '../components/organisms/ChartOfAccounts';
+import { ChartOfAccounts } from '../components/organisms/ChartOfAccountsPage';
 import { useAccounting } from '../hooks/useAccounting';
 import type { Account } from '../stores/accountingModel';
 

@@ -3,7 +3,7 @@
  * Centralized exports with tree-shaking support and convenient access patterns
  */
 
-import { createLiveIcon, createIconSet, DynamicIcon } from './utils';
+import { createLiveIcon, createIconSet, DynamicIcon } from './CreateLiveIcon';
 import { iconRegistry } from './IconRegistry';
 
 // Pre-created icon sets for common usage patterns
@@ -137,7 +137,7 @@ export {
   ICON_SIZES,
   ICON_COLORS,
   ICON_ANIMATIONS
-} from './utils';
+} from './CreateLiveIcon';
 
 // Type exports
 export type {
@@ -145,7 +145,7 @@ export type {
   IconCategory,
   IconRegistryEntry,
   IconRegistry
-} from './types';
+} from './ICONSIZES';
 
 // All available icons map for dynamic access
 export const ALL_ICONS = {

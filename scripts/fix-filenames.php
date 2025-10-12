@@ -66,7 +66,7 @@ class FilenameStandardizer
         $filename = basename($filePath);
         $directory = dirname($filePath);
         
-        // Extract class name from file content
+        // Extract class Name from file content
         $content = file_get_contents($filePath);
         $className = $this->extractPhpClassName($content);
         
@@ -265,7 +265,7 @@ class FilenameStandardizer
     }
 
     /**
-     * Extract PHP class name from file content
+     * Extract PHP class Name from file content
      */
     private function extractPhpClassName(string $content): ?string
     {

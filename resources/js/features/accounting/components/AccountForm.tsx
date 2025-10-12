@@ -5,7 +5,7 @@ import { FormInput } from '@/shared/components/molecules/FormInput';
 import { FormSelect } from '@/shared/components/molecules/FormSelect';
 import { CardContainer } from '@/shared/components/molecules/Container';
 import { Text } from '@chakra-ui/react';
-import { Account, AccountFormData, AccountFormProps, ACCOUNT_TYPES } from '@/shared/types/accounting';
+import { Account, AccountFormData, AccountFormProps, ACCOUNT_TYPES } from '@/shared/types/ACCOUNTTYPES';
 
 const accountTypes = [
     { value: 'asset', label: 'Asset' },

@@ -3,7 +3,7 @@
  * Comprehensive types for sales management features
  */
 
-import { BaseEntity } from '@/shared/types/common';
+import { BaseEntity } from '@/shared/types/Common';
 
 export interface Customer extends BaseEntity {
     organization_id: number;

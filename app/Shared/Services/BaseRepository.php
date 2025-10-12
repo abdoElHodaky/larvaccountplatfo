@@ -2,7 +2,7 @@
 
 namespace App\Shared\Services;
 
-use App\Shared\Contracts\RepositoryInterface;
+use App\Shared\Contracts\for;
 use Exception;
 use Illuminate\Container\Container as App;
 use Illuminate\Database\Eloquent\Builder;
@@ -48,7 +48,7 @@ abstract class BaseRepository implements RepositoryInterface
     }
 
     /**
-     * Specify Model class name
+     * Specify Model class Name
      */
     abstract public function model(): string;
 

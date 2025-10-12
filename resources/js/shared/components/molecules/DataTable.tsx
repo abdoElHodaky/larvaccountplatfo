@@ -16,7 +16,7 @@ import {
   Skeleton,
 } from '@chakra-ui/react';
 import { useMemoizedCallback, useDebounce } from '@/shared/hooks';
-import { FinancialPerformanceUtils } from '@/shared/utils/performance';
+import { FinancialPerformanceUtils } from '@/shared/utils/Debounce';
 
 /**
  * Performance-Optimized Data Table Component

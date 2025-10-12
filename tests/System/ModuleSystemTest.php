@@ -26,7 +26,7 @@ class ModuleSystemTest extends TenantTestCase
     /**
      * Test module discovery functionality.
      */
-    public function test_module_discovery(): void
+    public function testModuleDiscovery(): void
     {
         $modules = $this->moduleDiscovery->discoverModules();
 
@@ -45,7 +45,7 @@ class ModuleSystemTest extends TenantTestCase
     /**
      * Test module loading and registration.
      */
-    public function test_module_loading(): void
+    public function testModuleLoading(): void
     {
         $modules = $this->moduleDiscovery->discoverModules();
 
@@ -60,12 +60,12 @@ class ModuleSystemTest extends TenantTestCase
     /**
      * Test inter-module communication.
      */
-    public function test_inter_module_communication(): void
+    public function testInterModuleCommunication(): void
     {
         // Register a test service
         $testService = new class
         {
-            public function test_method(): string
+            public function testMethod(): string
             {
                 return 'test_response';
             }
@@ -82,7 +82,7 @@ class ModuleSystemTest extends TenantTestCase
     /**
      * Test module dependency resolution.
      */
-    public function test_module_dependency_resolution(): void
+    public function testModuleDependencyResolution(): void
     {
         $dependencies = $this->moduleDiscovery->getModuleDependencies();
 
@@ -104,7 +104,7 @@ class ModuleSystemTest extends TenantTestCase
     /**
      * Test module configuration loading.
      */
-    public function test_module_configuration_loading(): void
+    public function testModuleConfigurationLoading(): void
     {
         $moduleConfig = config('modules');
 
@@ -123,7 +123,7 @@ class ModuleSystemTest extends TenantTestCase
     /**
      * Test module health checks.
      */
-    public function test_module_health_checks(): void
+    public function testModuleHealthChecks(): void
     {
         $modules = $this->moduleDiscovery->discoverModules();
 
@@ -149,7 +149,7 @@ class ModuleSystemTest extends TenantTestCase
     /**
      * Test module event system.
      */
-    public function test_module_event_system(): void
+    public function testModuleEventSystem(): void
     {
         $eventFired = false;
         $eventData = null;
@@ -172,7 +172,7 @@ class ModuleSystemTest extends TenantTestCase
     /**
      * Test module performance metrics.
      */
-    public function test_module_performance_metrics(): void
+    public function testModulePerformanceMetrics(): void
     {
         $startTime = microtime(true);
 
@@ -200,7 +200,7 @@ class ModuleSystemTest extends TenantTestCase
     /**
      * Test module isolation and security.
      */
-    public function test_module_isolation(): void
+    public function testModuleIsolation(): void
     {
         // Test that modules cannot access each other's private data directly
         $accountingService = $this->interModuleBus->getService('Accounting', 'AccountingService');
