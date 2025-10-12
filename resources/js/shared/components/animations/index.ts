@@ -5,8 +5,8 @@ export { AnimatedFormInput } from '../AnimatedFormInput';
 
 // Phase 4 Animation Components
 export { AnimatedCard, useAnimatedCard } from './AnimatedCard';
-export { AnimatedList, AnimatedListItem, useAnimatedList } from './AnimatedList';
+export { AnimatedList, AnimatedListItem, useAnimatedList } from './AnimatedListItem';
 
 // Animation Types
 export type { CardAnimationType, CardSize } from './AnimatedCard';
-export type { ListAnimationType, ListDirection } from './AnimatedList';
+export type { ListAnimationType, ListDirection } from './AnimatedListItem';

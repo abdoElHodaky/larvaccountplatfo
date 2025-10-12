@@ -1,5 +1,5 @@
 import React, { useCallback, useRef, useMemo, useState } from 'react';
-import { shallowEqual } from '@/shared/utils/performance';
+import { shallowEqual } from '@/shared/utils/Debounce';
 
 /**
  * useMemoizedCallback Hook

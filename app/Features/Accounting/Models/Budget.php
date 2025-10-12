@@ -42,26 +42,37 @@ class Budget extends HybridModel
      * Budget types
      */
     const TYPE_OPERATIONAL = 'operational';
+
     const TYPE_CAPITAL = 'capital';
+
     const TYPE_PROJECT = 'project';
+
     const TYPE_DEPARTMENT = 'department';
 
     /**
      * Period types
      */
     const PERIOD_MONTHLY = 'monthly';
+
     const PERIOD_QUARTERLY = 'quarterly';
+
     const PERIOD_YEARLY = 'yearly';
+
     const PERIOD_CUSTOM = 'custom';
 
     /**
      * Budget statuses
      */
     const STATUS_DRAFT = 'draft';
+
     const STATUS_PENDING_APPROVAL = 'pending_approval';
+
     const STATUS_APPROVED = 'approved';
+
     const STATUS_ACTIVE = 'active';
+
     const STATUS_COMPLETED = 'completed';
+
     const STATUS_CANCELLED = 'cancelled';
 
     /**
@@ -102,8 +113,8 @@ class Budget extends HybridModel
     public function scopeActive($query)
     {
         return $query->where('status', self::STATUS_ACTIVE)
-                    ->where('start_date', '<=', now())
-                    ->where('end_date', '>=', now());
+            ->where('start_date', '<=', now())
+            ->where('end_date', '>=', now());
     }
 
     /**
@@ -113,11 +124,11 @@ class Budget extends HybridModel
     {
         return $query->where(function ($q) use ($startDate, $endDate) {
             $q->whereBetween('start_date', [$startDate, $endDate])
-              ->orWhereBetween('end_date', [$startDate, $endDate])
-              ->orWhere(function ($q2) use ($startDate, $endDate) {
-                  $q2->where('start_date', '<=', $startDate)
-                     ->where('end_date', '>=', $endDate);
-              });
+                ->orWhereBetween('end_date', [$startDate, $endDate])
+                ->orWhere(function ($q2) use ($startDate, $endDate) {
+                    $q2->where('start_date', '<=', $startDate)
+                        ->where('end_date', '>=', $endDate);
+                });
         });
     }
 
@@ -171,7 +182,7 @@ class Budget extends HybridModel
     {
         $budgeted = $this->calculateTotalAmount();
         $actual = $this->calculateActualAmount();
-        
+
         return $budgeted > 0 ? ($actual / $budgeted) * 100 : 0;
     }
 
@@ -183,7 +194,7 @@ class Budget extends HybridModel
         $this->status = self::STATUS_APPROVED;
         $this->approved_by = $approvedBy;
         $this->approved_at = now();
-        
+
         return $this->save();
     }
 
@@ -197,6 +208,7 @@ class Budget extends HybridModel
         }
 
         $this->status = self::STATUS_ACTIVE;
+
         return $this->save();
     }
 

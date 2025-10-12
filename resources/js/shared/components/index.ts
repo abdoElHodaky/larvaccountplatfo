@@ -12,7 +12,7 @@ export { DataTable } from './molecules/DataTable';
 export { FormInput } from './molecules/FormInput';
 export { Button, PrimaryButton } from './atoms/Button';
 export { TextInput } from './atoms/TextInput';
-export { InputError } from './atoms/InputError';
+export { InputError } from './atoms/inputError';
 export { InputLabel } from './atoms/InputLabel';
 
 // Basic UI Components
@@ -26,7 +26,7 @@ export * from './animations';
 
 // Phase 4 Animation Components - New Implementations
 export { AnimatedCard, useAnimatedCard } from './animations/AnimatedCard';
-export { AnimatedList, AnimatedListItem, useAnimatedList } from './animations/AnimatedList';
+export { AnimatedList, AnimatedListItem, useAnimatedList } from './animations/AnimatedListItem';
 
 // Phase 5 SEO Components - Inertia.js Migration
 export { DocumentHead, Head } from './seo/DocumentHead';
