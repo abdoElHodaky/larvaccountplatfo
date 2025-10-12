@@ -96,7 +96,6 @@ export const AccountCard: React.FC<AccountCardProps> = memo(({
             fontSize="2xl" 
             fontWeight="bold"
             color={`${account.type}.600`}
-            fontVariantNumeric="lining-nums tabular-nums"
           >
             {formattedBalance}
           </StatNumber>

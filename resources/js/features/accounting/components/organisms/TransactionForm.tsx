@@ -214,7 +214,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
                 <AnimatedFormInput
                   type="number"
                   label="Amount *"
-                  value={formData.amount}
+                  value={formData.amount.toString()}
                   onChange={(e) => handleInputChange('amount', parseFloat(e.target.value) || 0)}
                   min="0"
                   step="0.01"
