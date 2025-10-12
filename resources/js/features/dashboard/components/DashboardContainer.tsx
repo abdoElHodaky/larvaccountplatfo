@@ -223,6 +223,7 @@ export const DashboardContainer: React.FC<DashboardContainerProps> = ({
     });
   }, [enableCollaboration, updateCollaborativeData]);
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const handleWidgetUpdate = useCallback((widgetId: string, updates: any) => {
     if (enableCollaboration) {
       updateCollaborativeData((prev: any) => ({
@@ -334,7 +335,7 @@ export const DashboardContainer: React.FC<DashboardContainerProps> = ({
             <DashboardMetrics
               metrics={combinedMetrics}
               loading={metricsLoading}
-              error={metricsError}
+              error={metricsError?.message || null}
             />
           </div>
 
