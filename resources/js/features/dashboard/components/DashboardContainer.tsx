@@ -51,7 +51,7 @@ export const DashboardContainer: React.FC<DashboardContainerProps> = ({
   const renderStartTime = performance.now();
 
   // State management
-  const [state, setState] = useState<DashboardState>({
+  const [state, _setState] = useState<DashboardState>({
     selectedDateRange: {
       start: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
       end: new Date().toISOString().split('T')[0],
@@ -101,7 +101,7 @@ export const DashboardContainer: React.FC<DashboardContainerProps> = ({
   // Collaboration hooks
   const {
     collaborators,
-    updateData: updateCollaborativeData,
+    updateData: _updateCollaborativeData,
     isLocked: dashboardLocked,
     hasUnsavedChanges,
     saveDocument: saveDashboard,

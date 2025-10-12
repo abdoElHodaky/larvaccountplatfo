@@ -1,0 +1,92 @@
+graph TB
+    subgraph "Client Layer"
+        A[React 18 + TypeScript] --> B[Alova.js GraphQL Client]
+        A --> C[Socket.io Client]
+        A --> D[Performance Monitor]
+        A --> E[LiveIcons System]
+        A --> F[Animation Engine]
+    end
+    
+    subgraph "API Gateway Layer"
+        G[Load Balancer] --> H[API Gateway]
+        H --> I[Rate Limiter]
+        I --> J[Security Manager]
+        J --> K[Request Router]
+    end
+    
+    subgraph "Application Layer"
+        K --> L[Laravel 10 API]
+        L --> M[GraphQL Lighthouse]
+        L --> N[WebSocket Server]
+        L --> O[Queue System]
+        L --> P[Authentication Service]
+        L --> Q[Authorization Service]
+    end
+    
+    subgraph "Business Logic Layer"
+        R[Accounting Module] --> R1[Chart of Accounts]
+        R --> R2[Transaction Management]
+        R --> R3[Financial Reporting]
+        
+        S[Dashboard Module] --> S1[Real-time Metrics]
+        S --> S2[Widget System]
+        S --> S3[Collaboration Engine]
+        
+        T[Organization Module] --> T1[Multi-tenancy]
+        T --> T2[User Management]
+        T --> T3[Role Management]
+    end
+    
+    subgraph "Data Layer"
+        L --> U[MySQL/PostgreSQL]
+        L --> V[Redis Cache]
+        L --> W[File Storage]
+        L --> X[Search Engine]
+    end
+    
+    subgraph "Infrastructure Layer"
+        Y[Kubernetes Cluster] --> Z[Auto-scaling (3-10 pods)]
+        Y --> AA[Health Checks]
+        Y --> BB[Service Mesh]
+        Y --> CC[Monitoring Stack]
+    end
+    
+    subgraph "External Services"
+        DD[Email Service] --> EE[SMTP/SES]
+        FF[File Storage] --> GG[S3/MinIO]
+        HH[Monitoring] --> II[Prometheus/Grafana]
+        JJ[Logging] --> KK[ELK Stack]
+    end
+    
+    %% Connections
+    B --> H
+    C --> N
+    D --> CC
+    
+    L --> R
+    L --> S
+    L --> T
+    
+    R --> U
+    S --> V
+    T --> U
+    
+    Y --> L
+    CC --> HH
+    
+    %% Styling
+    classDef client fill:#e3f2fd,stroke:#1976d2,stroke-width:2px
+    classDef gateway fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px
+    classDef application fill:#e8f5e8,stroke:#388e3c,stroke-width:2px
+    classDef business fill:#fff3e0,stroke:#f57c00,stroke-width:2px
+    classDef data fill:#fce4ec,stroke:#c2185b,stroke-width:2px
+    classDef infrastructure fill:#f1f8e9,stroke:#689f38,stroke-width:2px
+    classDef external fill:#fff8e1,stroke:#ffa000,stroke-width:2px
+    
+    class A,B,C,D,E,F client
+    class G,H,I,J,K gateway
+    class L,M,N,O,P,Q application
+    class R,R1,R2,R3,S,S1,S2,S3,T,T1,T2,T3 business
+    class U,V,W,X data
+    class Y,Z,AA,BB,CC infrastructure
+    class DD,EE,FF,GG,HH,II,JJ,KK external
