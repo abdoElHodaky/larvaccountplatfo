@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Model;
  * Organization Scoped Trait
  * Automatically scopes models to the current organization/tenant
  */
-trait OrganizationScoped
+trait OrganizationScopedTrait
 {
     /**
      * Boot the organization scoped trait for a model.
