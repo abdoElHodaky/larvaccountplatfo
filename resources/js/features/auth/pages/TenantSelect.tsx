@@ -60,13 +60,13 @@ export default function TenantSelect({ user, tenants }: TenantSelectProps) {
         
         switch (plan) {
             case 'free':
-                return <StatusFreeIcon {...iconProps} color="green" />;
+                return <StatusFreeIcon {...iconProps} color="success" />;
             case 'basic':
-                return <StatusChartIcon {...iconProps} color="blue" />;
+                return <StatusChartIcon {...iconProps} color="primary" />;
             case 'professional':
-                return <StatusBusinessIcon {...iconProps} color="purple" />;
+                return <StatusBusinessIcon {...iconProps} color="secondary" />;
             case 'enterprise':
-                return <StatusEnterpriseIcon {...iconProps} color="indigo" />;
+                return <StatusEnterpriseIcon {...iconProps} color="primary" />;
             default:
                 return <StatusChartIcon {...iconProps} color="gray" />;
         }
@@ -80,7 +80,7 @@ export default function TenantSelect({ user, tenants }: TenantSelectProps) {
                 <div className="bg-white shadow-lg rounded-lg px-8 py-10">
                     <div className="text-center mb-8">
                         <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                            <StatusWaveIcon size="lg" color="blue" animated />
+                            <StatusWaveIcon size="lg" color="primary" animated />
                         </div>
                         <h1 className="text-3xl font-bold text-gray-900">Welcome back, {user.name}!</h1>
                         <p className="text-gray-600 mt-2">Select an organization to continue</p>

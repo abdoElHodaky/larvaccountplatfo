@@ -101,15 +101,15 @@ export default function Dashboard({ tenant, user, stats, recentActivity, quickAc
         
         switch (module) {
             case 'accounting':
-                return <StatusChartIcon {...iconProps} color="blue" />;
+                return <StatusChartIcon {...iconProps} color="primary" />;
             case 'invoicing':
-                return <StatusDocumentIcon {...iconProps} color="yellow" />;
+                return <StatusDocumentIcon {...iconProps} color="warning" />;
             case 'banking':
-                return <StatusBankIcon {...iconProps} color="green" />;
+                return <StatusBankIcon {...iconProps} color="success" />;
             case 'inventory':
-                return <StatusBoxIcon {...iconProps} color="purple" />;
+                return <StatusBoxIcon {...iconProps} color="secondary" />;
             case 'reporting':
-                return <StatusTrendUpIcon {...iconProps} color="indigo" />;
+                return <StatusTrendUpIcon {...iconProps} color="primary" />;
             default:
                 return <ActionSettingsIcon {...iconProps} color="gray" />;
         }
@@ -158,7 +158,7 @@ export default function Dashboard({ tenant, user, stats, recentActivity, quickAc
                         <div className="bg-white rounded-lg shadow p-6">
                             <div className="flex items-center">
                                 <div className="p-2 bg-green-100 rounded-lg">
-                                    <StatusChartIcon size="lg" color="green" animated />
+                                    <StatusChartIcon size="lg" color="success" animated />
                                 </div>
                                 <div className="ml-4">
                                     <p className="text-sm font-medium text-gray-600">Accounts</p>
@@ -173,7 +173,7 @@ export default function Dashboard({ tenant, user, stats, recentActivity, quickAc
                         <div className="bg-white rounded-lg shadow p-6">
                             <div className="flex items-center">
                                 <div className="p-2 bg-yellow-100 rounded-lg">
-                                    <StatusDocumentIcon size="lg" color="yellow" animated />
+                                    <StatusDocumentIcon size="lg" color="warning" animated />
                                 </div>
                                 <div className="ml-4">
                                     <p className="text-sm font-medium text-gray-600">Revenue</p>

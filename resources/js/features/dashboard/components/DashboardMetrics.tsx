@@ -74,9 +74,9 @@ export const DashboardMetrics: React.FC<DashboardMetricsProps> = ({
   const getTrendIcon = (changeType: string) => {
     switch (changeType) {
       case 'increase':
-        return <StatusTrendUpIcon size="sm" color="green" />;
+        return <StatusTrendUpIcon size="sm" color="success" />;
       case 'decrease':
-        return <StatusTrendDownIcon size="sm" color="red" />;
+        return <StatusTrendDownIcon size="sm" color="danger" />;
       default:
         return <StatusTrendRightIcon size="sm" color="gray" />;
     }
