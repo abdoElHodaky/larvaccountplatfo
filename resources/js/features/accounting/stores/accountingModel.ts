@@ -272,7 +272,7 @@ export const accountingModel = createModel<RootModel>()({
     }),
   },
   
-  effects: (dispatch) => ({
+  effects: (dispatch: any, rootState: any) => ({
     // Account effects
     async fetchAccounts(filters?: Partial<AccountingFilters>) {
       dispatch.accounting.setAccountsLoading(true);
@@ -310,8 +310,8 @@ export const accountingModel = createModel<RootModel>()({
         // dispatch.accounting.updateAccount(response.data);
         
         // Mock implementation
-        const state = this.getState();
-        const existingAccount = state.accounting.accounts.find(a => a.id === payload.id);
+        const state = rootState();
+        const existingAccount = state.accounting.accounts.find((a: Account) => a.id === payload.id);
         if (existingAccount) {
           const updatedAccount = {
             ...existingAccount,

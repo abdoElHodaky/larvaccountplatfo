@@ -293,10 +293,9 @@ export class DashboardApiService {
         message: data.deleteDashboardLayout.message,
       };
     } catch (error: unknown) {
-      const errorMessage = error instanceof Error ? error.message : 'Failed to delete dashboard layout:';
+      const errorMessage = error instanceof Error ? error.message : 'Failed to delete dashboard layout';
       log.error('Failed to delete dashboard layout:', error, "DashboardAPI");
       throw new Error(errorMessage);
-      throw new Error(error.message || 'Failed to delete dashboard layout');
     }
   }
 
@@ -314,10 +313,9 @@ export class DashboardApiService {
         message: 'Widget created successfully',
       };
     } catch (error: unknown) {
-      const errorMessage = error instanceof Error ? error.message : 'Failed to create widget:';
+      const errorMessage = error instanceof Error ? error.message : 'Failed to create widget';
       log.error('Failed to create widget:', error, "DashboardAPI");
       throw new Error(errorMessage);
-      throw new Error(error.message || 'Failed to create widget');
     }
   }
 
@@ -334,10 +332,9 @@ export class DashboardApiService {
         message: 'Widget updated successfully',
       };
     } catch (error: unknown) {
-      const errorMessage = error instanceof Error ? error.message : 'Failed to update widget:';
+      const errorMessage = error instanceof Error ? error.message : 'Failed to update widget';
       log.error('Failed to update widget:', error, "DashboardAPI");
       throw new Error(errorMessage);
-      throw new Error(error.message || 'Failed to update widget');
     }
   }
 
@@ -354,10 +351,9 @@ export class DashboardApiService {
         message: data.deleteWidget.message,
       };
     } catch (error: unknown) {
-      const errorMessage = error instanceof Error ? error.message : 'Failed to delete widget:';
+      const errorMessage = error instanceof Error ? error.message : 'Failed to delete widget';
       log.error('Failed to delete widget:', error, "DashboardAPI");
       throw new Error(errorMessage);
-      throw new Error(error.message || 'Failed to delete widget');
     }
   }
 
@@ -374,10 +370,9 @@ export class DashboardApiService {
         success: true,
       };
     } catch (error: unknown) {
-      const errorMessage = error instanceof Error ? error.message : 'Failed to fetch widget data:';
+      const errorMessage = error instanceof Error ? error.message : 'Failed to fetch widget data';
       log.error('Failed to fetch widget data:', error, "DashboardAPI");
       throw new Error(errorMessage);
-      throw new Error(error.message || 'Failed to fetch widget data');
     }
   }
 
@@ -395,10 +390,9 @@ export class DashboardApiService {
         success: true,
       };
     } catch (error: unknown) {
-      const errorMessage = error instanceof Error ? error.message : 'Failed to fetch dashboard metrics:';
+      const errorMessage = error instanceof Error ? error.message : 'Failed to fetch dashboard metrics';
       log.error('Failed to fetch dashboard metrics:', error, "DashboardAPI");
       throw new Error(errorMessage);
-      throw new Error(error.message || 'Failed to fetch dashboard metrics');
     }
   }
 
@@ -415,10 +409,9 @@ export class DashboardApiService {
         success: true,
       };
     } catch (error: unknown) {
-      const errorMessage = error instanceof Error ? error.message : 'Failed to fetch dashboard charts:';
+      const errorMessage = error instanceof Error ? error.message : 'Failed to fetch dashboard charts';
       log.error('Failed to fetch dashboard charts:', error, "DashboardAPI");
       throw new Error(errorMessage);
-      throw new Error(error.message || 'Failed to fetch dashboard charts');
     }
   }
 

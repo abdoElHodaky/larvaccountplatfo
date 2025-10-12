@@ -116,8 +116,9 @@ export const DashboardContainer: React.FC<DashboardContainerProps> = ({
     const metricsMap = new Map(metrics.map((m: any) => [m.id, m]));
     
     realtimeMetrics.forEach(rtMetric => {
+      const existingMetric = metricsMap.get(rtMetric.id);
       metricsMap.set(rtMetric.id, {
-        ...metricsMap.get(rtMetric.id),
+        ...(existingMetric || {}),
         ...rtMetric,
         isRealtime: true,
       });
@@ -133,8 +134,9 @@ export const DashboardContainer: React.FC<DashboardContainerProps> = ({
     const widgetsMap = new Map(widgets.map(w => [w.id, w]));
     
     realtimeWidgets.forEach(rtWidget => {
+      const existingWidget = widgetsMap.get(rtWidget.id);
       widgetsMap.set(rtWidget.id, {
-        ...widgetsMap.get(rtWidget.id),
+        ...(existingWidget || {}),
         ...rtWidget,
         isRealtime: true,
       });
@@ -204,7 +206,7 @@ export const DashboardContainer: React.FC<DashboardContainerProps> = ({
     
     if (viewMode === 'edit' && enableCollaboration) {
       // Notify other collaborators about edit mode
-      updateCollaborativeData(prev => ({
+      updateCollaborativeData((prev: any) => ({
         ...prev,
         editMode: true,
         editedBy: 'current-user-id',
@@ -221,11 +223,11 @@ export const DashboardContainer: React.FC<DashboardContainerProps> = ({
 
   const handleWidgetUpdate = useCallback((widgetId: string, updates: any) => {
     if (enableCollaboration) {
-      updateCollaborativeData(prev => ({
+      updateCollaborativeData((prev: any) => ({
         ...prev,
-        widgets: prev.widgets?.map(w => 
+        widgets: (prev.widgets || []).map((w: any) => 
           w.id === widgetId ? { ...w, ...updates } : w
-        ) || [],
+        ),
       }));
     }
     
@@ -244,7 +246,7 @@ export const DashboardContainer: React.FC<DashboardContainerProps> = ({
           page: '/dashboard',
           metadata: { hasUnsavedChanges },
         });
-      } catch (error) {
+      } catch (error: unknown) {
         console.error('Failed to save dashboard:', error);
       }
     }
@@ -344,7 +346,7 @@ export const DashboardContainer: React.FC<DashboardContainerProps> = ({
             <DashboardMetrics
               metrics={combinedMetrics}
               loading={metricsLoading}
-              error={metricsError}
+              error={metricsError?.message || null}
               dateRange={state.selectedDateRange}
               enableRealtime={enableRealtime}
               socketConnected={socketConnected}
