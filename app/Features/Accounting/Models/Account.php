@@ -2,14 +2,19 @@
 
 namespace App\Features\Accounting\Models;
 
+use App\Features\Accounting\Models\AccountBalance;
+use App\Features\Accounting\Models\JournalEntry;
+use App\Features\Accounting\Models\Transaction;
 use App\Shared\Models\HybridModel;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Account extends HybridModel
 {
-    use SoftDeletes;
+    use HasFactory, SoftDeletes;
 
     protected $fillable = [
         'organization_id',
@@ -43,52 +48,35 @@ class Account extends HybridModel
         'deleted_at' => 'datetime',
     ];
 
-    protected $dates = [
-        'created_at',
-        'updated_at',
-        'deleted_at',
-    ];
+
 
     /**
      * Account types
      */
-    const TYPE_ASSET = 'asset';
-
-    const TYPE_LIABILITY = 'liability';
-
-    const TYPE_EQUITY = 'equity';
-
-    const TYPE_REVENUE = 'revenue';
-
-    const TYPE_EXPENSE = 'expense';
+    public const TYPE_ASSET = 'asset';
+    public const TYPE_LIABILITY = 'liability';
+    public const TYPE_EQUITY = 'equity';
+    public const TYPE_REVENUE = 'revenue';
+    public const TYPE_EXPENSE = 'expense';
 
     /**
      * Account subtypes
      */
-    const SUBTYPE_CURRENT_ASSET = 'current_asset';
-
-    const SUBTYPE_FIXED_ASSET = 'fixed_asset';
-
-    const SUBTYPE_CURRENT_LIABILITY = 'current_liability';
-
-    const SUBTYPE_LONG_TERM_LIABILITY = 'long_term_liability';
-
-    const SUBTYPE_OWNERS_EQUITY = 'owners_equity';
-
-    const SUBTYPE_OPERATING_REVENUE = 'operating_revenue';
-
-    const SUBTYPE_OTHER_REVENUE = 'other_revenue';
-
-    const SUBTYPE_OPERATING_EXPENSE = 'operating_expense';
-
-    const SUBTYPE_OTHER_EXPENSE = 'other_expense';
+    public const SUBTYPE_CURRENT_ASSET = 'current_asset';
+    public const SUBTYPE_FIXED_ASSET = 'fixed_asset';
+    public const SUBTYPE_CURRENT_LIABILITY = 'current_liability';
+    public const SUBTYPE_LONG_TERM_LIABILITY = 'long_term_liability';
+    public const SUBTYPE_OWNERS_EQUITY = 'owners_equity';
+    public const SUBTYPE_OPERATING_REVENUE = 'operating_revenue';
+    public const SUBTYPE_OTHER_REVENUE = 'other_revenue';
+    public const SUBTYPE_OPERATING_EXPENSE = 'operating_expense';
+    public const SUBTYPE_OTHER_EXPENSE = 'other_expense';
 
     /**
      * Normal balance types
      */
-    const NORMAL_BALANCE_DEBIT = 'debit';
-
-    const NORMAL_BALANCE_CREDIT = 'credit';
+    public const NORMAL_BALANCE_DEBIT = 'debit';
+    public const NORMAL_BALANCE_CREDIT = 'credit';
 
     /**
      * Get the parent account
@@ -141,7 +129,7 @@ class Account extends HybridModel
     /**
      * Scope for active accounts
      */
-    public function scopeActive($query)
+    public function scopeActive(Builder $query): Builder
     {
         return $query->where('is_active', true);
     }
@@ -149,7 +137,7 @@ class Account extends HybridModel
     /**
      * Scope for system accounts
      */
-    public function scopeSystem($query)
+    public function scopeSystem(Builder $query): Builder
     {
         return $query->where('is_system', true);
     }
@@ -157,7 +145,7 @@ class Account extends HybridModel
     /**
      * Scope for user-created accounts
      */
-    public function scopeUserCreated($query)
+    public function scopeUserCreated(Builder $query): Builder
     {
         return $query->where('is_system', false);
     }
@@ -165,7 +153,7 @@ class Account extends HybridModel
     /**
      * Scope for accounts by type
      */
-    public function scopeByType($query, string $type)
+    public function scopeByType(Builder $query, string $type): Builder
     {
         return $query->where('type', $type);
     }
@@ -173,7 +161,7 @@ class Account extends HybridModel
     /**
      * Scope for root accounts (no parent)
      */
-    public function scopeRoot($query)
+    public function scopeRoot(Builder $query): Builder
     {
         return $query->whereNull('parent_id');
     }
