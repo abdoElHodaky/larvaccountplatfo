@@ -2,14 +2,14 @@
 
 namespace App\Features\Dashboard\Services;
 
-use Modules\Accounting\Services\AccountingService;
 use Illuminate\Support\Facades\Log;
+use Modules\Accounting\Services\AccountingService;
 
 class DashboardService
 {
     protected $accountingService;
 
-    public function __construct(AccountingService $accountingService = null)
+    public function __construct(?AccountingService $accountingService = null)
     {
         $this->accountingService = $accountingService;
     }
@@ -19,7 +19,7 @@ class DashboardService
      */
     public function getDashboardStats(int $tenantId): array
     {
-        if (!$this->accountingService) {
+        if (! $this->accountingService) {
             return $this->getDefaultStats();
         }
 
@@ -51,7 +51,8 @@ class DashboardService
                 ],
             ];
         } catch (\Exception $e) {
-            Log::error('Dashboard stats error: ' . $e->getMessage());
+            Log::error('Dashboard stats error: '.$e->getMessage());
+
             return $this->getDefaultStats();
         }
     }
@@ -61,13 +62,13 @@ class DashboardService
      */
     public function getRecentActivity(int $tenantId, int $limit = 10): array
     {
-        if (!$this->accountingService) {
+        if (! $this->accountingService) {
             return [];
         }
 
         try {
             $recentTransactions = $this->accountingService->getRecentTransactions($tenantId, $limit);
-            
+
             return $recentTransactions->map(function ($transaction) {
                 return [
                     'id' => $transaction->id,
@@ -82,7 +83,8 @@ class DashboardService
                 ];
             })->toArray();
         } catch (\Exception $e) {
-            Log::error('Dashboard recent activity error: ' . $e->getMessage());
+            Log::error('Dashboard recent activity error: '.$e->getMessage());
+
             return [];
         }
     }

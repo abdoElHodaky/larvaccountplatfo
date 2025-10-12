@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('transactions', function (Blueprint $table) {
             $table->id();
             $table->foreignId('tenant_id')->constrained()->onDelete('cascade');
-            
+
             // Transaction identification
             $table->string('transaction_number')->index(); // Auto-generated unique number
             $table->string('reference')->nullable(); // External reference (invoice #, check #, etc.)
@@ -26,19 +26,19 @@ return new class extends Migration
                 'transfer',
                 'adjustment',
                 'opening_balance',
-                'closing_entry'
+                'closing_entry',
             ])->index();
-            
+
             // Transaction details
             $table->date('transaction_date')->index();
             $table->text('description');
             $table->text('notes')->nullable();
-            
+
             // Financial information
             $table->decimal('total_amount', 15, 2); // Total transaction amount
             $table->string('currency', 3)->default('USD');
             $table->decimal('exchange_rate', 10, 6)->default(1.000000); // For multi-currency
-            
+
             // Status and workflow
             $table->enum('status', [
                 'draft',
@@ -46,30 +46,30 @@ return new class extends Migration
                 'approved',
                 'posted',
                 'cancelled',
-                'reversed'
+                'reversed',
             ])->default('draft')->index();
-            
+
             // Relationships
             $table->foreignId('created_by')->constrained('users');
             $table->foreignId('approved_by')->nullable()->constrained('users');
             $table->foreignId('reversed_by')->nullable()->constrained('users');
             $table->foreignId('reversal_of')->nullable()->constrained('transactions'); // If this reverses another transaction
-            
+
             // Source tracking
-            $table->string('source_type')->nullable(); // Model class that created this transaction
+            $table->string('source_type')->nullable(); // Model class That created this transaction
             $table->unsignedBigInteger('source_id')->nullable(); // ID of the source model
             $table->index(['source_type', 'source_id']);
-            
+
             // Audit trail
             $table->timestamp('posted_at')->nullable();
             $table->timestamp('approved_at')->nullable();
             $table->timestamp('cancelled_at')->nullable();
             $table->timestamp('reversed_at')->nullable();
-            
+
             // Metadata
             $table->json('metadata')->nullable(); // Additional properties
             $table->timestamps();
-            
+
             // Indexes for performance
             $table->index(['tenant_id', 'transaction_date']);
             $table->index(['tenant_id', 'status']);

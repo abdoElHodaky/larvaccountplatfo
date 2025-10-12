@@ -1,7 +1,7 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
 use App\Features\TenantManagement\Controllers\TenantController;
+use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
@@ -22,7 +22,7 @@ Route::middleware(['auth', 'verified', 'tenant'])->group(function () {
     // Tenant settings and management
     Route::get('/tenant/settings', [TenantController::class, 'settings'])->name('tenant.settings');
     Route::put('/tenant/settings', [TenantController::class, 'updateSettings'])->name('tenant.settings.update');
-    
+
     // Tenant users management
     Route::get('/tenant/users', [TenantController::class, 'users'])->name('tenant.users');
     Route::post('/tenant/users/invite', [TenantController::class, 'inviteUser'])->name('tenant.users.invite');

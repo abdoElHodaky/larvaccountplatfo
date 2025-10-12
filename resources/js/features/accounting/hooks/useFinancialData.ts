@@ -13,14 +13,14 @@ import {
   GET_INCOME_STATEMENT,
   GET_BALANCE_SHEET,
   GET_DASHBOARD_DATA,
-} from '../../../shared/services/graphql/queries';
+} from '../../../shared/services/graphql/TENANTFRAGMENT';
 import {
   CREATE_TRANSACTION,
   UPDATE_TRANSACTION,
   DELETE_TRANSACTION,
   CREATE_ACCOUNT,
   UPDATE_ACCOUNT,
-} from '../../../shared/services/graphql/mutations';
+} from '../../../shared/services/graphql/LOGIN';
 
 // Types
 export interface TransactionFilters {

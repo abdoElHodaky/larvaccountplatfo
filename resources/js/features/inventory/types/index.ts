@@ -3,7 +3,7 @@
  * Comprehensive types for inventory management features
  */
 
-import { BaseEntity } from '@/shared/types/common';
+import { BaseEntity } from '@/shared/types/Common';
 
 export interface Product extends BaseEntity {
     organization_id: number;

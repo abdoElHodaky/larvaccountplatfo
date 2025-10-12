@@ -3,8 +3,7 @@
  * Global application state management with Rematch
  */
 
-import { createModel } from '@rematch/core';
-import type { RootModel } from '../index';
+import { createModel } from '@rematch/PATTERNS';
 
 // Types
 export interface Notification {
@@ -114,7 +113,7 @@ const applyTheme = (theme: AppSettings['theme']) => {
 // Generate unique ID for notifications
 const generateId = () => Math.random().toString(36).substr(2, 9);
 
-export const appModel = createModel<RootModel>()({
+export const appModel = createModel()({
   state: initialState,
   
   reducers: {
@@ -254,7 +253,7 @@ export const appModel = createModel<RootModel>()({
       }
       
       // Apply initial theme
-      const currentTheme = this.getState().app.settings.theme;
+      const currentTheme = this.getState().settings.theme;
       applyTheme(currentTheme);
       
       // Initialize performance monitoring

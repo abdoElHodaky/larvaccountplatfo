@@ -10,9 +10,13 @@ use Laravel\Horizon\Contracts\WorkloadRepository;
 class HorizonPerformanceMonitor
 {
     private JobRepository $jobRepository;
+
     private MetricsRepository $metricsRepository;
+
     private SupervisorRepository $supervisorRepository;
+
     private WorkloadRepository $workloadRepository;
+
     private PerformanceMonitor $performanceMonitor;
 
     public function __construct(
@@ -35,7 +39,7 @@ class HorizonPerformanceMonitor
     public function getQueuePerformanceMetrics(int $minutes = 60): array
     {
         $since = now()->subMinutes($minutes);
-        
+
         return [
             'period' => [
                 'minutes' => $minutes,
@@ -59,10 +63,10 @@ class HorizonPerformanceMonitor
     {
         $queues = $this->getActiveQueues();
         $metrics = [];
-        
+
         foreach ($queues as $queue) {
             $queueMetrics = $this->metricsRepository->queueMetrics($queue, $since);
-            
+
             $metrics[$queue] = [
                 'throughput' => $queueMetrics['throughput'] ?? 0,
                 'runtime' => $queueMetrics['runtime'] ?? 0,
@@ -74,7 +78,7 @@ class HorizonPerformanceMonitor
                 'average_runtime' => $queueMetrics['average_runtime'] ?? 0,
             ];
         }
-        
+
         return $metrics;
     }
 
@@ -85,7 +89,7 @@ class HorizonPerformanceMonitor
     {
         $recentJobs = $this->jobRepository->getRecent();
         $failedJobs = $this->jobRepository->getFailed();
-        
+
         return [
             'total_processed' => count($recentJobs),
             'total_failed' => count($failedJobs),
@@ -104,7 +108,7 @@ class HorizonPerformanceMonitor
     {
         $supervisors = $this->supervisorRepository->all();
         $metrics = [];
-        
+
         foreach ($supervisors as $supervisor) {
             $metrics[$supervisor->name] = [
                 'status' => $supervisor->status,
@@ -114,7 +118,7 @@ class HorizonPerformanceMonitor
                 'uptime' => $this->getSupervisorUptime($supervisor),
             ];
         }
-        
+
         return $metrics;
     }
 
@@ -124,7 +128,7 @@ class HorizonPerformanceMonitor
     private function getWorkloadMetrics(): array
     {
         $workload = $this->workloadRepository->get();
-        
+
         return [
             'queues' => $workload,
             'total_load' => array_sum($workload),
@@ -138,13 +142,13 @@ class HorizonPerformanceMonitor
      */
     private function getTenantQueueMetrics(\DateTime $since): array
     {
-        if (!config('horizon.multi_tenant.enabled', true)) {
+        if (! config('horizon.multi_tenant.enabled', true)) {
             return [];
         }
-        
+
         $tenantMetrics = [];
         $tenantQueues = $this->getTenantQueues();
-        
+
         foreach ($tenantQueues as $tenantId => $queues) {
             $tenantMetrics[$tenantId] = [
                 'queues' => $queues,
@@ -154,7 +158,7 @@ class HorizonPerformanceMonitor
                 'throughput' => $this->getTenantThroughput($tenantId, $since),
             ];
         }
-        
+
         return $tenantMetrics;
     }
 
@@ -165,7 +169,7 @@ class HorizonPerformanceMonitor
     {
         $alerts = [];
         $config = config('horizon.performance_monitoring.alerts', []);
-        
+
         // Check for long wait times
         if (isset($config['long_wait_threshold'])) {
             $longWaitQueues = $this->getQueuesWithLongWaitTimes($config['long_wait_threshold']);
@@ -180,7 +184,7 @@ class HorizonPerformanceMonitor
                 ];
             }
         }
-        
+
         // Check for high failure rates
         if (isset($config['high_failure_rate'])) {
             $highFailureQueues = $this->getQueuesWithHighFailureRate($config['high_failure_rate']);
@@ -191,11 +195,11 @@ class HorizonPerformanceMonitor
                     'queue' => $queue,
                     'failure_rate' => $failureRate,
                     'threshold' => $config['high_failure_rate'],
-                    'message' => "Queue '{$queue}' has high failure rate: " . ($failureRate * 100) . "%",
+                    'message' => "Queue '{$queue}' has high failure rate: ".($failureRate * 100).'%',
                 ];
             }
         }
-        
+
         // Check for memory usage
         if (isset($config['memory_threshold'])) {
             $highMemorySupervisors = $this->getSupervisorsWithHighMemoryUsage($config['memory_threshold']);
@@ -206,11 +210,11 @@ class HorizonPerformanceMonitor
                     'supervisor' => $supervisor,
                     'memory_usage' => $memoryUsage,
                     'threshold' => $config['memory_threshold'],
-                    'message' => "Supervisor '{$supervisor}' has high memory usage: " . ($memoryUsage * 100) . "%",
+                    'message' => "Supervisor '{$supervisor}' has high memory usage: ".($memoryUsage * 100).'%',
                 ];
             }
         }
-        
+
         return $alerts;
     }
 
@@ -220,25 +224,25 @@ class HorizonPerformanceMonitor
     public function integrateWithPerformanceMonitor(): void
     {
         $queueMetrics = $this->getQueuePerformanceMetrics(5); // Last 5 minutes
-        
+
         // Record queue metrics in the performance monitor
         foreach ($queueMetrics['queue_metrics'] as $queue => $metrics) {
             $this->performanceMonitor->recordMetric("queue.{$queue}.throughput", $metrics['throughput'], [
                 'queue' => $queue,
                 'type' => 'queue_metric',
             ]);
-            
+
             $this->performanceMonitor->recordMetric("queue.{$queue}.wait_time", $metrics['wait_time'], [
                 'queue' => $queue,
                 'type' => 'queue_metric',
             ]);
-            
+
             $this->performanceMonitor->recordMetric("queue.{$queue}.pending_jobs", $metrics['pending_jobs'], [
                 'queue' => $queue,
                 'type' => 'queue_metric',
             ]);
         }
-        
+
         // Record overall job metrics
         $jobMetrics = $queueMetrics['job_metrics'];
         $this->performanceMonitor->recordMetric('queue.total_processed', $jobMetrics['total_processed']);
@@ -253,6 +257,7 @@ class HorizonPerformanceMonitor
     private function getActiveQueues(): array
     {
         $workload = $this->workloadRepository->get();
+
         return array_keys($workload);
     }
 
@@ -280,6 +285,7 @@ class HorizonPerformanceMonitor
     private function getFailedJobsCount(string $queue, \DateTime $since): int
     {
         $failedJobs = $this->jobRepository->getFailed();
+
         return count(array_filter($failedJobs, function ($job) use ($queue, $since) {
             return $job->queue === $queue && $job->failed_at >= $since;
         }));
@@ -291,6 +297,7 @@ class HorizonPerformanceMonitor
     private function getCompletedJobsCount(string $queue, \DateTime $since): int
     {
         $recentJobs = $this->jobRepository->getRecent();
+
         return count(array_filter($recentJobs, function ($job) use ($queue, $since) {
             return $job->queue === $queue && $job->completed_at >= $since;
         }));
@@ -302,6 +309,7 @@ class HorizonPerformanceMonitor
     private function calculateFailureRate(array $recentJobs, array $failedJobs): float
     {
         $totalJobs = count($recentJobs) + count($failedJobs);
+
         return $totalJobs > 0 ? count($failedJobs) / $totalJobs : 0.0;
     }
 
@@ -313,11 +321,11 @@ class HorizonPerformanceMonitor
         if (empty($jobs)) {
             return 0.0;
         }
-        
+
         $totalRuntime = array_sum(array_map(function ($job) {
             return $job->runtime ?? 0;
         }, $jobs));
-        
+
         return $totalRuntime / count($jobs);
     }
 
@@ -329,7 +337,7 @@ class HorizonPerformanceMonitor
         if (empty($jobs)) {
             return 0.0;
         }
-        
+
         return max(array_map(function ($job) {
             return $job->runtime ?? 0;
         }, $jobs));
@@ -341,22 +349,22 @@ class HorizonPerformanceMonitor
     private function getJobTypeMetrics(array $jobs): array
     {
         $jobTypes = [];
-        
+
         foreach ($jobs as $job) {
             $jobType = $job->name ?? 'unknown';
-            if (!isset($jobTypes[$jobType])) {
+            if (! isset($jobTypes[$jobType])) {
                 $jobTypes[$jobType] = [
                     'count' => 0,
                     'total_runtime' => 0,
                     'average_runtime' => 0,
                 ];
             }
-            
+
             $jobTypes[$jobType]['count']++;
             $jobTypes[$jobType]['total_runtime'] += $job->runtime ?? 0;
             $jobTypes[$jobType]['average_runtime'] = $jobTypes[$jobType]['total_runtime'] / $jobTypes[$jobType]['count'];
         }
-        
+
         return $jobTypes;
     }
 
@@ -370,7 +378,7 @@ class HorizonPerformanceMonitor
             'jobs_with_retries' => 0,
             'average_retries' => 0,
         ];
-        
+
         foreach ($failedJobs as $job) {
             $attempts = $job->attempts ?? 1;
             if ($attempts > 1) {
@@ -378,11 +386,11 @@ class HorizonPerformanceMonitor
                 $retryStats['total_retries'] += ($attempts - 1);
             }
         }
-        
+
         if ($retryStats['jobs_with_retries'] > 0) {
             $retryStats['average_retries'] = $retryStats['total_retries'] / $retryStats['jobs_with_retries'];
         }
-        
+
         return $retryStats;
     }
 
@@ -411,11 +419,11 @@ class HorizonPerformanceMonitor
     {
         $total = array_sum($workload);
         $distribution = [];
-        
+
         foreach ($workload as $queue => $load) {
             $distribution[$queue] = $total > 0 ? $load / $total : 0;
         }
-        
+
         return $distribution;
     }
 
@@ -427,20 +435,20 @@ class HorizonPerformanceMonitor
         if (empty($workload)) {
             return 1.0;
         }
-        
+
         $values = array_values($workload);
         $mean = array_sum($values) / count($values);
-        
+
         if ($mean == 0) {
             return 1.0;
         }
-        
+
         $variance = array_sum(array_map(function ($value) use ($mean) {
             return pow($value - $mean, 2);
         }, $values)) / count($values);
-        
-        $coefficient_of_variation = sqrt($variance) / $mean;
-        
+
+        $coefficientOfVariation = sqrt($variance) / $mean;
+
         // Return a score between 0 and 1, where 1 is perfectly balanced
         return max(0, 1 - $coefficient_of_variation);
     }

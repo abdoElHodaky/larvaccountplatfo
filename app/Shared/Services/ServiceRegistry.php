@@ -2,9 +2,8 @@
 
 namespace App\Shared\Services;
 
-use App\Shared\Contracts\ServiceInterface;
-use Illuminate\Support\Collection;
 use Exception;
+use Illuminate\Support\Collection;
 
 /**
  * Service registry for managing service instances and dependencies
@@ -12,13 +11,16 @@ use Exception;
 class ServiceRegistry
 {
     protected Collection $services;
+
     protected array $serviceMap = [];
+
     protected array $dependencyGraph = [];
+
     protected array $initializedServices = [];
 
     public function __construct()
     {
-        $this->services = new Collection();
+        $this->services = new Collection;
     }
 
     /**
@@ -89,7 +91,7 @@ class ServiceRegistry
         $visiting = [];
 
         foreach ($this->getServiceNames() as $serviceName) {
-            if (!isset($visited[$serviceName])) {
+            if (! isset($visited[$serviceName])) {
                 $this->topologicalSort($serviceName, $visited, $visiting, $sorted);
             }
         }
@@ -146,7 +148,7 @@ class ServiceRegistry
         }
 
         $service = $this->get($name);
-        if (!$service) {
+        if (! $service) {
             throw new Exception("Service not found: {$name}");
         }
 
@@ -222,15 +224,15 @@ class ServiceRegistry
 
         foreach ($this->services as $name => $service) {
             $isHealthy = $service->isHealthy();
-            
+
             if ($isHealthy) {
                 $metrics['healthy_services']++;
             } else {
                 $metrics['unhealthy_services']++;
             }
 
-            $serviceMetrics = method_exists($service, 'getMetrics') 
-                ? $service->getMetrics() 
+            $serviceMetrics = method_exists($service, 'getMetrics')
+                ? $service->getMetrics()
                 : [
                     'name' => $service->getName(),
                     'version' => $service->getVersion(),
@@ -262,7 +264,7 @@ class ServiceRegistry
     public function clear(): void
     {
         $this->cleanupAll();
-        $this->services = new Collection();
+        $this->services = new Collection;
         $this->serviceMap = [];
         $this->dependencyGraph = [];
         $this->initializedServices = [];
@@ -285,6 +287,7 @@ class ServiceRegistry
     {
         try {
             $this->getServicesInDependencyOrder();
+
             return false;
         } catch (Exception $e) {
             return str_contains($e->getMessage(), 'Circular dependency');
@@ -298,6 +301,7 @@ class ServiceRegistry
     {
         $tree = [];
         $this->buildDependencyTree($serviceName, $tree, []);
+
         return $tree;
     }
 
@@ -312,9 +316,9 @@ class ServiceRegistry
 
         $visited[] = $serviceName;
         $dependencies = $this->dependencyGraph[$serviceName] ?? [];
-        
+
         $tree[$serviceName] = [];
-        
+
         foreach ($dependencies as $dependency) {
             if ($this->has($dependency)) {
                 $this->buildDependencyTree($dependency, $tree[$serviceName], $visited);

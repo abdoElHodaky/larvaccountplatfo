@@ -2,14 +2,14 @@
 
 namespace App\Services;
 
-use App\Models\Tenant;
 use App\Models\GlobalUser;
-use Modules\Shared\Models\Organization;
-use Modules\Shared\Models\User;
+use App\Models\Tenant;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Str;
+use Modules\Shared\Models\Organization;
+use Modules\Shared\Models\User;
 
 class TenantProvisioningService
 {
@@ -19,17 +19,11 @@ class TenantProvisioningService
     protected $tenantResolver;
 
     /**
-     * The database initialization service.
-     */
-    protected $databaseInitService;
-
-    /**
      * Create a new tenant provisioning service instance.
      */
-    public function __construct(TenantResolver $tenantResolver, DatabaseInitializationService $databaseInitService)
+    public function __construct(TenantResolver $tenantResolver)
     {
         $this->tenantResolver = $tenantResolver;
-        $this->databaseInitService = $databaseInitService;
     }
 
     /**
@@ -77,11 +71,11 @@ class TenantProvisioningService
             ];
         } catch (\Exception $e) {
             DB::connection('landlord')->rollBack();
-            
+
             // Cleanup any partially created resources
             $this->cleanupFailedProvisioning($tenant ?? null);
 
-            throw new \Exception("Tenant provisioning failed: " . $e->getMessage(), 0, $e);
+            throw new \Exception('Tenant provisioning failed: '.$e->getMessage(), 0, $e);
         }
     }
 
@@ -91,7 +85,7 @@ class TenantProvisioningService
     protected function determineDatabaseStrategy(array $tenantData): string
     {
         // Check if strategy is explicitly requested
-        if (!empty($tenantData['database_strategy'])) {
+        if (! empty($tenantData['database_strategy'])) {
             return $tenantData['database_strategy'];
         }
 
@@ -139,7 +133,7 @@ class TenantProvisioningService
         // Set database configuration based on strategy
         $tenantData['database_strategy'] = $databaseStrategy;
         $tenantData['database_name'] = $this->generateDatabaseName($tenantData['subdomain'], $databaseStrategy);
-        
+
         if ($databaseStrategy === 'dedicated') {
             $tenantData['database_host'] = $this->getDedicatedDatabaseHost($tenantData['region'] ?? null);
         }
@@ -156,15 +150,15 @@ class TenantProvisioningService
 
         // Set organization data
         $organizationData['slug'] = $organizationData['slug'] ?? Str::slug($organizationData['name']);
-        
+
         // For shared databases, the organization ID should match the tenant ID
         if ($tenant->database_strategy === 'shared') {
             $organizationData['id'] = $tenant->id;
         }
 
-        $organization = new Organization();
+        $organization = new Organization;
         $organization->setConnection($connectionName);
-        
+
         return $organization->create($organizationData);
     }
 
@@ -185,9 +179,9 @@ class TenantProvisioningService
             'email_verified_at' => now(),
         ];
 
-        $user = new User();
+        $user = new User;
         $user->setConnection($connectionName);
-        
+
         return $user->create($userData);
     }
 
@@ -249,7 +243,7 @@ class TenantProvisioningService
         $counter = 1;
 
         while (Tenant::where('subdomain', $subdomain)->exists()) {
-            $subdomain = $baseSubdomain . '-' . $counter;
+            $subdomain = $baseSubdomain.'-'.$counter;
             $counter++;
         }
 
@@ -265,10 +259,10 @@ class TenantProvisioningService
             case 'dedicated':
                 return "tenant_{$subdomain}_dedicated";
             case 'clustered':
-                return "cluster_" . $this->getRegionFromSubdomain($subdomain);
+                return 'cluster_'.$this->getRegionFromSubdomain($subdomain);
             case 'shared':
             default:
-                return "shared_shard_" . ((crc32($subdomain) % 4) + 1);
+                return 'shared_shard_'.((crc32($subdomain) % 4) + 1);
         }
     }
 
@@ -293,6 +287,7 @@ class TenantProvisioningService
     protected function hasRegionalCluster(string $region): bool
     {
         $supportedRegions = ['us-east-1', 'us-west-2', 'eu-west-1', 'ap-southeast-1'];
+
         return in_array($region, $supportedRegions);
     }
 
@@ -311,7 +306,7 @@ class TenantProvisioningService
      */
     protected function cleanupFailedProvisioning(?Tenant $tenant): void
     {
-        if (!$tenant) {
+        if (! $tenant) {
             return;
         }
 
@@ -378,7 +373,7 @@ class TenantProvisioningService
             ];
         } catch (\Exception $e) {
             DB::connection('landlord')->rollBack();
-            throw new \Exception("Tenant promotion failed: " . $e->getMessage(), 0, $e);
+            throw new \Exception('Tenant promotion failed: '.$e->getMessage(), 0, $e);
         }
     }
 
@@ -411,7 +406,7 @@ class TenantProvisioningService
 
         $data = $query->get()->toArray();
 
-        if (!empty($data)) {
+        if (! empty($data)) {
             DB::connection($toConnection)->table($table)->insert($data);
         }
     }
@@ -447,11 +442,11 @@ class TenantProvisioningService
             $errors[] = 'Tenant name is required';
         }
 
-        if (!empty($tenantData['subdomain']) && !preg_match('/^[a-z0-9-]+$/', $tenantData['subdomain'])) {
+        if (! empty($tenantData['subdomain']) && ! preg_match('/^[a-z0-9-]+$/', $tenantData['subdomain'])) {
             $errors[] = 'Subdomain must contain only lowercase letters, numbers, and hyphens';
         }
 
-        if (!empty($tenantData['subdomain']) && Tenant::where('subdomain', $tenantData['subdomain'])->exists()) {
+        if (! empty($tenantData['subdomain']) && Tenant::where('subdomain', $tenantData['subdomain'])->exists()) {
             $errors[] = 'Subdomain is already taken';
         }
 
@@ -465,7 +460,7 @@ class TenantProvisioningService
             $errors[] = 'Admin user name is required';
         }
 
-        if (empty($adminUserData['email']) || !filter_var($adminUserData['email'], FILTER_VALIDATE_EMAIL)) {
+        if (empty($adminUserData['email']) || ! filter_var($adminUserData['email'], FILTER_VALIDATE_EMAIL)) {
             $errors[] = 'Valid admin user email is required';
         }
 
@@ -476,4 +471,3 @@ class TenantProvisioningService
         return $errors;
     }
 }
-

@@ -4,7 +4,7 @@
  */
 
 import { gql, mutation } from '../../../shared/services/alova/alova.config';
-import { useRequest, useAutoRequest } from 'alova/client';
+import { useRequest, useAutoRequest } from 'alova/GETDASHBOARDMETRICS';
 
 // TypeScript interfaces
 export interface DashboardMetric {

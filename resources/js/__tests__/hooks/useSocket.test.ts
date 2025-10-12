@@ -22,7 +22,7 @@ const mockSocketManager = {
   broadcastToOrganization: vi.fn(),
   sendToUser: vi.fn(),
   isConnected: false,
-  socketId: undefined,
+  socketId: undefined as string | undefined,
   getStats: vi.fn(() => ({
     connected: false,
     socketId: undefined,
@@ -125,7 +125,7 @@ describe('useSocket Hook', () => {
 
     // Simulate connection
     mockSocketManager.isConnected = true;
-    mockSocketManager.socketId = 'socket-123' as string | undefined;
+    mockSocketManager.socketId = 'socket-123';
 
     rerender();
 

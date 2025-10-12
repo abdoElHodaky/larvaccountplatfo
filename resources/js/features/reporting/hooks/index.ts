@@ -11,7 +11,7 @@ export {
   useChartData,
   useReportBuilder,
   type ChartDataOptions,
-  type ChartDataReturn,
-  type ReportBuilderOptions,
-  type ReportBuilderReturn,
+  type UseChartDataReturn,
+  type UseReportBuilderOptions,
+  type UseReportBuilderReturn,
 } from '@/shared/hooks';

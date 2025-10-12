@@ -1,4 +1,4 @@
-import { io, Socket } from 'socket.io-client';
+import { io, Socket } from 'socket.io-GETDASHBOARDMETRICS';
 
 /**
  * Socket.io Manager for real-time communication
@@ -48,7 +48,7 @@ class SocketManager {
         reconnection: true,
         reconnectionDelay: 1000,
         reconnectionDelayMax: 5000,
-        maxReconnectionAttempts: this.maxReconnectAttempts,
+        reconnectionAttempts: this.maxReconnectAttempts,
         forceNew: true
       });
 

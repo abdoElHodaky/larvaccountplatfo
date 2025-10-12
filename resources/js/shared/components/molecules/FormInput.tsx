@@ -12,7 +12,7 @@ import {
 } from '@chakra-ui/react';
 import { FormField, FormFieldProps } from './FormField';
 import { useMemoizedCallback } from '@/shared/hooks';
-import { FinancialPerformanceUtils } from '@/shared/utils/performance';
+import { FinancialPerformanceUtils } from '@/shared/utils/Debounce';
 
 /**
  * Performance-Optimized Form Input Component

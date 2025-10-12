@@ -3,9 +3,9 @@
 namespace App\Features\Accounting\Models;
 
 use App\Shared\Models\HybridModel;
-use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Transaction extends HybridModel
 {
@@ -64,31 +64,47 @@ class Transaction extends HybridModel
      * Transaction statuses
      */
     const STATUS_DRAFT = 'draft';
+
     const STATUS_PENDING = 'pending';
+
     const STATUS_APPROVED = 'approved';
+
     const STATUS_POSTED = 'posted';
+
     const STATUS_CANCELLED = 'cancelled';
+
     const STATUS_REVERSED = 'reversed';
 
     /**
      * Transaction types
      */
     const TYPE_JOURNAL_ENTRY = 'journal_entry';
+
     const TYPE_PAYMENT = 'payment';
+
     const TYPE_RECEIPT = 'receipt';
+
     const TYPE_TRANSFER = 'transfer';
+
     const TYPE_ADJUSTMENT = 'adjustment';
+
     const TYPE_ACCRUAL = 'accrual';
+
     const TYPE_DEPRECIATION = 'depreciation';
+
     const TYPE_PAYROLL = 'payroll';
 
     /**
      * Recurring frequencies
      */
     const FREQUENCY_DAILY = 'daily';
+
     const FREQUENCY_WEEKLY = 'weekly';
+
     const FREQUENCY_MONTHLY = 'monthly';
+
     const FREQUENCY_QUARTERLY = 'quarterly';
+
     const FREQUENCY_ANNUALLY = 'annually';
 
     /**
@@ -202,7 +218,7 @@ class Transaction extends HybridModel
     {
         $totalDebits = $this->journalEntries()->sum('debit_amount');
         $totalCredits = $this->journalEntries()->sum('credit_amount');
-        
+
         return abs($totalDebits - $totalCredits) < 0.01; // Allow for rounding differences
     }
 
@@ -249,16 +265,16 @@ class Transaction extends HybridModel
     /**
      * Approve the transaction
      */
-    public function approve(int $approvedBy = null): bool
+    public function approve(?int $approvedBy = null): bool
     {
-        if (!$this->canBeApproved()) {
+        if (! $this->canBeApproved()) {
             return false;
         }
 
         $this->status = self::STATUS_APPROVED;
         $this->approved_by = $approvedBy ?: auth()->id();
         $this->approved_at = now();
-        
+
         return $this->save();
     }
 
@@ -267,7 +283,7 @@ class Transaction extends HybridModel
      */
     public function post(): bool
     {
-        if (!$this->canBePosted()) {
+        if (! $this->canBePosted()) {
             return false;
         }
 
@@ -288,11 +304,11 @@ class Transaction extends HybridModel
     /**
      * Reverse the transaction
      */
-    public function reverse(string $reason = null): Transaction
+    public function reverse(?string $reason = null): Transaction
     {
         $reversalTransaction = $this->replicate();
         $reversalTransaction->status = self::STATUS_DRAFT;
-        $reversalTransaction->description = 'Reversal: ' . $this->description;
+        $reversalTransaction->description = 'Reversal: '.$this->description;
         $reversalTransaction->metadata = array_merge($this->metadata ?? [], [
             'original_transaction_id' => $this->id,
             'reversal_reason' => $reason,
@@ -318,7 +334,7 @@ class Transaction extends HybridModel
      */
     public function getFormattedReference(): string
     {
-        return $this->reference_number ?: 'TXN-' . str_pad($this->id, 8, '0', STR_PAD_LEFT);
+        return $this->reference_number ?: 'TXN-'.str_pad($this->id, 8, '0', STR_PAD_LEFT);
     }
 
     /**
@@ -326,7 +342,7 @@ class Transaction extends HybridModel
      */
     public function calculateNextOccurrence(): ?\Carbon\Carbon
     {
-        if (!$this->is_recurring || !$this->recurring_frequency) {
+        if (! $this->is_recurring || ! $this->recurring_frequency) {
             return null;
         }
 

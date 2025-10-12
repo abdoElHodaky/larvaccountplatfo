@@ -14,29 +14,15 @@ import {
   useColorModeValue,
 } from '@chakra-ui/react';
 import { CardContainer } from '@/shared/components/molecules/Container';
-import { FinancialPerformanceUtils } from '@/shared/utils/performance';
+import { FinancialPerformanceUtils } from '@/shared/utils/Debounce';
 
 /**
  * Performance-Optimized Account Card Component
  * Demonstrates React.Fragment, memoization, and Chakra UI integration
  */
 
-interface Account {
-  id: string;
-  name: string;
-  type: 'asset' | 'liability' | 'equity' | 'revenue' | 'expense';
-  balance: number;
-  currency: string;
-  change: number;
-  changePercent: number;
-  lastUpdated: string;
-}
-
-interface AccountCardProps {
-  account: Account;
-  onClick?: (account: Account) => void;
-  className?: string;
-}
+// Import consolidated types
+import { Account, AccountCardProps } from '@/shared/types/ACCOUNTTYPES';
 
 export const AccountCard: React.FC<AccountCardProps> = memo(({
   account,

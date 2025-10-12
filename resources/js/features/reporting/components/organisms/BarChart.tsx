@@ -13,7 +13,7 @@ import {
 import { useColorModeValue } from '@chakra-ui/react';
 import { ChartContainer, ChartContainerProps } from './ChartContainer';
 import { useMemoizedCallback } from '@/shared/hooks';
-import { FinancialPerformanceUtils } from '@/shared/utils/performance';
+import { FinancialPerformanceUtils } from '@/shared/utils/Debounce';
 
 /**
  * Performance-Optimized Bar Chart Component
@@ -152,7 +152,7 @@ export const BarChart: React.FC<BarChartProps> = memo(({
     
     // Default financial formatting
     if (typeof value === 'number') {
-      return FinancialPerformanceUtils.formatCurrency(Number(value) || 0, 'USD', 0);
+      return FinancialPerformanceUtils.formatCurrency(Number(value) || 0, 'USD');
     }
     
     return String(value);
@@ -210,7 +210,7 @@ export const BarChart: React.FC<BarChartProps> = memo(({
 
   // Memoized custom tooltip component
   const CustomTooltip = useMemo(() => {
-    if (!showTooltip) return null;
+    if (!showTooltip) return undefined;
     
     return ({ active, payload, label }: any) => {
       if (!active || !payload || !payload.length) return null;
@@ -352,7 +352,7 @@ export const FinancialBarChart: React.FC<BarChartProps> = memo((props) => (
     {...props}
     variant="financial"
     colorScheme="financial"
-    formatYAxis={(value) => FinancialPerformanceUtils.formatCurrency(Number(value) || 0, 'USD', 0)}
+    formatYAxis={(value) => FinancialPerformanceUtils.formatCurrency(Number(value) || 0, 'USD')}
     formatTooltip={(value, name) => [
       FinancialPerformanceUtils.formatCurrency(Number(value) || 0, 'USD'),
       name
@@ -370,7 +370,7 @@ export const ProfitLossBarChart: React.FC<BarChartProps> = memo((props) => (
     {...props}
     variant="financial"
     colorScheme="profit-loss"
-    formatYAxis={(value) => FinancialPerformanceUtils.formatCurrency(Number(value) || 0, 'USD', 0)}
+    formatYAxis={(value) => FinancialPerformanceUtils.formatCurrency(Number(value) || 0, 'USD')}
     formatTooltip={(value, name) => [
       FinancialPerformanceUtils.formatCurrency(Number(value) || 0, 'USD'),
       name

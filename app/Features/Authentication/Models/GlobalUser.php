@@ -3,7 +3,6 @@
 namespace App\Features\Authentication\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -83,6 +82,6 @@ class GlobalUser extends Authenticatable
     {
         // This would return the user record from the tenant's database
         // Implementation depends on how you structure tenant-specific user data
-        return null; // Placeholder
+        // Placeholder
     }
 }

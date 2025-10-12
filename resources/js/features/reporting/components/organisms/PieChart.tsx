@@ -10,7 +10,7 @@ import {
 import { useColorModeValue } from '@chakra-ui/react';
 import { ChartContainer, ChartContainerProps } from './ChartContainer';
 import { useMemoizedCallback } from '@/shared/hooks';
-import { FinancialPerformanceUtils } from '@/shared/utils/performance';
+import { FinancialPerformanceUtils } from '@/shared/utils/Debounce';
 
 /**
  * Performance-Optimized Pie Chart Component
@@ -158,7 +158,7 @@ export const PieChart: React.FC<PieChartProps> = memo(({
 
   // Memoized custom tooltip component
   const CustomTooltip = useMemo(() => {
-    if (!showTooltip) return null;
+    if (!showTooltip) return undefined;
     
     return ({ active, payload }: any) => {
       if (!active || !payload || !payload.length) return null;

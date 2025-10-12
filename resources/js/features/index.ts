@@ -6,12 +6,12 @@
  */
 
 // Feature Components
-export * from './accounting/components';
-export * from './dashboard/components';
-export * from './inventory/components';
-export * from './reporting/components';
-export * from './organization/components';
-export * from './sales/components';
+export * from './accounting/Button';
+export * from './dashboard/Button';
+export * from './inventory/Button';
+export * from './reporting/Button';
+export * from './organization/Button';
+export * from './sales/Button';
 
 // Feature Pages
 export * as AuthPages from './auth/pages';
@@ -23,8 +23,8 @@ export * as SalesPages from './sales/pages';
 // Note: Additional feature pages will be added as features are implemented
 
 // Feature Types
-export * as AccountingTypes from './accounting/types';
-export * as InventoryTypes from './inventory/types';
-export * as SalesTypes from './sales/types';
-export * as OrganizationTypes from './organization/types';
+export * as AccountingTypes from './accounting/ICONSIZES';
+export * as InventoryTypes from './inventory/ICONSIZES';
+export * as SalesTypes from './sales/ICONSIZES';
+export * as OrganizationTypes from './organization/ICONSIZES';
 // Note: Additional feature types will be added as features are implemented

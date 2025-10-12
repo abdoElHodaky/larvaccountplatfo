@@ -16,7 +16,7 @@ import {
   Skeleton,
 } from '@chakra-ui/react';
 import { useMemoizedCallback, useDebounce } from '@/shared/hooks';
-import { FinancialPerformanceUtils } from '@/shared/utils/performance';
+import { FinancialPerformanceUtils } from '@/shared/utils/Debounce';
 
 /**
  * Performance-Optimized Data Table Component
@@ -221,7 +221,7 @@ export const DataTable = <T extends TableData = TableData>({
     switch (column.type) {
       case 'currency':
         return (
-          <Text fontVariantNumeric="lining-nums tabular-nums">
+          <Text sx={{ fontVariantNumeric: "lining-nums tabular-nums" }}>
             {FinancialPerformanceUtils.formatCurrency(
               Number(value) || 0,
               column.currency || 'USD'
@@ -231,14 +231,14 @@ export const DataTable = <T extends TableData = TableData>({
       
       case 'percentage':
         return (
-          <Text fontVariantNumeric="lining-nums tabular-nums">
+          <Text sx={{ fontVariantNumeric: "lining-nums tabular-nums" }}>
             {FinancialPerformanceUtils.formatPercentage(Number(value) || 0)}
           </Text>
         );
       
       case 'number':
         return (
-          <Text fontVariantNumeric="lining-nums tabular-nums">
+          <Text sx={{ fontVariantNumeric: "lining-nums tabular-nums" }}>
             {FinancialPerformanceUtils.formatNumber(
               Number(value) || 0,
               column.precision || 2

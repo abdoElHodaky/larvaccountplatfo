@@ -3,7 +3,6 @@
 namespace App\Services\Performance;
 
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Query\Builder as QueryBuilder;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -15,7 +14,9 @@ use Illuminate\Support\Facades\Log;
 class QueryOptimizationService
 {
     private const CACHE_PREFIX = 'query_cache:';
+
     private const DEFAULT_TTL = 300; // 5 minutes
+
     private const SLOW_QUERY_THRESHOLD = 1000; // 1 second in milliseconds
 
     /**
@@ -25,17 +26,17 @@ class QueryOptimizationService
         callable $queryCallback,
         array $tags = [],
         int $ttl = self::DEFAULT_TTL,
-        string $customKey = null
+        ?string $customKey = null
     ) {
         $key = $customKey ?: self::generateCacheKey($queryCallback, $tags);
-        
+
         return Cache::remember($key, $ttl, function () use ($queryCallback) {
             $startTime = microtime(true);
             $result = $queryCallback();
             $endTime = microtime(true);
-            
+
             $executionTime = ($endTime - $startTime) * 1000;
-            
+
             // Log slow queries
             if ($executionTime > self::SLOW_QUERY_THRESHOLD) {
                 Log::warning('Slow query detected', [
@@ -43,7 +44,7 @@ class QueryOptimizationService
                     'cache_key' => $key ?? 'unknown',
                 ]);
             }
-            
+
             return $result;
         });
     }
@@ -59,28 +60,28 @@ class QueryOptimizationService
     ) {
         // Clone query to avoid modifying original
         $optimizedQuery = clone $query;
-        
+
         // Add cursor condition if provided
         if ($cursor) {
             $optimizedQuery->where($cursorColumn, '>', $cursor);
         }
-        
+
         // Limit results and add one extra to check for next page
         $results = $optimizedQuery
             ->orderBy($cursorColumn)
             ->limit($perPage + 1)
             ->get();
-        
+
         $hasNextPage = $results->count() > $perPage;
-        
+
         if ($hasNextPage) {
             $results->pop(); // Remove the extra item
         }
-        
-        $nextCursor = $hasNextPage && $results->isNotEmpty() 
+
+        $nextCursor = $hasNextPage && $results->isNotEmpty()
             ? $results->last()->{$cursorColumn}
             : null;
-        
+
         return [
             'data' => $results,
             'has_next_page' => $hasNextPage,
@@ -96,10 +97,10 @@ class QueryOptimizationService
         if (empty($models) || empty($relations)) {
             return;
         }
-        
+
         $collection = collect($models);
         $modelClass = get_class($collection->first());
-        
+
         // Use Eloquent's load method for efficient batch loading
         $collection->load($relations);
     }
@@ -112,13 +113,13 @@ class QueryOptimizationService
         foreach ($indexes as $index) {
             if (is_array($index)) {
                 // Composite index
-                $query->orderBy(DB::raw('(' . implode(', ', $index) . ')'));
+                $query->orderBy(DB::raw('('.implode(', ', $index).')'));
             } else {
                 // Single column index
                 $query->orderBy($index);
             }
         }
-        
+
         return $query;
     }
 
@@ -131,10 +132,10 @@ class QueryOptimizationService
         string $column = '*',
         int $ttl = 600 // 10 minutes for aggregations
     ) {
-        $cacheKey = self::CACHE_PREFIX . 'agg:' . md5(
-            $query->toSql() . serialize($query->getBindings()) . $aggregateFunction . $column
+        $cacheKey = self::CACHE_PREFIX.'agg:'.md5(
+            $query->toSql().serialize($query->getBindings()).$aggregateFunction.$column
         );
-        
+
         return Cache::remember($cacheKey, $ttl, function () use ($query, $aggregateFunction, $column) {
             return $query->{$aggregateFunction}($column);
         });
@@ -146,7 +147,7 @@ class QueryOptimizationService
     public static function bulkInsert(string $table, array $data, int $batchSize = 1000): void
     {
         $chunks = array_chunk($data, $batchSize);
-        
+
         DB::transaction(function () use ($table, $chunks) {
             foreach ($chunks as $chunk) {
                 DB::table($table)->insert($chunk);
@@ -162,16 +163,16 @@ class QueryOptimizationService
         if (empty($updates)) {
             return;
         }
-        
+
         DB::transaction(function () use ($table, $updates, $keyColumn) {
             foreach ($updates as $update) {
-                if (!isset($update[$keyColumn])) {
+                if (! isset($update[$keyColumn])) {
                     continue;
                 }
-                
+
                 $id = $update[$keyColumn];
                 unset($update[$keyColumn]);
-                
+
                 DB::table($table)->where($keyColumn, $id)->update($update);
             }
         });
@@ -185,8 +186,8 @@ class QueryOptimizationService
         $reflection = new \ReflectionFunction($callback);
         $file = $reflection->getFileName();
         $line = $reflection->getStartLine();
-        
-        return self::CACHE_PREFIX . md5($file . $line . serialize($tags));
+
+        return self::CACHE_PREFIX.md5($file.$line.serialize($tags));
     }
 
     /**
@@ -236,21 +237,22 @@ class QueryOptimizationService
         switch ($pattern) {
             case 'recent_records':
                 return $query->orderBy('created_at', 'desc')
-                           ->limit(100);
-                           
+                    ->limit(100);
+
             case 'active_records':
                 return $query->where('status', 'active')
-                           ->whereNull('deleted_at');
-                           
+                    ->whereNull('deleted_at');
+
             case 'user_owned':
                 return $query->where('user_id', auth()->id());
-                
+
             case 'tenant_scoped':
                 if (auth()->user() && method_exists(auth()->user(), 'currentTenant')) {
                     return $query->where('tenant_id', auth()->user()->currentTenant()->id);
                 }
+
                 return $query;
-                
+
             default:
                 return $query;
         }
@@ -270,7 +272,7 @@ class QueryOptimizationService
                     \PDO::ATTR_TIMEOUT => 30,
                     \PDO::MYSQL_ATTR_USE_BUFFERED_QUERY => true,
                 ]
-            )
+            ),
         ]);
     }
 

@@ -5,8 +5,8 @@ namespace App\Features\Inventory\Controllers\Api;
 use App\Features\Inventory\Controllers\InventoryController;
 use App\Features\Inventory\Models\Product;
 use App\Features\Inventory\Models\ProductCategory;
-use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 
 class InventoryApiController extends InventoryController
 {
@@ -105,26 +105,25 @@ class InventoryApiController extends InventoryController
     {
         try {
             $organizationId = $this->getCurrentOrganizationId();
-            
+
             $categories = ProductCategory::where('organization_id', $organizationId)
-                                       ->active()
-                                       ->with(['children'])
-                                       ->whereNull('parent_id')
-                                       ->orderBy('sort_order')
-                                       ->orderBy('name')
-                                       ->get();
+                ->active()
+                ->with(['children'])
+                ->whereNull('parent_id')
+                ->orderBy('sort_order')
+                ->orderBy('name')
+                ->get();
 
             return response()->json([
                 'success' => true,
                 'data' => $this->formatCategoriesForFrontend($categories),
-                'message' => 'Categories retrieved successfully'
+                'message' => 'Categories retrieved successfully',
             ]);
-
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
                 'message' => 'Failed to retrieve categories',
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
             ], 500);
         }
     }
@@ -143,39 +142,38 @@ class InventoryApiController extends InventoryController
                     'value' => $overview['total_products'],
                     'label' => 'Total Products',
                     'icon' => 'package',
-                    'color' => 'blue'
+                    'color' => 'blue',
                 ],
                 'total_stock_value' => [
                     'value' => number_format($overview['total_stock_value'], 2),
                     'label' => 'Total Stock Value',
                     'icon' => 'dollar-sign',
-                    'color' => 'green'
+                    'color' => 'green',
                 ],
                 'low_stock_products' => [
                     'value' => $overview['low_stock_products'],
                     'label' => 'Low Stock Items',
                     'icon' => 'alert-triangle',
-                    'color' => 'yellow'
+                    'color' => 'yellow',
                 ],
                 'out_of_stock_products' => [
                     'value' => $overview['out_of_stock_products'],
                     'label' => 'Out of Stock',
                     'icon' => 'x-circle',
-                    'color' => 'red'
-                ]
+                    'color' => 'red',
+                ],
             ];
 
             return response()->json([
                 'success' => true,
                 'data' => $statistics,
-                'message' => 'Statistics retrieved successfully'
+                'message' => 'Statistics retrieved successfully',
             ]);
-
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
                 'message' => 'Failed to retrieve statistics',
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
             ], 500);
         }
     }
@@ -191,14 +189,14 @@ class InventoryApiController extends InventoryController
             $limit = $request->get('limit', 10);
 
             $products = Product::where('organization_id', $organizationId)
-                             ->active()
-                             ->where(function ($q) use ($query) {
-                                 $q->where('name', 'like', "%{$query}%")
-                                   ->orWhere('sku', 'like', "%{$query}%");
-                             })
-                             ->with(['category'])
-                             ->limit($limit)
-                             ->get();
+                ->active()
+                ->where(function ($q) use ($query) {
+                    $q->where('name', 'like', "%{$query}%")
+                        ->orWhere('sku', 'like', "%{$query}%");
+                })
+                ->with(['category'])
+                ->limit($limit)
+                ->get();
 
             $formattedProducts = $products->map(function ($product) {
                 return [
@@ -215,14 +213,13 @@ class InventoryApiController extends InventoryController
             return response()->json([
                 'success' => true,
                 'data' => $formattedProducts,
-                'message' => 'Products found'
+                'message' => 'Products found',
             ]);
-
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
                 'message' => 'Search failed',
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
             ], 500);
         }
     }

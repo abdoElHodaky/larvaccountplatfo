@@ -3,7 +3,7 @@
  * Types for organization management and administration
  */
 
-import { BaseEntity } from '@/shared/types/common';
+import { BaseEntity } from '@/shared/types/Common';
 
 // Re-export from shared types
 export type { Organization } from '@/shared/types/auth';

@@ -1,6 +1,6 @@
 import { extendTheme, type ThemeConfig } from '@chakra-ui/react';
 import { accountingColors } from './colors';
-import { components } from './components';
+import { components } from './Button';
 
 /**
  * Custom Chakra UI Theme for Laravel Accounting Platform

@@ -3,3 +3,4 @@
 
 // Placeholder for future sales atoms
 // Example: export { default as SalesButton } from './SalesButton';
+export {};

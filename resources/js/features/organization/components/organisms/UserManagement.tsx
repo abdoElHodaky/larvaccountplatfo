@@ -115,7 +115,7 @@ export const UserManagement = memo<UserManagementProps>(({
     try {
       await onUserCreate({
         ...formData,
-        permissions: ROLE_PERMISSIONS[formData.role],
+        permissions: [...ROLE_PERMISSIONS[formData.role]],
       });
       
       toast({

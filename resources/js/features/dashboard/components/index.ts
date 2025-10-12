@@ -3,4 +3,4 @@ export { default as DashboardOverview } from './organisms/DashboardOverview';
 export { default as FinancialChart } from './organisms/FinancialChart';
 export { default as MetricsCards } from './organisms/MetricsCards';
 export { default as QuickActions } from './organisms/QuickActions';
-export { default as RecentTransactions } from './organisms/RecentTransactions';
+export { default as RecentTransactions } from './organisms/RecentTransactionsPage';

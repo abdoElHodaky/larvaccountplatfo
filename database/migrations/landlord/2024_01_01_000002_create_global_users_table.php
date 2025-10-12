@@ -22,7 +22,7 @@ return new class extends Migration
             $table->timestamp('last_login_at')->nullable();
             $table->string('remember_token')->nullable();
             $table->timestamps();
-            
+
             // Indexes for performance
             $table->index(['tenant_id']);
             $table->index(['email']);
@@ -39,4 +39,3 @@ return new class extends Migration
         Schema::dropIfExists('global_users');
     }
 };
-

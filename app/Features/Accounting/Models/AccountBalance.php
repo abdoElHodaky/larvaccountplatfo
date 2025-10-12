@@ -44,9 +44,13 @@ class AccountBalance extends HybridModel
      * Period types
      */
     const PERIOD_DAILY = 'daily';
+
     const PERIOD_WEEKLY = 'weekly';
+
     const PERIOD_MONTHLY = 'monthly';
+
     const PERIOD_QUARTERLY = 'quarterly';
+
     const PERIOD_YEARLY = 'yearly';
 
     /**
@@ -103,8 +107,8 @@ class AccountBalance extends HybridModel
     public function getNetBalance(): float
     {
         $account = $this->account;
-        
-        if (!$account) {
+
+        if (! $account) {
             return $this->balance;
         }
 

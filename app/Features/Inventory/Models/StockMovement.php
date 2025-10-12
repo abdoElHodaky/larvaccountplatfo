@@ -31,8 +31,11 @@ class StockMovement extends Model
      * Movement types
      */
     const TYPE_IN = 'in';
+
     const TYPE_OUT = 'out';
+
     const TYPE_ADJUSTMENT = 'adjustment';
+
     const TYPE_TRANSFER = 'transfer';
 
     /**

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Account } from '@/shared/types';
+import { Account } from '@/shared/ICONSIZES';
 
 interface Props {
     accounts: Account[];

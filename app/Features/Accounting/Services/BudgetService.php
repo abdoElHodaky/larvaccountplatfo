@@ -2,16 +2,15 @@
 
 namespace App\Features\Accounting\Services;
 
+use App\Features\Accounting\Models\Account;
 use App\Features\Accounting\Models\Budget;
 use App\Features\Accounting\Models\BudgetLineItem;
-use App\Features\Accounting\Models\Account;
-use App\Features\Accounting\Models\Transaction;
 use App\Features\Accounting\Models\JournalEntry;
-use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\Log;
+use App\Features\Accounting\Models\Transaction;
 use Carbon\Carbon;
+use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\DB;
 
 class BudgetService
 {
@@ -35,12 +34,12 @@ class BudgetService
             ]);
 
             // Create line items if provided
-            if (!empty($data['line_items'])) {
+            if (! empty($data['line_items'])) {
                 $this->createBudgetLineItems($budget, $data['line_items']);
             }
 
             $this->clearBudgetCache($organizationId);
-            
+
             return $budget->load('lineItems.account');
         });
     }
@@ -67,7 +66,7 @@ class BudgetService
             }
 
             $this->clearBudgetCache($budget->organization_id);
-            
+
             return $budget->load('lineItems.account');
         });
     }
@@ -114,7 +113,7 @@ class BudgetService
         $budget->lineItems()->whereNotIn('id', $providedIds)->delete();
 
         foreach ($lineItems as $itemData) {
-            if (!empty($itemData['id'])) {
+            if (! empty($itemData['id'])) {
                 // Update existing line item
                 $lineItem = BudgetLineItem::find($itemData['id']);
                 if ($lineItem && $lineItem->budget_id === $budget->id) {
@@ -201,12 +200,12 @@ class BudgetService
     public function getBudgetDashboard(int $organizationId): array
     {
         $cacheKey = "budget_dashboard_{$organizationId}";
-        
+
         return Cache::remember($cacheKey, 300, function () use ($organizationId) {
             $activeBudgets = Budget::where('organization_id', $organizationId)
-                                  ->active()
-                                  ->with('lineItems')
-                                  ->get();
+                ->active()
+                ->with('lineItems')
+                ->get();
 
             $totalBudgeted = $activeBudgets->sum(function ($budget) {
                 return $budget->calculateTotalAmount();
@@ -228,7 +227,7 @@ class BudgetService
                 $actual = $budgets->sum(function ($budget) {
                     return $budget->calculateActualAmount();
                 });
-                
+
                 return [
                     'budgeted' => $budgeted,
                     'actual' => $actual,
@@ -255,7 +254,7 @@ class BudgetService
                         'id' => $budget->id,
                         'name' => $budget->name,
                         'type' => $budget->budget_type,
-                        'period' => $budget->start_date->format('M Y') . ' - ' . $budget->end_date->format('M Y'),
+                        'period' => $budget->start_date->format('M Y').' - '.$budget->end_date->format('M Y'),
                         'budgeted' => $budget->calculateTotalAmount(),
                         'actual' => $budget->calculateActualAmount(),
                         'utilization' => $budget->getUtilizationPercentage(),
@@ -272,15 +271,15 @@ class BudgetService
     public function getBudgetAlerts(int $organizationId, float $thresholdPercent = 90.0): array
     {
         $alerts = [];
-        
+
         $budgets = Budget::where('organization_id', $organizationId)
-                        ->active()
-                        ->with('lineItems.account')
-                        ->get();
+            ->active()
+            ->with('lineItems.account')
+            ->get();
 
         foreach ($budgets as $budget) {
             $utilization = $budget->getUtilizationPercentage();
-            
+
             if ($utilization >= 100) {
                 $alerts[] = [
                     'type' => 'over_budget',
@@ -304,7 +303,7 @@ class BudgetService
             // Check individual line items
             foreach ($budget->lineItems as $lineItem) {
                 $itemUtilization = $lineItem->getUtilizationPercentage();
-                
+
                 if ($itemUtilization >= 100) {
                     $alerts[] = [
                         'type' => 'line_item_over_budget',
@@ -334,22 +333,22 @@ class BudgetService
         float $growthRate = 0.0
     ): array {
         $budgetData = [];
-        
+
         foreach ($accountIds as $accountId) {
             $account = Account::find($accountId);
-            if (!$account || $account->organization_id !== $organizationId) {
+            if (! $account || $account->organization_id !== $organizationId) {
                 continue;
             }
 
             // Get historical data for the same period in previous year
             $historicalStart = $startDate->copy()->subYear();
             $historicalEnd = $endDate->copy()->subYear();
-            
+
             $historicalAmount = $this->getActualAmount($organizationId, $accountId, $historicalStart, $historicalEnd);
-            
+
             // Apply growth rate
             $budgetedAmount = $historicalAmount * (1 + ($growthRate / 100));
-            
+
             $budgetData[] = [
                 'account_id' => $accountId,
                 'account_name' => $account->name,
@@ -371,12 +370,12 @@ class BudgetService
     private function getActualAmount(int $organizationId, int $accountId, $startDate, $endDate): float
     {
         return JournalEntry::where('account_id', $accountId)
-                          ->whereHas('transaction', function ($query) use ($organizationId, $startDate, $endDate) {
-                              $query->where('organization_id', $organizationId)
-                                   ->whereBetween('transaction_date', [$startDate, $endDate])
-                                   ->where('status', Transaction::STATUS_POSTED);
-                          })
-                          ->sum('amount');
+            ->whereHas('transaction', function ($query) use ($organizationId, $startDate, $endDate) {
+                $query->where('organization_id', $organizationId)
+                    ->whereBetween('transaction_date', [$startDate, $endDate])
+                    ->where('status', Transaction::STATUS_POSTED);
+            })
+            ->sum('amount');
     }
 
     /**
