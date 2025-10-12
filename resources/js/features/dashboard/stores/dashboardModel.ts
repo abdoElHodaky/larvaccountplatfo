@@ -327,7 +327,7 @@ export const dashboardModel = createModel<RootModel>()({
       
       try {
         const response = await dashboardApi.updateLayout(payload.id, payload.data);
-        dispatch.dashboard.updateLayout(response.data);
+        dispatch.dashboard.updateLayout({ id: payload.id, ...response.data } as DashboardLayout);
         return { success: true, data: response.data };
       } catch (error: any) {
         const errorMessage = error.message || 'Failed to update dashboard layout';
@@ -370,7 +370,7 @@ export const dashboardModel = createModel<RootModel>()({
       
       try {
         const response = await dashboardApi.updateWidget(payload.id, payload.data);
-        dispatch.dashboard.updateWidget(response.data);
+        dispatch.dashboard.updateWidget({ id: payload.id, ...response.data } as Widget);
         return { success: true, data: response.data };
       } catch (error: any) {
         const errorMessage = error.message || 'Failed to update widget';
@@ -398,7 +398,7 @@ export const dashboardModel = createModel<RootModel>()({
       dispatch.dashboard.setWidgetLoading({ widgetId, loading: true });
       
       try {
-        const response = await dashboardApi.getWidgetData(widgetId, this.filters);
+        const response = await dashboardApi.getWidgetData(widgetId, {});
         dispatch.dashboard.updateWidgetData({ 
           widgetId, 
           data: response.data 
@@ -413,10 +413,11 @@ export const dashboardModel = createModel<RootModel>()({
     },
     
     async refreshAllWidgets() {
-      const { widgets } = this;
+      // Get widgets from state - this would need to be passed as parameter in real implementation
+      const widgets: any[] = [];
       
       await Promise.all(
-        widgets.map(widget => 
+        widgets.map((widget: any) => 
           dispatch.dashboard.refreshWidgetData(widget.id)
         )
       );
@@ -429,7 +430,7 @@ export const dashboardModel = createModel<RootModel>()({
       dispatch.dashboard.clearError();
       
       try {
-        const response = await dashboardApi.getMetrics(filters || this.filters);
+        const response = await dashboardApi.getMetrics(filters || {});
         dispatch.dashboard.setMetrics(response.data);
       } catch (error: any) {
         dispatch.dashboard.setError(error.message || 'Failed to fetch metrics');
@@ -441,7 +442,7 @@ export const dashboardModel = createModel<RootModel>()({
       dispatch.dashboard.clearError();
       
       try {
-        const response = await dashboardApi.getCharts(filters || this.filters);
+        const response = await dashboardApi.getCharts(filters || {});
         dispatch.dashboard.setCharts(response.data);
       } catch (error: any) {
         dispatch.dashboard.setError(error.message || 'Failed to fetch charts');

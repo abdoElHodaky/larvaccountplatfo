@@ -26,6 +26,11 @@ export default {
         { pattern: /^emotion-.*/ },
         // Common Chakra UI utility patterns
         { pattern: /^(bg|text|border|shadow|rounded|p|m|w|h|flex|grid)-.*/ },
+        // Phase 5: LiveIcons patterns
+        { pattern: /^(primary|secondary|success|warning|danger|gray)-(50|100|200|300|400|500|600|700|800|900|950)$/ },
+        { pattern: /^(w|h)-(3|4|5|6|8)$/ },
+        { pattern: /^animate-(icon-bounce|icon-pulse|icon-rotate|icon-shake|icon-float)$/ },
+        { pattern: /^(hover:)?(text|bg)-(primary|secondary|success|warning|danger|gray)-(500|600|700)$/ },
     ],
 
     theme: {
@@ -108,6 +113,12 @@ export default {
                 'fade-in': 'fadeIn 0.5s ease-in-out',
                 'slide-in': 'slideIn 0.3s ease-out',
                 'bounce-in': 'bounceIn 0.6s ease-out',
+                // Phase 5: LiveIcons animations
+                'icon-bounce': 'iconBounce 0.3s ease-out',
+                'icon-pulse': 'iconPulse 0.6s ease-in-out infinite',
+                'icon-rotate': 'iconRotate 0.5s ease-in-out',
+                'icon-shake': 'iconShake 0.4s ease-in-out',
+                'icon-float': 'iconFloat 2s ease-in-out infinite',
             },
             keyframes: {
                 fadeIn: {
@@ -123,6 +134,28 @@ export default {
                     '50%': { transform: 'scale(1.05)' },
                     '70%': { transform: 'scale(0.9)' },
                     '100%': { transform: 'scale(1)', opacity: '1' },
+                },
+                // Phase 5: LiveIcons keyframes
+                iconBounce: {
+                    '0%, 100%': { transform: 'scale(1)' },
+                    '50%': { transform: 'scale(1.2)' },
+                },
+                iconPulse: {
+                    '0%, 100%': { opacity: '1' },
+                    '50%': { opacity: '0.5' },
+                },
+                iconRotate: {
+                    '0%': { transform: 'rotate(0deg)' },
+                    '100%': { transform: 'rotate(180deg)' },
+                },
+                iconShake: {
+                    '0%, 100%': { transform: 'translateX(0)' },
+                    '25%': { transform: 'translateX(-2px)' },
+                    '75%': { transform: 'translateX(2px)' },
+                },
+                iconFloat: {
+                    '0%, 100%': { transform: 'translateY(0)' },
+                    '50%': { transform: 'translateY(-4px)' },
                 },
             },
             boxShadow: {

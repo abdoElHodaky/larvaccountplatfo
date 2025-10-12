@@ -1,6 +1,13 @@
 // import { FormEvent } from 'react';
 import { Head, Link, useForm } from '@inertiajs/react';
 import AuthLayout from '@/shared/components/layouts/AuthLayout';
+import { 
+  StatusFreeIcon, 
+  StatusChartIcon, 
+  StatusBusinessIcon, 
+  StatusEnterpriseIcon,
+  StatusWaveIcon 
+} from '@/shared/icons';
 
 interface Tenant {
     id: number;
@@ -49,13 +56,20 @@ export default function TenantSelect({ user, tenants }: TenantSelectProps) {
     };
 
     const getPlanIcon = (plan: string) => {
-        const icons = {
-            free: '🆓',
-            basic: '📊',
-            professional: '💼',
-            enterprise: '🏢',
-        };
-        return icons[plan as keyof typeof icons] || '📊';
+        const iconProps = { size: 'md' as const, animated: true };
+        
+        switch (plan) {
+            case 'free':
+                return <StatusFreeIcon {...iconProps} color="success" />;
+            case 'basic':
+                return <StatusChartIcon {...iconProps} color="primary" />;
+            case 'professional':
+                return <StatusBusinessIcon {...iconProps} color="secondary" />;
+            case 'enterprise':
+                return <StatusEnterpriseIcon {...iconProps} color="primary" />;
+            default:
+                return <StatusChartIcon {...iconProps} color="gray" />;
+        }
     };
 
     return (
@@ -66,7 +80,7 @@ export default function TenantSelect({ user, tenants }: TenantSelectProps) {
                 <div className="bg-white shadow-lg rounded-lg px-8 py-10">
                     <div className="text-center mb-8">
                         <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                            <span className="text-2xl">👋</span>
+                            <StatusWaveIcon size="lg" color="primary" animated />
                         </div>
                         <h1 className="text-3xl font-bold text-gray-900">Welcome back, {user.name}!</h1>
                         <p className="text-gray-600 mt-2">Select an organization to continue</p>

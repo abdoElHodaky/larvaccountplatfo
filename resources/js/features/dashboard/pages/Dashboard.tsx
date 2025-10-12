@@ -1,6 +1,13 @@
-
-import { Head } from '@inertiajs/react';
+import { DocumentHead } from '@/shared/components/seo/DocumentHead';
 import AppLayout from '@/shared/components/layouts/AppLayout';
+import { 
+  StatusChartIcon, 
+  StatusDocumentIcon, 
+  StatusBankIcon, 
+  StatusBoxIcon, 
+  StatusTrendUpIcon,
+  ActionSettingsIcon 
+} from '@/shared/icons';
 
 interface User {
     id: number;
@@ -90,19 +97,30 @@ export default function Dashboard({ tenant, user, stats, recentActivity, quickAc
     };
 
     const getModuleIcon = (module: string) => {
-        const icons = {
-            accounting: '📊',
-            invoicing: '🧾',
-            banking: '🏦',
-            inventory: '📦',
-            reporting: '📈',
-        };
-        return icons[module as keyof typeof icons] || '⚙️';
+        const iconProps = { size: 'md' as const, animated: true };
+        
+        switch (module) {
+            case 'accounting':
+                return <StatusChartIcon {...iconProps} color="primary" />;
+            case 'invoicing':
+                return <StatusDocumentIcon {...iconProps} color="warning" />;
+            case 'banking':
+                return <StatusBankIcon {...iconProps} color="success" />;
+            case 'inventory':
+                return <StatusBoxIcon {...iconProps} color="secondary" />;
+            case 'reporting':
+                return <StatusTrendUpIcon {...iconProps} color="primary" />;
+            default:
+                return <ActionSettingsIcon {...iconProps} color="gray" />;
+        }
     };
 
     return (
         <AppLayout>
-            <Head title="Dashboard" />
+            <DocumentHead 
+                title="Dashboard" 
+                description="Main dashboard with organization overview and quick actions"
+            />
 
             <div className="space-y-6">
                 {/* Welcome Section */}
@@ -143,7 +161,7 @@ export default function Dashboard({ tenant, user, stats, recentActivity, quickAc
                         <div className="bg-white rounded-lg shadow p-6">
                             <div className="flex items-center">
                                 <div className="p-2 bg-green-100 rounded-lg">
-                                    <span className="text-2xl">📊</span>
+                                    <StatusChartIcon size="lg" color="success" animated />
                                 </div>
                                 <div className="ml-4">
                                     <p className="text-sm font-medium text-gray-600">Accounts</p>
@@ -158,7 +176,7 @@ export default function Dashboard({ tenant, user, stats, recentActivity, quickAc
                         <div className="bg-white rounded-lg shadow p-6">
                             <div className="flex items-center">
                                 <div className="p-2 bg-yellow-100 rounded-lg">
-                                    <span className="text-2xl">🧾</span>
+                                    <StatusDocumentIcon size="lg" color="warning" animated />
                                 </div>
                                 <div className="ml-4">
                                     <p className="text-sm font-medium text-gray-600">Revenue</p>

@@ -23,6 +23,7 @@ interface AccountBalancesProps {
   onAccountClick?: (account: AccountBalance) => void;
   showInactive?: boolean;
   filterByType?: string;
+  onFilterByTypeChange?: (type: string | undefined) => void;
   className?: string;
 }
 
@@ -33,6 +34,7 @@ export const AccountBalances: React.FC<AccountBalancesProps> = ({
   onAccountClick,
   showInactive = false,
   filterByType,
+  onFilterByTypeChange,
   className = ''
 }) => {
   const [sortBy, setSortBy] = useState<'name' | 'code' | 'balance' | 'type'>('name');
@@ -166,7 +168,7 @@ export const AccountBalances: React.FC<AccountBalancesProps> = ({
         <div className="filter-controls">
           <select
             value={filterByType || ''}
-            onChange={(e) => setSearchTerm(e.target.value || undefined)}
+            onChange={(e) => onFilterByTypeChange?.(e.target.value || undefined)}
             className="type-filter"
           >
             <option value="">All Types</option>

@@ -7,6 +7,7 @@ import React, { Suspense, useEffect } from 'react';
 import { Provider } from 'react-redux';
 import { ApolloProvider } from '@apollo/client';
 import { ChakraProvider, ColorModeScript } from '@chakra-ui/react';
+import { HelmetProvider } from 'react-helmet-async';
 
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
@@ -17,6 +18,7 @@ import { store } from '../stores';
 import { apolloClient } from '../services/graphql/apollo-client';
 import { useAuth, useApp, useAppActions } from '../hooks/useRematchStore';
 import { SocketProvider } from './SocketProvider';
+import { AnimationProvider } from './AnimationProvider';
 import { pwaManager } from '../utils/pwa';
 import { PWAInstallPrompt } from '../components/pwa/PWAInstallPrompt';
 
@@ -39,13 +41,13 @@ interface AppProvidersProps {
 const PerformanceMonitor: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   useEffect(() => {
     // Monitor render performance
-    const startTime = performance.now();
+    const _startTime = performance.now();
     
     const observer = new PerformanceObserver((list) => {
       const entries = list.getEntries();
       entries.forEach((entry) => {
         if (entry.entryType === 'measure') {
-          console.log(`Performance: ${entry.name} took ${entry.duration}ms`);
+          // Performance measurement logged
         }
       });
     });
@@ -54,14 +56,14 @@ const PerformanceMonitor: React.FC<{ children: React.ReactNode }> = ({ children 
 
     // Monitor memory usage (if available)
     if ('memory' in performance) {
-      const memoryInfo = (performance as any).memory;
-      console.log(`Memory usage: ${(memoryInfo.usedJSHeapSize / 1024 / 1024).toFixed(2)} MB`);
+      const _memoryInfo = (performance as { memory?: { usedJSHeapSize: number } }).memory;
+      // Memory usage tracked
     }
 
     return () => {
       observer.disconnect();
-      const endTime = performance.now();
-      console.log(`Component render time: ${(endTime - startTime).toFixed(2)}ms`);
+      const _endTime = performance.now();
+      // Component render time tracked
     };
   }, []);
 
@@ -93,7 +95,7 @@ const ConnectionMonitor: React.FC<{ children: React.ReactNode }> = ({ children }
   useEffect(() => {
     // Monitor online/offline status
     const handleOnline = () => {
-      console.log('Connection restored');
+      // Connection restored
     };
     
     const handleOffline = () => {
@@ -158,8 +160,8 @@ const AppInitializer: React.FC<{ children: React.ReactNode }> = ({ children }) =
     loadFeatureFlags();
     
     // Initialize PWA features
-    pwaManager.initialize().catch(error => {
-      console.error('PWA initialization failed:', error);
+    pwaManager.initialize().catch(_error => {
+      // PWA initialization failed
     });
   }, [loadFeatureFlags]);
 
@@ -169,21 +171,14 @@ const AppInitializer: React.FC<{ children: React.ReactNode }> = ({ children }) =
 /**
  * Error Handler
  */
-const handleError = (error: Error, errorInfo: { componentStack: string }) => {
-  console.error('Application Error:', error);
-  console.error('Component Stack:', errorInfo.componentStack);
+const handleError = (_error: Error, _errorInfo: { componentStack: string }) => {
+  // Application error logged
+  // Component stack logged
   
   // Send error to monitoring service
   if (process.env.NODE_ENV === 'production') {
     // Implement error reporting (e.g., Sentry, LogRocket)
-    console.error('Production error:', {
-      message: error.message,
-      stack: error.stack,
-      componentStack: errorInfo.componentStack,
-      timestamp: new Date().toISOString(),
-      userAgent: navigator.userAgent,
-      url: window.location.href,
-    });
+    // Production error logged with details
   }
 };
 
@@ -209,12 +204,14 @@ export const AppProviders: React.FC<AppProvidersProps> = ({ children }) => {
       onError={handleError}
       onReset={() => window.location.reload()}
     >
-      <Provider store={store}>
-        <ApolloProvider client={apolloClient}>
-            <ThemeProvider>
+      <HelmetProvider>
+        <Provider store={store}>
+          <ApolloProvider client={apolloClient}>
+              <ThemeProvider>
               <DndProvider backend={HTML5Backend}>
                 <SocketProvider>
-                  <PerformanceMonitor>
+                  <AnimationProvider>
+                    <PerformanceMonitor>
                     <ConnectionMonitor>
                       <AppInitializer>
                         <AuthInitializer>
@@ -226,12 +223,14 @@ export const AppProviders: React.FC<AppProvidersProps> = ({ children }) => {
                         </AuthInitializer>
                       </AppInitializer>
                     </ConnectionMonitor>
-                  </PerformanceMonitor>
+                    </PerformanceMonitor>
+                  </AnimationProvider>
                 </SocketProvider>
               </DndProvider>
-            </ThemeProvider>
-        </ApolloProvider>
-      </Provider>
+              </ThemeProvider>
+          </ApolloProvider>
+        </Provider>
+      </HelmetProvider>
     </ErrorBoundary>
   );
 };

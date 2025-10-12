@@ -550,7 +550,7 @@ export function useAccounts(filters?: AccountingFilters, options?: {
   );
 
   return {
-    accounts: data?.data?.accounts || [],
+    accounts: (data as any)?.accounts || [],
     loading,
     error,
     refetch: send,
@@ -570,7 +570,7 @@ export function useChartOfAccounts(organizationId: number, options?: {
   );
 
   return {
-    chartOfAccounts: data?.data?.chartOfAccounts || [],
+    chartOfAccounts: (data as any)?.chartOfAccounts || [],
     loading,
     error,
     refetch: send,
@@ -590,7 +590,7 @@ export function useTransactions(filters?: TransactionFilters, options?: {
   );
 
   return {
-    transactions: data?.data?.transactions || [],
+    transactions: (data as any)?.transactions || [],
     loading,
     error,
     refetch: send,
@@ -610,7 +610,7 @@ export function useJournalEntries(organizationId: number, filters?: any, options
   );
 
   return {
-    journalEntries: data?.data?.journalEntries || [],
+    journalEntries: (data as any)?.journalEntries || [],
     loading,
     error,
     refetch: send,
@@ -630,7 +630,7 @@ export function useAccountBalances(organizationId: number, asOfDate?: string, op
   );
 
   return {
-    balances: data?.data?.accountBalances || [],
+    balances: (data as any)?.accountBalances || [],
     loading,
     error,
     refetch: send,
@@ -650,7 +650,7 @@ export function useTrialBalance(organizationId: number, asOfDate?: string, optio
   );
 
   return {
-    trialBalance: data?.data?.trialBalance || [],
+    trialBalance: (data as any)?.trialBalance || [],
     loading,
     error,
     refetch: send,

@@ -2,9 +2,9 @@ name: CI
 
 on:
   push:
-    branches: [ main, develop ]
+    branches: [ main, develop, v2, v2-* ]
   pull_request:
-    branches: [ main, develop ]
+    branches: [ main, develop, v2, v2-* ]
 
 jobs:
   frontend-test:
@@ -68,6 +68,18 @@ jobs:
         extensions: mbstring, dom, fileinfo, mysql, redis
         coverage: none
     
+    - name: Create .env file
+      run: |
+        cp .env.example .env
+        php -r "echo 'APP_KEY=base64:' . base64_encode(random_bytes(32)) . PHP_EOL;" >> .env
+        sed -i 's/APP_ENV=local/APP_ENV=testing/' .env
+        sed -i 's/DB_CONNECTION=landlord/DB_CONNECTION=sqlite/' .env
+        sed -i 's/DB_DATABASE=accounting_landlord/DB_DATABASE=:memory:/' .env
+        echo "SESSION_DRIVER=array" >> .env
+        echo "CACHE_STORE=array" >> .env
+        echo "QUEUE_CONNECTION=sync" >> .env
+        echo "MAIL_MAILER=array" >> .env
+    
     - name: Cache Composer packages
       id: composer-cache
       uses: actions/cache@v3
@@ -78,7 +90,11 @@ jobs:
           ${{ runner.os }}-php-${{ matrix.php-version }}-
     
     - name: Install Composer dependencies
-      run: composer install --prefer-dist --no-progress --no-suggest --optimize-autoloader
+      run: composer install --prefer-dist --no-progress --optimize-autoloader
+      env:
+        COMPOSER_PROCESS_TIMEOUT: 0
+        COMPOSER_NO_INTERACTION: 1
+        COMPOSER_NO_AUDIT: 1
     
     - name: Run Laravel Pint (Code Style)
       run: ./vendor/bin/pint --test

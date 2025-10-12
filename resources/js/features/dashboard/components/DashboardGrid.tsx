@@ -23,12 +23,20 @@ interface DashboardWidget {
 }
 
 interface DashboardGridProps {
-  widgets: DashboardWidget[];
+  widgets: any; // Can be DashboardWidget[] or other widget format
   onWidgetMove?: (widgetId: string, newPosition: { x: number; y: number }) => void;
   onWidgetResize?: (widgetId: string, newSize: { width: number; height: number }) => void;
   onWidgetRemove?: (widgetId: string) => void;
+  onWidgetUpdate?: (widgetId: string, updates: any) => void;
   isEditable?: boolean;
   className?: string;
+  // Extended props for dashboard functionality
+  loading?: boolean;
+  error?: Error | string | null;
+  viewMode?: 'view' | 'edit';
+  enableCollaboration?: boolean;
+  enableRealtime?: boolean;
+  collaborators?: any[];
 }
 
 export const DashboardGrid: React.FC<DashboardGridProps> = ({

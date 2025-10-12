@@ -13,6 +13,19 @@ interface DashboardHeaderProps {
   className?: string;
   onRefresh?: () => void;
   isLoading?: boolean;
+  // Extended props for advanced dashboard functionality
+  dateRange?: { start: string; end: string };
+  onDateRangeChange?: (dateRange: { start: string; end: string }) => void;
+  metricTypes?: string[];
+  onMetricTypesChange?: (metricTypes: string[]) => void;
+  viewMode?: 'view' | 'edit';
+  onViewModeChange?: (mode: 'view' | 'edit') => void;
+  isEditable?: boolean;
+  onSave?: () => void;
+  hasUnsavedChanges?: boolean;
+  lastSaved?: Date | null;
+  isFullscreen?: boolean;
+  onToggleFullscreen?: () => void;
 }
 
 export const DashboardHeader: React.FC<DashboardHeaderProps> = ({

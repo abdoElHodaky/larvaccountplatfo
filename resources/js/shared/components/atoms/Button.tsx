@@ -2,21 +2,22 @@ import React from 'react';
 import { cn } from '@/shared/utils/cn';
 
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-    variant?: 'primary' | 'secondary' | 'danger' | 'ghost';
+    variant?: 'primary' | 'secondary' | 'danger' | 'ghost' | 'success';
     size?: 'sm' | 'md' | 'lg';
     loading?: boolean;
     children: React.ReactNode;
 }
 
 const buttonVariants = {
-    primary: 'bg-blue-600 hover:bg-blue-700 text-white border-transparent',
-    secondary: 'bg-gray-200 hover:bg-gray-300 text-gray-900 border-gray-300',
-    danger: 'bg-red-600 hover:bg-red-700 text-white border-transparent',
+    primary: 'bg-blue-600 hover:bg-blue-700 focus:ring-blue-500 text-white border-transparent',
+    secondary: 'bg-white hover:bg-gray-50 focus:ring-blue-500 text-gray-700 border-gray-300',
+    danger: 'bg-red-600 hover:bg-red-700 focus:ring-red-500 text-white border-transparent',
+    success: 'bg-green-600 hover:bg-green-700 focus:ring-green-500 text-white border-transparent',
     ghost: 'bg-transparent hover:bg-gray-100 text-gray-700 border-transparent',
 };
 
 const buttonSizes = {
-    sm: 'px-3 py-1.5 text-sm',
+    sm: 'px-3 py-2 text-sm',
     md: 'px-4 py-2 text-sm',
     lg: 'px-6 py-3 text-base',
 };
@@ -33,7 +34,7 @@ export function Button({
     return (
         <button
             className={cn(
-                'inline-flex items-center justify-center rounded-md border font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed',
+                'inline-flex items-center justify-center rounded-md border font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed',
                 buttonVariants[variant],
                 buttonSizes[size],
                 className
@@ -43,7 +44,7 @@ export function Button({
         >
             {loading && (
                 <svg
-                    className="animate-spin -ml-1 mr-2 h-4 w-4"
+                    className="animate-spin -ml-1 mr-3 h-5 w-5"
                     xmlns="http://www.w3.org/2000/svg"
                     fill="none"
                     viewBox="0 0 24 24"
@@ -68,4 +69,8 @@ export function Button({
     );
 }
 
+// Export both named and default for compatibility
 export default Button;
+
+// Legacy export for PrimaryButton compatibility
+export { Button as PrimaryButton };

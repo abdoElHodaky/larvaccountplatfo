@@ -20,6 +20,11 @@ interface CollaborationIndicatorProps {
   maxVisibleUsers?: number;
   className?: string;
   onUserClick?: (user: ActiveUser) => void;
+  // Extended props for dashboard collaboration
+  collaborators?: any[];
+  isLocked?: boolean;
+  socketConnected?: boolean;
+  lastUpdate?: Date | null;
 }
 
 export const CollaborationIndicator: React.FC<CollaborationIndicatorProps> = ({

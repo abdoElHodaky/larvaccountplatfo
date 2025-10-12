@@ -1,10 +1,11 @@
 import { FormEvent, useState } from 'react';
-import { Head, Link, useForm } from '@inertiajs/react';
+import { Link, useForm } from '@inertiajs/react';
 import AuthLayout from '@/shared/components/layouts/AuthLayout';
 import InputError from '@/shared/components/atoms/InputError';
 import InputLabel from '@/shared/components/atoms/InputLabel';
-import PrimaryButton from '@/shared/components/atoms/PrimaryButton';
+import { PrimaryButton } from '@/shared/components/atoms/Button';
 import TextInput from '@/shared/components/atoms/TextInput';
+import { DocumentHead } from '@/shared/components';
 
 interface RegisterData {
     name: string;
@@ -51,7 +52,11 @@ export default function Register() {
 
     return (
         <AuthLayout>
-            <Head title="Create Account" />
+            <DocumentHead 
+                title="Create Account - Laravel Accounting Platform"
+                description="Create your Laravel Accounting Platform account and start managing your business finances with our comprehensive accounting solution. Free trial available."
+                keywords="register, create account, accounting software, business finance, financial management, free trial"
+            />
 
             <div className="w-full max-w-2xl mx-auto">
                 <div className="bg-white shadow-lg rounded-lg px-8 py-10">

@@ -4,6 +4,7 @@
  */
 
 import React from 'react';
+import { StatusChartIcon, StatusTrendUpIcon, StatusTrendDownIcon, StatusTrendRightIcon } from '@/shared/icons';
 
 interface MetricData {
   id: string;
@@ -20,13 +21,19 @@ interface DashboardMetricsProps {
   loading?: boolean;
   error?: string | null;
   className?: string;
+  dateRange?: { start: string; end: string };
+  enableRealtime?: boolean;
+  socketConnected?: boolean;
 }
 
 export const DashboardMetrics: React.FC<DashboardMetricsProps> = ({
   metrics = [],
   loading = false,
   error = null,
-  className = ''
+  className = '',
+  dateRange: _dateRange,
+  enableRealtime: _enableRealtime = false,
+  socketConnected: _socketConnected = false
 }) => {
   if (loading) {
     return (
@@ -58,17 +65,27 @@ export const DashboardMetrics: React.FC<DashboardMetricsProps> = ({
     return (
       <div className={`dashboard-metrics empty ${className}`}>
         <div className="empty-state">
-          <span className="empty-icon">📊</span>
+          <StatusChartIcon size="xl" color="gray" className="empty-icon" />
           <p>No metrics available</p>
         </div>
       </div>
     );
   }
 
-  const formatChange = (change: number, changeType: string) => {
+  const formatChange = (change: number, _changeType: string) => {
     const sign = change > 0 ? '+' : '';
-    const icon = changeType === 'increase' ? '↗️' : changeType === 'decrease' ? '↘️' : '➡️';
-    return `${icon} ${sign}${change}%`;
+    return `${sign}${change}%`;
+  };
+
+  const getTrendIcon = (changeType: string) => {
+    switch (changeType) {
+      case 'increase':
+        return <StatusTrendUpIcon size="sm" color="success" />;
+      case 'decrease':
+        return <StatusTrendDownIcon size="sm" color="danger" />;
+      default:
+        return <StatusTrendRightIcon size="sm" color="gray" />;
+    }
   };
 
   return (
@@ -91,7 +108,8 @@ export const DashboardMetrics: React.FC<DashboardMetricsProps> = ({
               
               {metric.change !== undefined && metric.changeType && (
                 <div className={`metric-change ${metric.changeType}`}>
-                  {formatChange(metric.change, metric.changeType)}
+                  {getTrendIcon(metric.changeType)}
+                  <span>{formatChange(metric.change, metric.changeType)}</span>
                 </div>
               )}
             </div>

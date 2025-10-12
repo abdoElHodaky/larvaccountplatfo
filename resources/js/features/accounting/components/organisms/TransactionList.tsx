@@ -4,6 +4,8 @@
  */
 
 import React, { useState } from 'react';
+import AnimatedFormInput from '@/shared/components/AnimatedFormInput';
+import { AnimatedList } from '@/shared/components/animations';
 
 interface Transaction {
   id: string;
@@ -146,12 +148,14 @@ export const TransactionList: React.FC<TransactionListProps> = ({
           <div className="flex items-center justify-between">
             <h3 className="text-lg font-semibold text-gray-900">Transactions</h3>
             <div className="flex items-center space-x-4">
-              <input
+              <AnimatedFormInput
                 type="text"
                 placeholder="Filter by account..."
                 value={filterAccount}
                 onChange={(e) => setFilterAccount(e.target.value)}
-                className="px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                variant="search"
+                animationType="glow"
+                className="text-sm"
               />
               <button className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 text-sm">
                 Add Transaction
@@ -201,77 +205,83 @@ export const TransactionList: React.FC<TransactionListProps> = ({
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
-              {filteredTransactions.map((transaction) => (
-                <tr 
-                  key={transaction.id}
-                  className="hover:bg-gray-50 cursor-pointer"
-                  onClick={() => onTransactionClick?.(transaction)}
-                >
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                    {formatDate(transaction.date)}
-                  </td>
-                  <td className="px-6 py-4 text-sm text-gray-900">
-                    <div>
-                      <div className="font-medium">{transaction.description}</div>
-                      {transaction.reference && (
-                        <div className="text-xs text-gray-500">Ref: {transaction.reference}</div>
+              <AnimatedList
+                animationType="stagger"
+                direction="up"
+                staggerDelay={50}
+              >
+                {filteredTransactions.map((transaction) => (
+                  <tr 
+                    key={transaction.id}
+                    className="hover:bg-gray-50 cursor-pointer"
+                    onClick={() => onTransactionClick?.(transaction)}
+                  >
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                      {formatDate(transaction.date)}
+                    </td>
+                    <td className="px-6 py-4 text-sm text-gray-900">
+                      <div>
+                        <div className="font-medium">{transaction.description}</div>
+                        {transaction.reference && (
+                          <div className="text-xs text-gray-500">Ref: {transaction.reference}</div>
+                        )}
+                      </div>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                      <div>
+                        <div>{transaction.account}</div>
+                        {transaction.category && (
+                          <div className="text-xs text-gray-500">{transaction.category}</div>
+                        )}
+                      </div>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-right">
+                      {transaction.debit > 0 ? (
+                        <span className="text-red-600 font-medium">
+                          {formatCurrency(transaction.debit)}
+                        </span>
+                      ) : (
+                        <span className="text-gray-400">—</span>
                       )}
-                    </div>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                    <div>
-                      <div>{transaction.account}</div>
-                      {transaction.category && (
-                        <div className="text-xs text-gray-500">{transaction.category}</div>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-right">
+                      {transaction.credit > 0 ? (
+                        <span className="text-green-600 font-medium">
+                          {formatCurrency(transaction.credit)}
+                        </span>
+                      ) : (
+                        <span className="text-gray-400">—</span>
                       )}
-                    </div>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-right">
-                    {transaction.debit > 0 ? (
-                      <span className="text-red-600 font-medium">
-                        {formatCurrency(transaction.debit)}
-                      </span>
-                    ) : (
-                      <span className="text-gray-400">—</span>
-                    )}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-right">
-                    {transaction.credit > 0 ? (
-                      <span className="text-green-600 font-medium">
-                        {formatCurrency(transaction.credit)}
-                      </span>
-                    ) : (
-                      <span className="text-gray-400">—</span>
-                    )}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                    <div className="flex items-center justify-end space-x-2">
-                      {onEdit && (
-                        <button
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            onEdit(transaction);
-                          }}
-                          className="text-blue-600 hover:text-blue-900"
-                        >
-                          Edit
-                        </button>
-                      )}
-                      {onDelete && (
-                        <button
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            onDelete(transaction.id);
-                          }}
-                          className="text-red-600 hover:text-red-900"
-                        >
-                          Delete
-                        </button>
-                      )}
-                    </div>
-                  </td>
-                </tr>
-              ))}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                      <div className="flex items-center justify-end space-x-2">
+                        {onEdit && (
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              onEdit(transaction);
+                            }}
+                            className="text-blue-600 hover:text-blue-900"
+                          >
+                            Edit
+                          </button>
+                        )}
+                        {onDelete && (
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              onDelete(transaction.id);
+                            }}
+                            className="text-red-600 hover:text-red-900"
+                          >
+                            Delete
+                          </button>
+                        )}
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </AnimatedList>
             </tbody>
           </table>
         </div>

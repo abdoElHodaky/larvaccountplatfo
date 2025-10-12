@@ -4,6 +4,7 @@
  */
 
 import React, { useState } from 'react';
+import AnimatedFormInput from '@/shared/components/AnimatedFormInput';
 
 interface TransactionFormData {
   date: string;
@@ -11,6 +12,17 @@ interface TransactionFormData {
   account: string;
   amount: number;
   type: 'debit' | 'credit';
+  reference?: string;
+  category?: string;
+  notes?: string;
+}
+
+interface TransactionFormErrors {
+  date?: string;
+  description?: string;
+  account?: string;
+  amount?: string;
+  type?: string;
   reference?: string;
   category?: string;
   notes?: string;
@@ -42,7 +54,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
     notes: initialData.notes || ''
   });
 
-  const [errors, setErrors] = useState<Partial<TransactionFormData>>({});
+  const [errors, setErrors] = useState<TransactionFormErrors>({});
 
   const accounts = [
     'Cash',
@@ -67,7 +79,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
   ];
 
   const validateForm = (): boolean => {
-    const newErrors: Partial<TransactionFormData> = {};
+    const newErrors: TransactionFormErrors = {};
 
     if (!formData.date) {
       newErrors.date = 'Date is required';
@@ -125,56 +137,42 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
           {/* Date and Reference */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
-              <label htmlFor="date" className="block text-sm font-medium text-gray-700 mb-2">
-                Date *
-              </label>
-              <input
+              <AnimatedFormInput
                 type="date"
-                id="date"
+                label="Date *"
                 value={formData.date}
                 onChange={(e) => handleInputChange('date', e.target.value)}
-                className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ${
-                  errors.date ? 'border-red-500' : 'border-gray-300'
-                }`}
+                error={errors.date}
+                animationType="focus"
+                className="w-full"
               />
-              {errors.date && (
-                <p className="mt-1 text-sm text-red-600">{errors.date}</p>
-              )}
             </div>
 
             <div>
-              <label htmlFor="reference" className="block text-sm font-medium text-gray-700 mb-2">
-                Reference
-              </label>
-              <input
+              <AnimatedFormInput
                 type="text"
-                id="reference"
+                label="Reference"
                 value={formData.reference}
                 onChange={(e) => handleInputChange('reference', e.target.value)}
                 placeholder="e.g., INV-001, PAY-001"
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                animationType="slide"
+                className="w-full"
               />
             </div>
           </div>
 
           {/* Description */}
           <div>
-            <label htmlFor="description" className="block text-sm font-medium text-gray-700 mb-2">
-              Description *
-            </label>
-            <input
+            <AnimatedFormInput
               type="text"
-              id="description"
+              label="Description *"
               value={formData.description}
               onChange={(e) => handleInputChange('description', e.target.value)}
               placeholder="Enter transaction description"
-              className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ${
-                errors.description ? 'border-red-500' : 'border-gray-300'
-              }`}
+              error={errors.description}
+              animationType="glow"
+              className="w-full"
             />
-            {errors.description && (
-              <p className="mt-1 text-sm text-red-600">{errors.description}</p>
-            )}
           </div>
 
           {/* Account and Category */}
@@ -222,27 +220,21 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
           {/* Amount and Type */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
-              <label htmlFor="amount" className="block text-sm font-medium text-gray-700 mb-2">
-                Amount *
-              </label>
               <div className="relative">
-                <span className="absolute left-3 top-2 text-gray-500">$</span>
-                <input
+                <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 z-10">$</span>
+                <AnimatedFormInput
                   type="number"
-                  id="amount"
-                  value={formData.amount}
+                  label="Amount *"
+                  value={formData.amount?.toString() || ''}
                   onChange={(e) => handleInputChange('amount', parseFloat(e.target.value) || 0)}
                   min="0"
                   step="0.01"
                   placeholder="0.00"
-                  className={`w-full pl-8 pr-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ${
-                    errors.amount ? 'border-red-500' : 'border-gray-300'
-                  }`}
+                  error={errors.amount}
+                  animationType="bounce"
+                  className="w-full pl-8"
                 />
               </div>
-              {errors.amount && (
-                <p className="mt-1 text-sm text-red-600">{errors.amount}</p>
-              )}
             </div>
 
             <div>

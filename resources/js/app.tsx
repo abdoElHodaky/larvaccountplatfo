@@ -138,8 +138,7 @@ if (typeof window !== 'undefined') {
   // Initialize resource hints
   addResourceHints();
   
-  // Initialize route preloading
-  routePreloader.initialize();
+  // Route preloading is initialized automatically when needed
 }
 
 /**
