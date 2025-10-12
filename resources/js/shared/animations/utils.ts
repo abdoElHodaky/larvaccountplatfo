@@ -146,7 +146,7 @@ export function createAccessibleAnimation(
   if (shouldReduceMotion()) {
     // Apply final state immediately for reduced motion
     const finalFrame = keyframes[keyframes.length - 1];
-    Object.assign(element.style, finalFrame);
+    Object.assign((element as HTMLElement).style, finalFrame);
     return null;
   }
 

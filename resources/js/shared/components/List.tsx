@@ -77,20 +77,6 @@ export const List = forwardRef<HTMLDivElement, ListProps>(({
     onItemRemove(id);
   }, [onItemRemove, disabled]);
 
-  // Item addition animation
-  const _handleAdd = useCallback((item: ListItem) => {
-    if (!onItemAdd || disabled) return;
-
-    onItemAdd(item);
-
-    // Animate new item after it's added to DOM
-    setTimeout(() => {
-      const element = itemRefs.current.get(item.id);
-      if (element && !animate.shouldReduce()) {
-        animate.run(element, keyframes.listEnter, config);
-      }
-    }, 0);
-  }, [onItemAdd, disabled, config]);
 
   // Drag and drop for reordering
   const handleDragStart = (e: React.DragEvent, index: number) => {

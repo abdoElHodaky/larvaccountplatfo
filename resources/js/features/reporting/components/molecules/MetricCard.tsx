@@ -248,7 +248,7 @@ export const MetricCard: React.FC<MetricCardProps> = memo(({
             fontSize={sizeConfig.valueSize}
             fontWeight="bold"
             color={colors.primary}
-            fontVariantNumeric="lining-nums tabular-nums"
+            sx={{ fontVariantNumeric: "lining-nums tabular-nums" }}
           >
             {formattedValue}
           </StatNumber>

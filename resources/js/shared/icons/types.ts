@@ -50,43 +50,43 @@ export const ICON_COLORS = {
   gray: 'text-gray-600 hover:text-gray-700'
 } as const;
 
-// Animation keyframes
+// Animation keyframes (mutable for Web Animations API)
 export const ICON_ANIMATIONS = {
   bounce: [
     { transform: 'scale(1)' },
     { transform: 'scale(1.2)' },
     { transform: 'scale(1)' }
-  ],
+  ] as Keyframe[],
   pulse: [
     { transform: 'scale(1)', opacity: 1 },
     { transform: 'scale(1.1)', opacity: 0.8 },
     { transform: 'scale(1)', opacity: 1 }
-  ],
+  ] as Keyframe[],
   rotate: [
     { transform: 'rotate(0deg)' },
     { transform: 'rotate(180deg)' }
-  ],
+  ] as Keyframe[],
   shake: [
     { transform: 'translateX(0)' },
     { transform: 'translateX(-2px)' },
     { transform: 'translateX(2px)' },
     { transform: 'translateX(-2px)' },
     { transform: 'translateX(0)' }
-  ],
+  ] as Keyframe[],
   loading: [
     { transform: 'rotate(0deg)' },
     { transform: 'rotate(360deg)' }
-  ],
+  ] as Keyframe[],
   success: [
     { transform: 'scale(1)', opacity: 0.5 },
     { transform: 'scale(1.3)', opacity: 1 },
     { transform: 'scale(1)', opacity: 1 }
-  ],
+  ] as Keyframe[],
   error: [
     { transform: 'translateX(0)' },
     { transform: 'translateX(-3px)' },
     { transform: 'translateX(3px)' },
     { transform: 'translateX(-3px)' },
     { transform: 'translateX(0)' }
-  ]
-} as const;
+  ] as Keyframe[]
+};

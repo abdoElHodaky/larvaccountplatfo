@@ -9,6 +9,9 @@ export * from './exports';
 // Re-export types for convenience
 export type { IconProps, IconCategory, IconRegistryEntry } from './types';
 
+// Legacy type alias for backward compatibility
+export type LiveIconProps = IconProps;
+
 // Re-export utilities
 export { 
   createLiveIcon, 
