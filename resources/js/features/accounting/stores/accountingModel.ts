@@ -309,14 +309,20 @@ export const accountingModel = createModel<RootModel>()({
         // const response = await accountingApi.updateAccount(payload.id, payload.data);
         // dispatch.accounting.updateAccount(response.data);
         
-        // Mock implementation - update account directly
-        const updatedAccount = {
-          id: payload.id,
-          ...payload.data,
-          updatedAt: new Date().toISOString(),
-        } as Account;
-        dispatch.accounting.updateAccount(updatedAccount);
-        return { success: true, data: updatedAccount };
+        // Mock implementation
+        const state = this.getState() as any;
+        const existingAccount = state.accounting.accounts.find((a: any) => a.id === payload.id);
+        if (existingAccount) {
+          const updatedAccount = {
+            ...existingAccount,
+            ...payload.data,
+            updatedAt: new Date().toISOString(),
+          };
+          dispatch.accounting.updateAccount(updatedAccount);
+          return { success: true, data: updatedAccount };
+        }
+        
+        throw new Error('Account not found');
         
       } catch (error: any) {
         const errorMessage = error.message || 'Failed to update account';
