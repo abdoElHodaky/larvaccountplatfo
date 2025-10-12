@@ -13,7 +13,7 @@ class ProductTest extends TestCase
     use RefreshDatabase;
 
     /** @test */
-    public function itBelongsToACategory()
+    public function it_belongs_to_a_category()
     {
         $category = ProductCategory::factory()->create();
         $product = Product::factory()->create(['category_id' => $category->id]);
@@ -23,7 +23,7 @@ class ProductTest extends TestCase
     }
 
     /** @test */
-    public function itHasManyStockLevels()
+    public function it_has_many_stock_levels()
     {
         $product = Product::factory()->create();
         $stockLevels = StockLevel::factory()->count(3)->create(['product_id' => $product->id]);
@@ -33,7 +33,7 @@ class ProductTest extends TestCase
     }
 
     /** @test */
-    public function itCanGetCurrentStockQuantity()
+    public function it_can_get_current_stock_quantity()
     {
         $product = Product::factory()->create();
         $stockLevel = StockLevel::factory()->create([
@@ -45,7 +45,7 @@ class ProductTest extends TestCase
     }
 
     /** @test */
-    public function itCanCheckIfStockIsLow()
+    public function it_can_check_if_stock_is_low()
     {
         $product = Product::factory()->create(['min_stock_level' => 20]);
 
@@ -66,7 +66,7 @@ class ProductTest extends TestCase
     }
 
     /** @test */
-    public function itCanCheckIfOutOfStock()
+    public function it_can_check_if_out_of_stock()
     {
         $product = Product::factory()->create();
 
@@ -87,7 +87,7 @@ class ProductTest extends TestCase
     }
 
     /** @test */
-    public function itCanCalculateTotalValue()
+    public function it_can_calculate_total_value()
     {
         $product = Product::factory()->create(['price' => 50.00]);
         StockLevel::factory()->create([
@@ -99,7 +99,7 @@ class ProductTest extends TestCase
     }
 
     /** @test */
-    public function itCanScopeByCategory()
+    public function it_can_scope_by_category()
     {
         $category1 = ProductCategory::factory()->create();
         $category2 = ProductCategory::factory()->create();
@@ -114,7 +114,7 @@ class ProductTest extends TestCase
     }
 
     /** @test */
-    public function itCanScopeActiveProducts()
+    public function it_can_scope_active_products()
     {
         $activeProduct = Product::factory()->create(['status' => 'active']);
         $inactiveProduct = Product::factory()->create(['status' => 'inactive']);
@@ -126,7 +126,7 @@ class ProductTest extends TestCase
     }
 
     /** @test */
-    public function itCanScopeLowStockProducts()
+    public function it_can_scope_low_stock_products()
     {
         $product1 = Product::factory()->create(['min_stock_level' => 20]);
         $product2 = Product::factory()->create(['min_stock_level' => 10]);
@@ -150,7 +150,7 @@ class ProductTest extends TestCase
     }
 
     /** @test */
-    public function itCanSearchByNameOrSku()
+    public function it_can_search_by_name_or_sku()
     {
         $product1 = Product::factory()->create([
             'name' => 'Apple iPhone',
@@ -173,7 +173,7 @@ class ProductTest extends TestCase
     }
 
     /** @test */
-    public function itValidatesRequiredFields()
+    public function it_validates_required_fields()
     {
         $this->expectException(\Illuminate\Database\QueryException::class);
 
@@ -181,7 +181,7 @@ class ProductTest extends TestCase
     }
 
     /** @test */
-    public function itEnsuresUniqueSku()
+    public function it_ensures_unique_sku()
     {
         Product::factory()->create(['sku' => 'UNIQUE-SKU']);
 
@@ -191,7 +191,7 @@ class ProductTest extends TestCase
     }
 
     /** @test */
-    public function itCanBeSoftDeleted()
+    public function it_can_be_soft_deleted()
     {
         $product = Product::factory()->create();
 
@@ -203,7 +203,7 @@ class ProductTest extends TestCase
     }
 
     /** @test */
-    public function itFormatsPriceCorrectly()
+    public function it_formats_price_correctly()
     {
         $product = Product::factory()->create(['price' => 99.99]);
 
@@ -211,7 +211,7 @@ class ProductTest extends TestCase
     }
 
     /** @test */
-    public function itCanCheckReorderPoint()
+    public function it_can_check_reorder_point()
     {
         $product = Product::factory()->create(['reorder_point' => 15]);
 

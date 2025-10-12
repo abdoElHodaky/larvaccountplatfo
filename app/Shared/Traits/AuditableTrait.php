@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\Auth;
 
 /**
  * Auditable Trait
- * 
+ *
  * Automatically tracks who created and updated records.
  * Provides audit trail functionality for models.
  */
@@ -113,7 +113,7 @@ trait AuditableTrait
     {
         return $query->where(function ($q) use ($userId) {
             $q->where('created_by', $userId)
-              ->orWhere('updated_by', $userId);
+                ->orWhere('updated_by', $userId);
         });
     }
 

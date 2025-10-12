@@ -22,7 +22,7 @@ class TenantResolverTest extends TestCase
     }
 
     /** @test */
-    public function itDeterminesDedicatedStrategyForEnterprisePlan()
+    public function it_determines_dedicated_strategy_for_enterprise_plan()
     {
         $tenant = Tenant::factory()->create([
             'plan' => 'enterprise',
@@ -36,7 +36,7 @@ class TenantResolverTest extends TestCase
     }
 
     /** @test */
-    public function itDeterminesDedicatedStrategyForHighUserCount()
+    public function it_determines_dedicated_strategy_for_high_user_count()
     {
         $tenant = Tenant::factory()->create([
             'plan' => 'standard',
@@ -50,7 +50,7 @@ class TenantResolverTest extends TestCase
     }
 
     /** @test */
-    public function itDeterminesDedicatedStrategyForHighTransactionCount()
+    public function it_determines_dedicated_strategy_for_high_transaction_count()
     {
         $tenant = Tenant::factory()->create([
             'plan' => 'standard',
@@ -64,7 +64,7 @@ class TenantResolverTest extends TestCase
     }
 
     /** @test */
-    public function itDeterminesDedicatedStrategyForDataIsolationRequirement()
+    public function it_determines_dedicated_strategy_for_data_isolation_requirement()
     {
         $tenant = Tenant::factory()->create([
             'plan' => 'standard',
@@ -79,7 +79,7 @@ class TenantResolverTest extends TestCase
     }
 
     /** @test */
-    public function itDeterminesClusteredStrategyForRegionalTenant()
+    public function it_determines_clustered_strategy_for_regional_tenant()
     {
         $tenant = Tenant::factory()->create([
             'plan' => 'standard',
@@ -95,7 +95,7 @@ class TenantResolverTest extends TestCase
     }
 
     /** @test */
-    public function itDeterminesSharedStrategyForSmallTenant()
+    public function it_determines_shared_strategy_for_small_tenant()
     {
         $tenant = Tenant::factory()->create([
             'plan' => 'basic',
@@ -111,7 +111,7 @@ class TenantResolverTest extends TestCase
     }
 
     /** @test */
-    public function itGetsCorrectConnectionNameForDedicatedTenant()
+    public function it_gets_correct_connection_name_for_dedicated_tenant()
     {
         $tenant = Tenant::factory()->create(['id' => 123, 'plan' => 'enterprise']);
 
@@ -121,7 +121,7 @@ class TenantResolverTest extends TestCase
     }
 
     /** @test */
-    public function itGetsCorrectConnectionNameForSharedTenant()
+    public function it_gets_correct_connection_name_for_shared_tenant()
     {
         $tenant = Tenant::factory()->create(['id' => 8, 'plan' => 'basic']);
 
@@ -132,7 +132,7 @@ class TenantResolverTest extends TestCase
     }
 
     /** @test */
-    public function itGetsCorrectConnectionNameForClusteredTenant()
+    public function it_gets_correct_connection_name_for_clustered_tenant()
     {
         $tenant = Tenant::factory()->create([
             'plan' => 'standard',
@@ -146,7 +146,7 @@ class TenantResolverTest extends TestCase
     }
 
     /** @test */
-    public function itSetsTenantConnectionAndUpdatesConfig()
+    public function it_sets_tenant_connection_and_updates_config()
     {
         $tenant = Tenant::factory()->create(['id' => 456, 'plan' => 'enterprise']);
 
@@ -156,7 +156,7 @@ class TenantResolverTest extends TestCase
     }
 
     /** @test */
-    public function itResolvesTenantFromAuthenticatedUser()
+    public function it_resolves_tenant_from_authenticated_user()
     {
         $tenant = Tenant::factory()->create();
         $user = User::factory()->create(['current_tenant_id' => $tenant->id]);
@@ -169,7 +169,7 @@ class TenantResolverTest extends TestCase
     }
 
     /** @test */
-    public function itResolvesTenantFromSubdomain()
+    public function it_resolves_tenant_from_subdomain()
     {
         $tenant = Tenant::factory()->create(['subdomain' => 'acme']);
 
@@ -181,7 +181,7 @@ class TenantResolverTest extends TestCase
     }
 
     /** @test */
-    public function itResolvesTenantFromHeader()
+    public function it_resolves_tenant_from_header()
     {
         $tenant = Tenant::factory()->create();
 
@@ -193,7 +193,7 @@ class TenantResolverTest extends TestCase
     }
 
     /** @test */
-    public function itCachesTenantResolutionResults()
+    public function it_caches_tenant_resolution_results()
     {
         $tenant = Tenant::factory()->create();
 
@@ -208,7 +208,7 @@ class TenantResolverTest extends TestCase
     }
 
     /** @test */
-    public function itCreatesDedicatedConnectionConfiguration()
+    public function it_creates_dedicated_connection_configuration()
     {
         $tenant = Tenant::factory()->create(['id' => 789]);
 
@@ -221,7 +221,7 @@ class TenantResolverTest extends TestCase
     }
 
     /** @test */
-    public function itReturnsNullWhenNoTenantContextAvailable()
+    public function it_returns_null_when_no_tenant_context_available()
     {
         $resolvedTenant = $this->tenantResolver->resolveTenantFromRequest();
 
@@ -229,7 +229,7 @@ class TenantResolverTest extends TestCase
     }
 
     /** @test */
-    public function itHandlesInvalidSubdomainGracefully()
+    public function it_handles_invalid_subdomain_gracefully()
     {
         $this->app['request']->server->set('HTTP_HOST', 'www.example.com');
 
@@ -239,7 +239,7 @@ class TenantResolverTest extends TestCase
     }
 
     /** @test */
-    public function itHandlesNonexistentTenantIdInHeader()
+    public function it_handles_nonexistent_tenant_id_in_header()
     {
         $this->withHeaders(['X-Tenant-ID' => 99999]);
 

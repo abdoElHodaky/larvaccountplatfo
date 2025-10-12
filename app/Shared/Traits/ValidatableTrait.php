@@ -7,7 +7,7 @@ use Illuminate\Validation\ValidationException;
 
 /**
  * Validatable Trait
- * 
+ *
  * Provides validation functionality for models and services.
  * Includes validation rules, custom validation methods, and error handling.
  */
@@ -31,10 +31,10 @@ trait ValidatableTrait
     /**
      * Validate data against rules
      */
-    public function validate(array $data, array $rules = null): array
+    public function validate(array $data, ?array $rules = null): array
     {
         $rules = $rules ?? $this->getValidationRules();
-        
+
         $validator = Validator::make(
             $data,
             $rules,
@@ -52,10 +52,11 @@ trait ValidatableTrait
     /**
      * Validate data and return boolean result
      */
-    public function isValid(array $data, array $rules = null): bool
+    public function isValid(array $data, ?array $rules = null): bool
     {
         try {
             $this->validate($data, $rules);
+
             return true;
         } catch (ValidationException $e) {
             return false;
@@ -65,10 +66,10 @@ trait ValidatableTrait
     /**
      * Get validation errors without throwing exception
      */
-    public function getValidationErrors(array $data, array $rules = null): array
+    public function getValidationErrors(array $data, ?array $rules = null): array
     {
         $rules = $rules ?? $this->getValidationRules();
-        
+
         $validator = Validator::make(
             $data,
             $rules,
@@ -93,6 +94,7 @@ trait ValidatableTrait
     public function setValidationRules(array $rules): self
     {
         $this->validationRules = $rules;
+
         return $this;
     }
 
@@ -102,6 +104,7 @@ trait ValidatableTrait
     public function addValidationRule(string $field, $rule): self
     {
         $this->validationRules[$field] = $rule;
+
         return $this;
     }
 
@@ -119,6 +122,7 @@ trait ValidatableTrait
     public function setValidationMessages(array $messages): self
     {
         $this->validationMessages = $messages;
+
         return $this;
     }
 
@@ -128,6 +132,7 @@ trait ValidatableTrait
     public function addValidationMessage(string $key, string $message): self
     {
         $this->validationMessages[$key] = $message;
+
         return $this;
     }
 
@@ -145,6 +150,7 @@ trait ValidatableTrait
     public function setValidationAttributes(array $attributes): self
     {
         $this->validationAttributes = $attributes;
+
         return $this;
     }
 
@@ -154,6 +160,7 @@ trait ValidatableTrait
     public function addValidationAttribute(string $field, string $attribute): self
     {
         $this->validationAttributes[$field] = $attribute;
+
         return $this;
     }
 
@@ -163,6 +170,7 @@ trait ValidatableTrait
     public function validateForCreation(array $data): array
     {
         $rules = $this->getCreationRules();
+
         return $this->validate($data, $rules);
     }
 
@@ -172,6 +180,7 @@ trait ValidatableTrait
     public function validateForUpdate(array $data, $id = null): array
     {
         $rules = $this->getUpdateRules($id);
+
         return $this->validate($data, $rules);
     }
 
@@ -189,7 +198,7 @@ trait ValidatableTrait
     protected function getUpdateRules($id = null): array
     {
         $rules = $this->getValidationRules();
-        
+
         // Make fields optional for updates
         foreach ($rules as $field => $rule) {
             if (is_string($rule) && strpos($rule, 'required') !== false) {
@@ -201,7 +210,7 @@ trait ValidatableTrait
                 $rules[$field] = $rule;
             }
         }
-        
+
         return $rules;
     }
 
@@ -220,11 +229,11 @@ trait ValidatableTrait
     {
         // First run standard validation
         $validated = $this->validate($data);
-        
+
         // Then run custom validation
         $customErrors = $this->customValidation($data);
-        
-        if (!empty($customErrors)) {
+
+        if (! empty($customErrors)) {
             $validator = Validator::make([], []);
             foreach ($customErrors as $field => $messages) {
                 if (is_array($messages)) {
@@ -237,7 +246,7 @@ trait ValidatableTrait
             }
             throw new ValidationException($validator);
         }
-        
+
         return $validated;
     }
 
@@ -254,7 +263,7 @@ trait ValidatableTrait
                 $rules[$field] = $rule;
             }
         }
-        
+
         return $this->validate($data, $rules);
     }
 
@@ -281,6 +290,7 @@ trait ValidatableTrait
             if (is_string($value)) {
                 return trim($value);
             }
+
             return $value;
         }, $data);
     }
@@ -288,9 +298,10 @@ trait ValidatableTrait
     /**
      * Validate and sanitize data
      */
-    public function validateAndSanitize(array $data, array $rules = null): array
+    public function validateAndSanitize(array $data, ?array $rules = null): array
     {
         $sanitized = $this->sanitizeData($data);
+
         return $this->validate($sanitized, $rules);
     }
 }

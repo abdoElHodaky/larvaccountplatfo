@@ -22,7 +22,7 @@ class InventoryServiceTest extends TestCase
     }
 
     /** @test */
-    public function itCanGetDashboardData()
+    public function it_can_get_dashboard_data()
     {
         // Create test data
         $category = ProductCategory::factory()->create();
@@ -55,7 +55,7 @@ class InventoryServiceTest extends TestCase
     }
 
     /** @test */
-    public function itCanCreateProduct()
+    public function it_can_create_product()
     {
         $category = ProductCategory::factory()->create();
 
@@ -84,7 +84,7 @@ class InventoryServiceTest extends TestCase
     }
 
     /** @test */
-    public function itCanUpdateProduct()
+    public function it_can_update_product()
     {
         $category = ProductCategory::factory()->create();
         $product = Product::factory()->create(['category_id' => $category->id]);
@@ -108,7 +108,7 @@ class InventoryServiceTest extends TestCase
     }
 
     /** @test */
-    public function itCanDeleteProduct()
+    public function it_can_delete_product()
     {
         $category = ProductCategory::factory()->create();
         $product = Product::factory()->create(['category_id' => $category->id]);
@@ -120,7 +120,7 @@ class InventoryServiceTest extends TestCase
     }
 
     /** @test */
-    public function itCanGetProductsWithFilters()
+    public function it_can_get_products_with_filters()
     {
         $category1 = ProductCategory::factory()->create(['name' => 'Electronics']);
         $category2 = ProductCategory::factory()->create(['name' => 'Clothing']);
@@ -156,7 +156,7 @@ class InventoryServiceTest extends TestCase
     }
 
     /** @test */
-    public function itCanUpdateStockLevel()
+    public function it_can_update_stock_level()
     {
         $category = ProductCategory::factory()->create();
         $product = Product::factory()->create(['category_id' => $category->id]);
@@ -181,7 +181,7 @@ class InventoryServiceTest extends TestCase
     }
 
     /** @test */
-    public function itCanGetLowStockProducts()
+    public function it_can_get_low_stock_products()
     {
         $category = ProductCategory::factory()->create();
 
@@ -213,7 +213,7 @@ class InventoryServiceTest extends TestCase
     }
 
     /** @test */
-    public function itCanGetOutOfStockProducts()
+    public function it_can_get_out_of_stock_products()
     {
         $category = ProductCategory::factory()->create();
 
@@ -239,7 +239,7 @@ class InventoryServiceTest extends TestCase
     }
 
     /** @test */
-    public function itCanCalculateTotalInventoryValue()
+    public function it_can_calculate_total_inventory_value()
     {
         $category = ProductCategory::factory()->create();
 
@@ -268,7 +268,7 @@ class InventoryServiceTest extends TestCase
     }
 
     /** @test */
-    public function itCanGetProductsNeedingReorder()
+    public function it_can_get_products_needing_reorder()
     {
         $category = ProductCategory::factory()->create();
 
@@ -300,7 +300,7 @@ class InventoryServiceTest extends TestCase
     }
 
     /** @test */
-    public function itCanGetCategories()
+    public function it_can_get_categories()
     {
         $categories = ProductCategory::factory()->count(3)->create();
 
@@ -311,7 +311,7 @@ class InventoryServiceTest extends TestCase
     }
 
     /** @test */
-    public function itCanCreateCategory()
+    public function it_can_create_category()
     {
         $categoryData = [
             'name' => 'Test Category',
@@ -329,7 +329,7 @@ class InventoryServiceTest extends TestCase
     }
 
     /** @test */
-    public function itHandlesProductNotFoundException()
+    public function it_handles_product_not_found_exception()
     {
         $this->expectException(\Illuminate\Database\Eloquent\ModelNotFoundException::class);
 
@@ -337,7 +337,7 @@ class InventoryServiceTest extends TestCase
     }
 
     /** @test */
-    public function itValidatesStockUpdateData()
+    public function it_validates_stock_update_data()
     {
         $category = ProductCategory::factory()->create();
         $product = Product::factory()->create(['category_id' => $category->id]);
@@ -348,7 +348,7 @@ class InventoryServiceTest extends TestCase
     }
 
     /** @test */
-    public function itCanGetStockMovementsHistory()
+    public function it_can_get_stock_movements_history()
     {
         $category = ProductCategory::factory()->create();
         $product = Product::factory()->create(['category_id' => $category->id]);

@@ -2,7 +2,6 @@
 
 namespace App\Shared\Services;
 
-use App\Shared\Contracts\that;
 use Exception;
 use Illuminate\Support\Collection;
 

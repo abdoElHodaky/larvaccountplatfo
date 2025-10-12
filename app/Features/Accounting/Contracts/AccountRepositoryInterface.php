@@ -2,7 +2,6 @@
 
 namespace App\Features\Accounting\Contracts;
 
-use App\Shared\Contracts\for;
 use Illuminate\Database\Eloquent\Collection;
 
 /**

@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Collection;
 
 /**
  * Enhanced Repository Interface
- * 
+ *
  * Extends the base repository interface with advanced functionality
  * including bulk operations, caching, and event handling.
  */
@@ -45,7 +45,7 @@ interface EnhancedRepositoryInterface extends RepositoryInterface
     /**
      * Forget cached data
      */
-    public function forgetCache(string $key = null): void;
+    public function forgetCache(?string $key = null): void;
 
     /**
      * Enable or disable event firing

@@ -12,8 +12,7 @@ import {
   Hierarchical, 
   Stateful,
   Money,
-  DateRange,
-  ID 
+  DateRange
 } from './PATTERNS';
 
 // Account types

@@ -5,7 +5,6 @@ namespace App\Providers;
 use App\Features\Authentication\Auth\TenantAwareAuthManager;
 use App\Features\Organization\Services\OrganizationService;
 use App\Services\AuthService;
-
 use App\Services\TenantProvisioningService;
 use App\Services\TenantResolver;
 use App\Shared\Services\InterModuleBus;

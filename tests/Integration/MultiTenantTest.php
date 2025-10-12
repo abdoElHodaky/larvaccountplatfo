@@ -15,7 +15,7 @@ class MultiTenantTest extends TenantTestCase
     /**
      * Test that tenant context is properly set.
      */
-    public function testTenantContextIsSet(): void
+    public function test_tenant_context_is_set(): void
     {
         $this->assertCurrentTenant($this->tenant);
         $this->assertEquals('test-tenant', $this->tenant->subdomain);
@@ -24,7 +24,7 @@ class MultiTenantTest extends TenantTestCase
     /**
      * Test tenant data isolation between different tenants.
      */
-    public function testTenantDataIsolation(): void
+    public function test_tenant_data_isolation(): void
     {
         // Create two different tenants
         $tenant1 = Tenant::factory()->create(['subdomain' => 'tenant1']);
@@ -54,7 +54,7 @@ class MultiTenantTest extends TenantTestCase
     /**
      * Test that module data is properly isolated between tenants.
      */
-    public function testModuleDataIsolation(): void
+    public function test_module_data_isolation(): void
     {
         // Skip if Account model doesn't exist yet
         if (! class_exists(Account::class)) {
@@ -81,7 +81,7 @@ class MultiTenantTest extends TenantTestCase
     /**
      * Test database strategy switching.
      */
-    public function testDatabaseStrategySwitching(): void
+    public function test_database_strategy_switching(): void
     {
         // Test shared database strategy
         $sharedTenant = Tenant::factory()->create([
@@ -105,7 +105,7 @@ class MultiTenantTest extends TenantTestCase
     /**
      * Test tenant module enablement.
      */
-    public function testTenantModuleEnablement(): void
+    public function test_tenant_module_enablement(): void
     {
         $tenant = Tenant::factory()->create([
             'enabled_modules' => ['Accounting', 'Inventory'],
@@ -119,7 +119,7 @@ class MultiTenantTest extends TenantTestCase
     /**
      * Test tenant user authentication.
      */
-    public function testTenantUserAuthentication(): void
+    public function test_tenant_user_authentication(): void
     {
         $user = $this->createTestUser();
 
@@ -133,7 +133,7 @@ class MultiTenantTest extends TenantTestCase
     /**
      * Test global user authentication.
      */
-    public function testGlobalUserAuthentication(): void
+    public function test_global_user_authentication(): void
     {
         $globalUser = $this->createTestGlobalUser(['is_super_admin' => true]);
 

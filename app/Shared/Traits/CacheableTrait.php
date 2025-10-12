@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\Cache;
 
 /**
  * Cacheable Trait
- * 
+ *
  * Provides caching functionality for models and services.
  * Includes cache key generation and management methods.
  */
@@ -28,18 +28,18 @@ trait CacheableTrait
     public function getCacheKey(string $suffix = ''): string
     {
         $prefix = $this->cachePrefix ?? strtolower(class_basename(static::class));
-        
+
         if (isset($this->id)) {
             $prefix .= ":{$this->id}";
         }
-        
-        return $prefix . ($suffix ? ":{$suffix}" : '');
+
+        return $prefix.($suffix ? ":{$suffix}" : '');
     }
 
     /**
      * Remember a value in cache
      */
-    public function remember(string $key, callable $callback, int $ttl = null)
+    public function remember(string $key, callable $callback, ?int $ttl = null)
     {
         return Cache::remember(
             $this->getCacheKey($key),
@@ -51,7 +51,7 @@ trait CacheableTrait
     /**
      * Store a value in cache
      */
-    public function cacheSet(string $key, $value, int $ttl = null): bool
+    public function cacheSet(string $key, $value, ?int $ttl = null): bool
     {
         return Cache::put(
             $this->getCacheKey($key),
@@ -90,11 +90,11 @@ trait CacheableTrait
     public function cacheFlush(): void
     {
         $prefix = $this->cachePrefix ?? strtolower(class_basename(static::class));
-        
+
         if (isset($this->id)) {
             $prefix .= ":{$this->id}";
         }
-        
+
         // Note: This is a simplified implementation
         // In production, you might want to use cache tags or a more sophisticated approach
         Cache::forget($prefix);
@@ -106,6 +106,7 @@ trait CacheableTrait
     public function setCachePrefix(string $prefix): self
     {
         $this->cachePrefix = $prefix;
+
         return $this;
     }
 
@@ -115,6 +116,7 @@ trait CacheableTrait
     public function setCacheTtl(int $ttl): self
     {
         $this->cacheTtl = $ttl;
+
         return $this;
     }
 
@@ -129,10 +131,10 @@ trait CacheableTrait
     /**
      * Cache a method result
      */
-    public function cacheMethod(string $method, array $args = [], int $ttl = null)
+    public function cacheMethod(string $method, array $args = [], ?int $ttl = null)
     {
-        $key = $method . ':' . md5(serialize($args));
-        
+        $key = $method.':'.md5(serialize($args));
+
         return $this->remember($key, function () use ($method, $args) {
             return $this->$method(...$args);
         }, $ttl);

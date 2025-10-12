@@ -2,15 +2,16 @@
 
 /**
  * Filename Resimplification & Standardization Script
- * 
+ *
  * This script analyzes and fixes filename inconsistencies to match
  * established naming conventions (PascalCase for classes/components, camelCase for others).
  */
-
 class FilenameStandardizer
 {
     private $basePath;
+
     private $renames = [];
+
     private $stats = [
         'files_analyzed' => 0,
         'files_renamed' => 0,
@@ -53,7 +54,7 @@ class FilenameStandardizer
             $this->analyzePhpFile($file);
         }
 
-        echo "✅ PHP files analyzed: " . count($phpFiles) . "\n\n";
+        echo '✅ PHP files analyzed: '.count($phpFiles)."\n\n";
     }
 
     /**
@@ -62,29 +63,29 @@ class FilenameStandardizer
     private function analyzePhpFile(string $filePath): void
     {
         $this->stats['files_analyzed']++;
-        
+
         $filename = basename($filePath);
         $directory = dirname($filePath);
-        
+
         // Extract class Name from file content
         $content = file_get_contents($filePath);
         $className = $this->extractPhpClassName($content);
-        
+
         if ($className) {
-            $expectedFilename = $className . '.php';
-            
+            $expectedFilename = $className.'.php';
+
             if ($filename !== $expectedFilename) {
-                $newPath = $directory . '/' . $expectedFilename;
-                
+                $newPath = $directory.'/'.$expectedFilename;
+
                 // Check if target file already exists
-                if (!file_exists($newPath)) {
+                if (! file_exists($newPath)) {
                     $this->renames[] = [
                         'type' => 'php',
                         'old_path' => $filePath,
                         'new_path' => $newPath,
                         'old_name' => $filename,
                         'new_name' => $expectedFilename,
-                        'class_name' => $className
+                        'class_name' => $className,
                     ];
                     $this->stats['php_files_fixed']++;
                 }
@@ -105,7 +106,7 @@ class FilenameStandardizer
             $this->analyzeTypeScriptFile($file);
         }
 
-        echo "✅ TypeScript files analyzed: " . count($tsFiles) . "\n\n";
+        echo '✅ TypeScript files analyzed: '.count($tsFiles)."\n\n";
     }
 
     /**
@@ -114,33 +115,33 @@ class FilenameStandardizer
     private function analyzeTypeScriptFile(string $filePath): void
     {
         $this->stats['files_analyzed']++;
-        
+
         $filename = basename($filePath, '.tsx');
         $filename = basename($filename, '.ts');
         $directory = dirname($filePath);
         $extension = pathinfo($filePath, PATHINFO_EXTENSION);
-        
+
         $content = file_get_contents($filePath);
-        
+
         // Check if it's a React component
         if ($this->isReactComponent($content)) {
             $componentName = $this->extractComponentName($content, $filename);
-            
+
             if ($componentName) {
-                $expectedFilename = $componentName . '.' . $extension;
+                $expectedFilename = $componentName.'.'.$extension;
                 $currentFilename = basename($filePath);
-                
+
                 if ($currentFilename !== $expectedFilename) {
-                    $newPath = $directory . '/' . $expectedFilename;
-                    
-                    if (!file_exists($newPath)) {
+                    $newPath = $directory.'/'.$expectedFilename;
+
+                    if (! file_exists($newPath)) {
                         $this->renames[] = [
                             'type' => 'component',
                             'old_path' => $filePath,
                             'new_path' => $newPath,
                             'old_name' => $currentFilename,
                             'new_name' => $expectedFilename,
-                            'component_name' => $componentName
+                            'component_name' => $componentName,
                         ];
                         $this->stats['ts_files_fixed']++;
                     }
@@ -148,19 +149,19 @@ class FilenameStandardizer
             }
         } else {
             // For non-component files, ensure camelCase
-            $expectedFilename = $this->toCamelCase($filename) . '.' . $extension;
+            $expectedFilename = $this->toCamelCase($filename).'.'.$extension;
             $currentFilename = basename($filePath);
-            
+
             if ($currentFilename !== $expectedFilename && $this->shouldRename($filename)) {
-                $newPath = $directory . '/' . $expectedFilename;
-                
-                if (!file_exists($newPath)) {
+                $newPath = $directory.'/'.$expectedFilename;
+
+                if (! file_exists($newPath)) {
                     $this->renames[] = [
                         'type' => 'utility',
                         'old_path' => $filePath,
                         'new_path' => $newPath,
                         'old_name' => $currentFilename,
-                        'new_name' => $expectedFilename
+                        'new_name' => $expectedFilename,
                     ];
                     $this->stats['ts_files_fixed']++;
                 }
@@ -175,6 +176,7 @@ class FilenameStandardizer
     {
         if (empty($this->renames)) {
             echo "✅ No files need renaming - all filenames are already standardized!\n\n";
+
             return;
         }
 
@@ -229,11 +231,11 @@ class FilenameStandardizer
             if (pathinfo($filePath, PATHINFO_EXTENSION) === 'php') {
                 $oldClass = pathinfo($rename['old_name'], PATHINFO_FILENAME);
                 $newClass = pathinfo($rename['new_name'], PATHINFO_FILENAME);
-                
+
                 // Update use statements
                 $content = preg_replace(
-                    '/use\s+([^;]+\\\\)' . preg_quote($oldClass) . ';/',
-                    'use $1' . $newClass . ';',
+                    '/use\s+([^;]+\\\\)'.preg_quote($oldClass).';/',
+                    'use $1'.$newClass.';',
                     $content
                 );
             }
@@ -242,17 +244,17 @@ class FilenameStandardizer
             if (in_array(pathinfo($filePath, PATHINFO_EXTENSION), ['ts', 'tsx', 'js', 'jsx'])) {
                 $oldName = pathinfo($rename['old_name'], PATHINFO_FILENAME);
                 $newName = pathinfo($rename['new_name'], PATHINFO_FILENAME);
-                
+
                 // Update import statements
                 $content = preg_replace(
-                    '/from\s+[\'"]([^\'"]*)' . preg_quote($oldName) . '[\'"]/',
-                    'from \'$1' . $newName . '\'',
+                    '/from\s+[\'"]([^\'"]*)'.preg_quote($oldName).'[\'"]/',
+                    'from \'$1'.$newName.'\'',
                     $content
                 );
-                
+
                 $content = preg_replace(
-                    '/import\s+[\'"]([^\'"]*)' . preg_quote($oldName) . '[\'"]/',
-                    'import \'$1' . $newName . '\'',
+                    '/import\s+[\'"]([^\'"]*)'.preg_quote($oldName).'[\'"]/',
+                    'import \'$1'.$newName.'\'',
                     $content
                 );
             }
@@ -272,15 +274,15 @@ class FilenameStandardizer
         if (preg_match('/class\s+([A-Za-z_][A-Za-z0-9_]*)/i', $content, $matches)) {
             return $matches[1];
         }
-        
+
         if (preg_match('/interface\s+([A-Za-z_][A-Za-z0-9_]*)/i', $content, $matches)) {
             return $matches[1];
         }
-        
+
         if (preg_match('/trait\s+([A-Za-z_][A-Za-z0-9_]*)/i', $content, $matches)) {
             return $matches[1];
         }
-        
+
         return null;
     }
 
@@ -304,7 +306,7 @@ class FilenameStandardizer
         if (preg_match('/export\s+(?:default\s+)?(?:function|const)\s+([A-Z][A-Za-z0-9_]*)/i', $content, $matches)) {
             return $this->toPascalCase($matches[1]);
         }
-        
+
         // Fallback to filename in PascalCase
         return $this->toPascalCase($fallbackName);
     }
@@ -316,7 +318,8 @@ class FilenameStandardizer
     {
         // Don't rename special files
         $specialFiles = ['index', 'main', 'app', 'bootstrap', 'config'];
-        return !in_array(strtolower($filename), $specialFiles);
+
+        return ! in_array(strtolower($filename), $specialFiles);
     }
 
     /**
@@ -333,6 +336,7 @@ class FilenameStandardizer
     private function toCamelCase(string $str): string
     {
         $pascalCase = $this->toPascalCase($str);
+
         return lcfirst($pascalCase);
     }
 
@@ -342,8 +346,8 @@ class FilenameStandardizer
     private function findFiles(string $directory, string $pattern): array
     {
         $files = [];
-        
-        if (!is_dir($directory)) {
+
+        if (! is_dir($directory)) {
             return $files;
         }
 
@@ -354,12 +358,12 @@ class FilenameStandardizer
         foreach ($iterator as $file) {
             if ($file->isFile()) {
                 $filename = $file->getFilename();
-                
+
                 // Handle glob patterns
                 if (strpos($pattern, '{') !== false) {
                     $patterns = explode(',', trim($pattern, '*.{}'));
                     foreach ($patterns as $ext) {
-                        if (str_ends_with($filename, '.' . $ext)) {
+                        if (str_ends_with($filename, '.'.$ext)) {
                             $files[] = $file->getPathname();
                             break;
                         }
@@ -388,7 +392,7 @@ class FilenameStandardizer
         echo "TypeScript Files Fixed: {$this->stats['ts_files_fixed']}\n";
         echo "Import Updates: {$this->stats['import_updates']}\n\n";
 
-        if (!empty($this->renames)) {
+        if (! empty($this->renames)) {
             echo "🔧 DETAILED RENAMES:\n";
             foreach ($this->renames as $rename) {
                 echo "  {$rename['type']}: {$rename['old_name']} → {$rename['new_name']}\n";
@@ -402,9 +406,9 @@ class FilenameStandardizer
 
 // Run the standardizer if called directly
 if (basename(__FILE__) === basename($_SERVER['SCRIPT_NAME'])) {
-    $standardizer = new FilenameStandardizer();
+    $standardizer = new FilenameStandardizer;
     $stats = $standardizer->standardizeFilenames();
-    
+
     echo "\n🎯 SUMMARY:\n";
     echo "Total files processed: {$stats['files_analyzed']}\n";
     echo "Files renamed: {$stats['files_renamed']}\n";

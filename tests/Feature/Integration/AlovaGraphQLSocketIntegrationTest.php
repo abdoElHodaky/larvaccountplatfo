@@ -35,7 +35,7 @@ class AlovaGraphQLSocketIntegrationTest extends TestCase
     }
 
     /** @test */
-    public function itCanExecuteGraphqlQueriesWithAuthentication()
+    public function it_can_execute_graphql_queries_with_authentication()
     {
         // Create test account
         $account = Account::factory()->create([
@@ -80,7 +80,7 @@ class AlovaGraphQLSocketIntegrationTest extends TestCase
     }
 
     /** @test */
-    public function itBroadcastsEventsWhenTransactionsAreCreated()
+    public function it_broadcasts_events_when_transactions_are_created()
     {
         // Create test account
         $account = Account::factory()->create([
@@ -122,7 +122,7 @@ class AlovaGraphQLSocketIntegrationTest extends TestCase
     }
 
     /** @test */
-    public function itBroadcastsInventoryEventsWhenStockChanges()
+    public function it_broadcasts_inventory_events_when_stock_changes()
     {
         // Create test product category
         $category = ProductCategory::factory()->create([
@@ -167,7 +167,7 @@ class AlovaGraphQLSocketIntegrationTest extends TestCase
     }
 
     /** @test */
-    public function itCanQueryDashboardMetricsViaGraphql()
+    public function it_can_query_dashboard_metrics_via_graphql()
     {
         // Create test data
         $account = Account::factory()->create([
@@ -210,7 +210,7 @@ class AlovaGraphQLSocketIntegrationTest extends TestCase
     }
 
     /** @test */
-    public function itCanQueryInventoryDashboardViaGraphql()
+    public function it_can_query_inventory_dashboard_via_graphql()
     {
         // Create test inventory data
         $category = ProductCategory::factory()->create([
@@ -254,7 +254,7 @@ class AlovaGraphQLSocketIntegrationTest extends TestCase
     }
 
     /** @test */
-    public function itHandlesAuthenticationErrorsProperly()
+    public function it_handles_authentication_errors_properly()
     {
         // Remove authentication
         auth()->logout();
@@ -277,7 +277,7 @@ class AlovaGraphQLSocketIntegrationTest extends TestCase
     }
 
     /** @test */
-    public function itValidatesGraphqlInputProperly()
+    public function it_validates_graphql_input_properly()
     {
         // Try to create transaction with invalid data
         $response = $this->postJson('/graphql', [
@@ -304,7 +304,7 @@ class AlovaGraphQLSocketIntegrationTest extends TestCase
     }
 
     /** @test */
-    public function itCanPaginateGraphqlResults()
+    public function it_can_paginate_graphql_results()
     {
         // Create multiple accounts
         Account::factory()->count(20)->create([
@@ -345,7 +345,7 @@ class AlovaGraphQLSocketIntegrationTest extends TestCase
     }
 
     /** @test */
-    public function itCanFilterGraphqlResults()
+    public function it_can_filter_graphql_results()
     {
         // Create accounts with different types
         Account::factory()->create([
@@ -386,7 +386,7 @@ class AlovaGraphQLSocketIntegrationTest extends TestCase
     }
 
     /** @test */
-    public function itHandlesConcurrentRequestsProperly()
+    public function it_handles_concurrent_requests_properly()
     {
         // Create test account
         $account = Account::factory()->create([

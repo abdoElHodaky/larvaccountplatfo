@@ -322,7 +322,7 @@ export type SpreadsheetMimeType = 'application/vnd.ms-excel' | 'application/vnd.
 // Common regex patterns
 export const PATTERNS = {
   EMAIL: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-  PHONE: /^\+?[\d\s\-\(\)]+$/,
+  PHONE: /^\+?[\d\s\-()]+$/,
   URL: /^https?:\/\/.+/,
   UUID: /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i,
   SLUG: /^[a-z0-9]+(?:-[a-z0-9]+)*$/,
