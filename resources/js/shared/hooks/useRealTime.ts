@@ -4,7 +4,7 @@
  */
 
 import { useEffect, useCallback, useState, useRef } from 'react';
-import { socketClient } from '../services/socket/socket-GETDASHBOARDMETRICS';
+import { socketClient } from '../services/socket/socket-client';
 import { useSocket } from '../providers/SocketProvider';
 import { useAuth, useAppActions } from './useRematchStore';
 
