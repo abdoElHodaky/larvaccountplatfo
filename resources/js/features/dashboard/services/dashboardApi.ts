@@ -5,6 +5,7 @@
 
 import { apolloClient } from '../../../shared/services/graphql/apollo-client';
 import { gql } from '@apollo/client';
+import { log } from '../../../shared/utils/logger';
 import type { DashboardLayout, Widget, MetricData, ChartData, DashboardFilters } from '../stores/dashboardModel';
 import type { ApiResponse } from '../../accounting/services/accountingApi';
 
@@ -208,9 +209,10 @@ export class DashboardApiService {
         data: data.dashboardLayouts,
         success: true,
       };
-    } catch (error: any) {
-      console.error('Failed to fetch dashboard layouts:', error);
-      throw new Error(error.message || 'Failed to fetch dashboard layouts');
+    } catch (error: unknown) {
+      const errorMessage = error instanceof Error ? error.message : 'Failed to fetch dashboard layouts';
+      log.error('Failed to fetch dashboard layouts', error, 'DashboardAPI');
+      throw new Error(errorMessage);
     }
   }
 
@@ -226,7 +228,7 @@ export class DashboardApiService {
             cache.writeQuery({
               query: GET_DASHBOARD_LAYOUTS,
               data: {
-                dashboardLayouts: [...(existingLayouts as any).dashboardLayouts, mutationData.createDashboardLayout],
+                dashboardLayouts: [...(existingLayouts as { dashboardLayouts: DashboardLayout[] }).dashboardLayouts, mutationData.createDashboardLayout],
               },
             });
           }
@@ -238,9 +240,10 @@ export class DashboardApiService {
         success: true,
         message: 'Dashboard layout created successfully',
       };
-    } catch (error: any) {
-      console.error('Failed to create dashboard layout:', error);
-      throw new Error(error.message || 'Failed to create dashboard layout');
+    } catch (error: unknown) {
+      const errorMessage = error instanceof Error ? error.message : 'Failed to create dashboard layout';
+      log.error('Failed to create dashboard layout', error, 'DashboardAPI');
+      throw new Error(errorMessage);
     }
   }
 
@@ -265,9 +268,10 @@ export class DashboardApiService {
         success: true,
         message: 'Dashboard layout updated successfully',
       };
-    } catch (error: any) {
-      console.error('Failed to update dashboard layout:', error);
-      throw new Error(error.message || 'Failed to update dashboard layout');
+    } catch (error: unknown) {
+      const errorMessage = error instanceof Error ? error.message : 'Failed to update dashboard layout';
+      log.error('Failed to update dashboard layout', error, 'DashboardAPI');
+      throw new Error(errorMessage);
     }
   }
 
@@ -288,8 +292,10 @@ export class DashboardApiService {
         success: true,
         message: data.deleteDashboardLayout.message,
       };
-    } catch (error: any) {
-      console.error('Failed to delete dashboard layout:', error);
+    } catch (error: unknown) {
+      const errorMessage = error instanceof Error ? error.message : 'Failed to delete dashboard layout:';
+      log.error('Failed to delete dashboard layout:', error, "DashboardAPI");
+      throw new Error(errorMessage);
       throw new Error(error.message || 'Failed to delete dashboard layout');
     }
   }
@@ -307,8 +313,10 @@ export class DashboardApiService {
         success: true,
         message: 'Widget created successfully',
       };
-    } catch (error: any) {
-      console.error('Failed to create widget:', error);
+    } catch (error: unknown) {
+      const errorMessage = error instanceof Error ? error.message : 'Failed to create widget:';
+      log.error('Failed to create widget:', error, "DashboardAPI");
+      throw new Error(errorMessage);
       throw new Error(error.message || 'Failed to create widget');
     }
   }
@@ -325,8 +333,10 @@ export class DashboardApiService {
         success: true,
         message: 'Widget updated successfully',
       };
-    } catch (error: any) {
-      console.error('Failed to update widget:', error);
+    } catch (error: unknown) {
+      const errorMessage = error instanceof Error ? error.message : 'Failed to update widget:';
+      log.error('Failed to update widget:', error, "DashboardAPI");
+      throw new Error(errorMessage);
       throw new Error(error.message || 'Failed to update widget');
     }
   }
@@ -343,13 +353,15 @@ export class DashboardApiService {
         success: true,
         message: data.deleteWidget.message,
       };
-    } catch (error: any) {
-      console.error('Failed to delete widget:', error);
+    } catch (error: unknown) {
+      const errorMessage = error instanceof Error ? error.message : 'Failed to delete widget:';
+      log.error('Failed to delete widget:', error, "DashboardAPI");
+      throw new Error(errorMessage);
       throw new Error(error.message || 'Failed to delete widget');
     }
   }
 
-  async getWidgetData(widgetId: string, filters?: Partial<DashboardFilters>): Promise<ApiResponse<any>> {
+  async getWidgetData(widgetId: string, filters?: Partial<DashboardFilters>): Promise<ApiResponse<unknown>> {
     try {
       const { data } = await apolloClient.query({
         query: GET_WIDGET_DATA,
@@ -361,8 +373,10 @@ export class DashboardApiService {
         data: data.widgetData.data,
         success: true,
       };
-    } catch (error: any) {
-      console.error('Failed to fetch widget data:', error);
+    } catch (error: unknown) {
+      const errorMessage = error instanceof Error ? error.message : 'Failed to fetch widget data:';
+      log.error('Failed to fetch widget data:', error, "DashboardAPI");
+      throw new Error(errorMessage);
       throw new Error(error.message || 'Failed to fetch widget data');
     }
   }
@@ -380,8 +394,10 @@ export class DashboardApiService {
         data: data.dashboardMetrics,
         success: true,
       };
-    } catch (error: any) {
-      console.error('Failed to fetch dashboard metrics:', error);
+    } catch (error: unknown) {
+      const errorMessage = error instanceof Error ? error.message : 'Failed to fetch dashboard metrics:';
+      log.error('Failed to fetch dashboard metrics:', error, "DashboardAPI");
+      throw new Error(errorMessage);
       throw new Error(error.message || 'Failed to fetch dashboard metrics');
     }
   }
@@ -398,8 +414,10 @@ export class DashboardApiService {
         data: data.dashboardCharts,
         success: true,
       };
-    } catch (error: any) {
-      console.error('Failed to fetch dashboard charts:', error);
+    } catch (error: unknown) {
+      const errorMessage = error instanceof Error ? error.message : 'Failed to fetch dashboard charts:';
+      log.error('Failed to fetch dashboard charts:', error, "DashboardAPI");
+      throw new Error(errorMessage);
       throw new Error(error.message || 'Failed to fetch dashboard charts');
     }
   }
@@ -436,13 +454,14 @@ export class DashboardApiService {
         success: true,
         message: 'Dashboard exported successfully',
       };
-    } catch (error: any) {
-      console.error('Failed to export dashboard:', error);
-      throw new Error(error.message || 'Failed to export dashboard');
+    } catch (error: unknown) {
+      const errorMessage = error instanceof Error ? error.message : 'Failed to export dashboard';
+      log.error('Failed to export dashboard', error, 'DashboardAPI');
+      throw new Error(errorMessage);
     }
   }
 
-  async getDashboardAnalytics(layoutId: string, dateRange: { start: string; end: string }): Promise<ApiResponse<any>> {
+  async getDashboardAnalytics(layoutId: string, dateRange: { start: string; end: string }): Promise<ApiResponse<unknown>> {
     try {
       // This would typically be a separate GraphQL query
       // For now, we'll simulate analytics data
@@ -469,21 +488,23 @@ export class DashboardApiService {
         data: analytics,
         success: true,
       };
-    } catch (error: any) {
-      console.error('Failed to get dashboard analytics:', error);
-      throw new Error(error.message || 'Failed to get dashboard analytics');
+    } catch (error: unknown) {
+      const errorMessage = error instanceof Error ? error.message : 'Failed to get dashboard analytics';
+      log.error('Failed to get dashboard analytics', error, 'DashboardAPI');
+      throw new Error(errorMessage);
     }
   }
 
   // Real-time updates (would typically use subscriptions)
-  async subscribeToWidgetUpdates(widgetId: string, callback: (data: any) => void): Promise<() => void> {
+  async subscribeToWidgetUpdates(widgetId: string, callback: (data: unknown) => void): Promise<() => void> {
     // Simulate real-time updates with polling
     const interval = setInterval(async () => {
       try {
         const response = await this.getWidgetData(widgetId);
         callback(response.data);
       } catch (error) {
-        console.error('Failed to fetch widget update:', error);
+        log.error('Failed to fetch widget update', error, 'DashboardAPI');
+        // Don't throw here as it would break the subscription
       }
     }, 30000); // Update every 30 seconds
 
