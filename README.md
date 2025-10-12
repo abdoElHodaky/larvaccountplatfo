@@ -11,7 +11,7 @@
 
 **Enterprise-grade multi-tenant accounting platform with real-time collaboration, advanced security, and modern modular architecture**
 
-[🚀 Quick Start](#-quick-start) • [📖 Documentation](#-documentation) • [🏗️ Architecture](#️-architecture) • [🔒 Security](#-security) • [🚀 Deployment](#-deployment) • [📊 Performance](#-performance-metrics)
+[🚀 Quick Start](#-quick-start) • [📖 Documentation](#-documentation) • [🏗️ Architecture](#️-architecture) • [🗄️ Database](#️-database-design) • [🔒 Security](#-security) • [🚀 Deployment](#-deployment) • [📊 Performance](#-performance-metrics)
 
 </div>
 
@@ -338,6 +338,190 @@ graph TB
 
 ---
 
+## 🗄️ **Database Design**
+
+### **Entity Relationship Diagram**
+
+Our database architecture follows domain-driven design principles with proper normalization and multi-tenant isolation.
+
+```mermaid
+erDiagram
+    TENANTS {
+        uuid id PK
+        string name
+        string domain
+        string database_name
+        json settings
+        boolean is_active
+        timestamp created_at
+        timestamp updated_at
+    }
+    
+    USERS {
+        uuid id PK
+        uuid tenant_id FK
+        string name
+        string email
+        string password_hash
+        string phone
+        string timezone
+        string locale
+        boolean is_active
+        timestamp email_verified_at
+        timestamp last_login_at
+        timestamp created_at
+        timestamp updated_at
+    }
+    
+    ACCOUNTS {
+        uuid id PK
+        uuid tenant_id FK
+        uuid parent_id FK
+        string code
+        string name
+        text description
+        enum type
+        string subtype
+        enum normal_balance
+        boolean is_active
+        boolean is_system
+        integer level
+        string currency
+        decimal opening_balance
+        decimal current_balance
+        json settings
+        uuid created_by FK
+        timestamp created_at
+        timestamp updated_at
+        timestamp deleted_at
+    }
+    
+    TRANSACTIONS {
+        uuid id PK
+        uuid tenant_id FK
+        uuid created_by FK
+        string reference
+        text description
+        date transaction_date
+        decimal total_amount
+        string currency
+        enum status
+        json metadata
+        timestamp created_at
+        timestamp updated_at
+    }
+    
+    JOURNAL_ENTRIES {
+        uuid id PK
+        uuid tenant_id FK
+        uuid transaction_id FK
+        uuid account_id FK
+        decimal debit_amount
+        decimal credit_amount
+        string description
+        string reference
+        timestamp created_at
+    }
+    
+    REPORTS {
+        uuid id PK
+        uuid tenant_id FK
+        uuid generated_by FK
+        string name
+        enum type
+        json parameters
+        json data
+        string file_path
+        timestamp generated_at
+        timestamp expires_at
+    }
+    
+    AUDIT_LOGS {
+        uuid id PK
+        uuid tenant_id FK
+        uuid user_id FK
+        string action
+        string model_type
+        uuid model_id
+        json old_values
+        json new_values
+        string ip_address
+        string user_agent
+        timestamp created_at
+    }
+    
+    TENANTS ||--o{ USERS : "has many"
+    TENANTS ||--o{ ACCOUNTS : "has many"
+    TENANTS ||--o{ TRANSACTIONS : "has many"
+    TENANTS ||--o{ REPORTS : "has many"
+    TENANTS ||--o{ AUDIT_LOGS : "has many"
+    
+    USERS ||--o{ TRANSACTIONS : "creates"
+    USERS ||--o{ REPORTS : "generates"
+    USERS ||--o{ AUDIT_LOGS : "performs"
+    
+    ACCOUNTS ||--o{ ACCOUNTS : "parent-child"
+    ACCOUNTS ||--o{ JOURNAL_ENTRIES : "has many"
+    
+    TRANSACTIONS ||--o{ JOURNAL_ENTRIES : "has many"
+```
+
+### **Database Performance Strategy**
+
+```mermaid
+graph TB
+    subgraph "🎯 Primary Indexes"
+        PK[Primary Keys - UUID]
+        FK[Foreign Keys - tenant_id]
+        UNIQUE[Unique Constraints]
+    end
+    
+    subgraph "⚡ Performance Indexes"
+        TENANT_DATE[tenant_id + date fields]
+        SEARCH[Full-text search]
+        COMPOSITE[Composite indexes]
+    end
+    
+    subgraph "📊 Analytical Indexes"
+        REPORTING[Reporting queries]
+        AGGREGATION[Aggregation queries]
+        TIME_SERIES[Time-based queries]
+    end
+    
+    subgraph "🔧 Maintenance"
+        PARTITIONING[Table partitioning]
+        ARCHIVING[Data archiving]
+        CLEANUP[Automated cleanup]
+    end
+    
+    PK --> TENANT_DATE
+    FK --> TENANT_DATE
+    UNIQUE --> SEARCH
+    
+    TENANT_DATE --> REPORTING
+    SEARCH --> AGGREGATION
+    COMPOSITE --> TIME_SERIES
+    
+    REPORTING --> PARTITIONING
+    AGGREGATION --> ARCHIVING
+    TIME_SERIES --> CLEANUP
+    
+    style PK fill:#eff6ff,stroke:#2563eb,stroke-width:2px
+    style TENANT_DATE fill:#f0fdf4,stroke:#16a34a,stroke-width:2px
+    style REPORTING fill:#fef3c7,stroke:#d97706,stroke-width:2px
+    style PARTITIONING fill:#fef2f2,stroke:#dc2626,stroke-width:2px
+```
+
+### **Key Database Features**
+- 🏢 **Multi-tenant Architecture** with complete data isolation
+- 🔐 **UUID Primary Keys** for security and distributed systems
+- 📊 **Optimized Indexing** for high-performance queries
+- 🔄 **Audit Trail** for all data changes
+- 📈 **Scalable Design** with partitioning and archiving
+- 🛡️ **Data Integrity** with foreign key constraints
+
+---
+
 ## 🎨 **LiveIcons System Architecture**
 
 ### **Unified Icon Management System**
@@ -599,7 +783,112 @@ import { DynamicIcon, iconExists } from '@/shared/icons';
 
 ## 🔒 **Security Features**
 
-### **Authentication & Authorization**
+### **Authentication & Authorization Flow**
+
+```mermaid
+sequenceDiagram
+    participant C as Client
+    participant LB as Load Balancer
+    participant WAF as Web App Firewall
+    participant API as Laravel API
+    participant AUTH as Auth Service
+    participant JWT as JWT Handler
+    participant DB as Database
+    participant CACHE as Redis Cache
+    
+    Note over C,CACHE: Secure Authentication Flow
+    
+    C->>LB: Login Request
+    LB->>WAF: Security Check
+    WAF->>API: Filtered Request
+    
+    rect rgb(254, 243, 199)
+        Note over API,DB: Credential Validation
+        API->>AUTH: Validate Credentials
+        AUTH->>DB: Check User & Tenant
+        DB->>AUTH: User Data
+    end
+    
+    rect rgb(240, 249, 255)
+        Note over AUTH,CACHE: Token Generation
+        AUTH->>JWT: Generate JWT Token
+        JWT->>CACHE: Store Session Data
+        CACHE->>JWT: Session Stored
+        JWT->>AUTH: Signed Token
+    end
+    
+    AUTH->>API: Authentication Result
+    API->>WAF: Success Response
+    WAF->>LB: Filtered Response
+    LB->>C: JWT Token + User Data
+    
+    Note over C: Store JWT for API calls
+    Note over CACHE: Session expires in 24h
+```
+
+### **Multi-layered Security Architecture**
+
+```mermaid
+graph TB
+    subgraph "🌐 Network Security"
+        FIREWALL[Network Firewall]
+        DDoS[DDoS Protection]
+        SSL[SSL/TLS Encryption]
+    end
+    
+    subgraph "🛡️ Application Security"
+        WAF[Web Application Firewall]
+        RATE_LIMIT[Rate Limiting]
+        INPUT_VALID[Input Validation]
+        CSRF[CSRF Protection]
+    end
+    
+    subgraph "🔐 Authentication Security"
+        MFA[Multi-Factor Auth]
+        JWT_AUTH[JWT Authentication]
+        SESSION[Session Management]
+        PASSWORD[Password Policies]
+    end
+    
+    subgraph "🗄️ Data Security"
+        ENCRYPTION[Data Encryption]
+        BACKUP[Encrypted Backups]
+        AUDIT[Audit Logging]
+        GDPR[GDPR Compliance]
+    end
+    
+    subgraph "🏢 Tenant Security"
+        ISOLATION[Data Isolation]
+        PERMISSIONS[Role-Based Access]
+        TENANT_AUDIT[Tenant Audit Trail]
+    end
+    
+    FIREWALL --> WAF
+    DDoS --> RATE_LIMIT
+    SSL --> INPUT_VALID
+    
+    WAF --> MFA
+    RATE_LIMIT --> JWT_AUTH
+    INPUT_VALID --> SESSION
+    CSRF --> PASSWORD
+    
+    MFA --> ENCRYPTION
+    JWT_AUTH --> BACKUP
+    SESSION --> AUDIT
+    PASSWORD --> GDPR
+    
+    ENCRYPTION --> ISOLATION
+    BACKUP --> PERMISSIONS
+    AUDIT --> TENANT_AUDIT
+    
+    style FIREWALL fill:#fef2f2,stroke:#dc2626,stroke-width:2px
+    style WAF fill:#fef3c7,stroke:#d97706,stroke-width:2px
+    style JWT_AUTH fill:#eff6ff,stroke:#2563eb,stroke-width:2px
+    style ENCRYPTION fill:#f0fdf4,stroke:#16a34a,stroke-width:2px
+    style ISOLATION fill:#ecfdf5,stroke:#059669,stroke-width:2px
+```
+
+### **Core Security Features**
 - 🔐 **Multi-factor Authentication** (MFA)
 - 🎫 **JWT Token Management** with refresh tokens
 - 👥 **Role-based Access Control** (RBAC)
