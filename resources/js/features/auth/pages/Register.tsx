@@ -3,7 +3,7 @@ import { Head, Link, useForm } from '@inertiajs/react';
 import AuthLayout from '@/shared/components/layouts/AuthLayout';
 import InputError from '@/shared/components/atoms/InputError';
 import InputLabel from '@/shared/components/atoms/InputLabel';
-import PrimaryButton from '@/shared/components/atoms/PrimaryButton';
+import { PrimaryButton } from '@/shared/components/atoms/Button';
 import TextInput from '@/shared/components/atoms/TextInput';
 
 interface RegisterData {
