@@ -16,7 +16,7 @@ import {
 
 } from '@chakra-ui/react';
 
-import { AppLayout } from '@/shared/components/layouts/AppLayout';
+import AppLayout from '@/shared/components/layouts/AppLayout';
 import { useMemoizedCallback } from '@/shared/hooks';
 
 /**

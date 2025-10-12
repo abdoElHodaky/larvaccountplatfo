@@ -1,10 +1,11 @@
 import { FormEvent, useState } from 'react';
-import { Head, Link, useForm } from '@inertiajs/react';
+import { Link, useForm } from '@inertiajs/react';
 import AuthLayout from '@/shared/components/layouts/AuthLayout';
 import InputError from '@/shared/components/atoms/InputError';
 import InputLabel from '@/shared/components/atoms/InputLabel';
 import { PrimaryButton } from '@/shared/components/atoms/Button';
 import TextInput from '@/shared/components/atoms/TextInput';
+import { DocumentHead } from '@/shared/components';
 
 interface LoginProps {
     canResetPassword: boolean;
@@ -36,7 +37,11 @@ export default function Login({ canResetPassword, status }: LoginProps) {
 
     return (
         <AuthLayout>
-            <Head title="Sign In" />
+            <DocumentHead 
+                title="Sign In - Laravel Accounting Platform"
+                description="Sign in to your Laravel Accounting Platform account to access your financial dashboard, manage transactions, and track your business performance."
+                keywords="login, sign in, accounting, financial dashboard, business management"
+            />
 
             <div className="w-full max-w-md mx-auto">
                 <div className="bg-white shadow-lg rounded-lg px-8 py-10">

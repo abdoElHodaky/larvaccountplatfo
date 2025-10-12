@@ -35,6 +35,26 @@ export { NavBackIcon as LiveArrowLeftIcon } from './exports';
 /** @deprecated Use NavForwardIcon instead */
 export { NavForwardIcon as LiveArrowRightIcon } from './exports';
 
+// Additional legacy exports for dialog components
+export { LiveXMarkIcon } from './FormIcons';
+export { LiveInfoIcon } from './StatusIcons';
+export { LiveWarningIcon } from './StatusIcons';
+export { LiveErrorIcon } from './StatusIcons';
+export { LiveSuccessIcon } from './StatusIcons';
+
+// Status icons
+export { StatusIndicator, ConnectionStatus, BatteryStatus, ProgressStatus } from './StatusIcons';
+
+// Navigation icons
+export { LiveMenuToggleIcon, LiveBackIcon } from './NavigationIcons';
+
+// Form icons
+export { ValidationIcon, PasswordToggleIcon, SearchInputIcon, AddRemoveIcon } from './FormIcons';
+
+// Action icons
+export { LikeIcon, BookmarkIcon, StarRating, ThumbsVote, SendIcon, ActionButton } from './ActionIcons';
+export { LiveEditIcon, LiveDeleteIcon, LiveShareIcon } from './ActionIcons';
+
 // Constants for backward compatibility
 /** @deprecated Use ICON_SIZES from './types' instead */
 export { ICON_SIZES as iconSizes } from './types';

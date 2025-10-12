@@ -12,11 +12,12 @@ import {
   HeartIcon,
   BookmarkIcon,
   StarIcon,
-  ThumbUpIcon,
-  ThumbDownIcon,
+  HandThumbUpIcon,
+  HandThumbDownIcon,
+  ChatBubbleLeftIcon,
   PaperAirplaneIcon,
-  DownloadIcon,
-  UploadIcon,
+  ArrowDownTrayIcon,
+  ArrowUpTrayIcon,
   PrinterIcon,
   Cog6ToothIcon
 } from '@heroicons/react/24/outline';
@@ -77,8 +78,8 @@ export const LiveEditIcon = createLiveIcon(PencilIcon, 'bounce');
 export const LiveDeleteIcon = createLiveIcon(TrashIcon, 'shake');
 export const LiveCopyIcon = createLiveIcon(DocumentDuplicateIcon, 'pulse');
 export const LiveShareIcon = createLiveIcon(ShareIcon, 'bounce');
-export const LiveDownloadIcon = createLiveIcon(DownloadIcon, 'bounce');
-export const LiveUploadIcon = createLiveIcon(UploadIcon, 'bounce');
+export const LiveDownloadIcon = createLiveIcon(ArrowDownTrayIcon, 'bounce');
+export const LiveUploadIcon = createLiveIcon(ArrowUpTrayIcon, 'bounce');
 export const LivePrintIcon = createLiveIcon(PrinterIcon, 'pulse');
 export const LiveSettingsIcon = createLiveIcon(Cog6ToothIcon, 'rotate');
 
@@ -206,8 +207,8 @@ export const ThumbsVote: React.FC<LiveIconProps & {
   upCount?: number;
   downCount?: number;
 }> = ({ vote, onVote, upCount, downCount, size = 'md', className = '', ...props }) => {
-  const LiveThumbUpIcon = createLiveIcon(ThumbUpIcon);
-  const LiveThumbDownIcon = createLiveIcon(ThumbDownIcon);
+  const LiveThumbUpIcon = createLiveIcon(HandThumbUpIcon);
+  const LiveThumbDownIcon = createLiveIcon(HandThumbDownIcon);
 
   return (
     <div className={`flex items-center space-x-4 ${className}`}>

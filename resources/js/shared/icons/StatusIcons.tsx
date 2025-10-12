@@ -13,8 +13,7 @@ import {
   BoltIcon,
   ShieldCheckIcon,
   SignalIcon,
-  WifiIcon,
-  BatteryIcon
+  WifiIcon
 } from '@heroicons/react/24/outline';
 import { createLiveIcon, type LiveIconProps } from './index';
 
@@ -199,7 +198,7 @@ export const BatteryStatus: React.FC<LiveIconProps & {
   className = '',
   ...props 
 }) => {
-  const LiveBatteryIcon = createLiveIcon(BatteryIcon);
+  const LiveBatteryIcon = createLiveIcon(BoltIcon);
   
   const getBatteryColor = (level: number) => {
     if (level > 50) return 'success';
