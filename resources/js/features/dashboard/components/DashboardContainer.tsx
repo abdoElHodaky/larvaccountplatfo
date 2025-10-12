@@ -116,8 +116,9 @@ export const DashboardContainer: React.FC<DashboardContainerProps> = ({
     const metricsMap = new Map(metrics.map((m: any) => [m.id, m]));
     
     realtimeMetrics.forEach(rtMetric => {
+      const existingMetric = metricsMap.get(rtMetric.id);
       metricsMap.set(rtMetric.id, {
-        ...metricsMap.get(rtMetric.id),
+        ...(existingMetric || {}),
         ...rtMetric,
         isRealtime: true,
       });
@@ -133,8 +134,9 @@ export const DashboardContainer: React.FC<DashboardContainerProps> = ({
     const widgetsMap = new Map(widgets.map(w => [w.id, w]));
     
     realtimeWidgets.forEach(rtWidget => {
+      const existingWidget = widgetsMap.get(rtWidget.id);
       widgetsMap.set(rtWidget.id, {
-        ...widgetsMap.get(rtWidget.id),
+        ...(existingWidget || {}),
         ...rtWidget,
         isRealtime: true,
       });
@@ -221,11 +223,11 @@ export const DashboardContainer: React.FC<DashboardContainerProps> = ({
 
   const handleWidgetUpdate = useCallback((widgetId: string, updates: any) => {
     if (enableCollaboration) {
-      updateCollaborativeData(prev => ({
+      updateCollaborativeData((prev: any) => ({
         ...prev,
-        widgets: prev.widgets?.map(w => 
+        widgets: (prev.widgets || []).map((w: any) => 
           w.id === widgetId ? { ...w, ...updates } : w
-        ) || [],
+        ),
       }));
     }
     
@@ -283,7 +285,7 @@ export const DashboardContainer: React.FC<DashboardContainerProps> = ({
       <div className="dashboard-container">
         <LoadingSpinner 
           message="Loading dashboard..." 
-          size="large"
+          size="lg"
           showProgress={true}
         />
       </div>
@@ -300,28 +302,15 @@ export const DashboardContainer: React.FC<DashboardContainerProps> = ({
         {/* Dashboard Header */}
         <DashboardHeader
           title="Dashboard"
-          dateRange={state.selectedDateRange}
-          onDateRangeChange={handleDateRangeChange}
-          metricTypes={state.selectedMetricTypes}
-          onMetricTypesChange={handleMetricTypesChange}
-          viewMode={state.viewMode}
-          onViewModeChange={handleViewModeChange}
-          isEditable={isEditable}
           onRefresh={handleRefresh}
-          onSave={handleSaveDashboard}
-          hasUnsavedChanges={hasUnsavedChanges}
-          lastSaved={lastSaved}
-          isFullscreen={state.isFullscreen}
-          onToggleFullscreen={() => setState(prev => ({ ...prev, isFullscreen: !prev.isFullscreen }))}
+          isLoading={isLoading}
         />
 
         {/* Collaboration Indicator */}
         {enableCollaboration && (
           <CollaborationIndicator
-            collaborators={collaborators}
-            isLocked={dashboardLocked}
-            socketConnected={socketConnected}
-            lastUpdate={realtimeLastUpdate}
+            activeUsers={collaborators}
+            showUserCount={true}
           />
         )}
 
