@@ -30,6 +30,7 @@ return [
         'middleware' => [
             \Nuwave\Lighthouse\Support\Http\Middleware\AcceptJson::class,
             'auth:sanctum', // Enable Sanctum authentication for GraphQL
+            \App\Http\Middleware\GraphQLRateLimit::class, // Rate limiting for GraphQL
         ],
 
         /*
