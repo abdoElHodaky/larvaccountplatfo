@@ -158,7 +158,7 @@ export const PieChart: React.FC<PieChartProps> = memo(({
 
   // Memoized custom tooltip component
   const CustomTooltip = useMemo(() => {
-    if (!showTooltip) return null;
+    if (!showTooltip) return undefined;
     
     return ({ active, payload }: any) => {
       if (!active || !payload || !payload.length) return null;

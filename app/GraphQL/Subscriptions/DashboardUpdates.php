@@ -2,8 +2,8 @@
 
 namespace App\GraphQL\Subscriptions;
 
-use Nuwave\Lighthouse\Subscriptions\Subscriber;
 use Nuwave\Lighthouse\Schema\Types\GraphQLSubscription;
+use Nuwave\Lighthouse\Subscriptions\Subscriber;
 
 class DashboardUpdates extends GraphQLSubscription
 {
@@ -24,7 +24,7 @@ class DashboardUpdates extends GraphQLSubscription
     public function filter(Subscriber $subscriber, array $args): bool
     {
         $organizationId = $args['organizationId'];
-        
+
         return $this->root->organization_id == $organizationId;
     }
 }

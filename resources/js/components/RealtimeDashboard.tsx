@@ -1,5 +1,5 @@
-import React from 'react';
-import { useRealtimeDashboard } from '../hooks/useRealtime';
+import { useState, useEffect } from 'react';
+import { useRealtime, useRealtimeDashboard } from '../hooks/useRealtime';
 import { useDashboardMetrics } from '../hooks/useGraphQL';
 
 interface RealtimeDashboardProps {
@@ -101,7 +101,7 @@ export function RealtimeDashboard({ organizationId }: RealtimeDashboardProps) {
 
 // Example transaction list with real-time updates
 export function RealtimeTransactionList({ organizationId }: { organizationId: string }) {
-  const { transactions, connected } = useRealtimeDashboard(organizationId);
+  const { transactions, connected } = useRealtime(organizationId);
 
   return (
     <div className="realtime-transactions">
@@ -116,7 +116,7 @@ export function RealtimeTransactionList({ organizationId }: { organizationId: st
         {transactions.length === 0 ? (
           <p>No transactions yet</p>
         ) : (
-          transactions.slice(0, 10).map((transaction) => (
+          transactions.slice(0, 10).map((transaction: any) => (
             <div key={transaction.id} className="transaction-item">
               <div className="transaction-info">
                 <span className="description">{transaction.description}</span>

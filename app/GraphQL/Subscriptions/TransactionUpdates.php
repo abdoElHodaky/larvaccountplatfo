@@ -2,8 +2,8 @@
 
 namespace App\GraphQL\Subscriptions;
 
-use Nuwave\Lighthouse\Subscriptions\Subscriber;
 use Nuwave\Lighthouse\Schema\Types\GraphQLSubscription;
+use Nuwave\Lighthouse\Subscriptions\Subscriber;
 
 class TransactionUpdates extends GraphQLSubscription
 {
@@ -25,7 +25,7 @@ class TransactionUpdates extends GraphQLSubscription
     public function filter(Subscriber $subscriber, array $args): bool
     {
         $organizationId = $args['organizationId'];
-        
+
         // Only send updates for the requested organization
         return $this->root->organization_id == $organizationId;
     }

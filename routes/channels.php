@@ -37,7 +37,7 @@ Broadcast::channel('accounting', function ($user) {
     return $user !== null;
 });
 
-// Inventory updates  
+// Inventory updates
 Broadcast::channel('inventory', function ($user) {
     return $user !== null;
 });
