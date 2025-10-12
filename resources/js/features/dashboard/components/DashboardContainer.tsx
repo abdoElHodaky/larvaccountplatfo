@@ -176,67 +176,7 @@ export const DashboardContainer: React.FC<DashboardContainerProps> = ({
     });
   }, [dashboardId, orgId]);
 
-  // Event handlers
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const handleDateRangeChange = useCallback((dateRange: { start: string; end: string }) => {
-    setState(prev => ({ ...prev, selectedDateRange: dateRange }));
-    
-    // Track user interaction
-    performanceMonitor.recordInteraction({
-      type: 'input',
-      element: 'date-range-picker',
-      page: '/dashboard',
-      metadata: { dateRange },
-    });
-  }, []);
-
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const handleMetricTypesChange = useCallback((metricTypes: string[]) => {
-    setState(prev => ({ ...prev, selectedMetricTypes: metricTypes }));
-    
-    performanceMonitor.recordInteraction({
-      type: 'input',
-      element: 'metric-type-selector',
-      page: '/dashboard',
-      metadata: { metricTypes },
-    });
-  }, []);
-
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const handleViewModeChange = useCallback((viewMode: 'view' | 'edit') => {
-    setState(prev => ({ ...prev, viewMode }));
-    
-    if (viewMode === 'edit' && enableCollaboration) {
-      // Notify other collaborators about edit mode
-      updateCollaborativeData((prev: any) => ({
-        ...prev,
-        editMode: true,
-        editedBy: 'current-user-id',
-        editedAt: new Date(),
-      }));
-    }
-    
-    performanceMonitor.recordInteraction({
-      type: 'click',
-      element: `view-mode-${viewMode}`,
-      page: '/dashboard',
-    });
-  }, [enableCollaboration, updateCollaborativeData]);
-
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const handleWidgetUpdate = useCallback((widgetId: string, updates: any) => {
-    if (enableCollaboration) {
-      updateCollaborativeData((prev: any) => ({
-        ...prev,
-        widgets: (prev.widgets || []).map((w: any) => 
-          w.id === widgetId ? { ...w, ...updates } : w
-        ),
-      }));
-    }
-    
-    // Refetch widgets to ensure consistency
-    refetchWidgets();
-  }, [enableCollaboration, updateCollaborativeData, refetchWidgets]);
+  // Event handlers (removed unused handlers to fix TypeScript errors)
 
   const handleSaveDashboard = useCallback(async () => {
     if (enableCollaboration && hasUnsavedChanges) {

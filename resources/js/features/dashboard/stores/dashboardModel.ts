@@ -327,7 +327,7 @@ export const dashboardModel = createModel<RootModel>()({
       
       try {
         const response = await dashboardApi.updateLayout(payload.id, payload.data);
-        dispatch.dashboard.updateLayout(response.data as DashboardLayout);
+        dispatch.dashboard.updateLayout({ id: payload.id, ...response.data } as DashboardLayout);
         return { success: true, data: response.data };
       } catch (error: any) {
         const errorMessage = error.message || 'Failed to update dashboard layout';
@@ -370,7 +370,7 @@ export const dashboardModel = createModel<RootModel>()({
       
       try {
         const response = await dashboardApi.updateWidget(payload.id, payload.data);
-        dispatch.dashboard.updateWidget(response.data);
+        dispatch.dashboard.updateWidget({ id: payload.id, ...response.data } as Widget);
         return { success: true, data: response.data };
       } catch (error: any) {
         const errorMessage = error.message || 'Failed to update widget';

@@ -94,10 +94,10 @@ class MockWebSocket {
   }
 
   addEventListener(type: string, listener: EventListener): void {
-    if (type === 'open') this.onopen = listener as any;
-    if (type === 'close') this.onclose = listener as any;
-    if (type === 'message') this.onmessage = listener as any;
-    if (type === 'error') this.onerror = listener as any;
+    if (type === 'open') this.onopen = listener as ((this: WebSocket, ev: Event) => void) | null;
+    if (type === 'close') this.onclose = listener as ((this: WebSocket, ev: CloseEvent) => void) | null;
+    if (type === 'message') this.onmessage = listener as ((this: WebSocket, ev: MessageEvent) => void) | null;
+    if (type === 'error') this.onerror = listener as ((this: WebSocket, ev: Event) => void) | null;
   }
 
   removeEventListener(type: string, _listener: EventListener): void {
@@ -121,7 +121,7 @@ global.IntersectionObserver = class IntersectionObserver {
   unobserve() {}
   disconnect() {}
   takeRecords(): IntersectionObserverEntry[] { return []; }
-} as any;
+} as unknown as typeof IntersectionObserver;
 
 // Mock ResizeObserver
 global.ResizeObserver = class ResizeObserver {
@@ -138,7 +138,7 @@ global.PerformanceObserver = class PerformanceObserver {
   constructor(_callback: PerformanceObserverCallback) {}
   observe() {}
   disconnect() {}
-} as any;
+} as unknown as typeof PerformanceObserver;
 
 // Mock performance.memory
 Object.defineProperty(performance, 'memory', {

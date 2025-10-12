@@ -125,7 +125,7 @@ describe('useSocket Hook', () => {
 
     // Simulate connection
     mockSocketManager.isConnected = true;
-    mockSocketManager.socketId = 'socket-123';
+    mockSocketManager.socketId = 'socket-123' as string | undefined;
 
     rerender();
 
@@ -190,8 +190,8 @@ describe('useRealtimeDashboard Hook', () => {
     const { result } = renderHook(() => useRealtimeDashboard(mockOrganizationId));
 
     // Get the callback from the mock
-    const eventCallbacks = (mockSocketManager as Record<string, unknown>).eventCallbacks;
-    const metricsUpdateCallback = eventCallbacks.get('dashboard:metrics_updated');
+    const eventCallbacks = (mockSocketManager as any).eventCallbacks;
+    const metricsUpdateCallback = eventCallbacks?.get('dashboard:metrics_updated');
 
     // Simulate metrics update
     const newMetric = {
@@ -474,7 +474,7 @@ describe('Socket Hook Error Handling', () => {
         // Simulate callback error
         setTimeout(() => {
           try {
-            callback(null); // This should cause an error
+            callback({} as Record<string, unknown>); // This should cause an error
           } catch (error) {
             errorCallback(error);
           }

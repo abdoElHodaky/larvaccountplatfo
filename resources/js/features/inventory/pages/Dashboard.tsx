@@ -1,4 +1,4 @@
-import { Link } from '@inertiajs/react';
+import { Head, Link } from '@inertiajs/react';
 import AppLayout from '@/shared/components/layouts/AppLayout';
 import { formatCurrency, formatDate, formatNumber } from '@/shared/utils';
 import { Product, StockMovement, InventoryStats } from '../types';
@@ -26,7 +26,7 @@ export default function Dashboard({
     if (error) {
         return (
             <AppLayout>
-                <DocumentHead 
+                <Head 
                     title="Inventory Dashboard" 
                     description="Inventory dashboard error page"
                 />
@@ -50,7 +50,7 @@ export default function Dashboard({
 
     return (
         <AppLayout>
-            <DocumentHead 
+            <Head 
                 title="Inventory Dashboard" 
                 description="Inventory management dashboard with stock levels and product overview"
             />
