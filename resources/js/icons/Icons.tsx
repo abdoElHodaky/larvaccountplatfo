@@ -1,6 +1,6 @@
 import React from 'react';
 
-// Simplified live icons for real-time features
+// Simplified icons for real-time features
 export interface IconProps {
   size?: 'sm' | 'md' | 'lg';
   className?: string;
