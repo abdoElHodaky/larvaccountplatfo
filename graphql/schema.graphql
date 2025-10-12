@@ -121,28 +121,18 @@ type Query {
 
 "Real-time subscriptions"
 type Subscription {
-    # Accounting Subscriptions
-    "Subscribe to transaction updates for an organization"
+    # Real-time subscriptions (simplified)
+    "Subscribe to transaction updates"
     transactionUpdates(organizationId: ID!): Transaction
-        @subscription(class: "App\\Features\\Accounting\\GraphQL\\Subscriptions\\TransactionUpdates")
+        @subscription(class: "App\\GraphQL\\Subscriptions\\TransactionUpdates")
 
-    "Subscribe to account balance updates"
-    accountBalanceUpdates(organizationId: ID!): AccountBalance
-        @subscription(class: "App\\Features\\Accounting\\GraphQL\\Subscriptions\\AccountBalanceUpdates")
-
-    # Inventory Subscriptions
-    "Subscribe to stock level updates"
+    "Subscribe to stock updates"
     stockUpdates(organizationId: ID!): Product
-        @subscription(class: "App\\Features\\Inventory\\GraphQL\\Subscriptions\\StockUpdates")
+        @subscription(class: "App\\GraphQL\\Subscriptions\\StockUpdates")
 
-    "Subscribe to low stock alerts"
-    lowStockAlerts(organizationId: ID!): Product
-        @subscription(class: "App\\Features\\Inventory\\GraphQL\\Subscriptions\\LowStockAlerts")
-
-    # Dashboard Subscriptions
-    "Subscribe to dashboard metrics updates"
-    dashboardMetricsUpdates(organizationId: ID!): DashboardMetrics
-        @subscription(class: "App\\Features\\Dashboard\\GraphQL\\Subscriptions\\DashboardMetricsUpdates")
+    "Subscribe to dashboard updates"
+    dashboardUpdates(organizationId: ID!): DashboardMetrics
+        @subscription(class: "App\\GraphQL\\Subscriptions\\DashboardUpdates")
 }
 
 "Account for mutations"

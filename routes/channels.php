@@ -20,15 +20,34 @@ Broadcast::channel('App.Models.User.{id}', function ($user, $id) {
 
 /*
 |--------------------------------------------------------------------------
-| Multi-Tenant Channel Authorization
+| Real-time Integration Channels (Simplified)
 |--------------------------------------------------------------------------
 |
-| These channels provide tenant-specific authorization for the Laravel
-| Accounting Platform. All channels are prefixed with tenant ID for isolation.
+| Simplified channels for Alova.js + GraphQL + Socket.io integration
 |
 */
 
-// Tenant-specific account channels
+// Organization-based channels (simplified)
+Broadcast::channel('organization.{organizationId}', function ($user, $organizationId) {
+    return $user && $user->organizations()->where('id', $organizationId)->exists();
+});
+
+// Accounting updates
+Broadcast::channel('accounting', function ($user) {
+    return $user !== null;
+});
+
+// Inventory updates  
+Broadcast::channel('inventory', function ($user) {
+    return $user !== null;
+});
+
+// Dashboard updates
+Broadcast::channel('dashboard', function ($user) {
+    return $user !== null;
+});
+
+// Legacy tenant channels (keeping for compatibility)
 Broadcast::channel('tenant.{tenantId}.accounts', function ($user, $tenantId) {
     return $user && $user->tenant_id === $tenantId;
 });
