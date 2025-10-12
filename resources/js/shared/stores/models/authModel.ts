@@ -19,7 +19,7 @@ export interface User {
   lastLoginAt?: string;
   createdAt: string;
   updatedAt: string;
-  preferences?: {
+  preferences: {
     theme: 'light' | 'dark' | 'system';
     language: string;
     dateFormat: string;
@@ -272,7 +272,7 @@ export const authModel = createModel()({
           
           // Update user permissions for current tenant
           const state = this.getState();
-          if (state.auth.user) {
+          if (state.user) {
             dispatch.auth.updateUser({ permissions });
           }
           
@@ -324,7 +324,7 @@ export const authModel = createModel()({
     // Update user preferences
     async updatePreferences(preferences: Partial<User['preferences']>) {
       const state = this.getState();
-      if (!state.auth.user) return;
+      if (!state.user) return;
       
       try {
         // Optimistically update UI

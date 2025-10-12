@@ -48,7 +48,7 @@ class SocketManager {
         reconnection: true,
         reconnectionDelay: 1000,
         reconnectionDelayMax: 5000,
-        maxReconnectionAttempts: this.maxReconnectAttempts,
+        reconnectionAttempts: this.maxReconnectAttempts,
         forceNew: true
       });
 

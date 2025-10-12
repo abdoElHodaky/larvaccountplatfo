@@ -7,7 +7,7 @@ import { performanceMonitor as _performanceMonitor } from '../analytics/Performa
 import { socketManager } from '../socket/socketManager';
 
 // Security event types
-export interface SecurityEvent {
+interface SecurityEvent {
   id: string;
   type: 'authentication' | 'authorization' | 'data_access' | 'suspicious_activity' | 'policy_violation';
   severity: 'low' | 'medium' | 'high' | 'critical';
@@ -23,7 +23,7 @@ export interface SecurityEvent {
   resolved: boolean;
 }
 
-export interface SecurityPolicy {
+interface SecurityPolicy {
   id: string;
   name: string;
   type: 'rate_limit' | 'ip_whitelist' | 'data_access' | 'session_timeout' | 'password_policy';
@@ -34,7 +34,7 @@ export interface SecurityPolicy {
   updatedAt: Date;
 }
 
-export interface SecurityMetrics {
+interface SecurityMetrics {
   totalEvents: number;
   blockedAttempts: number;
   suspiciousActivities: number;
@@ -44,7 +44,7 @@ export interface SecurityMetrics {
   lastIncident?: Date;
 }
 
-export interface RateLimitConfig {
+interface RateLimitConfig {
   windowMs: number;
   maxRequests: number;
   skipSuccessfulRequests?: boolean;
@@ -52,7 +52,7 @@ export interface RateLimitConfig {
   keyGenerator?: (req: any) => string;
 }
 
-export interface SessionConfig {
+interface SessionConfig {
   maxAge: number;
   maxConcurrentSessions: number;
   requireReauth: boolean;

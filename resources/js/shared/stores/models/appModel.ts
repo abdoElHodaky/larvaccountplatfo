@@ -253,7 +253,7 @@ export const appModel = createModel()({
       }
       
       // Apply initial theme
-      const currentTheme = this.getState().app.settings.theme;
+      const currentTheme = this.getState().settings.theme;
       applyTheme(currentTheme);
       
       // Initialize performance monitoring

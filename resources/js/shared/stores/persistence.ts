@@ -55,7 +55,7 @@ export const persistConfig = {
   transforms: [
     // Transform for auth state
     {
-      in: (inboundState: any, key: string) => {
+      in: (inboundState: any, key: string | number) => {
         if (key === 'auth') {
           // Don't persist sensitive token data in some cases
           const { token, ...rest } = inboundState;
@@ -67,7 +67,7 @@ export const persistConfig = {
         }
         return inboundState;
       },
-      out: (outboundState: any, key: string) => {
+      out: (outboundState: any, key: string | number) => {
         if (key === 'auth') {
           // Validate token on hydration
           if (outboundState.token && outboundState.user) {
@@ -88,7 +88,7 @@ export const persistConfig = {
     
     // Transform for app state
     {
-      in: (inboundState: any, key: string) => {
+      in: (inboundState: any, key: string | number) => {
         if (key === 'app') {
           // Don't persist loading states or errors
           const { loading: _loading, error: _error, ...rest } = inboundState;
@@ -96,7 +96,7 @@ export const persistConfig = {
         }
         return inboundState;
       },
-      out: (outboundState: any, key: string) => {
+      out: (outboundState: any, key: string | number) => {
         if (key === 'app') {
           // Reset transient state on hydration
           return {

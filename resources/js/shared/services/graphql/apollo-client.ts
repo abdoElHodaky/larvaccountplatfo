@@ -20,7 +20,7 @@ import adapterFetch from 'alova/fetch';
 import ReactHook from 'alova/react';
 
 // Types
-export interface GraphQLConfig {
+interface GraphQLConfig {
   httpUri: string;
   wsUri: string;
   headers?: Record<string, string>;
@@ -29,7 +29,7 @@ export interface GraphQLConfig {
   cacheSize?: number;
 }
 
-export interface TenantContext {
+interface TenantContext {
   tenantId: string;
   subdomain: string;
   permissions: string[];
@@ -242,7 +242,7 @@ export const createAlovaInstance = () => {
     // Request retry configuration
     retry: {
       delay: [1000, 2000, 4000], // Exponential backoff
-      condition: (error) => {
+      condition: (error: any) => {
         // Retry on network errors and 5xx server errors
         return !error.response || (error.response.status >= 500 && error.response.status < 600);
       },
@@ -326,7 +326,7 @@ export const createAlovaInstance = () => {
     },
     
     // Global error handler
-    errorLogger: (error, method) => {
+    errorLogger: (error: any, method: any) => {
       // Send errors to monitoring service in production
       if (process.env.NODE_ENV === 'production') {
         // Example: Send to Sentry, LogRocket, etc.
