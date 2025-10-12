@@ -3,9 +3,13 @@
 namespace App\Features\Accounting\Models;
 
 use App\Shared\Models\HybridModel;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Builder;
 
 class FinancialForecast extends HybridModel
 {
@@ -46,56 +50,56 @@ class FinancialForecast extends HybridModel
     /**
      * Forecast types
      */
-    const TYPE_REVENUE = 'revenue';
+    public const TYPE_REVENUE = 'revenue';
 
-    const TYPE_EXPENSE = 'expense';
+    public const TYPE_EXPENSE = 'expense';
 
-    const TYPE_CASH_FLOW = 'cash_flow';
+    public const TYPE_CASH_FLOW = 'cash_flow';
 
-    const TYPE_PROFIT_LOSS = 'profit_loss';
+    public const TYPE_PROFIT_LOSS = 'profit_loss';
 
-    const TYPE_BALANCE_SHEET = 'balance_sheet';
+    public const TYPE_BALANCE_SHEET = 'balance_sheet';
 
-    const TYPE_COMPREHENSIVE = 'comprehensive';
+    public const TYPE_COMPREHENSIVE = 'comprehensive';
 
     /**
      * Period types
      */
-    const PERIOD_MONTHLY = 'monthly';
+    public const PERIOD_MONTHLY = 'monthly';
 
-    const PERIOD_QUARTERLY = 'quarterly';
+    public const PERIOD_QUARTERLY = 'quarterly';
 
-    const PERIOD_YEARLY = 'yearly';
+    public const PERIOD_YEARLY = 'yearly';
 
     /**
      * Methodologies
      */
-    const METHOD_HISTORICAL_TREND = 'historical_trend';
+    public const METHOD_HISTORICAL_TREND = 'historical_trend';
 
-    const METHOD_REGRESSION_ANALYSIS = 'regression_analysis';
+    public const METHOD_REGRESSION_ANALYSIS = 'regression_analysis';
 
-    const METHOD_SEASONAL_ADJUSTMENT = 'seasonal_adjustment';
+    public const METHOD_SEASONAL_ADJUSTMENT = 'seasonal_adjustment';
 
-    const METHOD_MARKET_BASED = 'market_based';
+    public const METHOD_MARKET_BASED = 'market_based';
 
-    const METHOD_BOTTOM_UP = 'bottom_up';
+    public const METHOD_BOTTOM_UP = 'bottom_up';
 
-    const METHOD_TOP_DOWN = 'top_down';
+    public const METHOD_TOP_DOWN = 'top_down';
 
-    const METHOD_SCENARIO_BASED = 'scenario_based';
+    public const METHOD_SCENARIO_BASED = 'scenario_based';
 
     /**
      * Forecast statuses
      */
-    const STATUS_DRAFT = 'draft';
+    public const STATUS_DRAFT = 'draft';
 
-    const STATUS_IN_REVIEW = 'in_review';
+    public const STATUS_IN_REVIEW = 'in_review';
 
-    const STATUS_APPROVED = 'approved';
+    public const STATUS_APPROVED = 'approved';
 
-    const STATUS_ACTIVE = 'active';
+    public const STATUS_ACTIVE = 'active';
 
-    const STATUS_ARCHIVED = 'archived';
+    public const STATUS_ARCHIVED = 'archived';
 
     /**
      * Get the forecast line items

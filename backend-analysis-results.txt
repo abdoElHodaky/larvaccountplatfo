@@ -1,405 +1,638 @@
 Backend Syntax Analysis Report
-Generated: Sun Oct 12 17:46:42 UTC 2025
+Generated: Sun Oct 12 17:54:36 UTC 2025
 ======================================
 
-Analyzing: server.php
-Analyzing: config/auth.php
-Analyzing: config/cache.php
-Analyzing: config/tenant.php
-Analyzing: config/database.php
-Analyzing: config/session.php
-Analyzing: config/services.php
-Analyzing: config/app.php
-Analyzing: config/mail.php
-Analyzing: config/broadcasting.php
-Analyzing: config/octane.php
-Analyzing: config/queue.php
-Analyzing: config/modules.php
-Analyzing: config/cors.php
-Analyzing: config/lighthouse.php
-Analyzing: config/telescope.php
-Analyzing: config/reverb.php
-Analyzing: config/logging.php
-Analyzing: config/horizon.php
-Analyzing: config/filesystems.php
-Analyzing: resources/views/layouts/app.blade.php
-Analyzing: resources/views/welcome.blade.php
-Analyzing: resources/views/app.blade.php
-Analyzing: bootstrap/app.php
-Analyzing: routes/api.php
-Analyzing: routes/web.php
-Analyzing: routes/channels.php
-Analyzing: routes/console.php
-Analyzing: routes/auth.php
-Analyzing: database/seeders/DatabaseSeeder.php
-Analyzing: database/seeders/AccountingSeeder.php
-Analyzing: database/migrations/tenant/2024_10_10_000001_create_budgets_table.php
-Analyzing: database/migrations/tenant/2024_10_10_000003_create_tax_rates_table.php
-Analyzing: database/migrations/tenant/2024_01_01_000009_create_suppliers_table.php
-Analyzing: database/migrations/tenant/2024_01_01_000002_create_journal_entries_table.php
-Analyzing: database/migrations/tenant/2024_01_01_000015_create_product_suppliers_table.php
-Analyzing: database/migrations/tenant/2024_10_10_000009_create_performance_metrics_table.php
-Analyzing: database/migrations/tenant/2024_01_01_000006_create_report_executions_table.php
-Analyzing: database/migrations/tenant/2024_10_10_000006_add_tax_support_to_transactions_table.php
-Analyzing: database/migrations/tenant/2024_10_10_000004_create_financial_forecasts_table.php
-Analyzing: database/migrations/tenant/2024_01_01_000010_create_products_table.php
-Analyzing: database/migrations/tenant/2024_01_01_000019_create_audit_logs_table.php
-Analyzing: database/migrations/tenant/2024_01_01_000013_create_purchase_orders_table.php
-Analyzing: database/migrations/tenant/2024_01_01_000008_create_warehouses_table.php
-Analyzing: database/migrations/tenant/2024_01_01_000007_create_product_categories_table.php
-Analyzing: database/migrations/tenant/2024_01_01_000017_create_integration_sync_logs_table.php
-Analyzing: database/migrations/tenant/2024_01_01_000016_create_api_integrations_table.php
-Analyzing: database/migrations/tenant/2024_10_10_000002_create_budget_line_items_table.php
-Analyzing: database/migrations/tenant/2024_10_10_000007_optimize_database_indexes.php
-Analyzing: database/migrations/tenant/2024_01_01_000003_create_transactions_table.php
-Analyzing: database/migrations/tenant/2024_01_01_000012_create_stock_movements_table.php
-Analyzing: database/migrations/tenant/2024_01_01_000005_create_report_schedules_table.php
-Analyzing: database/migrations/tenant/2024_01_01_000011_create_stock_levels_table.php
-Analyzing: database/migrations/tenant/2024_01_01_000014_create_purchase_order_items_table.php
-Analyzing: database/migrations/tenant/2024_10_10_000005_create_forecast_line_items_table.php
-Analyzing: database/migrations/tenant/2024_01_01_000001_create_accounts_table.php
-Analyzing: database/migrations/tenant/2024_01_02_000002_create_domain_events_table.php
-Analyzing: database/migrations/tenant/2024_01_02_000001_enhance_accounts_table_for_domain_driven_design.php
-Analyzing: database/migrations/tenant/2024_01_01_000018_create_reports_table.php
-Analyzing: database/migrations/tenant/2024_10_10_000008_create_dashboard_widgets_table.php
-Analyzing: database/migrations/tenant/2024_01_01_000004_create_financial_reports_table.php
-Analyzing: database/migrations/landlord/2024_01_01_000001_create_tenants_table.php
-Analyzing: database/migrations/landlord/2024_01_01_000002_create_global_users_table.php
-Analyzing: database/migrations/landlord/2024_01_01_000003_add_organization_fields_to_tenants_table.php
-Analyzing: database/migrations/2024_01_01_000007_create_account_balances_table.php
-Analyzing: database/migrations/2024_01_01_000005_create_transactions_table.php
-Analyzing: database/migrations/2024_01_01_000004_create_accounts_table.php
-Analyzing: database/migrations/2024_01_01_000006_create_journal_entries_table.php
-Analyzing: database/migrations/shared/2024_01_01_000001_create_organizations_table.php
-Analyzing: database/migrations/shared/2024_01_01_000002_create_users_table.php
-Analyzing: database/migrations/shared/2024_01_01_000001_create_users_table.php
-Analyzing: database/migrations/shared/2024_01_01_000002_create_tenant_users_table.php
-Analyzing: database/factories/TaxRateFactory.php
-Analyzing: database/factories/UserFactory.php
-Analyzing: database/factories/BudgetFactory.php
+Analyzing: app/Infrastructure/Database/TenantResolver.php
+Analyzing: app/Infrastructure/Database/TenantMigrationService.php
+Analyzing: app/Infrastructure/Broadcasting/ConnectionLimiter.php
+Analyzing: app/Infrastructure/Cache/QueryCache.php
+Analyzing: app/Providers/RouteServiceProvider.php
+Analyzing: app/Providers/GraphQLServiceProvider.php
+Analyzing: app/Providers/AppServiceProvider.php
+Analyzing: app/Providers/AuthServiceProvider.php
 Analyzing: app/Providers/EventServiceProvider.php
 Analyzing: app/Providers/BroadcastServiceProvider.php
-Analyzing: app/Providers/AuthServiceProvider.php
-Analyzing: app/Providers/AppServiceProvider.php
-Analyzing: app/Providers/GraphQLServiceProvider.php
-Analyzing: app/Providers/RouteServiceProvider.php
-Analyzing: app/GraphQL/Subscriptions/StockUpdates.php
-Analyzing: app/GraphQL/Subscriptions/TransactionUpdates.php
-Analyzing: app/GraphQL/Subscriptions/DashboardUpdates.php
 Analyzing: app/helpers.php
-  🚨 CRITICAL: Missing namespace declaration
+Analyzing: app/Shared/Events/DomainEvent.php
+Analyzing: app/Shared/Events/QueueableDomainEvent.php
+Analyzing: app/Shared/Events/BroadcastableDomainEvent.php
+Analyzing: app/Shared/Traits/ValidatableTrait.php
+  ⚠️  WARNING: Debug statements found
 
-Analyzing: app/Infrastructure/Database/TenantMigrationService.php
-Analyzing: app/Infrastructure/Database/TenantResolver.php
-Analyzing: app/Infrastructure/Cache/QueryCache.php
-Analyzing: app/Infrastructure/Broadcasting/ConnectionLimiter.php
+Analyzing: app/Shared/Traits/AuditableTrait.php
+  ℹ️  INFO: Scope methods missing return type hints
+
+Analyzing: app/Shared/Traits/CacheableTrait.php
+Analyzing: app/Shared/Traits/OrganizationScopedTrait.php
+Analyzing: app/Shared/Middleware/TrustProxies.php
+Analyzing: app/Shared/Middleware/EnsureTeamPermission.php
+Analyzing: app/Shared/Middleware/HandleInertiaRequests.php
+Analyzing: app/Shared/Middleware/PreventRequestsDuringMaintenance.php
+Analyzing: app/Shared/Models/Organization.php
+  ℹ️  INFO: Scope methods missing return type hints
+
+Analyzing: app/Shared/Models/User.php
+  ℹ️  INFO: Scope methods missing return type hints
+
+Analyzing: app/Shared/Models/HybridModel.php
+  ℹ️  INFO: Scope methods missing return type hints
+
+Analyzing: app/Shared/Models/Team.php
+  ℹ️  INFO: Scope methods missing return type hints
+
+Analyzing: app/Shared/Providers/ServiceLayerProvider.php
+Analyzing: app/Shared/Contracts/EnhancedRepositoryInterface.php
+Analyzing: app/Shared/Contracts/ServiceInterface.php
+Analyzing: app/Shared/Contracts/EventBusInterface.php
+Analyzing: app/Shared/Contracts/CacheableInterface.php
+Analyzing: app/Shared/Services/PerformanceOptimizer.php
+Analyzing: app/Shared/Services/HorizonPerformanceMonitor.php
+Analyzing: app/Shared/Services/ServiceManager.php
+Analyzing: app/Shared/Services/PerformanceMonitor.php
+Analyzing: app/Shared/Services/ServiceRegistry.php
+Analyzing: app/Shared/Services/ModuleDiscoveryService.php
+Analyzing: app/Shared/Services/PerformanceMonitoringService.php
+Analyzing: app/Shared/Services/BaseRepository.php
+Analyzing: app/Shared/Services/InterModuleBus.php
+Analyzing: app/Shared/Services/That.php
+Analyzing: app/Shared/Services/TelescopePerformanceAdapter.php
 Analyzing: app/Models/Tenant.php
   ℹ️  INFO: Scope methods missing return type hints
 
 Analyzing: app/Models/Team.php
-  ℹ️  INFO: Constants without explicit visibility found
-  ℹ️  INFO: Scope methods missing return type hints
-
-Analyzing: app/Models/User.php
-  ℹ️  INFO: Constants without explicit visibility found
   ℹ️  INFO: Scope methods missing return type hints
 
 Analyzing: app/Models/GlobalUser.php
   ℹ️  INFO: Scope methods missing return type hints
 
+Analyzing: app/Models/User.php
+  ℹ️  INFO: Scope methods missing return type hints
+
 Analyzing: app/Console/Kernel.php
-Analyzing: app/Console/Commands/System/HealthCheckCommand.php
-Analyzing: app/Console/Commands/Tenant/CreateTenantCommand.php
 Analyzing: app/Console/Commands/Module/ListModulesCommand.php
+Analyzing: app/Console/Commands/System/HealthCheckCommand.php
 Analyzing: app/Console/Commands/CacheWarmCommand.php
-Analyzing: app/Http/Controllers/Controller.php
-Analyzing: app/Http/Controllers/Api/BaseApiController.php
-Analyzing: app/Http/Controllers/Auth/VerifyEmailController.php
-Analyzing: app/Http/Controllers/Auth/EmailVerificationPromptController.php
-Analyzing: app/Http/Controllers/Auth/RegisterController.php
-Analyzing: app/Http/Controllers/Auth/LoginController.php
-Analyzing: app/Http/Controllers/Auth/RegisteredUserController.php
-  ℹ️  INFO: TODO/FIXME comments found
-
-Analyzing: app/Http/Controllers/Auth/AuthenticatedSessionController.php
-Analyzing: app/Http/Requests/Auth/LoginRequest.php
-Analyzing: app/Http/Middleware/EnsureEmailIsVerified.php
-Analyzing: app/Http/Middleware/EnsureAccountingPermission.php
-Analyzing: app/Http/Middleware/SetDatabaseShard.php
-Analyzing: app/Http/Middleware/AuthenticateTenant.php
-Analyzing: app/Http/Middleware/PreventRequestsDuringMaintenance.php
-Analyzing: app/Http/Middleware/TrustProxies.php
-Analyzing: app/Http/Middleware/ResolveTenant.php
-Analyzing: app/Http/Middleware/ApiResponseMiddleware.php
-Analyzing: app/Http/Middleware/TenantMiddleware.php
-Analyzing: app/Http/Middleware/GraphQLRateLimit.php
-Analyzing: app/Http/Middleware/EnsureTeamPermission.php
-Analyzing: app/Http/Middleware/HandleInertiaRequests.php
-Analyzing: app/Services/TenantProvisioningService.php
-  🚨 CRITICAL: Incorrect namespace 'Modules\' found (should be 'App\')
-
-Analyzing: app/Services/AuthService.php
-Analyzing: app/Services/Core/BaseService.php
-Analyzing: app/Services/TenantResolver.php
-Analyzing: app/Services/Performance/TenantIsolationService.php
-Analyzing: app/Services/Performance/QueryOptimizationService.php
+Analyzing: app/Console/Commands/Tenant/CreateTenantCommand.php
+Analyzing: app/Scopes/OrganizationScope.php
+Analyzing: app/Policies/TenantPolicy.php
 Analyzing: app/Services/Performance/MessageQueueService.php
   ⚠️  WARNING: Debug statements found
 
-Analyzing: app/Scopes/OrganizationScope.php
+Analyzing: app/Services/Performance/QueryOptimizationService.php
+Analyzing: app/Services/Performance/TenantIsolationService.php
+Analyzing: app/Services/TenantProvisioningService.php
+Analyzing: app/Services/TenantResolver.php
+Analyzing: app/Services/AuthService.php
+Analyzing: app/Services/Core/BaseService.php
+Analyzing: app/Http/Middleware/TrustProxies.php
+Analyzing: app/Http/Middleware/PreventRequestsDuringMaintenance.php
+Analyzing: app/Http/Middleware/EnsureAccountingPermission.php
+Analyzing: app/Http/Middleware/SetDatabaseShard.php
+Analyzing: app/Http/Middleware/ResolveTenant.php
+Analyzing: app/Http/Middleware/EnsureEmailIsVerified.php
+Analyzing: app/Http/Middleware/HandleInertiaRequests.php
+Analyzing: app/Http/Middleware/ApiResponseMiddleware.php
+Analyzing: app/Http/Middleware/EnsureTeamPermission.php
+Analyzing: app/Http/Middleware/AuthenticateTenant.php
+Analyzing: app/Http/Middleware/TenantMiddleware.php
+Analyzing: app/Http/Middleware/GraphQLRateLimit.php
+Analyzing: app/Http/Requests/Auth/LoginRequest.php
+Analyzing: app/Http/Controllers/Api/BaseApiController.php
+Analyzing: app/Http/Controllers/Auth/RegisterController.php
+Analyzing: app/Http/Controllers/Auth/EmailVerificationPromptController.php
+Analyzing: app/Http/Controllers/Auth/LoginController.php
+Analyzing: app/Http/Controllers/Auth/AuthenticatedSessionController.php
+Analyzing: app/Http/Controllers/Auth/RegisteredUserController.php
+  ℹ️  INFO: TODO/FIXME comments found
+
+Analyzing: app/Http/Controllers/Auth/VerifyEmailController.php
+Analyzing: app/Http/Controllers/Controller.php
+Analyzing: app/Features/Sales/Controllers/SalesController.php
+Analyzing: app/Features/Sales/Controllers/Api/SalesApiController.php
 Analyzing: app/Features/Sales/Routes/sales.php
   🚨 CRITICAL: Missing namespace declaration
 
-Analyzing: app/Features/Sales/Models/SalesOrder.php
-  ⚠️  DEPRECATED: $dates property found (use $casts instead)
-  ℹ️  INFO: Constants without explicit visibility found
-  ℹ️  INFO: Scope methods missing return type hints
-
-Analyzing: app/Features/Sales/Models/SalesOrderItem.php
-Analyzing: app/Features/Sales/Models/Customer.php
-  ⚠️  DEPRECATED: $dates property found (use $casts instead)
-  ℹ️  INFO: Constants without explicit visibility found
-  ℹ️  INFO: Scope methods missing return type hints
-
 Analyzing: app/Features/Sales/Providers/SalesServiceProvider.php
-Analyzing: app/Features/Sales/Services/SalesService.php
-Analyzing: app/Features/Sales/Controllers/Api/SalesApiController.php
-Analyzing: app/Features/Sales/Controllers/SalesController.php
-Analyzing: app/Features/Dashboard/Controllers/AdvancedDashboardController.php
-Analyzing: app/Features/Dashboard/Controllers/DashboardController.php
-Analyzing: app/Features/Dashboard/Events/MetricsUpdated.php
-Analyzing: app/Features/Dashboard/Providers/DashboardServiceProvider.php
-Analyzing: app/Features/Dashboard/Repositories/DashboardWidgetRepository.php
-Analyzing: app/Features/Dashboard/Services/DashboardService.php
-  🚨 CRITICAL: Incorrect namespace 'Modules\' found (should be 'App\')
-
-Analyzing: app/Features/Dashboard/Services/AdvancedDashboardService.php
-Analyzing: app/Features/Dashboard/Services/WidgetService.php
-Analyzing: app/Features/Dashboard/Models/DashboardWidget.php
-  ℹ️  INFO: Constants without explicit visibility found
+Analyzing: app/Features/Sales/Models/SalesOrderItem.php
+Analyzing: app/Features/Sales/Models/SalesOrder.php
   ℹ️  INFO: Scope methods missing return type hints
+
+Analyzing: app/Features/Sales/Models/Customer.php
+  ℹ️  INFO: Scope methods missing return type hints
+
+Analyzing: app/Features/Sales/Services/SalesService.php
+Analyzing: app/Features/Dashboard/Models/DashboardWidget.php
+  ℹ️  INFO: Scope methods missing return type hints
+
+Analyzing: app/Features/Dashboard/Controllers/DashboardController.php
+Analyzing: app/Features/Dashboard/Controllers/AdvancedDashboardController.php
+Analyzing: app/Features/Dashboard/Repositories/DashboardWidgetRepository.php
+Analyzing: app/Features/Dashboard/Routes/web.php
+  🚨 CRITICAL: Missing namespace declaration
 
 Analyzing: app/Features/Dashboard/Routes/dashboard.php
   🚨 CRITICAL: Missing namespace declaration
 
-Analyzing: app/Features/Dashboard/Routes/web.php
+Analyzing: app/Features/Dashboard/Services/DashboardService.php
+Analyzing: app/Features/Dashboard/Services/AdvancedDashboardService.php
+Analyzing: app/Features/Dashboard/Services/WidgetService.php
+Analyzing: app/Features/Dashboard/Events/MetricsUpdated.php
+Analyzing: app/Features/Dashboard/Providers/DashboardServiceProvider.php
+Analyzing: app/Features/Authentication/Controllers/Auth/RegisterController.php
+Analyzing: app/Features/Authentication/Controllers/Auth/RegisteredUserController.php
+  ℹ️  INFO: TODO/FIXME comments found
+
+Analyzing: app/Features/Authentication/Controllers/Auth/AuthenticatedSessionController.php
+Analyzing: app/Features/Authentication/Controllers/Auth/LoginController.php
+Analyzing: app/Features/Authentication/Services/AuthService.php
+Analyzing: app/Features/Authentication/Models/GlobalUser.php
+  ℹ️  INFO: Scope methods missing return type hints
+
+Analyzing: app/Features/Authentication/Auth/Providers/HybridUserProvider.php
+Analyzing: app/Features/Authentication/Auth/Guards/TenantUserGuard.php
+Analyzing: app/Features/Authentication/Auth/Guards/GlobalUserGuard.php
+Analyzing: app/Features/Authentication/Auth/TenantAwareAuthManager.php
+Analyzing: app/Features/Authentication/Middleware/EnsureEmailIsVerified.php
+Analyzing: app/Features/Inventory/Listeners/BroadcastInventoryEvents.php
+Analyzing: app/Features/Inventory/Services/InventoryService.php
+Analyzing: app/Features/Inventory/GraphQL/Mutations/UpdateStock.php
+Analyzing: app/Features/Inventory/GraphQL/Queries/InventoryDashboard.php
+Analyzing: app/Features/Inventory/GraphQL/Queries/OutOfStockProducts.php
+Analyzing: app/Features/Inventory/GraphQL/Queries/LowStockProducts.php
+Analyzing: app/Features/Inventory/Routes/inventory.php
   🚨 CRITICAL: Missing namespace declaration
 
-Analyzing: app/Features/Reporting/Services/ReportingService.php
-Analyzing: app/Features/Accounting/Models/Budget.php
-  ℹ️  INFO: Constants without explicit visibility found
+Analyzing: app/Features/Inventory/Providers/InventoryServiceProvider.php
+Analyzing: app/Features/Inventory/Models/StockMovement.php
+  ℹ️  INFO: Scope methods missing return type hints
+
+Analyzing: app/Features/Inventory/Models/StockLevel.php
+  ℹ️  INFO: Scope methods missing return type hints
+
+Analyzing: app/Features/Inventory/Models/Product.php
+  ℹ️  INFO: Scope methods missing return type hints
+
+Analyzing: app/Features/Inventory/Models/ProductCategory.php
+  ℹ️  INFO: Scope methods missing return type hints
+
+Analyzing: app/Features/Inventory/Controllers/InventoryController.php
+Analyzing: app/Features/Inventory/Controllers/Api/InventoryApiController.php
+Analyzing: app/Features/Inventory/Events/StockUpdated.php
+Analyzing: app/Features/TenantManagement/Models/Tenant.php
+  ℹ️  INFO: Scope methods missing return type hints
+
+Analyzing: app/Features/TenantManagement/Controllers/TenantController.php
+Analyzing: app/Features/TenantManagement/Routes/web.php
+  🚨 CRITICAL: Missing namespace declaration
+
+Analyzing: app/Features/TenantManagement/Services/TenantService.php
+  ℹ️  INFO: TODO/FIXME comments found
+
+Analyzing: app/Features/TenantManagement/Services/TenantProvisioningService.php
+Analyzing: app/Features/TenantManagement/Services/TenantResolver.php
+Analyzing: app/Features/TenantManagement/Providers/TenantManagementServiceProvider.php
+Analyzing: app/Features/TenantManagement/Middleware/ResolveTenant.php
+Analyzing: app/Features/TenantManagement/Middleware/AuthenticateTenant.php
+Analyzing: app/Features/TenantManagement/Middleware/TenantMiddleware.php
+Analyzing: app/Features/Organization/Providers/OrganizationServiceProvider.php
+Analyzing: app/Features/Organization/Services/OrganizationService.php
+Analyzing: app/Features/Organization/Routes/organization.php
+  🚨 CRITICAL: Missing namespace declaration
+
+Analyzing: app/Features/Organization/Controllers/OrganizationController.php
+Analyzing: app/Features/Accounting/Repositories/AccountRepository.php
+Analyzing: app/Features/Accounting/Models/FinancialForecast.php
+  ℹ️  INFO: Scope methods missing return type hints
+
+Analyzing: app/Features/Accounting/Models/JournalEntry.php
+Analyzing: app/Features/Accounting/Models/BudgetLineItem.php
+  ℹ️  INFO: Scope methods missing return type hints
+
+Analyzing: app/Features/Accounting/Models/AccountBalance.php
   ℹ️  INFO: Scope methods missing return type hints
 
 Analyzing: app/Features/Accounting/Models/ForecastLineItem.php
   ℹ️  INFO: Scope methods missing return type hints
 
 Analyzing: app/Features/Accounting/Models/Account.php
-Analyzing: app/Features/Accounting/Models/AccountBalance.php
-  ⚠️  DEPRECATED: $dates property found (use $casts instead)
-  ℹ️  INFO: Constants without explicit visibility found
-  ℹ️  INFO: Scope methods missing return type hints
-
-Analyzing: app/Features/Accounting/Models/Transaction.php
-Analyzing: app/Features/Accounting/Models/JournalEntry.php
-Analyzing: app/Features/Accounting/Models/FinancialForecast.php
-  ℹ️  INFO: Constants without explicit visibility found
-  ℹ️  INFO: Scope methods missing return type hints
-
-Analyzing: app/Features/Accounting/Models/BudgetLineItem.php
-  ℹ️  INFO: Constants without explicit visibility found
+Analyzing: app/Features/Accounting/Models/Budget.php
   ℹ️  INFO: Scope methods missing return type hints
 
 Analyzing: app/Features/Accounting/Models/TaxRate.php
-  ℹ️  INFO: Constants without explicit visibility found
   ℹ️  INFO: Scope methods missing return type hints
 
-Analyzing: app/Features/Accounting/Repositories/AccountRepository.php
-Analyzing: app/Features/Accounting/GraphQL/Queries/ProfitLoss.php
+Analyzing: app/Features/Accounting/Models/Transaction.php
 Analyzing: app/Features/Accounting/GraphQL/Queries/AccountingDashboard.php
+Analyzing: app/Features/Accounting/GraphQL/Queries/ProfitLoss.php
 Analyzing: app/Features/Accounting/GraphQL/Queries/BalanceSheet.php
 Analyzing: app/Features/Accounting/GraphQL/Mutations/CreateJournalEntry.php
-Analyzing: app/Features/Accounting/Events/TransactionUpdated.php
-Analyzing: app/Features/Accounting/Events/TransactionCreated.php
+Analyzing: app/Features/Accounting/Services/AccountingService.php
+Analyzing: app/Features/Accounting/Services/TaxService.php
+Analyzing: app/Features/Accounting/Services/ForecastingService.php
+Analyzing: app/Features/Accounting/Services/BudgetService.php
 Analyzing: app/Features/Accounting/Middleware/EnsureAccountingPermission.php
-Analyzing: app/Features/Accounting/Controllers/AccountingController.php
-Analyzing: app/Features/Accounting/Controllers/Api/AccountingApiController.php
+Analyzing: app/Features/Accounting/Listeners/BroadcastTransactionEvents.php
+Analyzing: app/Features/Accounting/Events/TransactionCreated.php
+Analyzing: app/Features/Accounting/Events/TransactionUpdated.php
 Analyzing: app/Features/Accounting/Contracts/AccountRepositoryInterface.php
-Analyzing: app/Features/Accounting/Providers/AccountingServiceProvider.php
 Analyzing: app/Features/Accounting/Routes/accounting.php
   🚨 CRITICAL: Missing namespace declaration
 
-Analyzing: app/Features/Accounting/Services/AccountingService.php
-Analyzing: app/Features/Accounting/Services/TaxService.php
-Analyzing: app/Features/Accounting/Services/BudgetService.php
-Analyzing: app/Features/Accounting/Services/ForecastingService.php
-Analyzing: app/Features/Accounting/Listeners/BroadcastTransactionEvents.php
-Analyzing: app/Features/Organization/Routes/organization.php
-  🚨 CRITICAL: Missing namespace declaration
-
-Analyzing: app/Features/Organization/Controllers/OrganizationController.php
-Analyzing: app/Features/Organization/Services/OrganizationService.php
-Analyzing: app/Features/Organization/Providers/OrganizationServiceProvider.php
-Analyzing: app/Features/Authentication/Controllers/Auth/AuthenticatedSessionController.php
-Analyzing: app/Features/Authentication/Controllers/Auth/RegisterController.php
-Analyzing: app/Features/Authentication/Controllers/Auth/RegisteredUserController.php
-  ℹ️  INFO: TODO/FIXME comments found
-
-Analyzing: app/Features/Authentication/Controllers/Auth/LoginController.php
-Analyzing: app/Features/Authentication/Middleware/EnsureEmailIsVerified.php
-Analyzing: app/Features/Authentication/Models/GlobalUser.php
-  ℹ️  INFO: Scope methods missing return type hints
-
-Analyzing: app/Features/Authentication/Services/AuthService.php
-  🚨 CRITICAL: Incorrect namespace 'Modules\' found (should be 'App\')
-
-Analyzing: app/Features/Authentication/Auth/TenantAwareAuthManager.php
-Analyzing: app/Features/Authentication/Auth/Guards/GlobalUserGuard.php
-Analyzing: app/Features/Authentication/Auth/Guards/TenantUserGuard.php
-Analyzing: app/Features/Authentication/Auth/Providers/HybridUserProvider.php
-Analyzing: app/Features/Inventory/Models/ProductCategory.php
-  ⚠️  DEPRECATED: $dates property found (use $casts instead)
-  ℹ️  INFO: Constants without explicit visibility found
-  ℹ️  INFO: Scope methods missing return type hints
-
-Analyzing: app/Features/Inventory/Models/Product.php
-  ⚠️  DEPRECATED: $dates property found (use $casts instead)
-  ℹ️  INFO: Constants without explicit visibility found
-  ℹ️  INFO: Scope methods missing return type hints
-
-Analyzing: app/Features/Inventory/Models/StockLevel.php
-  ⚠️  DEPRECATED: $dates property found (use $casts instead)
-  ℹ️  INFO: Scope methods missing return type hints
-
-Analyzing: app/Features/Inventory/Models/StockMovement.php
-  ℹ️  INFO: Constants without explicit visibility found
-  ℹ️  INFO: Scope methods missing return type hints
-
-Analyzing: app/Features/Inventory/Services/InventoryService.php
-Analyzing: app/Features/Inventory/GraphQL/Mutations/UpdateStock.php
-Analyzing: app/Features/Inventory/GraphQL/Queries/LowStockProducts.php
-Analyzing: app/Features/Inventory/GraphQL/Queries/OutOfStockProducts.php
-Analyzing: app/Features/Inventory/GraphQL/Queries/InventoryDashboard.php
-Analyzing: app/Features/Inventory/Listeners/BroadcastInventoryEvents.php
-Analyzing: app/Features/Inventory/Routes/inventory.php
-  🚨 CRITICAL: Missing namespace declaration
-
-Analyzing: app/Features/Inventory/Controllers/Api/InventoryApiController.php
-Analyzing: app/Features/Inventory/Controllers/InventoryController.php
-Analyzing: app/Features/Inventory/Providers/InventoryServiceProvider.php
-Analyzing: app/Features/Inventory/Events/StockUpdated.php
-Analyzing: app/Features/Purchase/Models/Supplier.php
-  ℹ️  INFO: Constants without explicit visibility found
+Analyzing: app/Features/Accounting/Providers/AccountingServiceProvider.php
+Analyzing: app/Features/Accounting/Controllers/Api/AccountingApiController.php
+Analyzing: app/Features/Accounting/Controllers/AccountingController.php
+Analyzing: app/Features/Purchase/Models/PurchaseOrder.php
   ℹ️  INFO: Scope methods missing return type hints
 
 Analyzing: app/Features/Purchase/Models/PurchaseOrderItem.php
-Analyzing: app/Features/Purchase/Models/PurchaseOrder.php
-  ℹ️  INFO: Constants without explicit visibility found
+Analyzing: app/Features/Purchase/Models/Supplier.php
   ℹ️  INFO: Scope methods missing return type hints
 
 Analyzing: app/Features/Purchase/Services/PurchaseService.php
-Analyzing: app/Features/TenantManagement/Models/Tenant.php
-  ℹ️  INFO: Scope methods missing return type hints
-
-Analyzing: app/Features/TenantManagement/Middleware/AuthenticateTenant.php
-Analyzing: app/Features/TenantManagement/Middleware/ResolveTenant.php
-Analyzing: app/Features/TenantManagement/Middleware/TenantMiddleware.php
-Analyzing: app/Features/TenantManagement/Services/TenantProvisioningService.php
-  🚨 CRITICAL: Incorrect namespace 'Modules\' found (should be 'App\')
-
-Analyzing: app/Features/TenantManagement/Services/TenantResolver.php
-Analyzing: app/Features/TenantManagement/Services/TenantService.php
-  ℹ️  INFO: TODO/FIXME comments found
-
-Analyzing: app/Features/TenantManagement/Controllers/TenantController.php
-Analyzing: app/Features/TenantManagement/Routes/web.php
-  🚨 CRITICAL: Missing namespace declaration
-
-Analyzing: app/Features/TenantManagement/Providers/TenantManagementServiceProvider.php
-Analyzing: app/Shared/Events/BroadcastableDomainEvent.php
-Analyzing: app/Shared/Events/DomainEvent.php
-Analyzing: app/Shared/Events/QueueableDomainEvent.php
-Analyzing: app/Shared/Providers/ServiceLayerProvider.php
-Analyzing: app/Shared/Models/Team.php
-  ℹ️  INFO: Constants without explicit visibility found
-  ℹ️  INFO: Scope methods missing return type hints
-
-Analyzing: app/Shared/Models/HybridModel.php
-  ℹ️  INFO: Scope methods missing return type hints
-
-Analyzing: app/Shared/Models/User.php
-  ℹ️  INFO: Constants without explicit visibility found
-  ℹ️  INFO: Scope methods missing return type hints
-
-Analyzing: app/Shared/Models/Organization.php
-  ℹ️  INFO: Scope methods missing return type hints
-
-Analyzing: app/Shared/Middleware/TrustProxies.php
-Analyzing: app/Shared/Middleware/PreventRequestsDuringMaintenance.php
-Analyzing: app/Shared/Middleware/EnsureTeamPermission.php
-Analyzing: app/Shared/Middleware/HandleInertiaRequests.php
-Analyzing: app/Shared/Traits/OrganizationScopedTrait.php
-Analyzing: app/Shared/Traits/ValidatableTrait.php
-  ⚠️  WARNING: Debug statements found
-
-Analyzing: app/Shared/Traits/CacheableTrait.php
-Analyzing: app/Shared/Traits/AuditableTrait.php
-  ℹ️  INFO: Scope methods missing return type hints
-
-Analyzing: app/Shared/Services/PerformanceOptimizer.php
-Analyzing: app/Shared/Services/PerformanceMonitor.php
-Analyzing: app/Shared/Services/InterModuleBus.php
-Analyzing: app/Shared/Services/PerformanceMonitoringService.php
-Analyzing: app/Shared/Services/That.php
-Analyzing: app/Shared/Services/ServiceRegistry.php
-Analyzing: app/Shared/Services/BaseRepository.php
-Analyzing: app/Shared/Services/ServiceManager.php
-Analyzing: app/Shared/Services/HorizonPerformanceMonitor.php
-Analyzing: app/Shared/Services/TelescopePerformanceAdapter.php
-Analyzing: app/Shared/Services/ModuleDiscoveryService.php
-Analyzing: app/Shared/Contracts/EventBusInterface.php
-Analyzing: app/Shared/Contracts/ServiceInterface.php
-Analyzing: app/Shared/Contracts/EnhancedRepositoryInterface.php
-Analyzing: app/Shared/Contracts/CacheableInterface.php
-Analyzing: app/Policies/TenantPolicy.php
-Analyzing: tests/CreatesApplication.php
-Analyzing: tests/TestCase.php
-Analyzing: tests/Shared/TenantTestCase.php
-Analyzing: tests/Integration/MultiTenantTest.php
-  🚨 CRITICAL: Incorrect namespace 'Modules\' found (should be 'App\')
-
-Analyzing: tests/Integration/SimplificationValidationTest.php
-Analyzing: tests/Feature/Infrastructure/TenantResolverTest.php
-Analyzing: tests/Feature/Integration/AlovaGraphQLSocketIntegrationTest.php
-Analyzing: tests/Feature/Inventory/InventoryApiTest.php
+Analyzing: app/Features/Reporting/Services/ReportingService.php
+Analyzing: app/GraphQL/Subscriptions/TransactionUpdates.php
+Analyzing: app/GraphQL/Subscriptions/DashboardUpdates.php
+Analyzing: app/GraphQL/Subscriptions/StockUpdates.php
 Analyzing: tests/Feature/Accounting/AccountingApiTest.php
 Analyzing: tests/Feature/GraphQL/InventoryGraphQLTest.php
 Analyzing: tests/Feature/GraphQL/AccountingGraphQLTest.php
+Analyzing: tests/Feature/Inventory/InventoryApiTest.php
+Analyzing: tests/Feature/Infrastructure/TenantResolverTest.php
+Analyzing: tests/Feature/Integration/AlovaGraphQLSocketIntegrationTest.php
+Analyzing: tests/Integration/SimplificationValidationTest.php
+Analyzing: tests/Integration/MultiTenantTest.php
+Analyzing: tests/TestCase.php
+Analyzing: tests/CreatesApplication.php
+Analyzing: tests/Shared/TenantTestCase.php
 Analyzing: tests/Unit/Inventory/ProductTest.php
 Analyzing: tests/Unit/Inventory/InventoryServiceTest.php
 Analyzing: tests/System/ModuleSystemTest.php
-Analyzing: scripts/run-analysis.php
+Analyzing: server.php
+Analyzing: database/seeders/AccountingSeeder.php
+Analyzing: database/seeders/DatabaseSeeder.php
+Analyzing: database/migrations/landlord/2024_01_01_000001_create_tenants_table.php
+Analyzing: database/migrations/landlord/2024_01_01_000002_create_global_users_table.php
+Analyzing: database/migrations/landlord/2024_01_01_000003_add_organization_fields_to_tenants_table.php
+Analyzing: database/migrations/tenant/2024_10_10_000004_create_financial_forecasts_table.php
+Analyzing: database/migrations/tenant/2024_10_10_000006_add_tax_support_to_transactions_table.php
+Analyzing: database/migrations/tenant/2024_01_02_000001_enhance_accounts_table_for_domain_driven_design.php
+Analyzing: database/migrations/tenant/2024_01_01_000010_create_products_table.php
+Analyzing: database/migrations/tenant/2024_01_01_000018_create_reports_table.php
+Analyzing: database/migrations/tenant/2024_01_01_000009_create_suppliers_table.php
+Analyzing: database/migrations/tenant/2024_01_01_000004_create_financial_reports_table.php
+Analyzing: database/migrations/tenant/2024_10_10_000001_create_budgets_table.php
+Analyzing: database/migrations/tenant/2024_01_01_000008_create_warehouses_table.php
+Analyzing: database/migrations/tenant/2024_01_01_000001_create_accounts_table.php
+Analyzing: database/migrations/tenant/2024_01_01_000015_create_product_suppliers_table.php
+Analyzing: database/migrations/tenant/2024_10_10_000003_create_tax_rates_table.php
+Analyzing: database/migrations/tenant/2024_01_01_000014_create_purchase_order_items_table.php
+Analyzing: database/migrations/tenant/2024_01_01_000016_create_api_integrations_table.php
+Analyzing: database/migrations/tenant/2024_01_02_000002_create_domain_events_table.php
+Analyzing: database/migrations/tenant/2024_01_01_000005_create_report_schedules_table.php
+Analyzing: database/migrations/tenant/2024_01_01_000019_create_audit_logs_table.php
+Analyzing: database/migrations/tenant/2024_10_10_000009_create_performance_metrics_table.php
+Analyzing: database/migrations/tenant/2024_01_01_000007_create_product_categories_table.php
+Analyzing: database/migrations/tenant/2024_01_01_000011_create_stock_levels_table.php
+Analyzing: database/migrations/tenant/2024_10_10_000007_optimize_database_indexes.php
+Analyzing: database/migrations/tenant/2024_01_01_000017_create_integration_sync_logs_table.php
+Analyzing: database/migrations/tenant/2024_01_01_000012_create_stock_movements_table.php
+Analyzing: database/migrations/tenant/2024_10_10_000008_create_dashboard_widgets_table.php
+Analyzing: database/migrations/tenant/2024_10_10_000005_create_forecast_line_items_table.php
+Analyzing: database/migrations/tenant/2024_01_01_000002_create_journal_entries_table.php
+Analyzing: database/migrations/tenant/2024_01_01_000003_create_transactions_table.php
+Analyzing: database/migrations/tenant/2024_10_10_000002_create_budget_line_items_table.php
+Analyzing: database/migrations/tenant/2024_01_01_000006_create_report_executions_table.php
+Analyzing: database/migrations/tenant/2024_01_01_000013_create_purchase_orders_table.php
+Analyzing: database/migrations/shared/2024_01_01_000001_create_users_table.php
+Analyzing: database/migrations/shared/2024_01_01_000002_create_tenant_users_table.php
+Analyzing: database/migrations/shared/2024_01_01_000002_create_users_table.php
+Analyzing: database/migrations/shared/2024_01_01_000001_create_organizations_table.php
+Analyzing: database/migrations/2024_01_01_000004_create_accounts_table.php
+Analyzing: database/migrations/2024_01_01_000006_create_journal_entries_table.php
+Analyzing: database/migrations/2024_01_01_000007_create_account_balances_table.php
+Analyzing: database/migrations/2024_01_01_000005_create_transactions_table.php
+Analyzing: database/factories/BudgetFactory.php
+Analyzing: database/factories/TaxRateFactory.php
+Analyzing: database/factories/UserFactory.php
+Analyzing: bootstrap/app.php
 Analyzing: scripts/fix-filenames.php
-Analyzing: scripts/analyze-code-patterns.php
-Analyzing: scripts/syntax-analyzer.php
-  ⚠️  DEPRECATED: $dates property found (use $casts instead)
-  🚨 CRITICAL: Incorrect namespace 'Modules\' found (should be 'App\')
-
-Analyzing: scripts/parallel-fixer.php
-  ⚠️  DEPRECATED: $dates property found (use $casts instead)
-  🚨 CRITICAL: Incorrect namespace 'Modules\' found (should be 'App\')
-
-Analyzing: scripts/fix-naming-conventions.php
 Analyzing: scripts/backend-syntax-analyzer.php
   ⚠️  DEPRECATED: $dates property found (use $casts instead)
   ⚠️  WARNING: Debug statements found
 
+Analyzing: scripts/fix-naming-conventions.php
+Analyzing: scripts/run-analysis.php
+Analyzing: scripts/analyze-code-patterns.php
+Analyzing: scripts/parallel-fixer.php
+  ⚠️  DEPRECATED: $dates property found (use $casts instead)
+  🚨 CRITICAL: Incorrect namespace 'Modules\' found (should be 'App\')
+
+Analyzing: scripts/syntax-analyzer.php
+  ⚠️  DEPRECATED: $dates property found (use $casts instead)
+  🚨 CRITICAL: Incorrect namespace 'Modules\' found (should be 'App\')
+
+Analyzing: config/horizon.php
+Analyzing: config/logging.php
+Analyzing: config/database.php
+Analyzing: config/tenant.php
+Analyzing: config/cors.php
+Analyzing: config/filesystems.php
+Analyzing: config/modules.php
+Analyzing: config/session.php
+Analyzing: config/octane.php
+Analyzing: config/queue.php
+Analyzing: config/mail.php
+Analyzing: config/reverb.php
+Analyzing: config/services.php
+Analyzing: config/cache.php
+Analyzing: config/app.php
+Analyzing: config/lighthouse.php
+Analyzing: config/auth.php
+Analyzing: config/telescope.php
+Analyzing: config/broadcasting.php
 Analyzing: public/index.php
+Analyzing: resources/views/app.blade.php
+Analyzing: resources/views/layouts/app.blade.php
+Analyzing: resources/views/welcome.blade.php
+Analyzing: routes/web.php
+Analyzing: routes/auth.php
+Analyzing: routes/channels.php
+Analyzing: routes/api.php
+Analyzing: routes/console.php
+Analyzing: app_backup_20251012_175432/helpers.php
+Analyzing: app_backup_20251012_175432/Features/Sales/Controllers/SalesController.php
+Analyzing: app_backup_20251012_175432/Features/Sales/Controllers/Api/SalesApiController.php
+Analyzing: app_backup_20251012_175432/Features/Sales/Routes/sales.php
+Analyzing: app_backup_20251012_175432/Features/Sales/Providers/SalesServiceProvider.php
+Analyzing: app_backup_20251012_175432/Features/Sales/Models/SalesOrderItem.php
+Analyzing: app_backup_20251012_175432/Features/Sales/Models/SalesOrder.php
+  ⚠️  DEPRECATED: $dates property found (use $casts instead)
+  ℹ️  INFO: Constants without explicit visibility found
+  ℹ️  INFO: Scope methods missing return type hints
+
+Analyzing: app_backup_20251012_175432/Features/Sales/Models/Customer.php
+  ⚠️  DEPRECATED: $dates property found (use $casts instead)
+  ℹ️  INFO: Constants without explicit visibility found
+  ℹ️  INFO: Scope methods missing return type hints
+
+Analyzing: app_backup_20251012_175432/Features/Sales/Services/SalesService.php
+Analyzing: app_backup_20251012_175432/Features/Dashboard/Models/DashboardWidget.php
+  ℹ️  INFO: Constants without explicit visibility found
+  ℹ️  INFO: Scope methods missing return type hints
+
+Analyzing: app_backup_20251012_175432/Features/Dashboard/Controllers/DashboardController.php
+Analyzing: app_backup_20251012_175432/Features/Dashboard/Controllers/AdvancedDashboardController.php
+Analyzing: app_backup_20251012_175432/Features/Dashboard/Repositories/DashboardWidgetRepository.php
+Analyzing: app_backup_20251012_175432/Features/Dashboard/Routes/web.php
+Analyzing: app_backup_20251012_175432/Features/Dashboard/Routes/dashboard.php
+Analyzing: app_backup_20251012_175432/Features/Dashboard/Services/DashboardService.php
+  🚨 CRITICAL: Incorrect namespace 'Modules\' found (should be 'App\')
+
+Analyzing: app_backup_20251012_175432/Features/Dashboard/Services/AdvancedDashboardService.php
+Analyzing: app_backup_20251012_175432/Features/Dashboard/Services/WidgetService.php
+Analyzing: app_backup_20251012_175432/Features/Dashboard/Events/MetricsUpdated.php
+Analyzing: app_backup_20251012_175432/Features/Dashboard/Providers/DashboardServiceProvider.php
+Analyzing: app_backup_20251012_175432/Features/Authentication/Controllers/Auth/RegisterController.php
+Analyzing: app_backup_20251012_175432/Features/Authentication/Controllers/Auth/RegisteredUserController.php
+  ℹ️  INFO: TODO/FIXME comments found
+
+Analyzing: app_backup_20251012_175432/Features/Authentication/Controllers/Auth/AuthenticatedSessionController.php
+Analyzing: app_backup_20251012_175432/Features/Authentication/Controllers/Auth/LoginController.php
+Analyzing: app_backup_20251012_175432/Features/Authentication/Services/AuthService.php
+  🚨 CRITICAL: Incorrect namespace 'Modules\' found (should be 'App\')
+
+Analyzing: app_backup_20251012_175432/Features/Authentication/Models/GlobalUser.php
+  ℹ️  INFO: Scope methods missing return type hints
+
+Analyzing: app_backup_20251012_175432/Features/Authentication/Auth/Providers/HybridUserProvider.php
+Analyzing: app_backup_20251012_175432/Features/Authentication/Auth/Guards/TenantUserGuard.php
+Analyzing: app_backup_20251012_175432/Features/Authentication/Auth/Guards/GlobalUserGuard.php
+Analyzing: app_backup_20251012_175432/Features/Authentication/Auth/TenantAwareAuthManager.php
+Analyzing: app_backup_20251012_175432/Features/Authentication/Middleware/EnsureEmailIsVerified.php
+Analyzing: app_backup_20251012_175432/Features/Inventory/Listeners/BroadcastInventoryEvents.php
+Analyzing: app_backup_20251012_175432/Features/Inventory/Services/InventoryService.php
+Analyzing: app_backup_20251012_175432/Features/Inventory/GraphQL/Mutations/UpdateStock.php
+Analyzing: app_backup_20251012_175432/Features/Inventory/GraphQL/Queries/InventoryDashboard.php
+Analyzing: app_backup_20251012_175432/Features/Inventory/GraphQL/Queries/OutOfStockProducts.php
+Analyzing: app_backup_20251012_175432/Features/Inventory/GraphQL/Queries/LowStockProducts.php
+Analyzing: app_backup_20251012_175432/Features/Inventory/Routes/inventory.php
+Analyzing: app_backup_20251012_175432/Features/Inventory/Providers/InventoryServiceProvider.php
+Analyzing: app_backup_20251012_175432/Features/Inventory/Models/StockMovement.php
+  ℹ️  INFO: Constants without explicit visibility found
+  ℹ️  INFO: Scope methods missing return type hints
+
+Analyzing: app_backup_20251012_175432/Features/Inventory/Models/StockLevel.php
+  ⚠️  DEPRECATED: $dates property found (use $casts instead)
+  ℹ️  INFO: Scope methods missing return type hints
+
+Analyzing: app_backup_20251012_175432/Features/Inventory/Models/Product.php
+  ⚠️  DEPRECATED: $dates property found (use $casts instead)
+  ℹ️  INFO: Constants without explicit visibility found
+  ℹ️  INFO: Scope methods missing return type hints
+
+Analyzing: app_backup_20251012_175432/Features/Inventory/Models/ProductCategory.php
+  ⚠️  DEPRECATED: $dates property found (use $casts instead)
+  ℹ️  INFO: Constants without explicit visibility found
+  ℹ️  INFO: Scope methods missing return type hints
+
+Analyzing: app_backup_20251012_175432/Features/Inventory/Controllers/InventoryController.php
+Analyzing: app_backup_20251012_175432/Features/Inventory/Controllers/Api/InventoryApiController.php
+Analyzing: app_backup_20251012_175432/Features/Inventory/Events/StockUpdated.php
+Analyzing: app_backup_20251012_175432/Features/TenantManagement/Models/Tenant.php
+  ℹ️  INFO: Scope methods missing return type hints
+
+Analyzing: app_backup_20251012_175432/Features/TenantManagement/Controllers/TenantController.php
+Analyzing: app_backup_20251012_175432/Features/TenantManagement/Routes/web.php
+Analyzing: app_backup_20251012_175432/Features/TenantManagement/Services/TenantService.php
+  ℹ️  INFO: TODO/FIXME comments found
+
+Analyzing: app_backup_20251012_175432/Features/TenantManagement/Services/TenantProvisioningService.php
+  🚨 CRITICAL: Incorrect namespace 'Modules\' found (should be 'App\')
+
+Analyzing: app_backup_20251012_175432/Features/TenantManagement/Services/TenantResolver.php
+Analyzing: app_backup_20251012_175432/Features/TenantManagement/Providers/TenantManagementServiceProvider.php
+Analyzing: app_backup_20251012_175432/Features/TenantManagement/Middleware/ResolveTenant.php
+Analyzing: app_backup_20251012_175432/Features/TenantManagement/Middleware/AuthenticateTenant.php
+Analyzing: app_backup_20251012_175432/Features/TenantManagement/Middleware/TenantMiddleware.php
+Analyzing: app_backup_20251012_175432/Features/Organization/Providers/OrganizationServiceProvider.php
+Analyzing: app_backup_20251012_175432/Features/Organization/Services/OrganizationService.php
+Analyzing: app_backup_20251012_175432/Features/Organization/Routes/organization.php
+Analyzing: app_backup_20251012_175432/Features/Organization/Controllers/OrganizationController.php
+Analyzing: app_backup_20251012_175432/Features/Accounting/Repositories/AccountRepository.php
+Analyzing: app_backup_20251012_175432/Features/Accounting/Models/FinancialForecast.php
+  ℹ️  INFO: Constants without explicit visibility found
+  ℹ️  INFO: Scope methods missing return type hints
+
+Analyzing: app_backup_20251012_175432/Features/Accounting/Models/JournalEntry.php
+Analyzing: app_backup_20251012_175432/Features/Accounting/Models/BudgetLineItem.php
+  ℹ️  INFO: Constants without explicit visibility found
+  ℹ️  INFO: Scope methods missing return type hints
+
+Analyzing: app_backup_20251012_175432/Features/Accounting/Models/AccountBalance.php
+  ⚠️  DEPRECATED: $dates property found (use $casts instead)
+  ℹ️  INFO: Constants without explicit visibility found
+  ℹ️  INFO: Scope methods missing return type hints
+
+Analyzing: app_backup_20251012_175432/Features/Accounting/Models/ForecastLineItem.php
+  ℹ️  INFO: Scope methods missing return type hints
+
+Analyzing: app_backup_20251012_175432/Features/Accounting/Models/Account.php
+Analyzing: app_backup_20251012_175432/Features/Accounting/Models/Budget.php
+  ℹ️  INFO: Constants without explicit visibility found
+  ℹ️  INFO: Scope methods missing return type hints
+
+Analyzing: app_backup_20251012_175432/Features/Accounting/Models/TaxRate.php
+  ℹ️  INFO: Constants without explicit visibility found
+  ℹ️  INFO: Scope methods missing return type hints
+
+Analyzing: app_backup_20251012_175432/Features/Accounting/Models/Transaction.php
+Analyzing: app_backup_20251012_175432/Features/Accounting/GraphQL/Queries/AccountingDashboard.php
+Analyzing: app_backup_20251012_175432/Features/Accounting/GraphQL/Queries/ProfitLoss.php
+Analyzing: app_backup_20251012_175432/Features/Accounting/GraphQL/Queries/BalanceSheet.php
+Analyzing: app_backup_20251012_175432/Features/Accounting/GraphQL/Mutations/CreateJournalEntry.php
+Analyzing: app_backup_20251012_175432/Features/Accounting/Services/AccountingService.php
+Analyzing: app_backup_20251012_175432/Features/Accounting/Services/TaxService.php
+Analyzing: app_backup_20251012_175432/Features/Accounting/Services/ForecastingService.php
+Analyzing: app_backup_20251012_175432/Features/Accounting/Services/BudgetService.php
+Analyzing: app_backup_20251012_175432/Features/Accounting/Middleware/EnsureAccountingPermission.php
+Analyzing: app_backup_20251012_175432/Features/Accounting/Listeners/BroadcastTransactionEvents.php
+Analyzing: app_backup_20251012_175432/Features/Accounting/Events/TransactionCreated.php
+Analyzing: app_backup_20251012_175432/Features/Accounting/Events/TransactionUpdated.php
+Analyzing: app_backup_20251012_175432/Features/Accounting/Contracts/AccountRepositoryInterface.php
+Analyzing: app_backup_20251012_175432/Features/Accounting/Routes/accounting.php
+Analyzing: app_backup_20251012_175432/Features/Accounting/Providers/AccountingServiceProvider.php
+Analyzing: app_backup_20251012_175432/Features/Accounting/Controllers/Api/AccountingApiController.php
+Analyzing: app_backup_20251012_175432/Features/Accounting/Controllers/AccountingController.php
+Analyzing: app_backup_20251012_175432/Features/Purchase/Models/PurchaseOrder.php
+  ℹ️  INFO: Constants without explicit visibility found
+  ℹ️  INFO: Scope methods missing return type hints
+
+Analyzing: app_backup_20251012_175432/Features/Purchase/Models/PurchaseOrderItem.php
+Analyzing: app_backup_20251012_175432/Features/Purchase/Models/Supplier.php
+  ℹ️  INFO: Constants without explicit visibility found
+  ℹ️  INFO: Scope methods missing return type hints
+
+Analyzing: app_backup_20251012_175432/Features/Purchase/Services/PurchaseService.php
+Analyzing: app_backup_20251012_175432/Features/Reporting/Services/ReportingService.php
+Analyzing: app_backup_20251012_175432/Infrastructure/Database/TenantResolver.php
+Analyzing: app_backup_20251012_175432/Infrastructure/Database/TenantMigrationService.php
+Analyzing: app_backup_20251012_175432/Infrastructure/Broadcasting/ConnectionLimiter.php
+Analyzing: app_backup_20251012_175432/Infrastructure/Cache/QueryCache.php
+Analyzing: app_backup_20251012_175432/Providers/RouteServiceProvider.php
+Analyzing: app_backup_20251012_175432/Providers/GraphQLServiceProvider.php
+Analyzing: app_backup_20251012_175432/Providers/AppServiceProvider.php
+Analyzing: app_backup_20251012_175432/Providers/AuthServiceProvider.php
+Analyzing: app_backup_20251012_175432/Providers/EventServiceProvider.php
+Analyzing: app_backup_20251012_175432/Providers/BroadcastServiceProvider.php
+Analyzing: app_backup_20251012_175432/Shared/Events/DomainEvent.php
+Analyzing: app_backup_20251012_175432/Shared/Events/QueueableDomainEvent.php
+Analyzing: app_backup_20251012_175432/Shared/Events/BroadcastableDomainEvent.php
+Analyzing: app_backup_20251012_175432/Shared/Traits/ValidatableTrait.php
+  ⚠️  WARNING: Debug statements found
+
+Analyzing: app_backup_20251012_175432/Shared/Traits/AuditableTrait.php
+  ℹ️  INFO: Scope methods missing return type hints
+
+Analyzing: app_backup_20251012_175432/Shared/Traits/CacheableTrait.php
+Analyzing: app_backup_20251012_175432/Shared/Traits/OrganizationScopedTrait.php
+Analyzing: app_backup_20251012_175432/Shared/Middleware/TrustProxies.php
+Analyzing: app_backup_20251012_175432/Shared/Middleware/EnsureTeamPermission.php
+Analyzing: app_backup_20251012_175432/Shared/Middleware/HandleInertiaRequests.php
+Analyzing: app_backup_20251012_175432/Shared/Middleware/PreventRequestsDuringMaintenance.php
+Analyzing: app_backup_20251012_175432/Shared/Models/Organization.php
+  ℹ️  INFO: Scope methods missing return type hints
+
+Analyzing: app_backup_20251012_175432/Shared/Models/User.php
+  ℹ️  INFO: Constants without explicit visibility found
+  ℹ️  INFO: Scope methods missing return type hints
+
+Analyzing: app_backup_20251012_175432/Shared/Models/HybridModel.php
+  ℹ️  INFO: Scope methods missing return type hints
+
+Analyzing: app_backup_20251012_175432/Shared/Models/Team.php
+  ℹ️  INFO: Constants without explicit visibility found
+  ℹ️  INFO: Scope methods missing return type hints
+
+Analyzing: app_backup_20251012_175432/Shared/Providers/ServiceLayerProvider.php
+Analyzing: app_backup_20251012_175432/Shared/Contracts/EnhancedRepositoryInterface.php
+Analyzing: app_backup_20251012_175432/Shared/Contracts/ServiceInterface.php
+Analyzing: app_backup_20251012_175432/Shared/Contracts/EventBusInterface.php
+Analyzing: app_backup_20251012_175432/Shared/Contracts/CacheableInterface.php
+Analyzing: app_backup_20251012_175432/Shared/Services/PerformanceOptimizer.php
+Analyzing: app_backup_20251012_175432/Shared/Services/HorizonPerformanceMonitor.php
+Analyzing: app_backup_20251012_175432/Shared/Services/ServiceManager.php
+Analyzing: app_backup_20251012_175432/Shared/Services/PerformanceMonitor.php
+Analyzing: app_backup_20251012_175432/Shared/Services/ServiceRegistry.php
+Analyzing: app_backup_20251012_175432/Shared/Services/ModuleDiscoveryService.php
+Analyzing: app_backup_20251012_175432/Shared/Services/PerformanceMonitoringService.php
+Analyzing: app_backup_20251012_175432/Shared/Services/BaseRepository.php
+Analyzing: app_backup_20251012_175432/Shared/Services/InterModuleBus.php
+Analyzing: app_backup_20251012_175432/Shared/Services/That.php
+Analyzing: app_backup_20251012_175432/Shared/Services/TelescopePerformanceAdapter.php
+Analyzing: app_backup_20251012_175432/Models/Tenant.php
+  ℹ️  INFO: Scope methods missing return type hints
+
+Analyzing: app_backup_20251012_175432/Models/Team.php
+  ℹ️  INFO: Constants without explicit visibility found
+  ℹ️  INFO: Scope methods missing return type hints
+
+Analyzing: app_backup_20251012_175432/Models/GlobalUser.php
+  ℹ️  INFO: Scope methods missing return type hints
+
+Analyzing: app_backup_20251012_175432/Models/User.php
+  ℹ️  INFO: Constants without explicit visibility found
+  ℹ️  INFO: Scope methods missing return type hints
+
+Analyzing: app_backup_20251012_175432/Console/Kernel.php
+Analyzing: app_backup_20251012_175432/Console/Commands/Module/ListModulesCommand.php
+Analyzing: app_backup_20251012_175432/Console/Commands/System/HealthCheckCommand.php
+Analyzing: app_backup_20251012_175432/Console/Commands/CacheWarmCommand.php
+Analyzing: app_backup_20251012_175432/Console/Commands/Tenant/CreateTenantCommand.php
+Analyzing: app_backup_20251012_175432/Scopes/OrganizationScope.php
+Analyzing: app_backup_20251012_175432/Policies/TenantPolicy.php
+Analyzing: app_backup_20251012_175432/Services/Performance/MessageQueueService.php
+  ⚠️  WARNING: Debug statements found
+
+Analyzing: app_backup_20251012_175432/Services/Performance/QueryOptimizationService.php
+Analyzing: app_backup_20251012_175432/Services/Performance/TenantIsolationService.php
+Analyzing: app_backup_20251012_175432/Services/TenantProvisioningService.php
+  🚨 CRITICAL: Incorrect namespace 'Modules\' found (should be 'App\')
+
+Analyzing: app_backup_20251012_175432/Services/TenantResolver.php
+Analyzing: app_backup_20251012_175432/Services/AuthService.php
+Analyzing: app_backup_20251012_175432/Services/Core/BaseService.php
+Analyzing: app_backup_20251012_175432/Http/Middleware/TrustProxies.php
+Analyzing: app_backup_20251012_175432/Http/Middleware/PreventRequestsDuringMaintenance.php
+Analyzing: app_backup_20251012_175432/Http/Middleware/EnsureAccountingPermission.php
+Analyzing: app_backup_20251012_175432/Http/Middleware/SetDatabaseShard.php
+Analyzing: app_backup_20251012_175432/Http/Middleware/ResolveTenant.php
+Analyzing: app_backup_20251012_175432/Http/Middleware/EnsureEmailIsVerified.php
+Analyzing: app_backup_20251012_175432/Http/Middleware/HandleInertiaRequests.php
+Analyzing: app_backup_20251012_175432/Http/Middleware/ApiResponseMiddleware.php
+Analyzing: app_backup_20251012_175432/Http/Middleware/EnsureTeamPermission.php
+Analyzing: app_backup_20251012_175432/Http/Middleware/AuthenticateTenant.php
+Analyzing: app_backup_20251012_175432/Http/Middleware/TenantMiddleware.php
+Analyzing: app_backup_20251012_175432/Http/Middleware/GraphQLRateLimit.php
+Analyzing: app_backup_20251012_175432/Http/Requests/Auth/LoginRequest.php
+Analyzing: app_backup_20251012_175432/Http/Controllers/Api/BaseApiController.php
+Analyzing: app_backup_20251012_175432/Http/Controllers/Auth/RegisterController.php
+Analyzing: app_backup_20251012_175432/Http/Controllers/Auth/EmailVerificationPromptController.php
+Analyzing: app_backup_20251012_175432/Http/Controllers/Auth/LoginController.php
+Analyzing: app_backup_20251012_175432/Http/Controllers/Auth/AuthenticatedSessionController.php
+Analyzing: app_backup_20251012_175432/Http/Controllers/Auth/RegisteredUserController.php
+  ℹ️  INFO: TODO/FIXME comments found
+
+Analyzing: app_backup_20251012_175432/Http/Controllers/Auth/VerifyEmailController.php
+Analyzing: app_backup_20251012_175432/Http/Controllers/Controller.php
+Analyzing: app_backup_20251012_175432/GraphQL/Subscriptions/TransactionUpdates.php
+Analyzing: app_backup_20251012_175432/GraphQL/Subscriptions/DashboardUpdates.php
+Analyzing: app_backup_20251012_175432/GraphQL/Subscriptions/StockUpdates.php
 
 SUMMARY STATISTICS:
 ===================
-Total Files Scanned: 272
-Files with Issues: 47
-Critical Issues: 15
-Warning Issues: 12
-Info Issues: 46
+Total Files Scanned: 447
+Files with Issues: 76
+Critical Issues: 13
+Warning Issues: 14
+Info Issues: 75
 Health Score: 0/100

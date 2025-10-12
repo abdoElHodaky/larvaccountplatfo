@@ -3,9 +3,13 @@
 namespace App\Features\Accounting\Models;
 
 use App\Shared\Models\HybridModel;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Builder;
 
 class Budget extends HybridModel
 {
@@ -41,39 +45,39 @@ class Budget extends HybridModel
     /**
      * Budget types
      */
-    const TYPE_OPERATIONAL = 'operational';
+    public const TYPE_OPERATIONAL = 'operational';
 
-    const TYPE_CAPITAL = 'capital';
+    public const TYPE_CAPITAL = 'capital';
 
-    const TYPE_PROJECT = 'project';
+    public const TYPE_PROJECT = 'project';
 
-    const TYPE_DEPARTMENT = 'department';
+    public const TYPE_DEPARTMENT = 'department';
 
     /**
      * Period types
      */
-    const PERIOD_MONTHLY = 'monthly';
+    public const PERIOD_MONTHLY = 'monthly';
 
-    const PERIOD_QUARTERLY = 'quarterly';
+    public const PERIOD_QUARTERLY = 'quarterly';
 
-    const PERIOD_YEARLY = 'yearly';
+    public const PERIOD_YEARLY = 'yearly';
 
-    const PERIOD_CUSTOM = 'custom';
+    public const PERIOD_CUSTOM = 'custom';
 
     /**
      * Budget statuses
      */
-    const STATUS_DRAFT = 'draft';
+    public const STATUS_DRAFT = 'draft';
 
-    const STATUS_PENDING_APPROVAL = 'pending_approval';
+    public const STATUS_PENDING_APPROVAL = 'pending_approval';
 
-    const STATUS_APPROVED = 'approved';
+    public const STATUS_APPROVED = 'approved';
 
-    const STATUS_ACTIVE = 'active';
+    public const STATUS_ACTIVE = 'active';
 
-    const STATUS_COMPLETED = 'completed';
+    public const STATUS_COMPLETED = 'completed';
 
-    const STATUS_CANCELLED = 'cancelled';
+    public const STATUS_CANCELLED = 'cancelled';
 
     /**
      * Get the budget line items

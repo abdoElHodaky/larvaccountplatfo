@@ -3,7 +3,7 @@
 namespace App\Features\Dashboard\Services;
 
 use Illuminate\Support\Facades\Log;
-use Modules\Accounting\Services\AccountingService;
+use App\Accounting\Services\AccountingService;
 
 class DashboardService
 {

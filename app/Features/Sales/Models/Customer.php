@@ -3,8 +3,11 @@
 namespace App\Features\Sales\Models;
 
 use App\Shared\Models\HybridModel;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Builder;
 
 class Customer extends HybridModel
 {
@@ -45,38 +48,38 @@ class Customer extends HybridModel
         'shipping_address' => 'array',
         'tags' => 'array',
         'metadata' => 'array',
+        'created_at' => 'datetime' => 'datetime',
+        'updated_at' => 'datetime' => 'datetime',
+        'deleted_at' => 'datetime' => 'datetime',
+    ];
+
+    protected $casts = [
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
         'deleted_at' => 'datetime',
     ];
 
-    protected $dates = [
-        'created_at',
-        'updated_at',
-        'deleted_at',
-    ];
-
     /**
      * Customer types
      */
-    const TYPE_INDIVIDUAL = 'individual';
+    public const TYPE_INDIVIDUAL = 'individual';
 
-    const TYPE_BUSINESS = 'business';
+    public const TYPE_BUSINESS = 'business';
 
-    const TYPE_GOVERNMENT = 'government';
+    public const TYPE_GOVERNMENT = 'government';
 
     /**
      * Payment terms
      */
-    const PAYMENT_TERMS_CASH = 'cash';
+    public const PAYMENT_TERMS_CASH = 'cash';
 
-    const PAYMENT_TERMS_NET_15 = 'net_15';
+    public const PAYMENT_TERMS_NET_15 = 'net_15';
 
-    const PAYMENT_TERMS_NET_30 = 'net_30';
+    public const PAYMENT_TERMS_NET_30 = 'net_30';
 
-    const PAYMENT_TERMS_NET_60 = 'net_60';
+    public const PAYMENT_TERMS_NET_60 = 'net_60';
 
-    const PAYMENT_TERMS_NET_90 = 'net_90';
+    public const PAYMENT_TERMS_NET_90 = 'net_90';
 
     /**
      * Get the sales orders for this customer

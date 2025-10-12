@@ -161,13 +161,6 @@ class SyntaxAnalyzer
         $issues = [];
         
         // Check for deprecated $dates property
-        if (preg_match('/protected\s+\$dates\s*=/', $content)) {
-            $issues[] = [
-                'type' => 'warning',
-                'category' => 'deprecated',
-                'message' => 'Deprecated $dates property found. Use $casts instead.',
-                'line' => $this->getLineNumber($content, 'protected $dates')
-            ];
             $this->stats['deprecated_patterns']++;
             $this->stats['warning_issues']++;
         }
@@ -222,7 +215,7 @@ class SyntaxAnalyzer
                 'type' => 'critical',
                 'category' => 'imports',
                 'message' => 'Incorrect namespace reference: Modules\\ should likely be App\\',
-                'line' => $this->getLineNumber($content, 'use Modules\\')
+                'line' => $this->getLineNumber($content, 'use App\\')
             ];
             $this->stats['critical_issues']++;
         }

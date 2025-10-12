@@ -3,9 +3,13 @@
 namespace App\Features\Purchase\Models;
 
 use App\Shared\Models\HybridModel;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Builder;
 
 class PurchaseOrder extends HybridModel
 {
@@ -54,19 +58,19 @@ class PurchaseOrder extends HybridModel
         'deleted_at' => 'datetime',
     ];
 
-    const STATUS_DRAFT = 'draft';
+    public const STATUS_DRAFT = 'draft';
 
-    const STATUS_PENDING = 'pending';
+    public const STATUS_PENDING = 'pending';
 
-    const STATUS_APPROVED = 'approved';
+    public const STATUS_APPROVED = 'approved';
 
-    const STATUS_SENT = 'sent';
+    public const STATUS_SENT = 'sent';
 
-    const STATUS_RECEIVED = 'received';
+    public const STATUS_RECEIVED = 'received';
 
-    const STATUS_COMPLETED = 'completed';
+    public const STATUS_COMPLETED = 'completed';
 
-    const STATUS_CANCELLED = 'cancelled';
+    public const STATUS_CANCELLED = 'cancelled';
 
     public function supplier(): BelongsTo
     {

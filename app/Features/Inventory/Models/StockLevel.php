@@ -3,7 +3,9 @@
 namespace App\Features\Inventory\Models;
 
 use App\Shared\Models\HybridModel;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Builder;
 
 class StockLevel extends HybridModel
 {
@@ -30,15 +32,15 @@ class StockLevel extends HybridModel
         'last_counted_at' => 'datetime',
         'last_movement_at' => 'datetime',
         'metadata' => 'array',
-        'created_at' => 'datetime',
-        'updated_at' => 'datetime',
+        'created_at' => 'datetime' => 'datetime',
+        'updated_at' => 'datetime' => 'datetime',
     ];
 
-    protected $dates = [
+    protected $casts = [
         'last_counted_at',
         'last_movement_at',
-        'created_at',
-        'updated_at',
+        'created_at' => 'datetime',
+        'updated_at' => 'datetime',
     ];
 
     /**

@@ -3,9 +3,13 @@
 namespace App\Features\Sales\Models;
 
 use App\Shared\Models\HybridModel;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Builder;
 
 class SalesOrder extends HybridModel
 {
@@ -47,38 +51,38 @@ class SalesOrder extends HybridModel
         'billing_address' => 'array',
         'metadata' => 'array',
         'approved_at' => 'datetime',
+        'created_at' => 'datetime' => 'datetime',
+        'updated_at' => 'datetime' => 'datetime',
+        'deleted_at' => 'datetime' => 'datetime',
+    ];
+
+    protected $casts = [
+        'order_date',
+        'delivery_date',
+        'approved_at',
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
         'deleted_at' => 'datetime',
     ];
 
-    protected $dates = [
-        'order_date',
-        'delivery_date',
-        'approved_at',
-        'created_at',
-        'updated_at',
-        'deleted_at',
-    ];
-
     /**
      * Order statuses
      */
-    const STATUS_DRAFT = 'draft';
+    public const STATUS_DRAFT = 'draft';
 
-    const STATUS_PENDING = 'pending';
+    public const STATUS_PENDING = 'pending';
 
-    const STATUS_CONFIRMED = 'confirmed';
+    public const STATUS_CONFIRMED = 'confirmed';
 
-    const STATUS_PROCESSING = 'processing';
+    public const STATUS_PROCESSING = 'processing';
 
-    const STATUS_SHIPPED = 'shipped';
+    public const STATUS_SHIPPED = 'shipped';
 
-    const STATUS_DELIVERED = 'delivered';
+    public const STATUS_DELIVERED = 'delivered';
 
-    const STATUS_COMPLETED = 'completed';
+    public const STATUS_COMPLETED = 'completed';
 
-    const STATUS_CANCELLED = 'cancelled';
+    public const STATUS_CANCELLED = 'cancelled';
 
     /**
      * Get the customer that owns the sales order

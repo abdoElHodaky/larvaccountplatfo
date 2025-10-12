@@ -3,15 +3,25 @@
 namespace App\Models;
 
 use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Database\Eloquent\Builder;
 use Laravel\Fortify\TwoFactorAuthenticatable;
+use Illuminate\Database\Eloquent\Builder;
 use Laravel\Jetstream\HasProfilePhoto;
+use Illuminate\Database\Eloquent\Builder;
 use Laravel\Jetstream\HasTeams;
+use Illuminate\Database\Eloquent\Builder;
 use Laravel\Sanctum\HasApiTokens;
+use Illuminate\Database\Eloquent\Builder;
 
 class User extends Authenticatable implements MustVerifyEmail
 {
@@ -79,7 +89,7 @@ class User extends Authenticatable implements MustVerifyEmail
     /**
      * Available user roles for accounting operations.
      */
-    const ACCOUNTING_ROLES = [
+    public const ACCOUNTING_ROLES = [
         'admin' => 'Administrator',
         'accountant' => 'Accountant',
         'bookkeeper' => 'Bookkeeper',
@@ -91,7 +101,7 @@ class User extends Authenticatable implements MustVerifyEmail
     /**
      * Role permissions mapping for accounting operations.
      */
-    const ACCOUNTING_PERMISSIONS = [
+    public const ACCOUNTING_PERMISSIONS = [
         'admin' => [
             'accounts:create', 'accounts:read', 'accounts:update', 'accounts:delete',
             'reports:read', 'reports:generate', 'reports:export',

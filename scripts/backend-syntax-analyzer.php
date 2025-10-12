@@ -212,14 +212,6 @@ class BackendSyntaxAnalyzer
     private function checkLaravelPatterns(string $content, array &$fileResults): void
     {
         // Check for deprecated $dates property (Laravel 7+)
-        if (preg_match('/protected\s+\$dates\s*=/', $content)) {
-            $fileResults['issues'][] = [
-                'type' => 'deprecated_pattern',
-                'severity' => 'warning',
-                'message' => 'Deprecated $dates property found',
-                'details' => 'The $dates property is deprecated since Laravel 7. Use $casts instead.',
-                'fix' => 'Replace $dates with $casts using datetime casting'
-            ];
         }
         
         // Check for old array syntax in config

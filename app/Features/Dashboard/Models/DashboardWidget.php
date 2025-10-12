@@ -3,8 +3,11 @@
 namespace App\Features\Dashboard\Models;
 
 use App\Shared\Models\HybridModel;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Builder;
 
 class DashboardWidget extends HybridModel
 {
@@ -50,52 +53,52 @@ class DashboardWidget extends HybridModel
     /**
      * Widget types
      */
-    const TYPE_FINANCIAL_SUMMARY = 'financial_summary';
+    public const TYPE_FINANCIAL_SUMMARY = 'financial_summary';
 
-    const TYPE_REVENUE_CHART = 'revenue_chart';
+    public const TYPE_REVENUE_CHART = 'revenue_chart';
 
-    const TYPE_EXPENSE_CHART = 'expense_chart';
+    public const TYPE_EXPENSE_CHART = 'expense_chart';
 
-    const TYPE_CASH_FLOW = 'cash_flow';
+    public const TYPE_CASH_FLOW = 'cash_flow';
 
-    const TYPE_BUDGET_OVERVIEW = 'budget_overview';
+    public const TYPE_BUDGET_OVERVIEW = 'budget_overview';
 
-    const TYPE_FORECAST_CHART = 'forecast_chart';
+    public const TYPE_FORECAST_CHART = 'forecast_chart';
 
-    const TYPE_TAX_SUMMARY = 'tax_summary';
+    public const TYPE_TAX_SUMMARY = 'tax_summary';
 
-    const TYPE_KPI_METRICS = 'kpi_metrics';
+    public const TYPE_KPI_METRICS = 'kpi_metrics';
 
-    const TYPE_RECENT_ACTIVITY = 'recent_activity';
+    public const TYPE_RECENT_ACTIVITY = 'recent_activity';
 
-    const TYPE_ALERTS = 'alerts';
+    public const TYPE_ALERTS = 'alerts';
 
-    const TYPE_QUICK_STATS = 'quick_stats';
+    public const TYPE_QUICK_STATS = 'quick_stats';
 
-    const TYPE_BALANCE_SHEET = 'balance_sheet';
+    public const TYPE_BALANCE_SHEET = 'balance_sheet';
 
-    const TYPE_PROFIT_LOSS = 'profit_loss';
+    public const TYPE_PROFIT_LOSS = 'profit_loss';
 
-    const TYPE_ACCOUNTS_AGING = 'accounts_aging';
+    public const TYPE_ACCOUNTS_AGING = 'accounts_aging';
 
-    const TYPE_INVENTORY_STATUS = 'inventory_status';
+    public const TYPE_INVENTORY_STATUS = 'inventory_status';
 
     /**
      * Data sources
      */
-    const SOURCE_ACCOUNTING = 'accounting';
+    public const SOURCE_ACCOUNTING = 'accounting';
 
-    const SOURCE_BUDGET = 'budget';
+    public const SOURCE_BUDGET = 'budget';
 
-    const SOURCE_FORECAST = 'forecast';
+    public const SOURCE_FORECAST = 'forecast';
 
-    const SOURCE_TAX = 'tax';
+    public const SOURCE_TAX = 'tax';
 
-    const SOURCE_INVENTORY = 'inventory';
+    public const SOURCE_INVENTORY = 'inventory';
 
-    const SOURCE_SALES = 'sales';
+    public const SOURCE_SALES = 'sales';
 
-    const SOURCE_PURCHASE = 'purchase';
+    public const SOURCE_PURCHASE = 'purchase';
 
     /**
      * Get the user that owns the widget

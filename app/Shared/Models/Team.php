@@ -3,11 +3,17 @@
 namespace App\Shared\Models;
 
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Builder;
 use Laravel\Jetstream\Events\TeamCreated;
+use Illuminate\Database\Eloquent\Builder;
 use Laravel\Jetstream\Events\TeamDeleted;
+use Illuminate\Database\Eloquent\Builder;
 use Laravel\Jetstream\Events\TeamUpdated;
+use Illuminate\Database\Eloquent\Builder;
 use Laravel\Jetstream\Team as JetstreamTeam;
+use Illuminate\Database\Eloquent\Builder;
 
 class Team extends JetstreamTeam
 {
@@ -44,7 +50,7 @@ class Team extends JetstreamTeam
     /**
      * Team types for accounting operations.
      */
-    const TEAM_TYPES = [
+    public const TEAM_TYPES = [
         'accounting' => 'Accounting Team',
         'finance' => 'Finance Team',
         'audit' => 'Audit Team',
@@ -55,7 +61,7 @@ class Team extends JetstreamTeam
     /**
      * Default team permissions for accounting operations.
      */
-    const DEFAULT_PERMISSIONS = [
+    public const DEFAULT_PERMISSIONS = [
         'accounting' => [
             'accounts:read', 'accounts:create', 'accounts:update',
             'transactions:read', 'transactions:create', 'transactions:update',

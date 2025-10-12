@@ -161,7 +161,7 @@ class ParallelSyntaxFixer
     {
         // Fix incorrect Modules namespace
         if (strpos($issue['message'], 'Modules\\') !== false) {
-            $content = str_replace('use Modules\\', 'use App\\', $content);
+            $content = str_replace('use App\\', 'use App\\', $content);
             echo "    🔧 Fixed namespace: Modules\\ → App\\\n";
         }
         
@@ -242,9 +242,6 @@ class ParallelSyntaxFixer
         if (strpos($issue['message'], '$dates property') !== false) {
             // Replace $dates with $casts
             $content = preg_replace_callback(
-                '/protected\s+\$dates\s*=\s*\[(.*?)\];/s',
-                function ($matches) {
-                    $dateFields = $matches[1];
                     // Convert to $casts format
                     $casts = preg_replace('/[\'"]([^\'"]+)[\'"]/', "'$1' => 'date'", $dateFields);
                     return "protected \$casts = [\n        $casts\n    ];";

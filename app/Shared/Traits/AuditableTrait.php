@@ -3,6 +3,7 @@
 namespace App\Shared\Traits;
 
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Database\Eloquent\Builder;
 
 /**
  * Auditable Trait

@@ -3,9 +3,13 @@
 namespace App\Features\Inventory\Models;
 
 use App\Shared\Models\HybridModel;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Builder;
 
 class ProductCategory extends HybridModel
 {
@@ -26,23 +30,23 @@ class ProductCategory extends HybridModel
     protected $casts = [
         'sort_order' => 'integer',
         'metadata' => 'array',
+        'created_at' => 'datetime' => 'datetime',
+        'updated_at' => 'datetime' => 'datetime',
+        'deleted_at' => 'datetime' => 'datetime',
+    ];
+
+    protected $casts = [
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
         'deleted_at' => 'datetime',
     ];
 
-    protected $dates = [
-        'created_at',
-        'updated_at',
-        'deleted_at',
-    ];
-
     /**
      * Category statuses
      */
-    const STATUS_ACTIVE = 'active';
+    public const STATUS_ACTIVE = 'active';
 
-    const STATUS_INACTIVE = 'inactive';
+    public const STATUS_INACTIVE = 'inactive';
 
     /**
      * Get the products for the category
