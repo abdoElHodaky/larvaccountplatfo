@@ -1,0 +1,102 @@
+sequenceDiagram
+    participant User
+    participant React
+    participant Alova
+    participant Laravel
+    participant Database
+    participant Cache
+    participant WebSocket
+    participant OtherUsers
+
+    Note over User,OtherUsers: Real-time Data Flow Architecture
+
+    %% Initial Page Load
+    User->>React: Navigate to Dashboard
+    React->>Alova: Query dashboard data
+    Alova->>Laravel: GraphQL Query
+    Laravel->>Cache: Check cache
+    alt Cache Hit
+        Cache-->>Laravel: Return cached data
+    else Cache Miss
+        Laravel->>Database: Execute query
+        Database-->>Laravel: Return data
+        Laravel->>Cache: Store in cache
+    end
+    Laravel-->>Alova: Return GraphQL response
+    Alova-->>React: Update component state
+    React-->>User: Render dashboard
+
+    %% Real-time Updates
+    User->>React: Edit transaction
+    React->>WebSocket: Join transaction room
+    WebSocket->>Cache: Store user presence
+    
+    User->>React: Make changes
+    React->>Alova: Mutation request
+    Alova->>Laravel: GraphQL Mutation
+    Laravel->>Database: Update transaction
+    Database-->>Laravel: Confirm update
+    Laravel->>Cache: Invalidate related cache
+    Laravel->>WebSocket: Broadcast changes
+    Laravel-->>Alova: Return mutation result
+    Alova-->>React: Update local state
+    React-->>User: Show success feedback
+    
+    %% Broadcast to other users
+    WebSocket->>OtherUsers: Broadcast transaction update
+    OtherUsers->>React: Receive update
+    React->>React: Update UI with changes
+    React-->>OtherUsers: Show real-time changes
+
+    %% Optimistic Updates
+    Note over User,React: Optimistic Update Flow
+    User->>React: Quick action (like/favorite)
+    React->>React: Optimistic UI update
+    React-->>User: Immediate feedback
+    React->>Alova: Background mutation
+    Alova->>Laravel: GraphQL Mutation
+    alt Success
+        Laravel-->>Alova: Success response
+        Alova-->>React: Confirm optimistic update
+    else Error
+        Laravel-->>Alova: Error response
+        Alova->>React: Revert optimistic update
+        React-->>User: Show error message
+    end
+
+    %% Caching Strategy
+    Note over Alova,Cache: Multi-layer Caching
+    Alova->>Alova: Check client cache
+    alt Client Cache Hit
+        Alova-->>React: Return cached data
+    else Client Cache Miss
+        Alova->>Laravel: Request data
+        Laravel->>Cache: Check Redis cache
+        alt Redis Cache Hit
+            Cache-->>Laravel: Return data
+        else Redis Cache Miss
+            Laravel->>Database: Query database
+            Database-->>Laravel: Return data
+            Laravel->>Cache: Store in Redis
+        end
+        Laravel-->>Alova: Return data
+        Alova->>Alova: Store in client cache
+        Alova-->>React: Return data
+    end
+
+    %% Error Handling
+    Note over User,Database: Error Handling Flow
+    User->>React: Submit form
+    React->>Alova: Mutation request
+    Alova->>Laravel: GraphQL Mutation
+    Laravel->>Database: Execute query
+    Database-->>Laravel: Database error
+    Laravel-->>Alova: Error response
+    Alova->>React: Handle error
+    React->>React: Show error UI
+    React-->>User: Display error message
+    
+    %% Retry mechanism
+    React->>React: Wait for retry delay
+    React->>Alova: Retry mutation
+    Note over Alova,Laravel: Exponential backoff retry

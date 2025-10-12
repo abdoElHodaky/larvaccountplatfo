@@ -1,0 +1,155 @@
+graph TB
+    subgraph "Security Layers"
+        subgraph "Perimeter Security"
+            A[WAF - Web Application Firewall] --> B[DDoS Protection]
+            B --> C[IP Geolocation Filtering]
+            C --> D[Rate Limiting]
+        end
+        
+        subgraph "API Gateway Security"
+            D --> E[API Gateway]
+            E --> F[Request Validation]
+            F --> G[Input Sanitization]
+            G --> H[CORS Policy]
+        end
+        
+        subgraph "Authentication Layer"
+            H --> I[Multi-Factor Authentication]
+            I --> J[JWT Token Management]
+            J --> K[Session Management]
+            K --> L[Password Policy]
+        end
+        
+        subgraph "Authorization Layer"
+            L --> M[Role-Based Access Control]
+            M --> N[Permission Matrix]
+            N --> O[Resource-Level Security]
+            O --> P[Data Ownership Validation]
+        end
+        
+        subgraph "Application Security"
+            P --> Q[Input Validation]
+            Q --> R[SQL Injection Prevention]
+            R --> S[XSS Protection]
+            S --> T[CSRF Protection]
+        end
+        
+        subgraph "Data Security"
+            T --> U[Encryption at Rest]
+            U --> V[Encryption in Transit]
+            V --> W[Key Management]
+            W --> X[Data Masking]
+        end
+    end
+    
+    subgraph "Threat Detection & Response"
+        subgraph "Monitoring"
+            Y[Real-time Monitoring] --> Z[Anomaly Detection]
+            Z --> AA[Behavioral Analysis]
+            AA --> BB[Risk Scoring]
+        end
+        
+        subgraph "Incident Response"
+            BB --> CC[Automated Blocking]
+            CC --> DD[Alert System]
+            DD --> EE[Incident Logging]
+            EE --> FF[Forensic Analysis]
+        end
+        
+        subgraph "Compliance"
+            FF --> GG[Audit Logging]
+            GG --> HH[Compliance Reporting]
+            HH --> II[Data Retention]
+            II --> JJ[Privacy Controls]
+        end
+    end
+    
+    subgraph "Security Controls"
+        subgraph "Network Security"
+            KK[Network Segmentation] --> LL[VPN Access]
+            LL --> MM[Firewall Rules]
+            MM --> NN[Intrusion Detection]
+        end
+        
+        subgraph "Infrastructure Security"
+            NN --> OO[Container Security]
+            OO --> PP[Image Scanning]
+            PP --> QQ[Runtime Protection]
+            QQ --> RR[Secret Management]
+        end
+        
+        subgraph "Application Hardening"
+            RR --> SS[Security Headers]
+            SS --> TT[Content Security Policy]
+            TT --> UU[HTTP Strict Transport Security]
+            UU --> VV[X-Frame-Options]
+        end
+    end
+    
+    subgraph "Security Standards Compliance"
+        subgraph "OWASP Top 10"
+            WW[Injection Prevention] --> XX[Broken Authentication]
+            XX --> YY[Sensitive Data Exposure]
+            YY --> ZZ[XML External Entities]
+            ZZ --> AAA[Broken Access Control]
+        end
+        
+        subgraph "Industry Standards"
+            AAA --> BBB[SOC 2 Type II]
+            BBB --> CCC[ISO 27001]
+            CCC --> DDD[GDPR Compliance]
+            DDD --> EEE[PCI DSS]
+        end
+        
+        subgraph "Security Testing"
+            EEE --> FFF[Penetration Testing]
+            FFF --> GGG[Vulnerability Scanning]
+            GGG --> HHH[Code Security Analysis]
+            HHH --> III[Dependency Scanning]
+        end
+    end
+    
+    %% Security Flow Connections
+    A --> Y
+    E --> Y
+    I --> Y
+    M --> Y
+    Q --> Y
+    U --> Y
+    
+    Y --> KK
+    CC --> OO
+    GG --> WW
+    
+    %% Styling
+    classDef perimeter fill:#ffebee,stroke:#c62828,stroke-width:2px
+    classDef gateway fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px
+    classDef auth fill:#e8f5e8,stroke:#2e7d32,stroke-width:2px
+    classDef authz fill:#e3f2fd,stroke:#1565c0,stroke-width:2px
+    classDef app fill:#fff3e0,stroke:#ef6c00,stroke-width:2px
+    classDef data fill:#fce4ec,stroke:#c2185b,stroke-width:2px
+    classDef monitoring fill:#f1f8e9,stroke:#558b2f,stroke-width:2px
+    classDef incident fill:#fff8e1,stroke:#ff8f00,stroke-width:2px
+    classDef compliance fill:#e0f2f1,stroke:#00695c,stroke-width:2px
+    classDef network fill:#e8eaf6,stroke:#3f51b5,stroke-width:2px
+    classDef infrastructure fill:#fafafa,stroke:#424242,stroke-width:2px
+    classDef hardening fill:#f9fbe7,stroke:#827717,stroke-width:2px
+    classDef owasp fill:#fff3e0,stroke:#f57c00,stroke-width:2px
+    classDef standards fill:#e1f5fe,stroke:#0277bd,stroke-width:2px
+    classDef testing fill:#f3e5f5,stroke:#8e24aa,stroke-width:2px
+    
+    class A,B,C,D perimeter
+    class E,F,G,H gateway
+    class I,J,K,L auth
+    class M,N,O,P authz
+    class Q,R,S,T app
+    class U,V,W,X data
+    class Y,Z,AA,BB monitoring
+    class CC,DD,EE,FF incident
+    class GG,HH,II,JJ compliance
+    class KK,LL,MM,NN network
+    class OO,PP,QQ,RR infrastructure
+    class SS,TT,UU,VV hardening
+    class WW,XX,YY,ZZ,AAA owasp
+    class BBB,CCC,DDD,EEE standards
+    class FFF,GGG,HHH,III testing

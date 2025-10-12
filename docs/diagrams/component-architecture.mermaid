@@ -1,0 +1,155 @@
+graph TB
+    subgraph "Component Architecture - Atomic Design Pattern"
+        subgraph "Atoms (Basic Building Blocks)"
+            A1[Button] --> A1a[Primary Button]
+            A1 --> A1b[Secondary Button]
+            A1 --> A1c[Icon Button]
+            
+            A2[Input] --> A2a[Text Input]
+            A2 --> A2b[Number Input]
+            A2 --> A2c[Date Input]
+            
+            A3[Label] --> A3a[Input Label]
+            A3 --> A3b[Error Label]
+            A3 --> A3c[Help Label]
+            
+            A4[Icon] --> A4a[LiveIcons System]
+            A4 --> A4b[Static Icons]
+        end
+        
+        subgraph "Molecules (Component Combinations)"
+            M1[Form Input] --> M1a[Animated Form Input]
+            M1 --> M1b[Validation Input]
+            M1 --> M1c[Search Input]
+            
+            M2[Card] --> M2a[Animated Card]
+            M2 --> M2b[Metric Card]
+            M2 --> M2c[Account Card]
+            
+            M3[Modal] --> M3a[Animated Modal]
+            M3 --> M3b[Confirmation Modal]
+            M3 --> M3c[Form Modal]
+            
+            M4[Navigation] --> M4a[Breadcrumbs]
+            M4 --> M4b[Pagination]
+            M4 --> M4c[Tab Navigation]
+        end
+        
+        subgraph "Organisms (Complex Components)"
+            O1[Dashboard] --> O1a[Dashboard Container]
+            O1 --> O1b[Dashboard Grid]
+            O1 --> O1c[Dashboard Metrics]
+            
+            O2[Forms] --> O2a[Transaction Form]
+            O2 --> O2b[Account Form]
+            O2 --> O2c[User Form]
+            
+            O3[Lists] --> O3a[Transaction List]
+            O3 --> O3b[Account List]
+            O3 --> O3c[User List]
+            
+            O4[Navigation] --> O4a[Sidebar]
+            O4 --> O4b[Top Bar]
+            O4 --> O4c[Mobile Menu]
+        end
+        
+        subgraph "Templates (Page Layouts)"
+            T1[Auth Layout] --> T1a[Login Page]
+            T1 --> T1b[Register Page]
+            T1 --> T1c[Reset Password]
+            
+            T2[App Layout] --> T2a[Dashboard Layout]
+            T2 --> T2b[Form Layout]
+            T2 --> T2c[List Layout]
+            
+            T3[Error Layout] --> T3a[404 Page]
+            T3 --> T3b[500 Page]
+            T3 --> T3c[Maintenance Page]
+        end
+        
+        subgraph "Pages (Complete Views)"
+            P1[Dashboard Pages] --> P1a[Main Dashboard]
+            P1 --> P1b[Accounting Dashboard]
+            P1 --> P1c[Inventory Dashboard]
+            
+            P2[Feature Pages] --> P2a[Accounts Management]
+            P2 --> P2b[Transaction Management]
+            P2 --> P2c[Reporting]
+            
+            P3[Admin Pages] --> P3a[User Management]
+            P3 --> P3b[Organization Settings]
+            P3 --> P3c[System Settings]
+        end
+    end
+    
+    subgraph "Animation System Integration"
+        AS1[Animation Provider] --> AS2[Animation Engine]
+        AS2 --> AS3[Web Animations API]
+        AS2 --> AS4[Reduced Motion Support]
+        AS2 --> AS5[Performance Monitor]
+        
+        AS6[Animation Types] --> AS6a[Entrance Animations]
+        AS6 --> AS6b[Exit Animations]
+        AS6 --> AS6c[Interaction Animations]
+        AS6 --> AS6d[Loading Animations]
+    end
+    
+    subgraph "State Management"
+        SM1[Global State] --> SM1a[User State]
+        SM1 --> SM1b[Organization State]
+        SM1 --> SM1c[Theme State]
+        
+        SM2[Feature State] --> SM2a[Accounting Model]
+        SM2 --> SM2b[Dashboard Model]
+        SM2 --> SM2c[Inventory Model]
+        
+        SM3[UI State] --> SM3a[Modal State]
+        SM3 --> SM3b[Loading State]
+        SM3 --> SM3c[Error State]
+    end
+    
+    %% Connections
+    A1 --> M1
+    A2 --> M1
+    A3 --> M1
+    A4 --> M1
+    
+    M1 --> O2
+    M2 --> O1
+    M3 --> O1
+    M4 --> O4
+    
+    O1 --> T2
+    O2 --> T2
+    O3 --> T2
+    O4 --> T1
+    O4 --> T2
+    
+    T1 --> P1
+    T2 --> P2
+    T3 --> P3
+    
+    AS1 --> M1
+    AS1 --> M2
+    AS1 --> M3
+    
+    SM1 --> O1
+    SM2 --> O2
+    SM3 --> M3
+    
+    %% Styling
+    classDef atoms fill:#e8f5e8,stroke:#2e7d32,stroke-width:2px
+    classDef molecules fill:#e3f2fd,stroke:#1565c0,stroke-width:2px
+    classDef organisms fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px
+    classDef templates fill:#fff3e0,stroke:#ef6c00,stroke-width:2px
+    classDef pages fill:#fce4ec,stroke:#c2185b,stroke-width:2px
+    classDef animation fill:#fff8e1,stroke:#ff8f00,stroke-width:2px
+    classDef state fill:#f1f8e9,stroke:#558b2f,stroke-width:2px
+    
+    class A1,A1a,A1b,A1c,A2,A2a,A2b,A2c,A3,A3a,A3b,A3c,A4,A4a,A4b atoms
+    class M1,M1a,M1b,M1c,M2,M2a,M2b,M2c,M3,M3a,M3b,M3c,M4,M4a,M4b,M4c molecules
+    class O1,O1a,O1b,O1c,O2,O2a,O2b,O2c,O3,O3a,O3b,O3c,O4,O4a,O4b,O4c organisms
+    class T1,T1a,T1b,T1c,T2,T2a,T2b,T2c,T3,T3a,T3b,T3c templates
+    class P1,P1a,P1b,P1c,P2,P2a,P2b,P2c,P3,P3a,P3b,P3c pages
+    class AS1,AS2,AS3,AS4,AS5,AS6,AS6a,AS6b,AS6c,AS6d animation
+    class SM1,SM1a,SM1b,SM1c,SM2,SM2a,SM2b,SM2c,SM3,SM3a,SM3b,SM3c state
