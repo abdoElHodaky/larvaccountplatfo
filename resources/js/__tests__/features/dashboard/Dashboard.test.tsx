@@ -11,7 +11,7 @@ const theme = extendTheme({});
 // Mock the Inertia hooks
 vi.mock('@inertiajs/react', () => ({
   Head: ({ children }: { children?: React.ReactNode }) => <div data-testid="head">{children}</div>,
-  Link: ({ href, children, ...props }: { href: string; children: React.ReactNode; [key: string]: any }) => 
+  Link: ({ href, children, ...props }: { href: string; children: React.ReactNode; [key: string]: unknown }) => 
     <a href={href} {...props}>{children}</a>,
   usePage: () => ({
     url: '/dashboard',

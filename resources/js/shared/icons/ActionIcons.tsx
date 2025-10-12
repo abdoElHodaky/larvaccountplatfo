@@ -14,7 +14,7 @@ import {
   StarIcon,
   HandThumbUpIcon,
   HandThumbDownIcon,
-  ChatBubbleLeftIcon,
+
   PaperAirplaneIcon,
   ArrowDownTrayIcon,
   ArrowUpTrayIcon,

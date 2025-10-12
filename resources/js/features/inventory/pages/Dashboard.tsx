@@ -1,4 +1,4 @@
-import { Head, Link } from '@inertiajs/react';
+import { Link } from '@inertiajs/react';
 import AppLayout from '@/shared/components/layouts/AppLayout';
 import { formatCurrency, formatDate, formatNumber } from '@/shared/utils';
 import { Product, StockMovement, InventoryStats } from '../types';
