@@ -286,7 +286,6 @@ export const DashboardContainer: React.FC<DashboardContainerProps> = ({
         <LoadingSpinner 
           label="Loading dashboard..." 
           size="lg"
-          overlay={true}
         />
       </div>
     );
@@ -302,28 +301,15 @@ export const DashboardContainer: React.FC<DashboardContainerProps> = ({
         {/* Dashboard Header */}
         <DashboardHeader
           title="Dashboard"
-          dateRange={state.selectedDateRange}
-          onDateRangeChange={handleDateRangeChange}
-          metricTypes={state.selectedMetricTypes}
-          onMetricTypesChange={handleMetricTypesChange}
-          viewMode={state.viewMode}
-          onViewModeChange={handleViewModeChange}
-          isEditable={isEditable}
           onRefresh={handleRefresh}
-          onSave={handleSaveDashboard}
-          hasUnsavedChanges={hasUnsavedChanges}
-          lastSaved={lastSaved}
-          isFullscreen={state.isFullscreen}
-          onToggleFullscreen={() => setState(prev => ({ ...prev, isFullscreen: !prev.isFullscreen }))}
+          isLoading={isLoading}
         />
 
         {/* Collaboration Indicator */}
         {enableCollaboration && (
           <CollaborationIndicator
-            collaborators={collaborators}
-            isLocked={dashboardLocked}
-            socketConnected={socketConnected}
-            lastUpdate={realtimeLastUpdate}
+            activeUsers={collaborators}
+            showUserCount={true}
           />
         )}
 
