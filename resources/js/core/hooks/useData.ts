@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useCallback } from 'react';
 import { useQuery, useMutation, useSubscription } from '@apollo/client';
 import { DocumentNode } from 'graphql';
 

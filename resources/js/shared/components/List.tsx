@@ -28,7 +28,7 @@ export const List = forwardRef<HTMLDivElement, ListProps>(({
   stagger = true,
   staggerDelay = 100,
   disabled = false,
-  onItemAdd,
+  onItemAdd: _onItemAdd,
   onItemRemove,
   onItemReorder,
   variant = 'default',

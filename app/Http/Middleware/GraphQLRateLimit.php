@@ -15,8 +15,8 @@ class GraphQLRateLimit
     public function handle(Request $request, Closure $next): Response
     {
         // Simple rate limiting for GraphQL
-        $key = 'graphql:' . ($request->user()?->id ?? $request->ip());
-        
+        $key = 'graphql:'.($request->user()?->id ?? $request->ip());
+
         if (RateLimiter::tooManyAttempts($key, 100)) { // 100 requests per minute
             return response()->json([
                 'errors' => [
@@ -24,10 +24,10 @@ class GraphQLRateLimit
                         'message' => 'Too many requests. Please try again later.',
                         'extensions' => [
                             'category' => 'rate_limit',
-                            'retry_after' => RateLimiter::availableIn($key)
-                        ]
-                    ]
-                ]
+                            'retry_after' => RateLimiter::availableIn($key),
+                        ],
+                    ],
+                ],
             ], 429);
         }
 

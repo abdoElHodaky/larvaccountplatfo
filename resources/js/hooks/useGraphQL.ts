@@ -1,6 +1,5 @@
 import { useRequest } from 'alova/react';
 import { 
-  graphqlClient, 
   createGraphQLQuery, 
   createGraphQLMutation,
   GET_TRANSACTIONS,

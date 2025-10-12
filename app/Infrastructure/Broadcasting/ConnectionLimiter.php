@@ -8,7 +8,9 @@ use Illuminate\Support\Facades\Log;
 class ConnectionLimiter
 {
     private const MAX_CONNECTIONS_PER_USER = 5;
+
     private const MAX_CONNECTIONS_PER_ORG = 100;
+
     private const CONNECTION_TTL = 3600; // 1 hour
 
     /**
@@ -22,16 +24,18 @@ class ConnectionLimiter
         if ($userConnections >= self::MAX_CONNECTIONS_PER_USER) {
             Log::warning('User connection limit exceeded', [
                 'user_id' => $userId,
-                'connections' => $userConnections
+                'connections' => $userConnections,
             ]);
+
             return false;
         }
 
         if ($orgConnections >= self::MAX_CONNECTIONS_PER_ORG) {
             Log::warning('Organization connection limit exceeded', [
                 'organization_id' => $organizationId,
-                'connections' => $orgConnections
+                'connections' => $orgConnections,
             ]);
+
             return false;
         }
 
@@ -51,7 +55,7 @@ class ConnectionLimiter
         Cache::put($socketKey, [
             'user_id' => $userId,
             'organization_id' => $organizationId,
-            'connected_at' => now()
+            'connected_at' => now(),
         ], self::CONNECTION_TTL);
 
         // Increment counters

@@ -1,7 +1,6 @@
 import { useRequest } from 'alova/react';
 import { useMemo, useCallback } from 'react';
 import { 
-  graphqlClient, 
   createGraphQLQuery, 
   createGraphQLMutation 
 } from '../graphql/client';
@@ -58,15 +57,11 @@ export function useOptimizedGraphQLMutation(mutation: string) {
   const { data, loading, error, send } = useRequest(method, { immediate: false });
 
   const mutate = useCallback(async (variables?: any) => {
-    try {
-      const result = await send({
-        query: mutation,
-        variables
-      });
-      return result?.data;
-    } catch (err) {
-      throw err;
-    }
+    const result = await send({
+      query: mutation,
+      variables
+    });
+    return result?.data;
   }, [send, mutation]);
 
   return [mutate, { data: data?.data, loading, error }] as const;
