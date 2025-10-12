@@ -4,16 +4,38 @@
  */
 
 // Common types
-export * from './common';
+export type {
+  BreadcrumbItem,
+  FormErrors,
+  NavigationItem,
+  PaginatedData,
+  SelectOption,
+} from './common';
 
 // Authentication types
-export * from './auth';
+export type {
+  User,
+  Organization,
+  Tenant,
+  PageProps,
+} from './auth';
 
 // Laravel/Inertia types
-export * from './laravel';
+export type {
+  Account,
+  AccountBalance,
+  DashboardStats,
+  JournalEntry,
+  Transaction,
+} from './laravel';
 
 // Re-export accounting types for backward compatibility
-export * from '@/features/accounting/types';
+export type {
+  AccountType,
+  TransactionType,
+  BalanceSheetItem,
+  IncomeStatementItem,
+} from '@/features/accounting/types';
 
 // Legacy compatibility - keep existing types
 export interface BaseEntity {

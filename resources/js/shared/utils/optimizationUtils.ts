@@ -404,13 +404,7 @@ export const usePerformanceOptimization = () => {
   };
 };
 
-// Export all utilities
-export {
-  BundleSplitter,
-  PreloadingStrategy,
-  ResourceOptimizer,
-  PerformanceOptimizer,
-};
+// All utilities are already exported via class declarations above
 
 // Initialize chunk registry with common chunks
 if (typeof window !== 'undefined') {

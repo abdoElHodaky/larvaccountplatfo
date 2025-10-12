@@ -10,22 +10,17 @@ export { default as AppLayout } from './layouts/AppLayout';
 export { Container, CardContainer } from './molecules/Container';
 export { DataTable } from './molecules/DataTable';
 export { FormInput } from './molecules/FormInput';
-export { Button } from './atoms/Button';
-export { PrimaryButton } from './atoms/PrimaryButton';
+export { Button, PrimaryButton } from './atoms/Button';
 export { TextInput } from './atoms/TextInput';
 export { InputError } from './atoms/InputError';
 export { InputLabel } from './atoms/InputLabel';
 
-// Phase 3 Animation Components
-export { AnimatedFormInput } from './AnimatedFormInput';
-export { AnimatedModal, AnimatedConfirmationModal, useAnimatedModal } from './AnimatedModal';
-export { AnimatedSidebar, useAnimatedSidebar } from './AnimatedSidebar';
+// Animation Components - All Phases
+export * from './animations';
 
-// Phase 4 Animation Components - Unified Structure
-export { Card } from './Card';
-export { Widget } from './Widget';
-export { List } from './List';
-export { Loader } from './Loader';
+// Phase 4 Animation Components - New Implementations
+export { AnimatedCard, useAnimatedCard } from './animations/AnimatedCard';
+export { AnimatedList, AnimatedListItem, useAnimatedList } from './animations/AnimatedList';
 
 // Phase 5 Enhanced Components - HeadlessUI + LiveIcons Integration
 export { EnhancedMenu, ActionMenu } from './enhanced/EnhancedMenu';
