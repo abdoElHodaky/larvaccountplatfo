@@ -4,7 +4,6 @@
  */
 
 import { createModel } from '@rematch/core';
-import type { RootModel } from '../../../shared/stores';
 import { inventoryApi } from '../services/inventoryApi';
 
 // Types
@@ -120,7 +119,7 @@ const initialState: InventoryState = {
   error: null,
 };
 
-export const inventoryModel = createModel<RootModel>()({
+export const inventoryModel = createModel()({
   name: 'inventory',
   state: initialState,
   

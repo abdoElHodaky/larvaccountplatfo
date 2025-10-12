@@ -4,7 +4,6 @@
  */
 
 import { createModel } from '@rematch/core';
-import type { RootModel } from '../../../shared/stores';
 import { accountingApi } from '../services/accountingApi';
 
 // Types
@@ -120,7 +119,7 @@ const initialState: AccountingState = {
   error: null,
 };
 
-export const accountingModel = createModel<RootModel>()({
+export const accountingModel = createModel()({
   state: initialState,
   
   reducers: {

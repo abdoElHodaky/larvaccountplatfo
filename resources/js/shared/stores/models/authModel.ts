@@ -4,7 +4,6 @@
  */
 
 import { createModel } from '@rematch/core';
-import type { RootModel } from '../index';
 import { apolloClient } from '../../services/graphql/apollo-client';
 import { LOGIN, LOGOUT, REGISTER, SWITCH_TENANT } from '../../services/graphql/mutations';
 import { GET_CURRENT_USER } from '../../services/graphql/queries';
@@ -89,7 +88,7 @@ const initialState: AuthState = {
   error: null,
 };
 
-export const authModel = createModel<RootModel>()({
+export const authModel = createModel()({
   state: initialState,
   
   reducers: {

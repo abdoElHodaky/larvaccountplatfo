@@ -4,7 +4,6 @@
  */
 
 import { createModel } from '@rematch/core';
-import type { RootModel } from '../../../shared/stores';
 import { dashboardApi } from '../services/dashboardApi';
 
 // Types
@@ -127,7 +126,7 @@ const initialState: DashboardState = {
   lastRefresh: null,
 };
 
-export const dashboardModel = createModel<RootModel>()({
+export const dashboardModel = createModel()({
   name: 'dashboard',
   state: initialState,
   

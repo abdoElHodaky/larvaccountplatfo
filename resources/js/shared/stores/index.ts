@@ -20,11 +20,11 @@ import { setDevToolsStore } from '../utils/devTools';
 
 // Define the models interface
 export interface RootModel {
-  app: AppModel;
-  auth: AuthModel;
-  accounting: AccountingModel;
-  inventory: InventoryModel;
-  dashboard: DashboardModel;
+  app: typeof appModel;
+  auth: typeof authModel;
+  accounting: typeof accountingModel;
+  inventory: typeof inventoryModel;
+  dashboard: typeof dashboardModel;
   [key: string]: any;
 }
 
