@@ -6,10 +6,10 @@
     "private": true,
     "scripts": {
         "build": "vite build && npm run build:sw",
-        "build:sw": "workbox generateSW workbox-config.js",
+        "build:sw": "workbox generateSW workbox-config.cjs",
         "build:ssr": "vite build --ssr resources/js/ssr.tsx",
         "dev": "vite",
-        "dev:sw": "workbox generateSW workbox-config.js --watch",
+        "dev:sw": "workbox generateSW workbox-config.cjs --watch",
         "preview": "vite preview",
         "lint": "eslint resources/js/**/*.{js,jsx,ts,tsx}",
         "lint:fix": "eslint resources/js/**/*.{js,jsx,ts,tsx} --fix",

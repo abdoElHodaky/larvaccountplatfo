@@ -83,7 +83,7 @@ export function getOrganizationUrl(path: string, orgId?: string): string {
  * Extract organization ID from URL
  */
 export function extractOrganizationIdFromUrl(url: string): string | null {
-  const match = url.match(/\/org\/([^\/]+)/);
+  const match = url.match(/\/org\/([^/]+)/);
   return match ? match[1] : null;
 }
 
