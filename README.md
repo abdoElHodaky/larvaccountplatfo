@@ -23,87 +23,154 @@
 
 ```mermaid
 graph TB
-    subgraph "🌐 Frontend Layer"
-        subgraph "React 18 + TypeScript"
-            A[UI Components] --> B[Feature Modules]
-            B --> C[Real-time Hooks]
-            C --> D[GraphQL Client]
-            D --> E[Socket.io Client]
+    subgraph "🌐 Frontend Ecosystem"
+        subgraph "📱 Client Applications"
+            WEB[Web Application<br/>React 18 + TypeScript] 
+            PWA[Progressive Web App<br/>Service Workers]
+            MOBILE[Mobile Responsive<br/>Touch Optimized]
         end
         
-        subgraph "Core Services"
-            F[Alova.js Client] --> G[Performance Monitor]
-            G --> H[Security Manager]
-            H --> I[LiveIcons System]
+        subgraph "🔧 Frontend Services"
+            ALOVA[Alova.js Client<br/>Smart Caching]
+            ICONS[LiveIcons System<br/>Dynamic Icons]
+            PERF[Performance Monitor<br/>Real-time Metrics]
+            SEC[Security Manager<br/>Token Management]
         end
     end
     
-    subgraph "🔗 API Gateway"
-        J[Laravel Router] --> K[Middleware Stack]
-        K --> L[Authentication]
-        L --> M[Rate Limiting]
+    subgraph "🔗 API Gateway Layer"
+        ROUTER[Laravel Router<br/>Route Management]
+        MIDDLEWARE[Middleware Stack<br/>Request Processing]
+        AUTH[Authentication<br/>JWT + Sanctum]
+        RATE[Rate Limiting<br/>DDoS Protection]
+        CORS[CORS Handler<br/>Cross-Origin]
     end
     
-    subgraph "🏛️ Backend Layer"
-        subgraph "Domain Layer"
-            N[Accounting Domain] --> O[Inventory Domain]
-            O --> P[Dashboard Domain]
-            P --> Q[Organization Domain]
+    subgraph "🏛️ Application Layer"
+        subgraph "🎯 Domain Services"
+            ACC_DOM[Accounting Domain<br/>Financial Logic]
+            INV_DOM[Inventory Domain<br/>Stock Management]
+            DASH_DOM[Dashboard Domain<br/>Analytics]
+            ORG_DOM[Organization Domain<br/>Multi-tenant]
         end
         
-        subgraph "Service Layer"
-            R[Core Services] --> S[Integration Services]
-            S --> T[Performance Services]
+        subgraph "⚙️ Core Services"
+            CORE[Core Services<br/>Business Logic]
+            INTEG[Integration Services<br/>External APIs]
+            REPORT[Reporting Services<br/>Financial Reports]
+            AUDIT[Audit Services<br/>Change Tracking]
         end
         
-        subgraph "Infrastructure"
-            U[GraphQL Lighthouse] --> V[Laravel Reverb]
-            V --> W[Broadcasting Events]
-            W --> X[Queue System]
+        subgraph "🚀 Infrastructure Services"
+            GRAPHQL[GraphQL Lighthouse<br/>API Schema]
+            REVERB[Laravel Reverb<br/>WebSocket Server]
+            BROADCAST[Broadcasting<br/>Real-time Events]
+            QUEUE[Queue System<br/>Background Jobs]
         end
     end
     
-    subgraph "💾 Data Layer"
-        Y[MySQL Database] --> Z[Redis Cache]
-        Z --> AA[Session Store]
+    subgraph "💾 Data Persistence Layer"
+        subgraph "🗄️ Primary Storage"
+            MYSQL[MySQL Database<br/>ACID Transactions]
+            TENANT_DB[Tenant Databases<br/>Data Isolation]
+        end
+        
+        subgraph "⚡ Caching Layer"
+            REDIS[Redis Cache<br/>Session & Data]
+            MEMORY[In-Memory Cache<br/>Query Results]
+        end
+        
+        subgraph "📁 File Storage"
+            LOCAL[Local Storage<br/>Development]
+            S3[AWS S3<br/>Production Files]
+        end
     end
     
-    subgraph "☁️ Infrastructure"
-        BB[Kubernetes Cluster] --> CC[Load Balancer]
-        CC --> DD[Auto-scaling]
-        DD --> EE[Health Monitoring]
+    subgraph "☁️ Infrastructure Layer"
+        subgraph "🐳 Container Orchestration"
+            K8S[Kubernetes Cluster<br/>Container Management]
+            HELM[Helm Charts<br/>Deployment]
+        end
+        
+        subgraph "🔄 Load Balancing"
+            LB[Load Balancer<br/>Traffic Distribution]
+            SCALE[Auto-scaling<br/>Dynamic Scaling]
+        end
+        
+        subgraph "📊 Monitoring"
+            HEALTH[Health Checks<br/>Service Monitoring]
+            LOGS[Centralized Logging<br/>ELK Stack]
+            METRICS[Metrics Collection<br/>Prometheus]
+        end
     end
     
-    %% Connections
-    E --> J
-    D --> U
-    F --> J
+    %% Frontend Connections
+    WEB --> ALOVA
+    PWA --> ICONS
+    MOBILE --> PERF
+    ALOVA --> ROUTER
+    ICONS --> ROUTER
+    PERF --> SEC
     
-    M --> N
-    M --> O
-    M --> P
-    M --> Q
+    %% API Gateway Flow
+    ROUTER --> MIDDLEWARE
+    MIDDLEWARE --> AUTH
+    AUTH --> RATE
+    RATE --> CORS
     
-    R --> Y
-    S --> Z
-    T --> AA
+    %% Domain Service Connections
+    CORS --> ACC_DOM
+    CORS --> INV_DOM
+    CORS --> DASH_DOM
+    CORS --> ORG_DOM
     
-    V --> E
-    W --> C
+    %% Service Layer Connections
+    ACC_DOM --> CORE
+    INV_DOM --> INTEG
+    DASH_DOM --> REPORT
+    ORG_DOM --> AUDIT
     
-    BB --> J
-    CC --> BB
+    %% Infrastructure Connections
+    CORE --> GRAPHQL
+    INTEG --> REVERB
+    REPORT --> BROADCAST
+    AUDIT --> QUEUE
+    
+    %% Data Layer Connections
+    GRAPHQL --> MYSQL
+    REVERB --> REDIS
+    BROADCAST --> TENANT_DB
+    QUEUE --> MEMORY
+    
+    %% File Storage Connections
+    MYSQL --> LOCAL
+    REDIS --> S3
+    
+    %% Infrastructure Connections
+    LOCAL --> K8S
+    S3 --> HELM
+    K8S --> LB
+    HELM --> SCALE
+    LB --> HEALTH
+    SCALE --> LOGS
+    HEALTH --> METRICS
+    
+    %% Real-time Connections
+    REVERB --> WEB
+    BROADCAST --> PWA
     
     %% Styling
-    classDef frontend fill:#e3f2fd,stroke:#1976d2,stroke-width:2px
-    classDef backend fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px
-    classDef data fill:#e8f5e8,stroke:#388e3c,stroke-width:2px
-    classDef infra fill:#fff3e0,stroke:#f57c00,stroke-width:2px
+    classDef frontend fill:#e3f2fd,stroke:#1976d2,stroke-width:3px,color:#000
+    classDef gateway fill:#fff3e0,stroke:#f57c00,stroke-width:3px,color:#000
+    classDef backend fill:#f3e5f5,stroke:#7b1fa2,stroke-width:3px,color:#000
+    classDef data fill:#e8f5e8,stroke:#388e3c,stroke-width:3px,color:#000
+    classDef infra fill:#fce4ec,stroke:#c2185b,stroke-width:3px,color:#000
     
-    class A,B,C,D,E,F,G,H,I frontend
-    class J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X backend
-    class Y,Z,AA data
-    class BB,CC,DD,EE infra
+    class WEB,PWA,MOBILE,ALOVA,ICONS,PERF,SEC frontend
+    class ROUTER,MIDDLEWARE,AUTH,RATE,CORS gateway
+    class ACC_DOM,INV_DOM,DASH_DOM,ORG_DOM,CORE,INTEG,REPORT,AUDIT,GRAPHQL,REVERB,BROADCAST,QUEUE backend
+    class MYSQL,TENANT_DB,REDIS,MEMORY,LOCAL,S3 data
+    class K8S,HELM,LB,SCALE,HEALTH,LOGS,METRICS infra
 ```
 
 ### **Technology Stack Overview**
@@ -167,173 +234,349 @@ graph TB
 
 ```mermaid
 sequenceDiagram
-    participant U as User
-    participant C as React Component
-    participant A as Alova.js Client
-    participant G as GraphQL Client
-    participant S as Socket.io Client
-    participant B as Laravel Backend
+    participant U as 👤 User
+    participant UI as 🖥️ React UI
+    participant ALOVA as ⚡ Alova Client
+    participant GQL as 🔗 GraphQL
+    participant WS as 🔄 WebSocket
+    participant AUTH as 🔐 Auth Layer
+    participant API as 🏛️ Laravel API
+    participant DB as 💾 Database
     
-    U->>C: User Interaction
-    C->>A: API Request
-    A->>G: GraphQL Query/Mutation
-    G->>B: HTTP Request
-    B-->>G: GraphQL Response
-    G-->>A: Processed Data
-    A-->>C: State Update
+    Note over U,DB: 🚀 Initial Page Load & Authentication
+    U->>UI: Page Load Request
+    UI->>AUTH: Check Authentication
+    AUTH->>API: Validate Token
+    API-->>AUTH: Token Valid
+    AUTH-->>UI: User Authenticated
     
-    Note over S,B: Real-time Updates
-    B->>S: Broadcast Event
-    S->>C: Real-time Data
-    C->>U: UI Update
+    Note over U,DB: 📊 Data Fetching Flow
+    U->>UI: User Interaction
+    UI->>ALOVA: Smart Cache Check
     
-    Note over C: Performance Optimizations
-    C->>C: Lazy Loading
-    C->>C: Component Memoization
-    C->>C: Bundle Splitting
+    alt Cache Hit
+        ALOVA-->>UI: Cached Data
+    else Cache Miss
+        ALOVA->>GQL: GraphQL Query
+        GQL->>API: HTTP Request
+        API->>DB: Database Query
+        DB-->>API: Query Results
+        API-->>GQL: GraphQL Response
+        GQL-->>ALOVA: Processed Data
+        ALOVA->>ALOVA: Update Cache
+        ALOVA-->>UI: Fresh Data
+    end
+    
+    UI->>UI: Component Re-render
+    UI-->>U: Updated Interface
+    
+    Note over U,DB: 🔄 Real-time Updates
+    API->>WS: Broadcast Event
+    WS->>UI: Real-time Data
+    UI->>ALOVA: Update Cache
+    UI->>UI: Optimistic Update
+    UI-->>U: Live UI Update
+    
+    Note over UI: 🎯 Performance Optimizations
+    UI->>UI: Lazy Load Components
+    UI->>UI: Memoize Expensive Calculations
+    UI->>UI: Virtual Scrolling
+    UI->>UI: Code Splitting
+    
+    Note over ALOVA: 🧠 Smart Caching Strategy
+    ALOVA->>ALOVA: Background Refresh
+    ALOVA->>ALOVA: Stale-While-Revalidate
+    ALOVA->>ALOVA: Request Deduplication
 ```
 
 ### **Backend Domain Architecture**
 
 ```mermaid
-graph LR
-    subgraph "🏛️ Domain Layer"
-        subgraph "Accounting Domain"
-            A1[Account Model] --> A2[Transaction Service]
-            A2 --> A3[Journal Entry]
-            A3 --> A4[Financial Reports]
+graph TB
+    subgraph "🏛️ Domain Layer - Business Logic"
+        subgraph "💰 Accounting Domain"
+            ACC_MODEL[Account Model<br/>📊 Chart of Accounts]
+            TXN_SERVICE[Transaction Service<br/>💸 Financial Operations]
+            JOURNAL[Journal Entry<br/>📝 Double-entry Bookkeeping]
+            FIN_REPORTS[Financial Reports<br/>📈 P&L, Balance Sheet]
+            
+            ACC_MODEL --> TXN_SERVICE
+            TXN_SERVICE --> JOURNAL
+            JOURNAL --> FIN_REPORTS
         end
         
-        subgraph "Inventory Domain"
-            I1[Product Model] --> I2[Stock Service]
-            I2 --> I3[Movement Tracking]
-            I3 --> I4[Inventory Reports]
+        subgraph "📦 Inventory Domain"
+            PROD_MODEL[Product Model<br/>🏷️ SKU Management]
+            STOCK_SERVICE[Stock Service<br/>📊 Inventory Control]
+            MOVEMENT[Movement Tracking<br/>📋 Stock History]
+            INV_REPORTS[Inventory Reports<br/>📊 Stock Analytics]
+            
+            PROD_MODEL --> STOCK_SERVICE
+            STOCK_SERVICE --> MOVEMENT
+            MOVEMENT --> INV_REPORTS
         end
         
-        subgraph "Dashboard Domain"
-            D1[Widget Model] --> D2[Metrics Service]
-            D2 --> D3[Real-time Updates]
-            D3 --> D4[Analytics Engine]
+        subgraph "📊 Dashboard Domain"
+            WIDGET_MODEL[Widget Model<br/>🎛️ Dashboard Components]
+            METRICS_SERVICE[Metrics Service<br/>📈 KPI Calculation]
+            REALTIME[Real-time Updates<br/>⚡ Live Data]
+            ANALYTICS[Analytics Engine<br/>🧠 Business Intelligence]
+            
+            WIDGET_MODEL --> METRICS_SERVICE
+            METRICS_SERVICE --> REALTIME
+            REALTIME --> ANALYTICS
         end
         
-        subgraph "Organization Domain"
-            O1[Tenant Model] --> O2[User Management]
-            O2 --> O3[Permission System]
-            O3 --> O4[Multi-tenancy]
+        subgraph "🏢 Organization Domain"
+            TENANT_MODEL[Tenant Model<br/>🏢 Multi-tenancy]
+            USER_MGMT[User Management<br/>👥 User Lifecycle]
+            PERMISSIONS[Permission System<br/>🔐 RBAC]
+            ISOLATION[Data Isolation<br/>🛡️ Tenant Security]
+            
+            TENANT_MODEL --> USER_MGMT
+            USER_MGMT --> PERMISSIONS
+            PERMISSIONS --> ISOLATION
         end
     end
     
-    subgraph "🔧 Service Layer"
-        S1[Core Services] --> S2[Integration Services]
-        S2 --> S3[Performance Services]
-        S3 --> S4[Security Services]
+    subgraph "⚙️ Service Layer - Application Services"
+        CORE_SERVICES[Core Services<br/>🔧 Business Operations]
+        INTEGRATION[Integration Services<br/>🔗 External APIs]
+        PERFORMANCE[Performance Services<br/>⚡ Optimization]
+        SECURITY[Security Services<br/>🔒 Auth & Encryption]
+        NOTIFICATION[Notification Services<br/>📧 Alerts & Messages]
+        AUDIT[Audit Services<br/>📋 Change Tracking]
     end
     
-    subgraph "🏗️ Infrastructure"
-        IN1[Database Layer] --> IN2[Cache Layer]
-        IN2 --> IN3[Queue System]
-        IN3 --> IN4[Broadcasting]
+    subgraph "🏗️ Infrastructure Layer - Technical Services"
+        subgraph "💾 Data Layer"
+            DATABASE[Database Layer<br/>🗄️ MySQL + Transactions]
+            CACHE[Cache Layer<br/>⚡ Redis + Memory]
+            SEARCH[Search Engine<br/>🔍 Full-text Search]
+        end
+        
+        subgraph "🔄 Communication"
+            QUEUE[Queue System<br/>📬 Background Jobs]
+            BROADCAST[Broadcasting<br/>📡 Real-time Events]
+            WEBSOCKET[WebSocket Server<br/>🔄 Live Connections]
+        end
+        
+        subgraph "🔧 Supporting Services"
+            FILE_STORAGE[File Storage<br/>📁 Document Management]
+            LOGGING[Logging System<br/>📝 Audit Trail]
+            MONITORING[Monitoring<br/>📊 Health Checks]
+        end
     end
     
-    %% Cross-domain connections
-    A2 --> S1
-    I2 --> S1
-    D2 --> S1
-    O2 --> S1
+    %% Domain to Service Connections
+    TXN_SERVICE --> CORE_SERVICES
+    STOCK_SERVICE --> CORE_SERVICES
+    METRICS_SERVICE --> PERFORMANCE
+    USER_MGMT --> SECURITY
     
-    S1 --> IN1
-    S2 --> IN2
-    S3 --> IN3
-    S4 --> IN4
+    %% Service to Infrastructure Connections
+    CORE_SERVICES --> DATABASE
+    INTEGRATION --> CACHE
+    PERFORMANCE --> SEARCH
+    SECURITY --> QUEUE
+    NOTIFICATION --> BROADCAST
+    AUDIT --> WEBSOCKET
+    
+    %% Infrastructure Internal Connections
+    DATABASE --> FILE_STORAGE
+    CACHE --> LOGGING
+    SEARCH --> MONITORING
+    
+    %% Cross-cutting Concerns
+    SECURITY -.-> ACC_MODEL
+    SECURITY -.-> PROD_MODEL
+    SECURITY -.-> WIDGET_MODEL
+    SECURITY -.-> TENANT_MODEL
+    
+    AUDIT -.-> TXN_SERVICE
+    AUDIT -.-> STOCK_SERVICE
+    AUDIT -.-> USER_MGMT
     
     %% Styling
-    classDef domain fill:#e8f5e8,stroke:#2e7d32,stroke-width:2px
-    classDef service fill:#e3f2fd,stroke:#1565c0,stroke-width:2px
-    classDef infra fill:#fff3e0,stroke:#ef6c00,stroke-width:2px
+    classDef domain fill:#e8f5e8,stroke:#2e7d32,stroke-width:3px,color:#000
+    classDef service fill:#e3f2fd,stroke:#1565c0,stroke-width:3px,color:#000
+    classDef infra fill:#fff3e0,stroke:#ef6c00,stroke-width:3px,color:#000
+    classDef data fill:#f3e5f5,stroke:#7b1fa2,stroke-width:3px,color:#000
     
-    class A1,A2,A3,A4,I1,I2,I3,I4,D1,D2,D3,D4,O1,O2,O3,O4 domain
-    class S1,S2,S3,S4 service
-    class IN1,IN2,IN3,IN4 infra
+    class ACC_MODEL,TXN_SERVICE,JOURNAL,FIN_REPORTS,PROD_MODEL,STOCK_SERVICE,MOVEMENT,INV_REPORTS,WIDGET_MODEL,METRICS_SERVICE,REALTIME,ANALYTICS,TENANT_MODEL,USER_MGMT,PERMISSIONS,ISOLATION domain
+    class CORE_SERVICES,INTEGRATION,PERFORMANCE,SECURITY,NOTIFICATION,AUDIT service
+    class DATABASE,CACHE,SEARCH,QUEUE,BROADCAST,WEBSOCKET,FILE_STORAGE,LOGGING,MONITORING infra
 ```
 
 ### **Real-time Communication Flow**
 
 ```mermaid
 sequenceDiagram
-    participant F as Frontend
-    participant L as Laravel
-    participant R as Laravel Reverb
-    participant D as Database
-    participant C as Cache
+    participant USER as 👤 User
+    participant UI as 🖥️ Frontend UI
+    participant GQL as 🔗 GraphQL API
+    participant LARAVEL as 🏛️ Laravel Backend
+    participant REVERB as 📡 Laravel Reverb
+    participant QUEUE as 📬 Queue System
+    participant DB as 💾 Database
+    participant CACHE as ⚡ Redis Cache
+    participant OTHER_USERS as 👥 Other Users
     
-    Note over F,C: Transaction Creation Flow
-    F->>L: Create Transaction (GraphQL)
-    L->>D: Store Transaction
-    D-->>L: Transaction Saved
-    L->>R: Broadcast Event
-    L-->>F: GraphQL Response
+    Note over USER,OTHER_USERS: 💸 Financial Transaction Creation Flow
     
-    Note over R,F: Real-time Broadcasting
-    R->>F: Socket.io Event
-    F->>F: Update UI State
+    USER->>UI: Create Transaction
+    UI->>UI: Optimistic UI Update
+    UI->>GQL: GraphQL Mutation
+    GQL->>LARAVEL: Process Transaction
     
-    Note over L,C: Cache Management
-    L->>C: Update Cache
-    L->>C: Invalidate Related Data
+    Note over LARAVEL: 🔄 Backend Processing
+    LARAVEL->>DB: Begin Transaction
+    LARAVEL->>DB: Validate Business Rules
+    LARAVEL->>DB: Create Journal Entries
+    LARAVEL->>DB: Update Account Balances
+    DB-->>LARAVEL: Transaction Committed
     
-    Note over F: Performance Optimization
-    F->>F: Optimistic Updates
-    F->>F: Background Sync
-    F->>F: Error Recovery
+    Note over LARAVEL: 📡 Real-time Broadcasting
+    LARAVEL->>REVERB: Broadcast TransactionCreated
+    LARAVEL->>QUEUE: Queue Background Jobs
+    LARAVEL-->>GQL: Success Response
+    GQL-->>UI: Transaction Confirmed
+    UI->>UI: Update UI with Real Data
+    
+    Note over REVERB,OTHER_USERS: 🔄 Live Updates to All Users
+    REVERB->>OTHER_USERS: WebSocket Event
+    OTHER_USERS->>OTHER_USERS: Update Dashboard
+    OTHER_USERS->>OTHER_USERS: Refresh Account Balances
+    
+    Note over LARAVEL,CACHE: 🧠 Cache Management Strategy
+    LARAVEL->>CACHE: Update Account Cache
+    LARAVEL->>CACHE: Invalidate Report Cache
+    LARAVEL->>CACHE: Update Dashboard Metrics
+    
+    Note over QUEUE: 🔄 Background Processing
+    QUEUE->>QUEUE: Generate Financial Reports
+    QUEUE->>QUEUE: Send Notifications
+    QUEUE->>QUEUE: Update Analytics
+    QUEUE->>QUEUE: Audit Trail Logging
+    
+    Note over UI: 🎯 Error Handling & Recovery
+    alt Transaction Fails
+        LARAVEL-->>GQL: Error Response
+        GQL-->>UI: Transaction Failed
+        UI->>UI: Revert Optimistic Update
+        UI->>UI: Show Error Message
+        UI->>UI: Retry Mechanism
+    end
+    
+    Note over REVERB: 📊 Connection Management
+    REVERB->>REVERB: Manage WebSocket Connections
+    REVERB->>REVERB: Handle Connection Drops
+    REVERB->>REVERB: Reconnection Logic
+    REVERB->>REVERB: Message Queuing
 ```
 
 ### **Multi-tenant Architecture**
 
 ```mermaid
 graph TB
-    subgraph "🌐 Request Flow"
-        A[User Request] --> B[Load Balancer]
-        B --> C[Laravel Router]
-        C --> D[Tenant Middleware]
+    subgraph "🌐 Request Processing Layer"
+        USER_REQ[👤 User Request<br/>HTTP/GraphQL]
+        LOAD_BAL[⚖️ Load Balancer<br/>Traffic Distribution]
+        ROUTER[🔗 Laravel Router<br/>Route Resolution]
+        TENANT_MW[🏢 Tenant Middleware<br/>Context Detection]
+        
+        USER_REQ --> LOAD_BAL
+        LOAD_BAL --> ROUTER
+        ROUTER --> TENANT_MW
     end
     
-    subgraph "🏢 Tenant Resolution"
-        D --> E[Tenant Resolver]
-        E --> F[Database Shard Selection]
-        F --> G[Context Switching]
+    subgraph "🏢 Tenant Resolution Engine"
+        RESOLVER[🔍 Tenant Resolver<br/>Multi-strategy Detection]
+        STRATEGY[📋 Resolution Strategy<br/>Subdomain/Header/Auth]
+        DB_SELECTOR[🗄️ Database Selector<br/>Shard Selection]
+        CONTEXT[🔄 Context Switcher<br/>Runtime Configuration]
+        
+        TENANT_MW --> RESOLVER
+        RESOLVER --> STRATEGY
+        STRATEGY --> DB_SELECTOR
+        DB_SELECTOR --> CONTEXT
     end
     
-    subgraph "💾 Data Isolation"
-        subgraph "Tenant A"
-            H1[Database A] --> I1[Cache A]
-            I1 --> J1[Sessions A]
+    subgraph "💾 Data Isolation Strategies"
+        subgraph "🏢 Enterprise Tenant (Dedicated)"
+            ENT_DB[🗄️ Dedicated Database<br/>Full Isolation]
+            ENT_CACHE[⚡ Private Cache<br/>Redis Instance]
+            ENT_FILES[📁 Private Storage<br/>S3 Bucket]
+            ENT_QUEUE[📬 Private Queue<br/>Background Jobs]
+            
+            ENT_DB --> ENT_CACHE
+            ENT_CACHE --> ENT_FILES
+            ENT_FILES --> ENT_QUEUE
         end
         
-        subgraph "Tenant B"
-            H2[Database B] --> I2[Cache B]
-            I2 --> J2[Sessions B]
+        subgraph "🏢 Standard Tenant (Shared DB)"
+            STD_SCHEMA[📊 Tenant Schema<br/>Logical Separation]
+            STD_CACHE[⚡ Namespaced Cache<br/>Shared Redis]
+            STD_FILES[📁 Tenant Folder<br/>Shared Storage]
+            STD_QUEUE[📬 Tagged Jobs<br/>Shared Queue]
+            
+            STD_SCHEMA --> STD_CACHE
+            STD_CACHE --> STD_FILES
+            STD_FILES --> STD_QUEUE
         end
         
-        subgraph "Shared Resources"
-            K[Global Users] --> L[System Config]
-            L --> M[Audit Logs]
+        subgraph "🌍 Shared System Resources"
+            GLOBAL_USERS[👥 Global Users<br/>Cross-tenant Auth]
+            SYSTEM_CONFIG[⚙️ System Config<br/>Global Settings]
+            AUDIT_LOGS[📋 Audit Trail<br/>Compliance Logging]
+            MONITORING[📊 System Monitoring<br/>Health Metrics]
+            
+            GLOBAL_USERS --> SYSTEM_CONFIG
+            SYSTEM_CONFIG --> AUDIT_LOGS
+            AUDIT_LOGS --> MONITORING
         end
     end
     
-    G --> H1
-    G --> H2
-    G --> K
+    subgraph "🔒 Security & Compliance"
+        DATA_ENCRYPT[🔐 Data Encryption<br/>At Rest & Transit]
+        ACCESS_CTRL[🛡️ Access Control<br/>RBAC + ABAC]
+        COMPLIANCE[📜 Compliance<br/>GDPR, SOX, HIPAA]
+        BACKUP[💾 Backup Strategy<br/>Per-tenant Backups]
+        
+        DATA_ENCRYPT --> ACCESS_CTRL
+        ACCESS_CTRL --> COMPLIANCE
+        COMPLIANCE --> BACKUP
+    end
+    
+    %% Context Switching Connections
+    CONTEXT --> ENT_DB
+    CONTEXT --> STD_SCHEMA
+    CONTEXT --> GLOBAL_USERS
+    
+    %% Security Integration
+    ENT_DB -.-> DATA_ENCRYPT
+    STD_SCHEMA -.-> DATA_ENCRYPT
+    GLOBAL_USERS -.-> ACCESS_CTRL
+    
+    %% Monitoring Integration
+    ENT_QUEUE -.-> MONITORING
+    STD_QUEUE -.-> MONITORING
+    AUDIT_LOGS -.-> MONITORING
     
     %% Styling
-    classDef request fill:#e3f2fd,stroke:#1976d2,stroke-width:2px
-    classDef tenant fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px
-    classDef data fill:#e8f5e8,stroke:#388e3c,stroke-width:2px
-    classDef shared fill:#fff3e0,stroke:#f57c00,stroke-width:2px
+    classDef request fill:#e3f2fd,stroke:#1976d2,stroke-width:3px,color:#000
+    classDef tenant fill:#f3e5f5,stroke:#7b1fa2,stroke-width:3px,color:#000
+    classDef enterprise fill:#e8f5e8,stroke:#2e7d32,stroke-width:3px,color:#000
+    classDef standard fill:#fff3e0,stroke:#ef6c00,stroke-width:3px,color:#000
+    classDef shared fill:#fce4ec,stroke:#c2185b,stroke-width:3px,color:#000
+    classDef security fill:#f1f8e9,stroke:#558b2f,stroke-width:3px,color:#000
     
-    class A,B,C,D request
-    class E,F,G tenant
-    class H1,I1,J1,H2,I2,J2 data
-    class K,L,M shared
+    class USER_REQ,LOAD_BAL,ROUTER,TENANT_MW request
+    class RESOLVER,STRATEGY,DB_SELECTOR,CONTEXT tenant
+    class ENT_DB,ENT_CACHE,ENT_FILES,ENT_QUEUE enterprise
+    class STD_SCHEMA,STD_CACHE,STD_FILES,STD_QUEUE standard
+    class GLOBAL_USERS,SYSTEM_CONFIG,AUDIT_LOGS,MONITORING shared
+    class DATA_ENCRYPT,ACCESS_CTRL,COMPLIANCE,BACKUP security
 ```
 
 ---
@@ -347,169 +590,257 @@ Our database architecture follows domain-driven design principles with proper no
 ```mermaid
 erDiagram
     TENANTS {
-        uuid id PK
-        string name
-        string domain
-        string database_name
-        json settings
-        boolean is_active
-        timestamp created_at
-        timestamp updated_at
+        uuid id PK "🔑 Primary Key"
+        string name "🏢 Organization Name"
+        string domain "🌐 Subdomain"
+        string database_name "🗄️ DB Identifier"
+        enum plan_type "💼 Subscription Plan"
+        json settings "⚙️ Configuration"
+        boolean is_active "✅ Status"
+        integer max_users "👥 User Limit"
+        decimal storage_quota "💾 Storage Limit"
+        timestamp created_at "📅 Created"
+        timestamp updated_at "📅 Modified"
     }
     
     USERS {
-        uuid id PK
-        uuid tenant_id FK
-        string name
-        string email
-        string password_hash
-        string phone
-        string timezone
-        string locale
-        boolean is_active
-        timestamp email_verified_at
-        timestamp last_login_at
-        timestamp created_at
-        timestamp updated_at
+        uuid id PK "🔑 Primary Key"
+        uuid tenant_id FK "🏢 Tenant Reference"
+        string name "👤 Full Name"
+        string email "📧 Email Address"
+        string password_hash "🔐 Encrypted Password"
+        string phone "📱 Phone Number"
+        string timezone "🌍 Timezone"
+        string locale "🗣️ Language"
+        json roles "🎭 User Roles"
+        json permissions "🔒 Access Rights"
+        boolean is_active "✅ Account Status"
+        boolean two_factor_enabled "🔐 2FA Status"
+        timestamp email_verified_at "✅ Email Verified"
+        timestamp last_login_at "🕐 Last Login"
+        timestamp created_at "📅 Created"
+        timestamp updated_at "📅 Modified"
     }
     
     ACCOUNTS {
-        uuid id PK
-        uuid tenant_id FK
-        uuid parent_id FK
-        string code
-        string name
-        text description
-        enum type
-        string subtype
-        enum normal_balance
-        boolean is_active
-        boolean is_system
-        integer level
-        string currency
-        decimal opening_balance
-        decimal current_balance
-        json settings
-        uuid created_by FK
-        timestamp created_at
-        timestamp updated_at
-        timestamp deleted_at
+        uuid id PK "🔑 Primary Key"
+        uuid tenant_id FK "🏢 Tenant Reference"
+        uuid parent_id FK "📊 Parent Account"
+        string code "🏷️ Account Code"
+        string name "📝 Account Name"
+        text description "📄 Description"
+        enum type "📊 Account Type"
+        string subtype "📋 Account Subtype"
+        enum normal_balance "⚖️ Normal Balance"
+        boolean is_active "✅ Active Status"
+        boolean is_system "🔧 System Account"
+        integer level "📊 Hierarchy Level"
+        string currency "💰 Currency Code"
+        decimal opening_balance "💵 Opening Balance"
+        decimal current_balance "💰 Current Balance"
+        json settings "⚙️ Account Settings"
+        uuid created_by FK "👤 Created By"
+        timestamp created_at "📅 Created"
+        timestamp updated_at "📅 Modified"
+        timestamp deleted_at "🗑️ Soft Delete"
     }
     
     TRANSACTIONS {
-        uuid id PK
-        uuid tenant_id FK
-        uuid created_by FK
-        string reference
-        text description
-        date transaction_date
-        decimal total_amount
-        string currency
-        enum status
-        json metadata
-        timestamp created_at
-        timestamp updated_at
+        uuid id PK "🔑 Primary Key"
+        uuid tenant_id FK "🏢 Tenant Reference"
+        uuid created_by FK "👤 Created By"
+        string reference "🏷️ Reference Number"
+        text description "📄 Description"
+        date transaction_date "📅 Transaction Date"
+        decimal total_amount "💰 Total Amount"
+        string currency "💱 Currency"
+        enum status "📊 Status"
+        enum type "📋 Transaction Type"
+        json metadata "📊 Additional Data"
+        json attachments "📎 File Attachments"
+        timestamp created_at "📅 Created"
+        timestamp updated_at "📅 Modified"
     }
     
     JOURNAL_ENTRIES {
-        uuid id PK
-        uuid tenant_id FK
-        uuid transaction_id FK
-        uuid account_id FK
-        decimal debit_amount
-        decimal credit_amount
-        string description
-        string reference
-        timestamp created_at
+        uuid id PK "🔑 Primary Key"
+        uuid tenant_id FK "🏢 Tenant Reference"
+        uuid transaction_id FK "💸 Transaction Reference"
+        uuid account_id FK "📊 Account Reference"
+        decimal debit_amount "➕ Debit Amount"
+        decimal credit_amount "➖ Credit Amount"
+        string description "📄 Entry Description"
+        string reference "🏷️ Reference"
+        integer entry_order "📊 Entry Order"
+        timestamp created_at "📅 Created"
+    }
+    
+    PRODUCTS {
+        uuid id PK "🔑 Primary Key"
+        uuid tenant_id FK "🏢 Tenant Reference"
+        uuid category_id FK "📦 Category Reference"
+        string sku "🏷️ Stock Keeping Unit"
+        string name "📝 Product Name"
+        text description "📄 Description"
+        decimal price "💰 Unit Price"
+        decimal cost "💵 Unit Cost"
+        integer stock_quantity "📊 Stock Level"
+        integer reorder_point "⚠️ Reorder Level"
+        boolean is_active "✅ Active Status"
+        json attributes "📊 Product Attributes"
+        timestamp created_at "📅 Created"
+        timestamp updated_at "📅 Modified"
+    }
+    
+    STOCK_MOVEMENTS {
+        uuid id PK "🔑 Primary Key"
+        uuid tenant_id FK "🏢 Tenant Reference"
+        uuid product_id FK "📦 Product Reference"
+        uuid created_by FK "👤 Created By"
+        enum movement_type "📊 Movement Type"
+        integer quantity "📊 Quantity"
+        decimal unit_cost "💵 Unit Cost"
+        string reference "🏷️ Reference"
+        text notes "📝 Notes"
+        timestamp movement_date "📅 Movement Date"
+        timestamp created_at "📅 Created"
     }
     
     REPORTS {
-        uuid id PK
-        uuid tenant_id FK
-        uuid generated_by FK
-        string name
-        enum type
-        json parameters
-        json data
-        string file_path
-        timestamp generated_at
-        timestamp expires_at
+        uuid id PK "🔑 Primary Key"
+        uuid tenant_id FK "🏢 Tenant Reference"
+        uuid generated_by FK "👤 Generated By"
+        string name "📝 Report Name"
+        enum type "📊 Report Type"
+        json parameters "⚙️ Parameters"
+        json data "📊 Report Data"
+        string file_path "📁 File Location"
+        enum status "📊 Generation Status"
+        timestamp generated_at "📅 Generated"
+        timestamp expires_at "⏰ Expires"
     }
     
     AUDIT_LOGS {
-        uuid id PK
-        uuid tenant_id FK
-        uuid user_id FK
-        string action
-        string model_type
-        uuid model_id
-        json old_values
-        json new_values
-        string ip_address
-        string user_agent
-        timestamp created_at
+        uuid id PK "🔑 Primary Key"
+        uuid tenant_id FK "🏢 Tenant Reference"
+        uuid user_id FK "👤 User Reference"
+        string action "🎯 Action Performed"
+        string model_type "📊 Model Type"
+        uuid model_id "🔗 Model ID"
+        json old_values "📊 Previous Values"
+        json new_values "📊 New Values"
+        string ip_address "🌐 IP Address"
+        string user_agent "🖥️ User Agent"
+        timestamp created_at "📅 Created"
     }
     
-    TENANTS ||--o{ USERS : "has many"
-    TENANTS ||--o{ ACCOUNTS : "has many"
-    TENANTS ||--o{ TRANSACTIONS : "has many"
-    TENANTS ||--o{ REPORTS : "has many"
-    TENANTS ||--o{ AUDIT_LOGS : "has many"
+    %% Tenant Relationships
+    TENANTS ||--o{ USERS : "🏢 manages"
+    TENANTS ||--o{ ACCOUNTS : "🏢 owns"
+    TENANTS ||--o{ TRANSACTIONS : "🏢 contains"
+    TENANTS ||--o{ PRODUCTS : "🏢 manages"
+    TENANTS ||--o{ REPORTS : "🏢 generates"
+    TENANTS ||--o{ AUDIT_LOGS : "🏢 tracks"
     
-    USERS ||--o{ TRANSACTIONS : "creates"
-    USERS ||--o{ REPORTS : "generates"
-    USERS ||--o{ AUDIT_LOGS : "performs"
+    %% User Relationships
+    USERS ||--o{ TRANSACTIONS : "👤 creates"
+    USERS ||--o{ STOCK_MOVEMENTS : "👤 records"
+    USERS ||--o{ REPORTS : "👤 generates"
+    USERS ||--o{ AUDIT_LOGS : "👤 performs"
     
-    ACCOUNTS ||--o{ ACCOUNTS : "parent-child"
-    ACCOUNTS ||--o{ JOURNAL_ENTRIES : "has many"
+    %% Account Relationships
+    ACCOUNTS ||--o{ ACCOUNTS : "📊 parent-child"
+    ACCOUNTS ||--o{ JOURNAL_ENTRIES : "📊 contains"
     
-    TRANSACTIONS ||--o{ JOURNAL_ENTRIES : "has many"
+    %% Transaction Relationships
+    TRANSACTIONS ||--o{ JOURNAL_ENTRIES : "💸 contains"
+    
+    %% Product Relationships
+    PRODUCTS ||--o{ STOCK_MOVEMENTS : "📦 tracks"
 ```
 
 ### **Database Performance Strategy**
 
 ```mermaid
 graph TB
-    subgraph "🎯 Primary Indexes"
-        PK[Primary Keys - UUID]
-        FK[Foreign Keys - tenant_id]
-        UNIQUE[Unique Constraints]
+    subgraph "🎯 Primary Index Strategy"
+        PK[🔑 Primary Keys<br/>UUID with B-Tree]
+        FK[🔗 Foreign Keys<br/>tenant_id Optimization]
+        UNIQUE[✨ Unique Constraints<br/>Business Rules]
+        TENANT_ISOLATION[🏢 Tenant Isolation<br/>Row-level Security]
+        
+        PK --> FK
+        FK --> UNIQUE
+        UNIQUE --> TENANT_ISOLATION
     end
     
-    subgraph "⚡ Performance Indexes"
-        TENANT_DATE[tenant_id + date fields]
-        SEARCH[Full-text search]
-        COMPOSITE[Composite indexes]
+    subgraph "⚡ Performance Optimization"
+        COMPOSITE[📊 Composite Indexes<br/>Multi-column Queries]
+        PARTIAL[🎯 Partial Indexes<br/>Filtered Data]
+        COVERING[📋 Covering Indexes<br/>Index-only Scans]
+        SEARCH[🔍 Full-text Search<br/>GIN Indexes]
+        
+        COMPOSITE --> PARTIAL
+        PARTIAL --> COVERING
+        COVERING --> SEARCH
     end
     
-    subgraph "📊 Analytical Indexes"
-        REPORTING[Reporting queries]
-        AGGREGATION[Aggregation queries]
-        TIME_SERIES[Time-based queries]
+    subgraph "📊 Analytics & Reporting"
+        TIME_SERIES[📈 Time-series Indexes<br/>Date Range Queries]
+        AGGREGATION[🧮 Aggregation Indexes<br/>SUM, COUNT, AVG]
+        MATERIALIZED[💾 Materialized Views<br/>Pre-computed Results]
+        REPORTING[📊 Reporting Indexes<br/>Business Intelligence]
+        
+        TIME_SERIES --> AGGREGATION
+        AGGREGATION --> MATERIALIZED
+        MATERIALIZED --> REPORTING
     end
     
-    subgraph "🔧 Maintenance"
-        PARTITIONING[Table partitioning]
-        ARCHIVING[Data archiving]
-        CLEANUP[Automated cleanup]
+    subgraph "🔧 Maintenance & Scaling"
+        PARTITIONING[📂 Table Partitioning<br/>Date-based Sharding]
+        ARCHIVING[📦 Data Archiving<br/>Historical Data]
+        VACUUM[🧹 Auto Vacuum<br/>Space Reclamation]
+        REPLICATION[🔄 Read Replicas<br/>Load Distribution]
+        
+        PARTITIONING --> ARCHIVING
+        ARCHIVING --> VACUUM
+        VACUUM --> REPLICATION
     end
     
-    PK --> TENANT_DATE
-    FK --> TENANT_DATE
-    UNIQUE --> SEARCH
+    subgraph "📊 Monitoring & Optimization"
+        QUERY_ANALYSIS[🔍 Query Analysis<br/>Performance Insights]
+        INDEX_USAGE[📈 Index Usage Stats<br/>Optimization Tracking]
+        SLOW_QUERIES[⚠️ Slow Query Log<br/>Performance Issues]
+        AUTO_EXPLAIN[🤖 Auto Explain<br/>Query Plan Analysis]
+        
+        QUERY_ANALYSIS --> INDEX_USAGE
+        INDEX_USAGE --> SLOW_QUERIES
+        SLOW_QUERIES --> AUTO_EXPLAIN
+    end
     
-    TENANT_DATE --> REPORTING
-    SEARCH --> AGGREGATION
-    COMPOSITE --> TIME_SERIES
-    
+    %% Cross-layer Connections
+    TENANT_ISOLATION --> COMPOSITE
+    SEARCH --> TIME_SERIES
     REPORTING --> PARTITIONING
-    AGGREGATION --> ARCHIVING
-    TIME_SERIES --> CLEANUP
+    REPLICATION --> QUERY_ANALYSIS
     
-    style PK fill:#eff6ff,stroke:#2563eb,stroke-width:2px
-    style TENANT_DATE fill:#f0fdf4,stroke:#16a34a,stroke-width:2px
-    style REPORTING fill:#fef3c7,stroke:#d97706,stroke-width:2px
-    style PARTITIONING fill:#fef2f2,stroke:#dc2626,stroke-width:2px
+    %% Performance Flow
+    FK -.-> COMPOSITE
+    COVERING -.-> MATERIALIZED
+    ARCHIVING -.-> QUERY_ANALYSIS
+    
+    %% Styling
+    classDef primary fill:#eff6ff,stroke:#2563eb,stroke-width:3px,color:#000
+    classDef performance fill:#f0fdf4,stroke:#16a34a,stroke-width:3px,color:#000
+    classDef analytics fill:#fef3c7,stroke:#d97706,stroke-width:3px,color:#000
+    classDef maintenance fill:#fef2f2,stroke:#dc2626,stroke-width:3px,color:#000
+    classDef monitoring fill:#f3e8ff,stroke:#9333ea,stroke-width:3px,color:#000
+    
+    class PK,FK,UNIQUE,TENANT_ISOLATION primary
+    class COMPOSITE,PARTIAL,COVERING,SEARCH performance
+    class TIME_SERIES,AGGREGATION,MATERIALIZED,REPORTING analytics
+    class PARTITIONING,ARCHIVING,VACUUM,REPLICATION maintenance
+    class QUERY_ANALYSIS,INDEX_USAGE,SLOW_QUERIES,AUTO_EXPLAIN monitoring
 ```
 
 ### **Key Database Features**
