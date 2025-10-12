@@ -21,22 +21,8 @@ import { FinancialPerformanceUtils } from '@/shared/utils/performance';
  * Demonstrates React.Fragment, memoization, and Chakra UI integration
  */
 
-interface Account {
-  id: string;
-  name: string;
-  type: 'asset' | 'liability' | 'equity' | 'revenue' | 'expense';
-  balance: number;
-  currency: string;
-  change: number;
-  changePercent: number;
-  lastUpdated: string;
-}
-
-interface AccountCardProps {
-  account: Account;
-  onClick?: (account: Account) => void;
-  className?: string;
-}
+// Import consolidated types
+import { Account, AccountCardProps } from '@/shared/types/accounting';
 
 export const AccountCard: React.FC<AccountCardProps> = memo(({
   account,

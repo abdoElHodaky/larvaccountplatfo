@@ -5,24 +5,7 @@ import { FormInput } from '@/shared/components/molecules/FormInput';
 import { FormSelect } from '@/shared/components/molecules/FormSelect';
 import { CardContainer } from '@/shared/components/molecules/Container';
 import { Text } from '@chakra-ui/react';
-
-interface Account {
-    id?: number;
-    code: string;
-    name: string;
-    type: string;
-    subtype: string;
-    parent_id?: number;
-    description?: string;
-    is_active: boolean;
-}
-
-interface AccountFormProps {
-    account?: Account;
-    accounts: Account[];
-    onSubmit: (data: Account) => void;
-    onCancel: () => void;
-}
+import { Account, AccountFormData, AccountFormProps, ACCOUNT_TYPES } from '@/shared/types/accounting';
 
 const accountTypes = [
     { value: 'asset', label: 'Asset' },
