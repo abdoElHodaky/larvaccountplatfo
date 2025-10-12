@@ -1,4 +1,3 @@
-import React from 'react';
 import { Head, Link } from '@inertiajs/react';
 import AppLayout from '@/shared/components/layouts/AppLayout';
 import { formatCurrency, formatDate, formatNumber } from '@/shared/utils';
