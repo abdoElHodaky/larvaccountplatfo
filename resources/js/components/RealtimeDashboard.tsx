@@ -1,4 +1,4 @@
-import React from 'react';
+
 import { useRealtime, useRealtimeDashboard } from '../hooks/useRealtime';
 import { useDashboardMetrics } from '../hooks/useGraphQL';
 

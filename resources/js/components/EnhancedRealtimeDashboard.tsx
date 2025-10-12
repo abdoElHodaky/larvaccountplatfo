@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from 'react';
+import { useRef, useEffect } from 'react';
 import { useRealtimeDashboardWithRetry } from '../hooks/useRealtimeWithRetry';
 import { useOptimizedGraphQLQuery } from '../hooks/useOptimizedGraphQL';
 import { useAnimation } from '../animations/transitions';
@@ -9,8 +9,8 @@ import {
   DashboardIcon,
   NotificationIcon,
   icons 
-} from '../icons/LiveIcons';
-import { GET_DASHBOARD_METRICS } from '../graphql/client';
+} from '../ui/icons/Icons';
+import { GET_DASHBOARD_METRICS } from '../core/graphql/client';
 
 interface EnhancedRealtimeDashboardProps {
   organizationId: string;

@@ -19,17 +19,11 @@ class TenantProvisioningService
     protected $tenantResolver;
 
     /**
-     * The database initialization service.
-     */
-    protected $databaseInitService;
-
-    /**
      * Create a new tenant provisioning service instance.
      */
-    public function __construct(TenantResolver $tenantResolver, DatabaseInitializationService $databaseInitService)
+    public function __construct(TenantResolver $tenantResolver)
     {
         $this->tenantResolver = $tenantResolver;
-        $this->databaseInitService = $databaseInitService;
     }
 
     /**

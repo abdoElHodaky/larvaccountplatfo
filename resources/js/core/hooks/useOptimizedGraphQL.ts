@@ -1,5 +1,5 @@
 import { useRequest } from 'alova/react';
-import { useMemo, useCallback } from 'react';
+import { useMemo, useCallback, useState, useEffect } from 'react';
 import { 
   createGraphQLQuery, 
   createGraphQLMutation 

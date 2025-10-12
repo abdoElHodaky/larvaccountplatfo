@@ -1,6 +1,6 @@
 <?php
 
-namespace App\GraphQL\Cache;
+namespace App\Infrastructure\Cache;
 
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;

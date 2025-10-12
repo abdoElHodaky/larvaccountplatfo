@@ -1,4 +1,4 @@
-import React from 'react';
+
 
 // Simplified icons for real-time features
 export interface IconProps {

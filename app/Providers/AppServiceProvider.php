@@ -5,7 +5,7 @@ namespace App\Providers;
 use App\Features\Authentication\Auth\TenantAwareAuthManager;
 use App\Features\Organization\Services\OrganizationService;
 use App\Services\AuthService;
-use App\Services\DatabaseInitializationService;
+
 use App\Services\TenantProvisioningService;
 use App\Services\TenantResolver;
 use App\Shared\Services\InterModuleBus;
@@ -58,16 +58,10 @@ class AppServiceProvider extends ServiceProvider
             return new TenantResolver;
         });
 
-        // Database Initialization Service
-        $this->app->singleton(DatabaseInitializationService::class, function ($app) {
-            return new DatabaseInitializationService;
-        });
-
         // Tenant Provisioning Service
         $this->app->singleton(TenantProvisioningService::class, function ($app) {
             return new TenantProvisioningService(
-                $app->make(TenantResolver::class),
-                $app->make(DatabaseInitializationService::class)
+                $app->make(TenantResolver::class)
             );
         });
     }
@@ -205,7 +199,6 @@ class AppServiceProvider extends ServiceProvider
     {
         return [
             TenantResolver::class,
-            DatabaseInitializationService::class,
             TenantProvisioningService::class,
             TenantAwareAuthManager::class,
             AuthService::class,
