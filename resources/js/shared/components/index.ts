@@ -16,7 +16,13 @@ export { TextInput } from './atoms/TextInput';
 export { InputError } from './atoms/InputError';
 export { InputLabel } from './atoms/InputLabel';
 
-// Animation Components
+// Phase 3 Animation Components
 export { AnimatedFormInput } from './AnimatedFormInput';
 export { AnimatedModal, AnimatedConfirmationModal, useAnimatedModal } from './AnimatedModal';
 export { AnimatedSidebar, useAnimatedSidebar } from './AnimatedSidebar';
+
+// Phase 4 Animation Components - Unified Structure
+export { Card } from './Card';
+export { Widget } from './Widget';
+export { List } from './List';
+export { Loader } from './Loader';
