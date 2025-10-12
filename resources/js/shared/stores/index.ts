@@ -25,6 +25,7 @@ export interface RootModel {
   accounting: AccountingModel;
   inventory: InventoryModel;
   dashboard: DashboardModel;
+  [key: string]: any;
 }
 
 // Create the models object

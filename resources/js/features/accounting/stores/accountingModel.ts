@@ -310,8 +310,8 @@ export const accountingModel = createModel<RootModel>()({
         // dispatch.accounting.updateAccount(response.data);
         
         // Mock implementation
-        const state = this.getState();
-        const existingAccount = state.accounting.accounts.find(a => a.id === payload.id);
+        const state = this.getState() as any;
+        const existingAccount = state.accounting.accounts.find((a: any) => a.id === payload.id);
         if (existingAccount) {
           const updatedAccount = {
             ...existingAccount,
