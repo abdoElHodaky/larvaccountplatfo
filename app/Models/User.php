@@ -8,20 +8,14 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use Laravel\Fortify\TwoFactorAuthenticatable;
-use Laravel\Jetstream\HasProfilePhoto;
-use Laravel\Jetstream\HasTeams;
 use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable implements MustVerifyEmail
 {
     use HasApiTokens;
     use HasFactory;
-    use HasProfilePhoto;
-    use HasTeams;
     use Notifiable;
     use SoftDeletes;
-    use TwoFactorAuthenticatable;
 
     /**
      * The attributes that are mass assignable.
@@ -381,7 +375,7 @@ class User extends Authenticatable implements MustVerifyEmail
     /**
      * Check if user can perform a specific action in a tenant.
      */
-    public function can(string $permission, ?Tenant $tenant = null): bool
+    public function canInTenant(string $permission, ?Tenant $tenant = null): bool
     {
         if (! $tenant) {
             $tenant = app('tenant');
