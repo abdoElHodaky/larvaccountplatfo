@@ -1,430 +1,752 @@
-# Laravel Backend Naming Conventions Guide
+# 📝 Unified Naming Conventions Guide
 
-## Overview
+## 🎯 Overview
 
-This document establishes consistent naming conventions for the Laravel accounting platform backend to improve code readability, maintainability, and developer experience.
+This document establishes unified naming conventions for the Laravel Modular Accounting Platform to ensure consistency, readability, and maintainability across the entire codebase. These conventions apply to all backend components including controllers, services, models, middleware, and other PHP classes.
 
-## General Principles
+---
 
-1. **Clarity over Brevity** - Names should be descriptive and self-documenting
-2. **Consistency** - Follow established patterns throughout the codebase
-3. **Context Awareness** - Names should make sense within their domain context
-4. **Avoid Abbreviations** - Use full words unless the abbreviation is universally understood
+## 🏗️ General Principles
 
-## File and Directory Naming
+### **1. Consistency First**
+- Use the same naming pattern throughout the entire application
+- Follow established Laravel conventions where applicable
+- Prioritize clarity over brevity
 
-### Directory Names
-- **PascalCase** for feature directories: `Accounting`, `BusinessOperations`
-- **PascalCase** for subdirectories: `Controllers`, `Services`, `Models`
-- **lowercase** for configuration directories: `config`, `database`, `resources`
+### **2. Self-Documenting Names**
+- Names should clearly indicate purpose and responsibility
+- Avoid abbreviations unless they are widely understood
+- Use descriptive names that reduce the need for comments
 
-### File Names
-- **PascalCase** with descriptive suffixes:
-  - Controllers: `AccountController.php`, `TransactionController.php`
-  - Services: `AccountCreationService.php`, `TransactionProcessingService.php`
-  - Models: `Account.php`, `Transaction.php`, `JournalEntry.php`
-  - Events: `TransactionCreated.php`, `AccountBalanceUpdated.php`
-  - Listeners: `SendTransactionNotification.php`, `UpdateAccountBalance.php`
+### **3. Context Awareness**
+- Consider the namespace and directory structure when naming
+- Avoid redundant information in names
+- Use appropriate prefixes/suffixes for different component types
 
-## Class Naming Conventions
+---
 
-### Controllers
+## 📁 Directory and Namespace Conventions
+
+### **Feature Modules**
 ```php
-// ✅ Good - Descriptive and follows pattern
-class AccountController extends Controller
-class TransactionController extends Controller
-class ReportGenerationController extends Controller
+// Pattern: PascalCase, descriptive business domain
+app/Features/Accounting/
+app/Features/InventoryManagement/
+app/Features/FinancialReporting/
+app/Features/UserAuthentication/
 
-// ❌ Avoid - Too generic or unclear
-class AccountingController extends Controller  // Too broad
-class DataController extends Controller        // Too generic
-class AccController extends Controller         // Abbreviated
+// Namespace pattern
+namespace App\Features\Accounting\Services;
+namespace App\Features\InventoryManagement\Controllers;
 ```
 
-### Services
+### **Shared Components**
 ```php
-// ✅ Good - Specific responsibility and action
-class AccountCreationService
-class TransactionProcessingService
-class ReportGenerationService
-class TaxCalculationService
-class ReconciliationService
+// Pattern: Descriptive purpose
+app/Shared/Services/
+app/Shared/Contracts/
+app/Shared/Traits/
+app/Shared/Exceptions/
 
-// ❌ Avoid - Too broad or unclear
-class AccountingService     // Too broad - what does it do?
-class DataService          // Too generic
-class HelperService        // Unclear purpose
+// Namespace pattern
+namespace App\Shared\Services;
+namespace App\Shared\Contracts;
 ```
 
-### Models
-```php
-// ✅ Good - Singular, descriptive entity names
-class Account extends Model
-class Transaction extends Model
-class JournalEntry extends Model
-class ChartOfAccounts extends Model
-class TaxRate extends Model
+---
 
-// ❌ Avoid - Plural or unclear names
-class Accounts extends Model           // Should be singular
-class TransactionData extends Model    // Redundant suffix
-class AccModel extends Model          // Abbreviated
+## 🎮 Controller Naming Conventions
+
+### **1. Feature Controllers**
+```php
+// Pattern: [Feature]Controller
+// Location: app/Features/[Feature]/Controllers/
+
+✅ Correct Examples:
+AccountingController.php
+InventoryController.php
+ReportingController.php
+DashboardController.php
+UserManagementController.php
+
+❌ Incorrect Examples:
+AccountController.php          // Too generic
+AccController.php              // Abbreviated
+AccountingManagementController.php  // Redundant
 ```
 
-### Events
+### **2. API Controllers**
 ```php
-// ✅ Good - Past tense, descriptive
-class TransactionCreated
-class AccountBalanceUpdated
-class ReportGenerated
-class UserLoggedIn
-class InvoicePaid
+// Pattern: [Feature]ApiController
+// Location: app/Features/[Feature]/Controllers/Api/
 
-// ❌ Avoid - Present tense or unclear
-class CreateTransaction    // Should be past tense
-class AccountEvent        // Too generic
-class DataUpdated         // Too vague
+✅ Correct Examples:
+AccountingApiController.php
+InventoryApiController.php
+ReportingApiController.php
+
+// Alternative pattern for specific API versions
+AccountingV1Controller.php
+AccountingV2Controller.php
 ```
 
-### Listeners
+### **3. Global Controllers**
 ```php
-// ✅ Good - Action-oriented, descriptive
-class SendTransactionNotification
-class UpdateAccountBalance
-class LogUserActivity
-class GenerateAuditTrail
-class RecalculateTotals
+// Pattern: [Purpose]Controller
+// Location: app/Http/Controllers/
 
-// ❌ Avoid - Unclear or generic names
-class TransactionListener     // What does it do?
-class AccountHandler         // Too generic
-class DataProcessor          // Too vague
+✅ Correct Examples:
+AuthenticationController.php   // Core auth operations
+HealthCheckController.php      // System health
+WebhookController.php          // External webhooks
+ApiController.php              // Base API controller
+
+❌ Incorrect Examples:
+RegisteredUserController.php   // Should be: UserRegistrationController.php
+EmailVerificationPromptController.php  // Should be: EmailVerificationController.php
 ```
 
-## Method Naming Conventions
-
-### Controller Methods
+### **4. Specialized Controllers**
 ```php
-// ✅ Good - RESTful and descriptive
-public function index()           // List resources
-public function show($id)         // Show single resource
-public function store(Request $request)    // Create new resource
-public function update(Request $request, $id)  // Update resource
-public function destroy($id)      // Delete resource
+// Pattern: [Entity][Action]Controller
 
-// Custom actions - verb + noun
-public function generateReport()
-public function exportData()
-public function reconcileAccount()
+✅ Correct Examples:
+UserRegistrationController.php
+PasswordResetController.php
+EmailVerificationController.php
+TenantProvisioningController.php
+
+// For resource controllers
+UserResourceController.php
+AccountResourceController.php
 ```
 
-### Service Methods
+---
+
+## 🔧 Service Naming Conventions
+
+### **1. Core Services**
 ```php
-// ✅ Good - Verb + noun pattern
+// Pattern: [Domain]Service
+// Location: app/Services/Core/
+
+✅ Correct Examples:
+AuthenticationService.php      // Core authentication logic
+AuthorizationService.php       // Permission management
+TenantService.php              // Tenant operations
+UserService.php                // User management
+SecurityService.php            // Security utilities
+
+❌ Incorrect Examples:
+AuthService.php                // Too abbreviated
+TenantProvisioningService.php  // Should be: TenantService.php
+UserManagementService.php      // Redundant "Management"
+```
+
+### **2. Infrastructure Services**
+```php
+// Pattern: [Technology/Purpose]Service
+// Location: app/Services/Infrastructure/
+
+✅ Correct Examples:
+CacheService.php               // Caching operations
+QueueService.php               // Queue management
+StorageService.php             // File storage
+NotificationService.php        // Notifications
+EmailService.php               // Email operations
+SmsService.php                 // SMS operations
+
+❌ Incorrect Examples:
+CachingService.php             // Use "Cache" not "Caching"
+FileStorageService.php         // Use "Storage" not "FileStorage"
+```
+
+### **3. Feature Services**
+```php
+// Pattern: [Domain][Purpose]Service (if purpose is specific)
+// Pattern: [Domain]Service (if general domain service)
+// Location: app/Features/[Feature]/Services/
+
+✅ Correct Examples:
+// General domain services
+AccountingService.php          // Main accounting operations
+InventoryService.php           // Main inventory operations
+ReportingService.php           // Main reporting operations
+
+// Specific purpose services
+BudgetManagementService.php    // Budget-specific operations
+TaxCalculationService.php      // Tax-specific calculations
+StockValuationService.php      // Stock valuation logic
+FinancialForecastingService.php // Financial forecasting
+
+❌ Incorrect Examples:
+BudgetService.php              // Too generic, use BudgetManagementService.php
+TaxService.php                 // Too generic, use TaxCalculationService.php
+ForecastingService.php         // Use FinancialForecastingService.php
+```
+
+### **4. Application Services**
+```php
+// Pattern: [Entity][Action]Service
+// Location: app/Features/[Feature]/Services/Application/
+
+✅ Correct Examples:
+AccountCreationService.php     // Account creation logic
+TransactionProcessingService.php // Transaction processing
+ReportGenerationService.php    // Report generation
+UserRegistrationService.php    // User registration flow
+
+❌ Incorrect Examples:
+CreateAccountService.php       // Use AccountCreationService.php
+ProcessTransactionService.php  // Use TransactionProcessingService.php
+```
+
+### **5. Integration Services**
+```php
+// Pattern: [System]IntegrationService
+// Location: app/Features/[Feature]/Services/Integration/
+
+✅ Correct Examples:
+BankingIntegrationService.php  // Bank API integration
+TaxSystemIntegrationService.php // Tax system integration
+PayrollIntegrationService.php  // Payroll system integration
+QuickBooksIntegrationService.php // QuickBooks integration
+
+❌ Incorrect Examples:
+BankIntegrationService.php     // Use "Banking" not "Bank"
+TaxIntegrationService.php      // Use "TaxSystem" for clarity
+```
+
+---
+
+## 📊 Model Naming Conventions
+
+### **1. Entity Models**
+```php
+// Pattern: [Entity] (singular, PascalCase)
+// Location: app/Features/[Feature]/Models/ or app/Models/
+
+✅ Correct Examples:
+Account.php                    // Accounting entity
+Transaction.php                // Transaction entity
+JournalEntry.php               // Journal entry entity
+User.php                       // User entity
+Tenant.php                     // Tenant entity
+Product.php                    // Product entity
+Order.php                      // Order entity
+
+❌ Incorrect Examples:
+Accounts.php                   // Should be singular
+TransactionModel.php           // Don't add "Model" suffix
+JournalEntries.php             // Should be singular: JournalEntry.php
+```
+
+### **2. Pivot Models**
+```php
+// Pattern: [Entity1][Entity2] (alphabetical order)
+// Location: app/Features/[Feature]/Models/Pivots/
+
+✅ Correct Examples:
+AccountUser.php                // Account-User relationship
+ProductCategory.php            // Product-Category relationship
+RolePermission.php             // Role-Permission relationship
+TeamUser.php                   // Team-User relationship
+
+❌ Incorrect Examples:
+UserAccount.php                // Should be AccountUser.php (alphabetical)
+CategoryProduct.php            // Should be ProductCategory.php
+```
+
+### **3. Value Objects**
+```php
+// Pattern: [Concept] (descriptive name)
+// Location: app/Features/[Feature]/Models/ValueObjects/
+
+✅ Correct Examples:
+Money.php                      // Money value object
+Address.php                    // Address value object
+DateRange.php                  // Date range value object
+AccountCode.php                // Account code value object
+
+❌ Incorrect Examples:
+MoneyValue.php                 // Don't add "Value" suffix
+AddressVO.php                  // Don't abbreviate "ValueObject"
+```
+
+---
+
+## 🛡️ Middleware Naming Conventions
+
+### **1. Authentication/Authorization Middleware**
+```php
+// Pattern: [Verb][Entity/Purpose]
+// Location: app/Http/Middleware/ or app/Features/[Feature]/Middleware/
+
+✅ Correct Examples:
+AuthenticateUser.php           // User authentication
+AuthenticateTenant.php         // Tenant authentication
+EnsureAccountingPermission.php // Permission checking
+EnsureEmailVerified.php        // Email verification check
+EnsureTeamMembership.php       // Team membership check
+
+❌ Incorrect Examples:
+AuthMiddleware.php             // Too generic
+CheckPermission.php            // Use "Ensure" prefix
+VerifyEmail.php                // Use "EnsureEmailVerified"
+```
+
+### **2. Request Processing Middleware**
+```php
+// Pattern: [Action][Entity/Purpose]
+// Location: app/Http/Middleware/
+
+✅ Correct Examples:
+ResolveTenant.php              // Tenant resolution
+ValidateApiRequest.php         // API request validation
+TransformApiResponse.php       // API response transformation
+LogApiRequest.php              // API request logging
+
+❌ Incorrect Examples:
+TenantResolver.php             // Use "ResolveTenant"
+ApiValidator.php               // Use "ValidateApiRequest"
+ResponseTransformer.php        // Use "TransformApiResponse"
+```
+
+### **3. Rate Limiting Middleware**
+```php
+// Pattern: [Purpose]RateLimit
+// Location: app/Http/Middleware/
+
+✅ Correct Examples:
+ApiRateLimit.php               // API rate limiting
+GraphQLRateLimit.php           // GraphQL rate limiting
+AuthenticationRateLimit.php    // Auth rate limiting
+
+❌ Incorrect Examples:
+RateLimitApi.php               // Use "ApiRateLimit"
+GraphQLThrottle.php            // Use "GraphQLRateLimit"
+```
+
+---
+
+## 📋 Repository Naming Conventions
+
+### **1. Entity Repositories**
+```php
+// Pattern: [Entity]Repository
+// Location: app/Features/[Feature]/Repositories/
+
+✅ Correct Examples:
+AccountRepository.php          // Account data access
+TransactionRepository.php      // Transaction data access
+UserRepository.php             // User data access
+ProductRepository.php          // Product data access
+
+❌ Incorrect Examples:
+AccountRepo.php                // Don't abbreviate
+AccountsRepository.php         // Use singular entity name
+AccountDataRepository.php      // Don't add "Data"
+```
+
+### **2. Repository Interfaces**
+```php
+// Pattern: [Entity]RepositoryInterface
+// Location: app/Contracts/Repositories/
+
+✅ Correct Examples:
+AccountRepositoryInterface.php
+TransactionRepositoryInterface.php
+UserRepositoryInterface.php
+
+// Alternative pattern (shorter)
+AccountRepositoryContract.php
+TransactionRepositoryContract.php
+```
+
+---
+
+## 🎭 Event and Listener Naming Conventions
+
+### **1. Domain Events**
+```php
+// Pattern: [Entity][Action] (past tense)
+// Location: app/Features/[Feature]/Events/
+
+✅ Correct Examples:
+AccountCreated.php             // Account was created
+TransactionProcessed.php       // Transaction was processed
+UserRegistered.php             // User was registered
+OrderCompleted.php             // Order was completed
+PaymentReceived.php            // Payment was received
+
+❌ Incorrect Examples:
+CreateAccount.php              // Use past tense: AccountCreated
+ProcessTransaction.php         // Use past tense: TransactionProcessed
+NewUser.php                    // Use UserRegistered
+```
+
+### **2. Event Listeners**
+```php
+// Pattern: [Action][Entity]Listener
+// Location: app/Features/[Feature]/Listeners/
+
+✅ Correct Examples:
+SendAccountCreatedNotification.php    // Send notification when account created
+UpdateInventoryOnOrderCompleted.php   // Update inventory when order completed
+LogUserRegistration.php               // Log user registration
+CalculateTaxOnTransactionProcessed.php // Calculate tax when transaction processed
+
+❌ Incorrect Examples:
+AccountCreatedListener.php     // Be more specific about action
+NotifyAccountCreated.php       // Use "Send" prefix for notifications
+```
+
+---
+
+## 🔌 Job and Queue Naming Conventions
+
+### **1. Job Classes**
+```php
+// Pattern: [Action][Entity]Job
+// Location: app/Jobs/ or app/Features/[Feature]/Jobs/
+
+✅ Correct Examples:
+ProcessTransactionJob.php      // Process a transaction
+SendEmailNotificationJob.php   // Send email notification
+GenerateReportJob.php          // Generate a report
+SyncInventoryJob.php           // Sync inventory data
+BackupDatabaseJob.php          // Backup database
+
+❌ Incorrect Examples:
+TransactionProcessor.php       // Use ProcessTransactionJob
+EmailSender.php                // Use SendEmailNotificationJob
+ReportGenerator.php            // Use GenerateReportJob
+```
+
+### **2. Queue Names**
+```php
+// Pattern: [purpose]-[priority] (kebab-case)
+
+✅ Correct Examples:
+'email-notifications'          // Email notifications queue
+'report-generation'            // Report generation queue
+'data-processing-high'         // High priority data processing
+'background-tasks-low'         // Low priority background tasks
+
+❌ Incorrect Examples:
+'emails'                       // Too generic
+'reports'                      // Too generic
+'high_priority'                // Use kebab-case
+```
+
+---
+
+## 🧪 Test Naming Conventions
+
+### **1. Test Classes**
+```php
+// Pattern: [ClassBeingTested]Test
+// Location: tests/Feature/ or tests/Unit/
+
+✅ Correct Examples:
+AccountingServiceTest.php      // Testing AccountingService
+AccountControllerTest.php      // Testing AccountController
+UserRegistrationTest.php       // Testing user registration flow
+
+❌ Incorrect Examples:
+TestAccountingService.php      // Don't prefix with "Test"
+AccountingTest.php             // Be specific about what's being tested
+```
+
+### **2. Test Methods**
+```php
+// Pattern: test_[what_is_being_tested]_[expected_outcome]
+
+✅ Correct Examples:
+public function test_create_account_with_valid_data_returns_account()
+public function test_process_transaction_with_insufficient_funds_throws_exception()
+public function test_generate_report_with_date_range_returns_correct_data()
+
+❌ Incorrect Examples:
+public function testCreateAccount()           // Not descriptive enough
+public function test_account_creation()       // Missing expected outcome
+public function createAccountTest()           // Wrong naming pattern
+```
+
+---
+
+## 🏷️ Variable and Method Naming Conventions
+
+### **1. Method Names**
+```php
+// Pattern: camelCase, verb-based for actions, noun-based for getters
+
+✅ Correct Examples:
 public function createAccount(array $data): Account
-public function updateTransaction(int $id, array $data): Transaction
-public function calculateTax(float $amount): float
-public function generateReport(string $type): Report
-public function reconcileAccount(int $accountId): bool
+public function processTransaction(Transaction $transaction): void
+public function getAccountBalance(Account $account): Money
+public function calculateTax(Transaction $transaction): Money
+public function isAccountActive(Account $account): bool
+public function hasPermission(User $user, string $permission): bool
 
-// ❌ Avoid - Unclear or inconsistent
-public function doStuff()         // Too vague
-public function handle()          // What does it handle?
-public function process()         // Process what?
+❌ Incorrect Examples:
+public function account_create()              // Use camelCase
+public function processTransactionData()      // Be specific about what's processed
+public function getBalance()                  // Be specific: getAccountBalance
+public function calc_tax()                    // Don't abbreviate
 ```
 
-### Model Methods
+### **2. Variable Names**
 ```php
-// ✅ Good - Descriptive relationships and scopes
-// Relationships
-public function transactions(): HasMany
-public function parentAccount(): BelongsTo
-public function childAccounts(): HasMany
+// Pattern: camelCase, descriptive
 
-// Scopes
-public function scopeActive($query)
-public function scopeByType($query, $type)
-public function scopeWithBalance($query)
+✅ Correct Examples:
+$accountBalance = $this->calculateBalance($account);
+$transactionData = $request->validated();
+$userPermissions = $this->getPermissions($user);
+$organizationId = $request->input('organization_id');
 
-// Accessors/Mutators
-public function getFormattedBalanceAttribute(): string
-public function setCodeAttribute($value): void
-
-// Business logic methods
-public function calculateBalance(): float
-public function isReconciled(): bool
-public function canBeDeleted(): bool
+❌ Incorrect Examples:
+$bal = $this->calculateBalance($account);     // Don't abbreviate
+$data = $request->validated();                // Too generic
+$perms = $this->getPermissions($user);        // Don't abbreviate
+$org_id = $request->input('organization_id'); // Use camelCase
 ```
 
-## Variable Naming Conventions
-
-### General Variables
+### **3. Constants**
 ```php
-// ✅ Good - Descriptive camelCase
-$accountBalance = 1000.00;
-$transactionDate = now();
-$chartOfAccounts = Account::all();
-$userPreferences = $user->preferences;
+// Pattern: SCREAMING_SNAKE_CASE
 
-// ❌ Avoid - Unclear or abbreviated
-$bal = 1000.00;           // Abbreviated
-$data = Account::all();   // Too generic
-$temp = now();           // Unclear purpose
+✅ Correct Examples:
+const ACCOUNT_TYPE_ASSET = 'asset';
+const TRANSACTION_STATUS_PENDING = 'pending';
+const MAX_RETRY_ATTEMPTS = 3;
+const DEFAULT_CACHE_TTL = 3600;
+
+❌ Incorrect Examples:
+const accountTypeAsset = 'asset';             // Use SCREAMING_SNAKE_CASE
+const ASSET = 'asset';                        // Be more descriptive
+const MAX_RETRIES = 3;                        // Use MAX_RETRY_ATTEMPTS
 ```
 
-### Collections and Arrays
+---
+
+## 📊 Database Naming Conventions
+
+### **1. Table Names**
 ```php
-// ✅ Good - Plural nouns
-$accounts = Account::all();
-$transactions = $account->transactions;
-$reportData = $report->getData();
-$validationRules = ['name' => 'required'];
+// Pattern: snake_case, plural
 
-// ❌ Avoid - Singular or unclear
-$account = Account::all();     // Should be plural
-$list = $account->transactions; // Too generic
+✅ Correct Examples:
+accounts                       // Account model
+transactions                   // Transaction model
+journal_entries               // JournalEntry model
+user_permissions              // UserPermission model
+
+❌ Incorrect Examples:
+account                        // Should be plural
+Accounts                       // Use snake_case
+journalEntries                 // Use snake_case
+user_permission                // Should be plural
 ```
 
-### Boolean Variables
+### **2. Column Names**
 ```php
-// ✅ Good - is/has/can/should prefix
-$isActive = true;
-$hasTransactions = $account->transactions->count() > 0;
-$canBeDeleted = $account->canBeDeleted();
-$shouldReconcile = $account->needsReconciliation();
+// Pattern: snake_case
 
-// ❌ Avoid - Unclear boolean intent
-$active = true;           // Could be string or boolean
-$status = true;          // What status?
-$flag = false;           // What flag?
-```
-
-## Database Naming Conventions
-
-### Table Names
-```sql
--- ✅ Good - Plural, snake_case
-accounts
-transactions
-journal_entries
-chart_of_accounts
-tax_rates
-user_preferences
-
--- ❌ Avoid - Singular or inconsistent
-account              -- Should be plural
-transactionData      -- camelCase not appropriate
-acc_trans           -- Abbreviated
-```
-
-### Column Names
-```sql
--- ✅ Good - Descriptive snake_case
-id
-account_code
-account_name
+✅ Correct Examples:
+account_id
 transaction_date
 created_at
 updated_at
-parent_account_id
-is_active
-
--- ❌ Avoid - Abbreviated or unclear
-acc_cd              -- Abbreviated
-date               -- Which date?
-flag               -- What flag?
-```
-
-### Foreign Keys
-```sql
--- ✅ Good - {table}_id pattern
-account_id
-user_id
 organization_id
-parent_account_id
-journal_entry_id
+is_active
+current_balance
 
--- ❌ Avoid - Inconsistent patterns
-accountId           -- camelCase not appropriate
-acc_id             -- Abbreviated
-account            -- Missing _id suffix
+❌ Incorrect Examples:
+accountId                      // Use snake_case
+transactionDate                // Use snake_case
+createdAt                      // Use snake_case
+orgId                          // Don't abbreviate
+active                         // Use is_active for booleans
 ```
 
-## Route Naming Conventions
-
-### API Routes
+### **3. Foreign Key Names**
 ```php
-// ✅ Good - RESTful resource routes
-Route::apiResource('accounts', AccountController::class);
-Route::apiResource('transactions', TransactionController::class);
+// Pattern: [referenced_table_singular]_id
 
-// Custom routes - verb.noun pattern
-Route::post('accounts/{account}/reconcile', [AccountController::class, 'reconcile'])
-    ->name('accounts.reconcile');
-Route::get('reports/generate', [ReportController::class, 'generate'])
-    ->name('reports.generate');
+✅ Correct Examples:
+user_id                        // References users table
+account_id                     // References accounts table
+organization_id                // References organizations table
+parent_account_id              // References accounts table (self-reference)
+
+❌ Incorrect Examples:
+userId                         // Use snake_case
+account                        // Add _id suffix
+org_id                         // Don't abbreviate
 ```
 
-### Route Names
+---
+
+## 🔧 Configuration and Environment
+
+### **1. Configuration Keys**
 ```php
-// ✅ Good - Descriptive dot notation
-'accounts.index'
-'accounts.show'
-'accounts.store'
-'transactions.reconcile'
-'reports.generate'
+// Pattern: snake_case, hierarchical
 
-// ❌ Avoid - Unclear or inconsistent
-'acc.list'          -- Abbreviated
-'show_account'      -- Inconsistent format
-'data.get'          -- Too generic
+✅ Correct Examples:
+'accounting.default_currency'
+'reporting.cache_ttl'
+'integration.banking.api_key'
+'notification.email.from_address'
+
+❌ Incorrect Examples:
+'accountingDefaultCurrency'    // Use snake_case
+'reportCacheTTL'               // Use snake_case with hierarchy
+'bankingApiKey'                // Use hierarchical structure
 ```
 
-## Configuration and Environment Variables
-
-### Environment Variables
-```bash
-# ✅ Good - SCREAMING_SNAKE_CASE, descriptive
-APP_NAME="Accounting Platform"
-DB_CONNECTION=mysql
-WEBSOCKET_URL=ws://localhost:6001
-MAIL_MAILER=smtp
-CACHE_DRIVER=redis
-
-# ❌ Avoid - Unclear or inconsistent
-APP=accounting      # Too abbreviated
-db_host=localhost   # Wrong case
-URL=ws://localhost  # Too generic
-```
-
-### Configuration Keys
+### **2. Environment Variables**
 ```php
-// ✅ Good - snake_case, descriptive
-'database_connection' => 'mysql',
-'cache_timeout' => 3600,
-'mail_from_address' => 'noreply@example.com',
-'websocket_url' => env('WEBSOCKET_URL'),
+// Pattern: SCREAMING_SNAKE_CASE
 
-// ❌ Avoid - camelCase or unclear
-'dbConn' => 'mysql',        // Abbreviated
-'timeout' => 3600,          // Which timeout?
-'url' => env('URL'),        // Too generic
+✅ Correct Examples:
+ACCOUNTING_DEFAULT_CURRENCY=USD
+REPORTING_CACHE_TTL=3600
+BANKING_API_KEY=your_key_here
+EMAIL_FROM_ADDRESS=noreply@example.com
+
+❌ Incorrect Examples:
+accountingDefaultCurrency=USD  // Use SCREAMING_SNAKE_CASE
+REPORT_CACHE=3600              // Be more descriptive
+API_KEY=your_key_here          // Be specific: BANKING_API_KEY
 ```
 
-## GraphQL Naming Conventions
+---
 
-### Types
-```graphql
-# ✅ Good - PascalCase, descriptive
-type Account {
-  id: ID!
-  code: String!
-  name: String!
-}
+## 📋 Validation and Form Requests
 
-type Transaction {
-  id: ID!
-  date: String!
-  amount: Float!
-}
-
-# ❌ Avoid - Unclear or inconsistent
-type AccountData {    # Redundant suffix
-  # ...
-}
-```
-
-### Queries and Mutations
-```graphql
-# ✅ Good - camelCase, descriptive
-type Query {
-  accounts: [Account!]!
-  account(id: ID!): Account
-  transactionsByAccount(accountId: ID!): [Transaction!]!
-}
-
-type Mutation {
-  createAccount(input: CreateAccountInput!): Account!
-  updateTransaction(id: ID!, input: UpdateTransactionInput!): Transaction!
-  deleteAccount(id: ID!): Boolean!
-}
-
-# ❌ Avoid - Unclear or inconsistent
-type Query {
-  getAccounts: [Account!]!     # Redundant 'get' prefix
-  acc(id: ID!): Account        # Abbreviated
-  data: [Transaction!]!        # Too generic
-}
-```
-
-## Testing Naming Conventions
-
-### Test Classes
+### **1. Form Request Classes**
 ```php
-// ✅ Good - {Class}Test pattern
-class AccountControllerTest extends TestCase
-class TransactionServiceTest extends TestCase
-class AccountCreationTest extends TestCase
+// Pattern: [Action][Entity]Request
+// Location: app/Http/Requests/ or app/Features/[Feature]/Requests/
 
-// ❌ Avoid - Unclear or inconsistent
-class TestAccount extends TestCase     // Wrong prefix
-class AccountTests extends TestCase    # Plural
+✅ Correct Examples:
+CreateAccountRequest.php       // Create account validation
+UpdateTransactionRequest.php   // Update transaction validation
+StoreUserRequest.php           // Store user validation
+DeleteProductRequest.php       // Delete product validation
+
+❌ Incorrect Examples:
+AccountRequest.php             // Be specific about action
+AccountCreateRequest.php       // Use CreateAccountRequest
+NewAccountRequest.php          // Use CreateAccountRequest
 ```
 
-### Test Methods
+### **2. Validation Rule Names**
 ```php
-// ✅ Good - test_{action}_{expected_result}
-public function test_create_account_with_valid_data_returns_account()
-public function test_update_transaction_with_invalid_amount_throws_exception()
-public function test_delete_account_with_transactions_fails()
+// Pattern: snake_case, descriptive
 
-// ❌ Avoid - Unclear or too brief
-public function testAccount()          // What about account?
-public function test_create()          // Create what?
-public function it_works()             // What works?
+✅ Correct Examples:
+'account_code' => 'required|string|max:20|unique:accounts'
+'transaction_amount' => 'required|numeric|min:0.01'
+'organization_id' => 'required|exists:organizations,id'
+'is_active' => 'boolean'
+
+❌ Incorrect Examples:
+'accountCode' => '...'          // Use snake_case
+'amount' => '...'               // Be specific: transaction_amount
+'org_id' => '...'               // Don't abbreviate
+'active' => '...'               // Use is_active for booleans
 ```
 
-## Implementation Checklist
+---
 
-### For New Code
-- [ ] Follow established naming patterns
-- [ ] Use descriptive, self-documenting names
-- [ ] Avoid abbreviations unless universally understood
-- [ ] Maintain consistency with existing codebase
-- [ ] Add appropriate suffixes (Controller, Service, etc.)
+## 🎯 Implementation Checklist
 
-### For Refactoring
-- [ ] Identify inconsistent naming patterns
-- [ ] Rename classes/methods to follow conventions
-- [ ] Update all references and imports
+### **Phase 1: Documentation and Standards**
+- [ ] Review and approve naming conventions
+- [ ] Create code style configuration files
+- [ ] Update IDE/editor configurations
+- [ ] Create naming convention quick reference
+
+### **Phase 2: Existing Code Analysis**
+- [ ] Audit existing code for naming violations
+- [ ] Prioritize violations by impact and effort
+- [ ] Create migration plan for critical violations
+- [ ] Document exceptions and legacy considerations
+
+### **Phase 3: Gradual Implementation**
+- [ ] Apply conventions to all new code
+- [ ] Refactor high-impact violations
+- [ ] Update tests to follow conventions
 - [ ] Update documentation and comments
-- [ ] Run tests to ensure nothing breaks
 
-## Tools and Automation
+### **Phase 4: Enforcement and Maintenance**
+- [ ] Set up automated code style checking
+- [ ] Create pre-commit hooks for validation
+- [ ] Update code review guidelines
+- [ ] Train team on new conventions
 
-### IDE Configuration
-- Configure IDE to suggest naming patterns
-- Set up code templates with proper naming
-- Enable naming convention inspections
+---
 
-### Code Quality Tools
-- Use PHP_CodeSniffer with custom rules
-- Configure PHPStan for naming analysis
-- Set up pre-commit hooks for naming validation
+## 🚀 Benefits of Consistent Naming
 
-### Documentation
-- Keep this guide updated with new patterns
-- Document exceptions and special cases
-- Provide examples for complex scenarios
+### **1. Developer Experience**
+- **Faster Navigation**: Predictable names make code easier to find
+- **Reduced Cognitive Load**: Consistent patterns reduce mental overhead
+- **Improved Onboarding**: New developers can quickly understand the codebase
 
-## Conclusion
+### **2. Code Quality**
+- **Better Readability**: Self-documenting code reduces need for comments
+- **Easier Maintenance**: Consistent patterns make changes more predictable
+- **Reduced Bugs**: Clear names reduce misunderstandings and errors
 
-Consistent naming conventions improve code readability, reduce cognitive load, and make the codebase more maintainable. By following these guidelines, we ensure that:
+### **3. Team Collaboration**
+- **Shared Understanding**: Common vocabulary improves communication
+- **Code Reviews**: Consistent patterns make reviews more effective
+- **Knowledge Transfer**: Easier to share knowledge between team members
 
-1. **New developers** can quickly understand the codebase structure
-2. **Code reviews** focus on logic rather than naming discussions
-3. **Maintenance** becomes easier with predictable naming patterns
-4. **Collaboration** improves with shared understanding of conventions
+### **4. Long-term Maintainability**
+- **Scalability**: Consistent patterns support codebase growth
+- **Refactoring**: Predictable names make large-scale changes safer
+- **Documentation**: Self-documenting code reduces documentation burden
 
-Remember: These are guidelines, not rigid rules. Use judgment when special cases arise, but document any exceptions clearly.
+---
+
+## 📊 Naming Convention Quick Reference
+
+### **File Types**
+| Component | Pattern | Example |
+|-----------|---------|---------|
+| Controller | `[Feature]Controller.php` | `AccountingController.php` |
+| Service | `[Domain][Purpose]Service.php` | `BudgetManagementService.php` |
+| Model | `[Entity].php` | `Account.php` |
+| Middleware | `[Verb][Entity].php` | `AuthenticateTenant.php` |
+| Repository | `[Entity]Repository.php` | `AccountRepository.php` |
+| Event | `[Entity][Action].php` | `AccountCreated.php` |
+| Listener | `[Action][Entity]Listener.php` | `SendAccountCreatedNotification.php` |
+| Job | `[Action][Entity]Job.php` | `ProcessTransactionJob.php` |
+| Request | `[Action][Entity]Request.php` | `CreateAccountRequest.php` |
+
+### **Method Types**
+| Purpose | Pattern | Example |
+|---------|---------|---------|
+| Create | `create[Entity]()` | `createAccount()` |
+| Update | `update[Entity]()` | `updateAccount()` |
+| Delete | `delete[Entity]()` | `deleteAccount()` |
+| Get Single | `get[Entity]()` | `getAccount()` |
+| Get Multiple | `get[Entities]()` | `getAccounts()` |
+| Find | `find[Entity]()` | `findAccount()` |
+| Check Boolean | `is[Condition]()` | `isAccountActive()` |
+| Check Boolean | `has[Condition]()` | `hasPermission()` |
+| Calculate | `calculate[Value]()` | `calculateBalance()` |
+| Process | `process[Entity]()` | `processTransaction()` |
+
+---
+
+**Last Updated**: 2024-10-16  
+**Status**: Ready for Implementation  
+**Next Review**: After team approval and initial implementation
 

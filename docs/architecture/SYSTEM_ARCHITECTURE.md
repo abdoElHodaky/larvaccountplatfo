@@ -350,7 +350,7 @@ graph TB
     end
     
     subgraph "🔄 CI/CD Pipeline"
-        M[GitHub Actions] --> N[Build & Test]
+        M[Manual Deployment] --> N[Build & Test]
         N --> O[Security Scan]
         O --> P[Deploy Staging]
         P --> Q[Deploy Production]
