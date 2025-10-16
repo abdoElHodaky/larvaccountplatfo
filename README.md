@@ -428,67 +428,20 @@ graph TB
 
 ```mermaid
 sequenceDiagram
-    participant USER as 👤 User
-    participant UI as 🖥️ Frontend UI
-    participant GQL as 🔗 GraphQL API
-    participant LARAVEL as 🏛️ Laravel Backend
-    participant REVERB as 📡 Laravel Reverb
-    participant QUEUE as 📬 Queue System
-    participant DB as 💾 Database
-    participant CACHE as ⚡ Redis Cache
-    participant OTHER_USERS as 👥 Other Users
+    participant User
+    participant Frontend
+    participant API
+    participant Database
+    participant WebSocket
     
-    Note over USER,OTHER_USERS: 💸 Financial Transaction Creation Flow
+    User->>Frontend: Create Transaction
+    Frontend->>API: Process Request
+    API->>Database: Save Transaction
+    API->>WebSocket: Broadcast Update
+    WebSocket->>Frontend: Real-time Update
     
-    USER->>UI: Create Transaction
-    UI->>UI: Optimistic UI Update
-    UI->>GQL: GraphQL Mutation
-    GQL->>LARAVEL: Process Transaction
-    
-    Note over LARAVEL: 🔄 Backend Processing
-    LARAVEL->>DB: Begin Transaction
-    LARAVEL->>DB: Validate Business Rules
-    LARAVEL->>DB: Create Journal Entries
-    LARAVEL->>DB: Update Account Balances
-    DB-->>LARAVEL: Transaction Committed
-    
-    Note over LARAVEL: 📡 Real-time Broadcasting
-    LARAVEL->>REVERB: Broadcast TransactionCreated
-    LARAVEL->>QUEUE: Queue Background Jobs
-    LARAVEL-->>GQL: Success Response
-    GQL-->>UI: Transaction Confirmed
-    UI->>UI: Update UI with Real Data
-    
-    Note over REVERB,OTHER_USERS: 🔄 Live Updates to All Users
-    REVERB->>OTHER_USERS: WebSocket Event
-    OTHER_USERS->>OTHER_USERS: Update Dashboard
-    OTHER_USERS->>OTHER_USERS: Refresh Account Balances
-    
-    Note over LARAVEL,CACHE: 🧠 Cache Management Strategy
-    LARAVEL->>CACHE: Update Account Cache
-    LARAVEL->>CACHE: Invalidate Report Cache
-    LARAVEL->>CACHE: Update Dashboard Metrics
-    
-    Note over QUEUE: 🔄 Background Processing
-    QUEUE->>QUEUE: Generate Financial Reports
-    QUEUE->>QUEUE: Send Notifications
-    QUEUE->>QUEUE: Update Analytics
-    QUEUE->>QUEUE: Audit Trail Logging
-    
-    Note over UI: 🎯 Error Handling & Recovery
-    alt Transaction Fails
-        LARAVEL-->>GQL: Error Response
-        GQL-->>UI: Transaction Failed
-        UI->>UI: Revert Optimistic Update
-        UI->>UI: Show Error Message
-        UI->>UI: Retry Mechanism
-    end
-    
-    Note over REVERB: 📊 Connection Management
-    REVERB->>REVERB: Manage WebSocket Connections
-    REVERB->>REVERB: Handle Connection Drops
-    REVERB->>REVERB: Reconnection Logic
-    REVERB->>REVERB: Message Queuing
+    Note over API: Background jobs queued
+    Note over Frontend: Optimistic UI updates
 ```
 
 ### **Multi-tenant Architecture**
@@ -777,87 +730,17 @@ erDiagram
 
 ### **Database Performance Strategy**
 
-```mermaid
-graph TB
-    subgraph "🎯 Primary Index Strategy"
-        PK[🔑 Primary Keys<br/>UUID with B-Tree]
-        FK[🔗 Foreign Keys<br/>tenant_id Optimization]
-        UNIQUE[✨ Unique Constraints<br/>Business Rules]
-        TENANT_ISOLATION[🏢 Tenant Isolation<br/>Row-level Security]
-        
-        PK --> FK
-        FK --> UNIQUE
-        UNIQUE --> TENANT_ISOLATION
-    end
-    
-    subgraph "⚡ Performance Optimization"
-        COMPOSITE[📊 Composite Indexes<br/>Multi-column Queries]
-        PARTIAL[🎯 Partial Indexes<br/>Filtered Data]
-        COVERING[📋 Covering Indexes<br/>Index-only Scans]
-        SEARCH[🔍 Full-text Search<br/>GIN Indexes]
-        
-        COMPOSITE --> PARTIAL
-        PARTIAL --> COVERING
-        COVERING --> SEARCH
-    end
-    
-    subgraph "📊 Analytics & Reporting"
-        TIME_SERIES[📈 Time-series Indexes<br/>Date Range Queries]
-        AGGREGATION[🧮 Aggregation Indexes<br/>SUM, COUNT, AVG]
-        MATERIALIZED[💾 Materialized Views<br/>Pre-computed Results]
-        REPORTING[📊 Reporting Indexes<br/>Business Intelligence]
-        
-        TIME_SERIES --> AGGREGATION
-        AGGREGATION --> MATERIALIZED
-        MATERIALIZED --> REPORTING
-    end
-    
-    subgraph "🔧 Maintenance & Scaling"
-        PARTITIONING[📂 Table Partitioning<br/>Date-based Sharding]
-        ARCHIVING[📦 Data Archiving<br/>Historical Data]
-        VACUUM[🧹 Auto Vacuum<br/>Space Reclamation]
-        REPLICATION[🔄 Read Replicas<br/>Load Distribution]
-        
-        PARTITIONING --> ARCHIVING
-        ARCHIVING --> VACUUM
-        VACUUM --> REPLICATION
-    end
-    
-    subgraph "📊 Monitoring & Optimization"
-        QUERY_ANALYSIS[🔍 Query Analysis<br/>Performance Insights]
-        INDEX_USAGE[📈 Index Usage Stats<br/>Optimization Tracking]
-        SLOW_QUERIES[⚠️ Slow Query Log<br/>Performance Issues]
-        AUTO_EXPLAIN[🤖 Auto Explain<br/>Query Plan Analysis]
-        
-        QUERY_ANALYSIS --> INDEX_USAGE
-        INDEX_USAGE --> SLOW_QUERIES
-        SLOW_QUERIES --> AUTO_EXPLAIN
-    end
-    
-    %% Cross-layer Connections
-    TENANT_ISOLATION --> COMPOSITE
-    SEARCH --> TIME_SERIES
-    REPORTING --> PARTITIONING
-    REPLICATION --> QUERY_ANALYSIS
-    
-    %% Performance Flow
-    FK -.-> COMPOSITE
-    COVERING -.-> MATERIALIZED
-    ARCHIVING -.-> QUERY_ANALYSIS
-    
-    %% Styling
-    classDef primary fill:#eff6ff,stroke:#2563eb,stroke-width:3px,color:#000
-    classDef performance fill:#f0fdf4,stroke:#16a34a,stroke-width:3px,color:#000
-    classDef analytics fill:#fef3c7,stroke:#d97706,stroke-width:3px,color:#000
-    classDef maintenance fill:#fef2f2,stroke:#dc2626,stroke-width:3px,color:#000
-    classDef monitoring fill:#f3e8ff,stroke:#9333ea,stroke-width:3px,color:#000
-    
-    class PK,FK,UNIQUE,TENANT_ISOLATION primary
-    class COMPOSITE,PARTIAL,COVERING,SEARCH performance
-    class TIME_SERIES,AGGREGATION,MATERIALIZED,REPORTING analytics
-    class PARTITIONING,ARCHIVING,VACUUM,REPLICATION maintenance
-    class QUERY_ANALYSIS,INDEX_USAGE,SLOW_QUERIES,AUTO_EXPLAIN monitoring
-```
+### **Database Performance Strategy**
+
+**Indexing**: UUID Primary Keys, Composite Indexes, Partial Indexes, Full-text Search (GIN)
+
+**Multi-tenant**: Row-level Security, Tenant Isolation, Optimized Foreign Keys
+
+**Analytics**: Time-series Indexes, Materialized Views, Aggregation Indexes
+
+**Scaling**: Table Partitioning, Data Archiving, Read Replicas, Auto Vacuum
+
+**Monitoring**: Query Analysis, Index Usage Stats, Slow Query Logging
 
 ### **Key Database Features**
 - 🏢 **Multi-tenant Architecture** with complete data isolation
@@ -869,734 +752,96 @@ graph TB
 
 ---
 
-## 🎨 **LiveIcons System Architecture**
+## 🎨 **LiveIcons System**
 
-### **Advanced Dynamic Icon Management System**
+### **Dynamic Icon Management System**
 
-Our enhanced LiveIcons system provides a centralized, performant, and developer-friendly approach to icon management with advanced animation capabilities, real-time updates, and intelligent caching.
+A centralized, performant icon system with smart caching, animations, and TypeScript support.
 
-```mermaid
-graph TB
-    subgraph "🚀 LiveIcons Ecosystem"
-        subgraph "📦 Entry Points & Distribution"
-            MAIN[🎯 index.ts<br/>Main Entry Point]
-            EXPORTS[📋 exports.ts<br/>Unified Exports]
-            BUNDLES[📦 Bundle Manager<br/>Tree-shaking Optimization]
-            CDN[🌐 CDN Distribution<br/>Global Delivery]
-            
-            MAIN --> EXPORTS
-            EXPORTS --> BUNDLES
-            BUNDLES --> CDN
-        end
-        
-        subgraph "🧠 Core Management System"
-            REGISTRY[🗂️ IconRegistry.ts<br/>Centralized Registry]
-            CACHE[⚡ CacheManager.ts<br/>Multi-layer Caching]
-            LOADER[🔄 LazyLoader.ts<br/>Dynamic Loading]
-            METADATA[📊 MetadataManager.ts<br/>Icon Intelligence]
-            
-            REGISTRY --> CACHE
-            REGISTRY --> LOADER
-            REGISTRY --> METADATA
-        end
-        
-        subgraph "🎭 Type System & Validation"
-            TYPES[📝 types.ts<br/>TypeScript Definitions]
-            VALIDATOR[✅ validator.ts<br/>Runtime Validation]
-            SCHEMA[📋 schema.ts<br/>Icon Schema]
-            CONSTANTS[🔧 constants.ts<br/>System Constants]
-            
-            TYPES --> VALIDATOR
-            TYPES --> SCHEMA
-            TYPES --> CONSTANTS
-        end
-        
-        subgraph "🛠️ Utility Layer"
-            UTILS[🔧 utils.ts<br/>Core Utilities]
-            FACTORY[🏭 IconFactory.ts<br/>Icon Creation]
-            TRANSFORMER[🔄 transformer.ts<br/>Icon Processing]
-            OPTIMIZER[⚡ optimizer.ts<br/>Performance Optimization]
-            
-            UTILS --> FACTORY
-            UTILS --> TRANSFORMER
-            UTILS --> OPTIMIZER
-        end
-        
-        subgraph "📂 Icon Categories & Collections"
-            subgraph "🧭 Navigation Icons"
-                NAV[nav-* Collection]
-                NAV_HOME[🏠 nav-home]
-                NAV_BACK[⬅️ nav-back]
-                NAV_MENU[☰ nav-menu]
-                NAV_BREADCRUMB[🍞 nav-breadcrumb]
-                
-                NAV --> NAV_HOME
-                NAV --> NAV_BACK
-                NAV --> NAV_MENU
-                NAV --> NAV_BREADCRUMB
-            end
-            
-            subgraph "⚡ Action Icons"
-                ACTION[action-* Collection]
-                ACTION_EDIT[✏️ action-edit]
-                ACTION_DELETE[🗑️ action-delete]
-                ACTION_ADD[➕ action-add]
-                ACTION_SAVE[💾 action-save]
-                
-                ACTION --> ACTION_EDIT
-                ACTION --> ACTION_DELETE
-                ACTION --> ACTION_ADD
-                ACTION --> ACTION_SAVE
-            end
-            
-            subgraph "📝 Form Icons"
-                FORM[form-* Collection]
-                FORM_SEARCH[🔍 form-search]
-                FORM_FILTER[🔽 form-filter]
-                FORM_CALENDAR[📅 form-calendar]
-                FORM_INPUT[📝 form-input]
-                
-                FORM --> FORM_SEARCH
-                FORM --> FORM_FILTER
-                FORM --> FORM_CALENDAR
-                FORM --> FORM_INPUT
-            end
-            
-            subgraph "📊 Status Icons"
-                STATUS[status-* Collection]
-                STATUS_SUCCESS[✅ status-success]
-                STATUS_ERROR[❌ status-error]
-                STATUS_WARNING[⚠️ status-warning]
-                STATUS_LOADING[⏳ status-loading]
-                
-                STATUS --> STATUS_SUCCESS
-                STATUS --> STATUS_ERROR
-                STATUS --> STATUS_WARNING
-                STATUS --> STATUS_LOADING
-            end
-            
-            subgraph "💼 Business Icons"
-                BUSINESS[business-* Collection]
-                BIZ_CHART[📈 business-chart]
-                BIZ_REPORT[📊 business-report]
-                BIZ_MONEY[💰 business-money]
-                BIZ_INVOICE[🧾 business-invoice]
-                
-                BUSINESS --> BIZ_CHART
-                BUSINESS --> BIZ_REPORT
-                BUSINESS --> BIZ_MONEY
-                BUSINESS --> BIZ_INVOICE
-            end
-        end
-        
-        subgraph "🎬 Advanced Animation System"
-            ANIM_ENGINE[🎭 AnimationEngine.ts<br/>Core Animation System]
-            ANIM_SCHEDULER[⏰ AnimationScheduler.ts<br/>Timeline Management]
-            ANIM_PHYSICS[🌊 PhysicsEngine.ts<br/>Realistic Motion]
-            ANIM_PRESETS[🎨 AnimationPresets.ts<br/>Predefined Animations]
-            
-            subgraph "🎪 Animation Types"
-                BOUNCE[🏀 bounce]
-                PULSE[💓 pulse]
-                ROTATE[🔄 rotate]
-                SHAKE[📳 shake]
-                LOADING[⏳ loading]
-                SUCCESS[✨ success]
-                ERROR[💥 error]
-                MORPH[🔄 morph]
-                ELASTIC[🎈 elastic]
-            end
-            
-            ANIM_ENGINE --> ANIM_SCHEDULER
-            ANIM_ENGINE --> ANIM_PHYSICS
-            ANIM_ENGINE --> ANIM_PRESETS
-            
-            ANIM_PRESETS --> BOUNCE
-            ANIM_PRESETS --> PULSE
-            ANIM_PRESETS --> ROTATE
-            ANIM_PRESETS --> SHAKE
-            ANIM_PRESETS --> LOADING
-            ANIM_PRESETS --> SUCCESS
-            ANIM_PRESETS --> ERROR
-            ANIM_PRESETS --> MORPH
-            ANIM_PRESETS --> ELASTIC
-        end
-        
-        subgraph "⚡ Performance & Optimization"
-            PERF_MONITOR[📊 PerformanceMonitor.ts<br/>Real-time Metrics]
-            TREE_SHAKE[🌳 TreeShaker.ts<br/>Bundle Optimization]
-            BATCH_LOADER[📦 BatchLoader.ts<br/>Parallel Loading]
-            MEMORY_MGR[🧠 MemoryManager.ts<br/>Memory Optimization]
-            PRELOADER[🚀 Preloader.ts<br/>Predictive Loading]
-            
-            PERF_MONITOR --> TREE_SHAKE
-            PERF_MONITOR --> BATCH_LOADER
-            PERF_MONITOR --> MEMORY_MGR
-            PERF_MONITOR --> PRELOADER
-        end
-        
-        subgraph "🔌 Integration Layer"
-            REACT_ADAPTER[⚛️ ReactAdapter.ts<br/>React Integration]
-            VUE_ADAPTER[💚 VueAdapter.ts<br/>Vue Integration]
-            ANGULAR_ADAPTER[🅰️ AngularAdapter.ts<br/>Angular Integration]
-            VANILLA_ADAPTER[🍦 VanillaAdapter.ts<br/>Pure JS Integration]
-            
-            REACT_ADAPTER --> FACTORY
-            VUE_ADAPTER --> FACTORY
-            ANGULAR_ADAPTER --> FACTORY
-            VANILLA_ADAPTER --> FACTORY
-        end
-        
-        subgraph "🌐 External Dependencies"
-            HEROICONS[🦸 @heroicons/react<br/>Icon Library]
-            LUCIDE[🎨 lucide-react<br/>Alternative Icons]
-            FRAMER[🎬 framer-motion<br/>Advanced Animations]
-            LOTTIE[🎭 lottie-react<br/>Complex Animations]
-            
-            HEROICONS --> FACTORY
-            LUCIDE --> FACTORY
-            FRAMER --> ANIM_ENGINE
-            LOTTIE --> ANIM_ENGINE
-        end
-        
-        subgraph "🔧 Development Tools"
-            DEVTOOLS[🛠️ DevTools.ts<br/>Development Utilities]
-            INSPECTOR[🔍 IconInspector.ts<br/>Runtime Inspection]
-            DEBUGGER[🐛 Debugger.ts<br/>Animation Debugging]
-            PROFILER[📊 Profiler.ts<br/>Performance Profiling]
-            
-            DEVTOOLS --> INSPECTOR
-            DEVTOOLS --> DEBUGGER
-            DEVTOOLS --> PROFILER
-        end
-    end
-    
-    %% Core System Connections
-    EXPORTS --> REGISTRY
-    EXPORTS --> TYPES
-    EXPORTS --> UTILS
-    
-    %% Registry to Categories
-    REGISTRY --> NAV
-    REGISTRY --> ACTION
-    REGISTRY --> FORM
-    REGISTRY --> STATUS
-    REGISTRY --> BUSINESS
-    
-    %% Utility Connections
-    FACTORY --> ANIM_ENGINE
-    OPTIMIZER --> PERF_MONITOR
-    
-    %% Performance Connections
-    CACHE --> MEMORY_MGR
-    LOADER --> BATCH_LOADER
-    METADATA --> PRELOADER
-    
-    %% Development Connections
-    REGISTRY -.-> DEVTOOLS
-    ANIM_ENGINE -.-> DEBUGGER
-    PERF_MONITOR -.-> PROFILER
-    
-    %% Styling
-    classDef entry fill:#e3f2fd,stroke:#1976d2,stroke-width:3px,color:#000
-    classDef core fill:#f3e5f5,stroke:#7b1fa2,stroke-width:3px,color:#000
-    classDef types fill:#e8f5e8,stroke:#388e3c,stroke-width:3px,color:#000
-    classDef utils fill:#fff3e0,stroke:#f57c00,stroke-width:3px,color:#000
-    classDef icons fill:#fce4ec,stroke:#c2185b,stroke-width:3px,color:#000
-    classDef animation fill:#f1f8e9,stroke:#689f38,stroke-width:3px,color:#000
-    classDef performance fill:#fff8e1,stroke:#fbc02d,stroke-width:3px,color:#000
-    classDef integration fill:#f3e5f5,stroke:#8e24aa,stroke-width:3px,color:#000
-    classDef external fill:#e0f2f1,stroke:#00695c,stroke-width:3px,color:#000
-    classDef dev fill:#fafafa,stroke:#424242,stroke-width:3px,color:#000
-    
-    class MAIN,EXPORTS,BUNDLES,CDN entry
-    class REGISTRY,CACHE,LOADER,METADATA core
-    class TYPES,VALIDATOR,SCHEMA,CONSTANTS types
-    class UTILS,FACTORY,TRANSFORMER,OPTIMIZER utils
-    class NAV,ACTION,FORM,STATUS,BUSINESS,NAV_HOME,NAV_BACK,ACTION_EDIT,FORM_SEARCH,STATUS_SUCCESS,BIZ_CHART icons
-    class ANIM_ENGINE,ANIM_SCHEDULER,ANIM_PHYSICS,ANIM_PRESETS,BOUNCE,PULSE,ROTATE,SHAKE,LOADING animation
-    class PERF_MONITOR,TREE_SHAKE,BATCH_LOADER,MEMORY_MGR,PRELOADER performance
-    class REACT_ADAPTER,VUE_ADAPTER,ANGULAR_ADAPTER,VANILLA_ADAPTER integration
-    class HEROICONS,LUCIDE,FRAMER,LOTTIE external
-    class DEVTOOLS,INSPECTOR,DEBUGGER,PROFILER dev
-```
-
-### **Icon Loading & Animation Flow**
-
-```mermaid
-sequenceDiagram
-    participant App as React App
-    participant Registry as IconRegistry
-    participant Loader as LazyLoader
-    participant Cache as CacheManager
-    participant Anim as AnimationEngine
-    participant DOM as DOM Element
-    
-    App->>Registry: Request Icon (nav-home)
-    Registry->>Cache: Check Cache
-    
-    alt Icon in Cache
-        Cache-->>Registry: Return Cached Icon
-    else Icon Not Cached
-        Registry->>Loader: Load Icon Dynamically
-        Loader->>Loader: Import Icon Component
-        Loader-->>Registry: Return Icon Component
-        Registry->>Cache: Store in Cache
-    end
-    
-    Registry-->>App: Return Icon Component
-    App->>DOM: Render Icon
-    
-    Note over App,Anim: Animation Trigger
-    App->>Anim: Request Animation (bounce)
-    Anim->>Anim: Calculate Animation Properties
-    Anim->>DOM: Apply Web Animations API
-    DOM-->>App: Animation Complete
-    
-    Note over Registry,Cache: Performance Optimization
-    Registry->>Cache: Preload Related Icons
-    Cache->>Loader: Batch Load Icons
-```
-
-### **Icon Performance Optimization Pipeline**
-
-```mermaid
-graph LR
-    subgraph "🚀 Performance Pipeline"
-        A[Icon Request] --> B{Cache Check}
-        B -->|Hit| C[Return Cached]
-        B -->|Miss| D[Dynamic Import]
-        
-        D --> E[Tree Shaking]
-        E --> F[Bundle Splitting]
-        F --> G[Compression]
-        G --> H[CDN Delivery]
-        
-        H --> I[Browser Cache]
-        I --> J[Memory Cache]
-        J --> K[Render Optimization]
-        
-        K --> L[Hardware Acceleration]
-        L --> M[60fps Animation]
-        M --> N[Reduced Motion Support]
-    end
-    
-    subgraph "📊 Metrics Collection"
-        O[Load Time Tracking]
-        P[Memory Usage Monitor]
-        Q[Animation Performance]
-        R[Bundle Size Analysis]
-        
-        C --> O
-        M --> P
-        N --> Q
-        G --> R
-    end
-    
-    %% Styling
-    classDef performance fill:#e8f5e8,stroke:#2e7d32,stroke-width:2px
-    classDef metrics fill:#fff3e0,stroke:#ef6c00,stroke-width:2px
-    
-    class A,B,C,D,E,F,G,H,I,J,K,L,M,N performance
-    class O,P,Q,R metrics
-```
-
-### **Icon Category Architecture**
-
-```mermaid
-mindmap
-  root((LiveIcons System))
-    Navigation
-      nav-home
-      nav-back
-      nav-menu
-      nav-close
-      nav-breadcrumb
-      nav-sidebar
-      nav-tabs
-      nav-pagination
-      nav-dropdown
-    Actions
-      action-edit
-      action-delete
-      action-add
-      action-save
-      action-copy
-      action-share
-      action-download
-      action-upload
-      action-refresh
-    Forms
-      form-search
-      form-filter
-      form-calendar
-      form-user
-      form-email
-      form-password
-    Status
-      status-success
-      status-error
-      status-warning
-      status-loading
-      status-info
-    Business
-      business-chart
-      business-report
-      business-money
-      business-invoice
-      business-analytics
-```
-
-### **Animation System Architecture**
+### **Core Architecture**
 
 ```mermaid
 graph TB
-    subgraph "🎭 Animation Architecture"
-        subgraph "Animation Triggers"
-            T1[Hover Trigger]
-            T2[Click Trigger]
-            T3[Visible Trigger]
-            T4[Always Trigger]
-            T5[Custom Trigger]
-        end
-        
-        subgraph "Animation Engine Core"
-            E1[Web Animations API]
-            E2[CSS Transforms]
-            E3[Hardware Acceleration]
-            E4[Performance Monitor]
-        end
-        
-        subgraph "Animation Types"
-            A1[🏀 Bounce Animation]
-            A2[💓 Pulse Animation]
-            A3[🔄 Rotate Animation]
-            A4[📳 Shake Animation]
-            A5[⏳ Loading Animation]
-            A6[✨ Success Animation]
-            A7[💥 Error Animation]
-            A8[🔄 Morph Animation]
-            A9[🎈 Elastic Animation]
-        end
-        
-        subgraph "Accessibility Features"
-            AC1[Reduced Motion Detection]
-            AC2[WCAG 2.1 AA Compliance]
-            AC3[Screen Reader Support]
-            AC4[Keyboard Navigation]
-        end
-        
-        subgraph "Performance Optimization"
-            P1[Animation Pooling]
-            P2[RAF Scheduling]
-            P3[GPU Acceleration]
-            P4[Memory Management]
-        end
+    subgraph "🎯 LiveIcons Core"
+        REGISTRY[Icon Registry<br/>Centralized Management]
+        CACHE[Smart Cache<br/>Performance Layer]
+        LOADER[Dynamic Loader<br/>Lazy Loading]
+        FACTORY[Icon Factory<br/>Component Creation]
     end
     
-    %% Connections
-    T1 --> E1
-    T2 --> E1
-    T3 --> E1
-    T4 --> E1
-    T5 --> E1
+    subgraph "🎨 Icon Categories"
+        NAV[Navigation Icons<br/>nav-*]
+        ACTION[Action Icons<br/>action-*]
+        FORM[Form Icons<br/>form-*]
+        STATUS[Status Icons<br/>status-*]
+        BUSINESS[Business Icons<br/>business-*]
+    end
     
-    E1 --> A1
-    E1 --> A2
-    E1 --> A3
-    E1 --> A4
-    E1 --> A5
-    E1 --> A6
-    E1 --> A7
-    E1 --> A8
-    E1 --> A9
+    subgraph "🎭 Animation System"
+        ANIMATIONS[Animation Engine<br/>Hardware Accelerated]
+        PRESETS[Animation Presets<br/>bounce, pulse, rotate, etc.]
+    end
     
-    E4 --> P1
-    E4 --> P2
-    E4 --> P3
-    E4 --> P4
+    REGISTRY --> CACHE
+    REGISTRY --> LOADER
+    LOADER --> FACTORY
+    FACTORY --> NAV
+    FACTORY --> ACTION
+    FACTORY --> FORM
+    FACTORY --> STATUS
+    FACTORY --> BUSINESS
+    FACTORY --> ANIMATIONS
+    ANIMATIONS --> PRESETS
     
-    E1 --> AC1
-    E1 --> AC2
-    E1 --> AC3
-    E1 --> AC4
-    
-    %% Styling
-    classDef trigger fill:#e3f2fd,stroke:#1976d2,stroke-width:2px
-    classDef engine fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px
+    classDef core fill:#e3f2fd,stroke:#1976d2,stroke-width:2px
+    classDef icons fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px
     classDef animation fill:#e8f5e8,stroke:#388e3c,stroke-width:2px
-    classDef accessibility fill:#fff3e0,stroke:#f57c00,stroke-width:2px
-    classDef performance fill:#fce4ec,stroke:#c2185b,stroke-width:2px
     
-    class T1,T2,T3,T4,T5 trigger
-    class E1,E2,E3,E4 engine
-    class A1,A2,A3,A4,A5,A6,A7,A8,A9 animation
-    class AC1,AC2,AC3,AC4 accessibility
-    class P1,P2,P3,P4 performance
+    class REGISTRY,CACHE,LOADER,FACTORY core
+    class NAV,ACTION,FORM,STATUS,BUSINESS icons
+    class ANIMATIONS,PRESETS animation
 ```
 
-### **Development & Debugging Tools**
+### **Usage Flow**
 
 ```mermaid
-graph TB
-    subgraph "🛠️ Development Ecosystem"
-        subgraph "Development Tools"
-            D1[🔍 Icon Inspector]
-            D2[🐛 Animation Debugger]
-            D3[📊 Performance Profiler]
-            D4[🎨 Icon Preview Tool]
-            D5[📝 Documentation Generator]
-        end
-        
-        subgraph "Runtime Monitoring"
-            M1[📈 Load Time Metrics]
-            M2[🧠 Memory Usage Tracking]
-            M3[🎬 Animation Performance]
-            M4[📦 Bundle Size Analysis]
-            M5[⚡ Cache Hit Rates]
-        end
-        
-        subgraph "Quality Assurance"
-            Q1[✅ Icon Validation]
-            Q2[🧪 Animation Testing]
-            Q3[♿ Accessibility Audit]
-            Q4[📱 Responsive Testing]
-            Q5[🌐 Cross-browser Testing]
-        end
-        
-        subgraph "Build & Optimization"
-            B1[🌳 Tree Shaking]
-            B2[📦 Bundle Splitting]
-            B3[🗜️ Compression]
-            B4[🚀 CDN Optimization]
-            B5[📊 Performance Reports]
-        end
-    end
+flowchart LR
+    A[Request Icon] --> B{Cached?}
+    B -->|Yes| C[Return Cached]
+    B -->|No| D[Load Dynamically]
+    D --> E[Cache & Return]
+    C --> F[Render with Animation]
+    E --> F
     
-    %% Connections
-    D1 --> M1
-    D2 --> M3
-    D3 --> M2
-    D4 --> Q1
-    D5 --> Q3
+    classDef process fill:#e3f2fd,stroke:#1976d2,stroke-width:2px
+    classDef decision fill:#fff3e0,stroke:#f57c00,stroke-width:2px
+    classDef result fill:#e8f5e8,stroke:#388e3c,stroke-width:2px
     
-    M1 --> B5
-    M2 --> B1
-    M3 --> B2
-    M4 --> B3
-    M5 --> B4
-    
-    Q1 --> B1
-    Q2 --> B2
-    Q3 --> B3
-    Q4 --> B4
-    Q5 --> B5
-    
-    %% Styling
-    classDef dev fill:#e8f5e8,stroke:#2e7d32,stroke-width:2px
-    classDef monitor fill:#e3f2fd,stroke:#1565c0,stroke-width:2px
-    classDef quality fill:#fff3e0,stroke:#ef6c00,stroke-width:2px
-    classDef build fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px
-    
-    class D1,D2,D3,D4,D5 dev
-    class M1,M2,M3,M4,M5 monitor
-    class Q1,Q2,Q3,Q4,Q5 quality
-    class B1,B2,B3,B4,B5 build
+    class A,D,E process
+    class B decision
+    class C,F result
 ```
 
-### **LiveIcons Usage Examples**
+### **Icon Categories**
 
-#### **🚀 Basic Usage**
-```tsx
-import { NavHomeIcon, ActionEditIcon, StatusSuccessIcon } from '@/shared/icons';
+**Navigation Icons**: `nav-home`, `nav-back`, `nav-menu`, `nav-close`, `nav-breadcrumb`, `nav-sidebar`, `nav-tabs`, `nav-pagination`, `nav-dropdown`
 
-// Simple icon usage
-<NavHomeIcon size="md" color="primary" />
+**Action Icons**: `action-edit`, `action-delete`, `action-add`, `action-save`, `action-copy`, `action-share`, `action-download`, `action-upload`, `action-refresh`
 
-// Icon with hover animation
-<ActionEditIcon animated={true} animationType="bounce" trigger="hover" />
+**Form Icons**: `form-search`, `form-filter`, `form-calendar`, `form-user`, `form-email`, `form-password`
 
-// Status icon with auto-animation
-<StatusSuccessIcon animationType="success" trigger="visible" duration={800} />
-```
+**Status Icons**: `status-success`, `status-error`, `status-warning`, `status-loading`, `status-info`
 
-#### **🎭 Advanced Animation Examples**
-```tsx
-import { DynamicIcon, useIconAnimation } from '@/shared/icons';
+**Business Icons**: `business-chart`, `business-report`, `business-money`, `business-invoice`, `business-analytics`
 
-// Complex animation sequence
-<DynamicIcon 
-  name="business-chart"
-  size="xl"
-  animated={true}
-  animationType="morph"
-  customAnimation={{
-    keyframes: [
-      { transform: 'scale(1) rotate(0deg)', opacity: 1 },
-      { transform: 'scale(1.2) rotate(180deg)', opacity: 0.8 },
-      { transform: 'scale(1) rotate(360deg)', opacity: 1 }
-    ],
-    options: { duration: 1000, easing: 'cubic-bezier(0.4, 0, 0.2, 1)' }
-  }}
-/>
-```
+### **Animation Types**
 
-### **📊 LiveIcons Performance Metrics**
+**Available Animations**: `bounce`, `pulse`, `rotate`, `shake`, `loading`, `success`, `error`, `morph`, `elastic`
 
-| **Metric** | **Before** | **After** | **Improvement** |
-|------------|------------|-----------|-----------------|
-| **Bundle Size** | 2.1MB | 850KB | **60% reduction** 🎯 |
-| **Icon Load Time** | 300ms | 120ms | **60% faster** ⚡ |
-| **Memory Usage** | 15MB | 9MB | **40% reduction** 📉 |
-| **Animation Start** | 150ms | <50ms | **67% faster** 🚀 |
-| **Tree Shaking** | 0% | 85% | **85% improvement** 🌳 |
-| **Cache Hit Rate** | 60% | 95% | **58% improvement** 📈 |
+**Features**: Hardware-accelerated, 60fps performance, reduced motion support, Web Animations API
 
-    class A,B,C,D,E entryPoint
-    class F,G,H,I,J,K,L,M,N,O,P,Q coreSystem
-    class R,R1,R2,R3,S,S1,S2,S3,T,T1,T2,T3,U,U1,U2,U3 iconCategory
-    class V,W,X,Y,Z,Z1,Z2,Z3,Z4,Z5,Z6,Z7 animation
-    class AA,BB,CC,DD,EE,FF performance
-    class GG,HH,II,JJ,KK,LL external
-```
+### **Performance Metrics**
 
-### **LiveIcons Animation Flow**
-
-```mermaid
-sequenceDiagram
-    participant Component as React Component
-    participant LiveIcon as LiveIcon
-    participant Registry as Icon Registry
-    participant AnimationEngine as Animation Engine
-    participant Browser as Browser
-    
-    Component->>LiveIcon: Render with animation props
-    LiveIcon->>Registry: Request icon metadata
-    Registry-->>LiveIcon: Icon data + animation config
-    
-    alt Trigger: hover
-        Component->>LiveIcon: Mouse enter
-        LiveIcon->>AnimationEngine: Start hover animation
-        AnimationEngine->>Browser: Execute animation
-        Browser-->>User: Hover animation
-        
-        Component->>LiveIcon: Mouse leave
-        LiveIcon->>AnimationEngine: Reverse animation
-        AnimationEngine->>Browser: Execute reverse
-        Browser-->>User: Return to normal
-    end
-    
-    alt Trigger: click
-        Component->>LiveIcon: Click event
-        LiveIcon->>AnimationEngine: Start click animation
-        AnimationEngine->>Browser: Execute animation
-        Browser-->>User: Click feedback
-    end
-    
-    alt Trigger: visible
-        LiveIcon->>AnimationEngine: Trigger visibility animation
-        AnimationEngine->>Browser: Execute animation
-        Browser-->>User: Entrance animation
-    end
-    
-    alt Trigger: always
-        LiveIcon->>AnimationEngine: Start continuous animation
-        loop Continuous
-            AnimationEngine->>Browser: Execute animation cycle
-            Browser-->>User: Continuous animation
-        end
-    end
-    
-    Note over LiveIcon,AnimationEngine: Cleanup on unmount
-    Component->>LiveIcon: Component unmounting
-    LiveIcon->>AnimationEngine: Cancel all animations
-    LiveIcon->>Registry: Release references
-    AnimationEngine->>Browser: Cleanup animation resources
-```
-
-### **Key Features**
-- 🚀 **Lazy Loading**: Icons load on-demand for optimal performance
-- 🌳 **Tree Shaking**: Only used icons are included in the bundle
-- ⚡ **Parallel Processing**: Batch loading and animation processing
-- 🎭 **Rich Animations**: 7 built-in animation types with custom triggers
-- 📦 **Centralized Registry**: Single source of truth for all icons
-- 🔧 **TypeScript Support**: Full type safety and IntelliSense
-- 🎨 **Consistent Naming**: Simplified `category-action` convention
-
-### **Usage Examples**
-
-#### **Basic Usage**
-```tsx
-import { NavHomeIcon, ActionEditIcon, StatusSuccessIcon } from '@/shared/icons';
-
-// Simple usage
-<NavHomeIcon size="md" color="primary" />
-
-// With animations
-<ActionEditIcon 
-  animated={true} 
-  animationType="bounce" 
-  trigger="hover" 
-/>
-
-// Status with auto-animation
-<StatusSuccessIcon 
-  animationType="success" 
-  trigger="visible" 
-/>
-```
-
-#### **Dynamic Icons**
-```tsx
-import { DynamicIcon, iconExists } from '@/shared/icons';
-
-// Runtime icon selection
-<DynamicIcon 
-  name="nav-home" 
-  size="lg" 
-  animated={true} 
-/>
-
-// With existence check
-{iconExists('action-edit') && (
-  <DynamicIcon name="action-edit" />
-)}
-```
-
-### **Available Icons**
-
-| Category | Icons | Examples |
-|----------|-------|----------|
-| **Navigation** | 9 icons | `nav-home`, `nav-back`, `nav-menu`, `nav-close` |
-| **Actions** | 9 icons | `action-edit`, `action-delete`, `action-add`, `action-view` |
-| **Forms** | 6 icons | `form-search`, `form-filter`, `form-calendar`, `form-user` |
-| **Status** | 5 icons | `status-success`, `status-error`, `status-warning`, `status-loading` |
-
----
-
-## 📊 **Performance Metrics**
-
-### **Core Performance**
-| Metric | Before | After | Improvement |
-|--------|--------|-------|-------------|
-| **Bundle Size** | 3.8MB | 430KB | **88% smaller** ⚡ |
-| **Initial Load** | 2.5s | 1.0s | **60% faster** 🚀 |
-| **Query Execution** | 200ms | 80ms | **60% faster** ⚡ |
-| **Memory Usage** | 45MB | 25MB | **44% reduction** 📉 |
-| **Cache Hit Rate** | 70% | 95% | **36% improvement** 📈 |
-| **Real-time Latency** | N/A | <100ms | **New capability** ✨ |
-
-### **Animation & UI Performance**
-| Metric | Target | Achieved | Status |
-|--------|--------|----------|--------|
-| **Animation Start Time** | <100ms | <50ms | **✅ Exceeded** |
-| **Frame Rate** | 60fps | 60fps | **✅ Achieved** |
-| **Icon Load Time** | <200ms | <100ms | **✅ Exceeded** |
-| **Component Render** | <16ms | <10ms | **✅ Exceeded** |
-| **Animation Memory** | <5MB | <3MB | **✅ Exceeded** |
-| **Reduced Motion Support** | 100% | 100% | **✅ Complete** |
-
-### **LiveIcons System Performance**
 | Metric | Before | After | Improvement |
 |--------|--------|-------|-------------|
 | **Icon Bundle Size** | 2.1MB | 850KB | **60% reduction** 🎯 |
@@ -1613,106 +858,33 @@ import { DynamicIcon, iconExists } from '@/shared/icons';
 
 ```mermaid
 sequenceDiagram
-    participant C as Client
-    participant LB as Load Balancer
-    participant WAF as Web App Firewall
-    participant API as Laravel API
-    participant AUTH as Auth Service
-    participant JWT as JWT Handler
-    participant DB as Database
-    participant CACHE as Redis Cache
+    participant Client
+    participant API
+    participant Database
+    participant Cache
     
-    Note over C,CACHE: Secure Authentication Flow
+    Client->>API: Login Request
+    API->>Database: Validate Credentials
+    Database->>API: User Data
+    API->>Cache: Store Session
+    API->>Client: JWT Token
     
-    C->>LB: Login Request
-    LB->>WAF: Security Check
-    WAF->>API: Filtered Request
-    
-    rect rgb(254, 243, 199)
-        Note over API,DB: Credential Validation
-        API->>AUTH: Validate Credentials
-        AUTH->>DB: Check User & Tenant
-        DB->>AUTH: User Data
-    end
-    
-    rect rgb(240, 249, 255)
-        Note over AUTH,CACHE: Token Generation
-        AUTH->>JWT: Generate JWT Token
-        JWT->>CACHE: Store Session Data
-        CACHE->>JWT: Session Stored
-        JWT->>AUTH: Signed Token
-    end
-    
-    AUTH->>API: Authentication Result
-    API->>WAF: Success Response
-    WAF->>LB: Filtered Response
-    LB->>C: JWT Token + User Data
-    
-    Note over C: Store JWT for API calls
-    Note over CACHE: Session expires in 24h
+    Note over Client: Token valid for 24h
 ```
 
 ### **Multi-layered Security Architecture**
 
-```mermaid
-graph TB
-    subgraph "🌐 Network Security"
-        FIREWALL[Network Firewall]
-        DDoS[DDoS Protection]
-        SSL[SSL/TLS Encryption]
-    end
-    
-    subgraph "🛡️ Application Security"
-        WAF[Web Application Firewall]
-        RATE_LIMIT[Rate Limiting]
-        INPUT_VALID[Input Validation]
-        CSRF[CSRF Protection]
-    end
-    
-    subgraph "🔐 Authentication Security"
-        MFA[Multi-Factor Auth]
-        JWT_AUTH[JWT Authentication]
-        SESSION[Session Management]
-        PASSWORD[Password Policies]
-    end
-    
-    subgraph "🗄️ Data Security"
-        ENCRYPTION[Data Encryption]
-        BACKUP[Encrypted Backups]
-        AUDIT[Audit Logging]
-        GDPR[GDPR Compliance]
-    end
-    
-    subgraph "🏢 Tenant Security"
-        ISOLATION[Data Isolation]
-        PERMISSIONS[Role-Based Access]
-        TENANT_AUDIT[Tenant Audit Trail]
-    end
-    
-    FIREWALL --> WAF
-    DDoS --> RATE_LIMIT
-    SSL --> INPUT_VALID
-    
-    WAF --> MFA
-    RATE_LIMIT --> JWT_AUTH
-    INPUT_VALID --> SESSION
-    CSRF --> PASSWORD
-    
-    MFA --> ENCRYPTION
-    JWT_AUTH --> BACKUP
-    SESSION --> AUDIT
-    PASSWORD --> GDPR
-    
-    ENCRYPTION --> ISOLATION
-    BACKUP --> PERMISSIONS
-    AUDIT --> TENANT_AUDIT
-    
-    style FIREWALL fill:#fef2f2,stroke:#dc2626,stroke-width:2px
-    style WAF fill:#fef3c7,stroke:#d97706,stroke-width:2px
-    style JWT_AUTH fill:#eff6ff,stroke:#2563eb,stroke-width:2px
-    style ENCRYPTION fill:#f0fdf4,stroke:#16a34a,stroke-width:2px
-    style ISOLATION fill:#ecfdf5,stroke:#059669,stroke-width:2px
-```
+### **Security Layers**
+
+**Network Security**: Firewall, DDoS Protection, SSL/TLS Encryption
+
+**Application Security**: WAF, Rate Limiting, Input Validation, CSRF Protection
+
+**Authentication**: Multi-Factor Auth, JWT, Session Management, Password Policies
+
+**Data Security**: Encryption at Rest/Transit, Encrypted Backups, Audit Logging, GDPR Compliance
+
+**Multi-Tenant**: Data Isolation, Role-Based Access Control, Tenant Audit Trails
 
 ### **Core Security Features**
 - 🔐 **Multi-factor Authentication** (MFA)
