@@ -17,8 +17,6 @@ class User extends Authenticatable implements MustVerifyEmail
 {
     use HasApiTokens;
     use HasFactory;
-    use HasProfilePhoto;
-    use HasTeams;
     use Notifiable;
     use SoftDeletes;
     use TwoFactorAuthenticatable;
@@ -381,7 +379,11 @@ class User extends Authenticatable implements MustVerifyEmail
     /**
      * Check if user can perform a specific action in a tenant.
      */
+<<<<<<< HEAD
     public function can(string $permission, ?Tenant $tenant = null): bool
+=======
+    public function canInTenant(string $permission, ?Tenant $tenant = null): bool
+>>>>>>> codegen-bot/structure-simplification-split-1760284918
     {
         if (! $tenant) {
             $tenant = app('tenant');

@@ -46,7 +46,24 @@ export { LiveErrorIcon } from './StatusConnectionIcon';
 export { LiveSuccessIcon } from './StatusConnectionIcon';
 
 // Status icons
-export { StatusIndicator, ConnectionStatus, BatteryStatus, ProgressStatus } from './StatusConnectionIcon';
+export { 
+  StatusIndicator, 
+  ConnectionStatus, 
+  BatteryStatus, 
+  ProgressStatus,
+  StatusChartIcon,
+  StatusDocumentIcon,
+  StatusBankIcon,
+  StatusBoxIcon,
+  StatusTrendUpIcon,
+  StatusTrendDownIcon,
+  StatusTrendRightIcon,
+  ActionSettingsIcon,
+  StatusFreeIcon,
+  StatusBusinessIcon,
+  StatusEnterpriseIcon,
+  StatusWaveIcon
+} from './StatusConnectionIcon';
 
 // Navigation icons
 export { LiveMenuToggleIcon, LiveBackIcon } from './NavigationConnectionIcon';
@@ -56,7 +73,7 @@ export { ValidationIcon, PasswordToggleIcon, SearchInputIcon, AddRemoveIcon } fr
 
 // Action icons
 export { LikeIcon, BookmarkIcon, StarRating, ThumbsVote, SendIcon, ActionButton } from './ActionConnectionIcon';
-export { LiveEditIcon, LiveDeleteIcon, LiveShareIcon } from './ActionConnectionIcon';
+export { LiveEditIcon, LiveDeleteIcon, LiveShareIcon, LiveCopyIcon } from './ActionConnectionIcon';
 
 // Constants for backward compatibility
 /** @deprecated Use ICON_SIZES from './ICONSIZES' instead */

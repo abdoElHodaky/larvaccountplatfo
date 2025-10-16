@@ -53,15 +53,28 @@ class Account extends HybridModel
     /**
      * Account types
      */
+<<<<<<< HEAD
     public const TYPE_ASSET = 'asset';
     public const TYPE_LIABILITY = 'liability';
     public const TYPE_EQUITY = 'equity';
     public const TYPE_REVENUE = 'revenue';
     public const TYPE_EXPENSE = 'expense';
+=======
+    const TYPE_ASSET = 'asset';
+
+    const TYPE_LIABILITY = 'liability';
+
+    const TYPE_EQUITY = 'equity';
+
+    const TYPE_REVENUE = 'revenue';
+
+    const TYPE_EXPENSE = 'expense';
+>>>>>>> codegen-bot/structure-simplification-split-1760284918
 
     /**
      * Account subtypes
      */
+<<<<<<< HEAD
     public const SUBTYPE_CURRENT_ASSET = 'current_asset';
     public const SUBTYPE_FIXED_ASSET = 'fixed_asset';
     public const SUBTYPE_CURRENT_LIABILITY = 'current_liability';
@@ -71,12 +84,37 @@ class Account extends HybridModel
     public const SUBTYPE_OTHER_REVENUE = 'other_revenue';
     public const SUBTYPE_OPERATING_EXPENSE = 'operating_expense';
     public const SUBTYPE_OTHER_EXPENSE = 'other_expense';
+=======
+    const SUBTYPE_CURRENT_ASSET = 'current_asset';
+
+    const SUBTYPE_FIXED_ASSET = 'fixed_asset';
+
+    const SUBTYPE_CURRENT_LIABILITY = 'current_liability';
+
+    const SUBTYPE_LONG_TERM_LIABILITY = 'long_term_liability';
+
+    const SUBTYPE_OWNERS_EQUITY = 'owners_equity';
+
+    const SUBTYPE_OPERATING_REVENUE = 'operating_revenue';
+
+    const SUBTYPE_OTHER_REVENUE = 'other_revenue';
+
+    const SUBTYPE_OPERATING_EXPENSE = 'operating_expense';
+
+    const SUBTYPE_OTHER_EXPENSE = 'other_expense';
+>>>>>>> codegen-bot/structure-simplification-split-1760284918
 
     /**
      * Normal balance types
      */
+<<<<<<< HEAD
     public const NORMAL_BALANCE_DEBIT = 'debit';
     public const NORMAL_BALANCE_CREDIT = 'credit';
+=======
+    const NORMAL_BALANCE_DEBIT = 'debit';
+
+    const NORMAL_BALANCE_CREDIT = 'credit';
+>>>>>>> codegen-bot/structure-simplification-split-1760284918
 
     /**
      * Get the parent account
