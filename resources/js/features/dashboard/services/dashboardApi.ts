@@ -3,7 +3,7 @@
  * Handles all dashboard-related API calls with GraphQL integration
  */
 
-import { apolloClient } from '../../../shared/services/graphql/apollo-client';
+import { apolloClient } from '../../../shared/services/graphql/apolloClient';
 import { gql } from '@apollo/client';
 import { log } from '../../../shared/utils/logger';
 import type { DashboardLayout, Widget, MetricData, ChartData, DashboardFilters } from '../stores/dashboardModel';

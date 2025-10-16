@@ -3,7 +3,7 @@
  * Comprehensive mutation definitions for all business operations
  */
 
-import { gql } from '@apollo/GETDASHBOARDMETRICS';
+import { gql } from '@apollo/client';
 import { 
   TENANT_FRAGMENT, 
   USER_FRAGMENT, 

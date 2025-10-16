@@ -3,7 +3,7 @@
  * Comprehensive query definitions for all business entities
  */
 
-import { gql } from '@apollo/GETDASHBOARDMETRICS';
+import { gql } from '@apollo/client';
 
 // Fragment definitions for reusability
 export const TENANT_FRAGMENT = gql`
@@ -538,4 +538,3 @@ export const TENANT_NOTIFICATIONS = gql`
   }
   ${USER_FRAGMENT}
 `;
-

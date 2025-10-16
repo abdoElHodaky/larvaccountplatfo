@@ -3,7 +3,9 @@
 namespace App\Features\Accounting\Models;
 
 use App\Shared\Models\HybridModel;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Builder;
 
 class AccountBalance extends HybridModel
 {
@@ -30,28 +32,28 @@ class AccountBalance extends HybridModel
         'fiscal_period' => 'integer',
         'is_closing_balance' => 'boolean',
         'metadata' => 'array',
-        'created_at' => 'datetime',
-        'updated_at' => 'datetime',
+        'created_at' => 'datetime' => 'datetime',
+        'updated_at' => 'datetime' => 'datetime',
     ];
 
-    protected $dates = [
+    protected $casts = [
         'balance_date',
-        'created_at',
-        'updated_at',
+        'created_at' => 'datetime',
+        'updated_at' => 'datetime',
     ];
 
     /**
      * Period types
      */
-    const PERIOD_DAILY = 'daily';
+    public const PERIOD_DAILY = 'daily';
 
-    const PERIOD_WEEKLY = 'weekly';
+    public const PERIOD_WEEKLY = 'weekly';
 
-    const PERIOD_MONTHLY = 'monthly';
+    public const PERIOD_MONTHLY = 'monthly';
 
-    const PERIOD_QUARTERLY = 'quarterly';
+    public const PERIOD_QUARTERLY = 'quarterly';
 
-    const PERIOD_YEARLY = 'yearly';
+    public const PERIOD_YEARLY = 'yearly';
 
     /**
      * Get the account that owns the balance

@@ -51,67 +51,11 @@ shared/
 
 ## 🏗️ System Architecture
 
-### **High-Level Architecture Diagram**
+### **High-Level Architecture Reference**
 
-```mermaid
-graph TB
-    subgraph "🌐 Frontend Application"
-        subgraph "📦 Feature Modules"
-            A[Accounting Module]
-            I[Inventory Module]
-            D[Dashboard Module]
-        end
-        
-        subgraph "🔄 State Layer"
-            S[Rematch Store]
-            P[Persistence Layer]
-            M[Model Registry]
-        end
-        
-        subgraph "🧩 Component Layer"
-            C[Shared Components]
-            CP[Component Patterns]
-            UI[UI Library]
-        end
-        
-        subgraph "⚡ Performance Layer"
-            PM[Performance Monitor]
-            BL[Bundle Loader]
-            PL[Preloading Strategy]
-        end
-        
-        subgraph "🛡️ Infrastructure"
-            EB[Error Boundaries]
-            DT[Dev Tools]
-            T[Testing Utils]
-        end
-    end
-    
-    subgraph "🚀 Backend Services"
-        API[GraphQL API]
-        WS[WebSocket Server]
-        DB[(Database)]
-    end
-    
-    A --> S
-    I --> S
-    D --> S
-    S --> P
-    S --> M
-    
-    C --> CP
-    CP --> UI
-    
-    PM --> BL
-    BL --> PL
-    
-    EB --> DT
-    DT --> T
-    
-    S --> API
-    API --> WS
-    WS --> DB
-```
+> **📋 See the comprehensive [System Architecture Overview](../README.md#-complete-system-architecture) in the main README for the authoritative high-level architecture diagram.**
+
+This section focuses on frontend-specific architectural patterns and implementation details.
 
 ### **Data Flow Architecture**
 

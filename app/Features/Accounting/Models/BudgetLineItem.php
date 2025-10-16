@@ -3,8 +3,11 @@
 namespace App\Features\Accounting\Models;
 
 use App\Shared\Models\HybridModel;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Builder;
 
 class BudgetLineItem extends HybridModel
 {
@@ -38,13 +41,13 @@ class BudgetLineItem extends HybridModel
     /**
      * Budget categories
      */
-    const CATEGORY_REVENUE = 'revenue';
+    public const CATEGORY_REVENUE = 'revenue';
 
-    const CATEGORY_EXPENSE = 'expense';
+    public const CATEGORY_EXPENSE = 'expense';
 
-    const CATEGORY_CAPITAL = 'capital';
+    public const CATEGORY_CAPITAL = 'capital';
 
-    const CATEGORY_OTHER = 'other';
+    public const CATEGORY_OTHER = 'other';
 
     /**
      * Get the budget that owns the line item

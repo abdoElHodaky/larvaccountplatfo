@@ -5,7 +5,7 @@ namespace Tests\Integration;
 use App\Models\Tenant;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Modules\Accounting\Models\Account;
+use App\Accounting\Models\Account;
 use Tests\Shared\TenantTestCase;
 
 class MultiTenantTest extends TenantTestCase

@@ -3,8 +3,11 @@
 namespace App\Features\Inventory\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Builder;
 
 class StockMovement extends Model
 {
@@ -30,13 +33,13 @@ class StockMovement extends Model
     /**
      * Movement types
      */
-    const TYPE_IN = 'in';
+    public const TYPE_IN = 'in';
 
-    const TYPE_OUT = 'out';
+    public const TYPE_OUT = 'out';
 
-    const TYPE_ADJUSTMENT = 'adjustment';
+    public const TYPE_ADJUSTMENT = 'adjustment';
 
-    const TYPE_TRANSFER = 'transfer';
+    public const TYPE_TRANSFER = 'transfer';
 
     /**
      * Get the product that owns the stock movement

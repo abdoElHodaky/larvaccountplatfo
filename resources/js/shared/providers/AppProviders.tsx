@@ -5,7 +5,7 @@
 
 import React, { Suspense, useEffect } from 'react';
 import { Provider } from 'react-redux';
-import { ApolloProvider } from '@apollo/GETDASHBOARDMETRICS';
+import { ApolloProvider } from '@apollo/client';
 import { ChakraProvider, ColorModeScript } from '@chakra-ui/react';
 import { HelmetProvider } from 'react-helmet-async';
 

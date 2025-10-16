@@ -3,8 +3,11 @@
 namespace App\Features\Accounting\Models;
 
 use App\Shared\Models\HybridModel;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Builder;
 
 class TaxRate extends HybridModel
 {
@@ -42,23 +45,23 @@ class TaxRate extends HybridModel
     /**
      * Tax types
      */
-    const TYPE_SALES_TAX = 'sales_tax';
+    public const TYPE_SALES_TAX = 'sales_tax';
 
-    const TYPE_VAT = 'vat';
+    public const TYPE_VAT = 'vat';
 
-    const TYPE_GST = 'gst';
+    public const TYPE_GST = 'gst';
 
-    const TYPE_INCOME_TAX = 'income_tax';
+    public const TYPE_INCOME_TAX = 'income_tax';
 
-    const TYPE_PAYROLL_TAX = 'payroll_tax';
+    public const TYPE_PAYROLL_TAX = 'payroll_tax';
 
-    const TYPE_PROPERTY_TAX = 'property_tax';
+    public const TYPE_PROPERTY_TAX = 'property_tax';
 
-    const TYPE_EXCISE_TAX = 'excise_tax';
+    public const TYPE_EXCISE_TAX = 'excise_tax';
 
-    const TYPE_CUSTOM_DUTY = 'custom_duty';
+    public const TYPE_CUSTOM_DUTY = 'custom_duty';
 
-    const TYPE_OTHER = 'other';
+    public const TYPE_OTHER = 'other';
 
     /**
      * Get transactions that use this tax rate

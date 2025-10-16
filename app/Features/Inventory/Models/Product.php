@@ -3,10 +3,15 @@
 namespace App\Features\Inventory\Models;
 
 use App\Shared\Models\HybridModel;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Builder;
 
 class Product extends HybridModel
 {
@@ -51,43 +56,43 @@ class Product extends HybridModel
         'is_serialized' => 'boolean',
         'dimensions' => 'array',
         'metadata' => 'array',
+        'created_at' => 'datetime' => 'datetime',
+        'updated_at' => 'datetime' => 'datetime',
+        'deleted_at' => 'datetime' => 'datetime',
+    ];
+
+    protected $casts = [
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
         'deleted_at' => 'datetime',
     ];
 
-    protected $dates = [
-        'created_at',
-        'updated_at',
-        'deleted_at',
-    ];
-
     /**
      * Product types
      */
-    const TYPE_PHYSICAL = 'physical';
+    public const TYPE_PHYSICAL = 'physical';
 
-    const TYPE_DIGITAL = 'digital';
+    public const TYPE_DIGITAL = 'digital';
 
-    const TYPE_SERVICE = 'service';
+    public const TYPE_SERVICE = 'service';
 
     /**
      * Product statuses
      */
-    const STATUS_ACTIVE = 'active';
+    public const STATUS_ACTIVE = 'active';
 
-    const STATUS_INACTIVE = 'inactive';
+    public const STATUS_INACTIVE = 'inactive';
 
-    const STATUS_DISCONTINUED = 'discontinued';
+    public const STATUS_DISCONTINUED = 'discontinued';
 
     /**
      * Valuation methods
      */
-    const VALUATION_FIFO = 'fifo';
+    public const VALUATION_FIFO = 'fifo';
 
-    const VALUATION_LIFO = 'lifo';
+    public const VALUATION_LIFO = 'lifo';
 
-    const VALUATION_AVERAGE = 'average';
+    public const VALUATION_AVERAGE = 'average';
 
     /**
      * Get the category that owns the product

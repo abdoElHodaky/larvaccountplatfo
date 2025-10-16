@@ -3,8 +3,11 @@
 namespace App\Shared\Models;
 
 use App\Scopes\OrganizationScope;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Builder;
 
 abstract class HybridModel extends Model
 {

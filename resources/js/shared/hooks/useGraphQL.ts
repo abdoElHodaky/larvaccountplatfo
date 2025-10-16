@@ -13,7 +13,7 @@ import type {
   MutationHookOptions, 
   SubscriptionHookOptions,
   LazyQueryHookOptions 
-} from '@apollo/GETDASHBOARDMETRICS';
+} from '@apollo/client';
 
 // Types
 export interface GraphQLHookOptions<TData = any, TVariables = any> {

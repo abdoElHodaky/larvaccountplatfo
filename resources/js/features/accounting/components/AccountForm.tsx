@@ -5,7 +5,7 @@ import { FormInput } from '@/shared/components/molecules/FormInput';
 import { FormSelect } from '@/shared/components/molecules/FormSelect';
 import { CardContainer } from '@/shared/components/molecules/Container';
 import { Text } from '@chakra-ui/react';
-import { Account, AccountFormProps } from '@/shared/types/ACCOUNTTYPES';
+import { Account, AccountFormProps, AccountFormData, AccountType, AccountSubType } from '@/shared/types/ACCOUNTTYPES';
 
 const accountTypes = [
     { value: 'asset', label: 'Asset' },
@@ -41,14 +41,16 @@ const accountSubtypes = {
 };
 
 export default function AccountForm({ account, accounts, onSubmit, onCancel }: AccountFormProps) {
-    const { data, setData, processing, errors } = useForm<Account>({
+    const { data, setData, processing, errors } = useForm<AccountFormData>({
         code: account?.code || '',
         name: account?.name || '',
         type: account?.type || 'asset',
-        subtype: account?.subtype || 'current_asset',
-        parent_id: account?.parent_id || undefined,
+        subType: account?.subType || 'current_asset',
+        parentId: account?.parentId || undefined,
         description: account?.description || '',
-        is_active: account?.is_active ?? true,
+        isActive: account?.isActive ?? true,
+        organizationId: account?.organizationId || 1,
+        tenantId: account?.tenantId || 1,
     });
 
     const [selectedType, setSelectedType] = useState(data.type);
@@ -59,17 +61,14 @@ export default function AccountForm({ account, accounts, onSubmit, onCancel }: A
     };
 
     const handleTypeChange = (type: string) => {
-        setSelectedType(type);
-        setData({
-            ...data,
-            type,
-            subtype: accountSubtypes[type as keyof typeof accountSubtypes]?.[0]?.value || '',
-        });
+        setSelectedType(type as AccountType);
+        setData('type', type as AccountType);
+        setData('subType', (accountSubtypes[type as keyof typeof accountSubtypes]?.[0]?.value || '') as AccountSubType);
     };
 
-    const parentAccountOptions = accounts
-        .filter(acc => acc.type === data.type && acc.id !== account?.id)
-        .map(acc => ({
+    const parentAccountOptions = (accounts || [])
+        .filter((acc: Account) => acc.type === data.type && acc.id !== account?.id)
+        .map((acc: Account) => ({
             value: acc.id?.toString() || '',
             label: `${acc.code} - ${acc.name}`,
         }));
@@ -121,10 +120,10 @@ export default function AccountForm({ account, accounts, onSubmit, onCancel }: A
                         <div>
                             <FormSelect
                                 label="Account Subtype"
-                                value={data.subtype}
-                                onChange={(value) => setData('subtype', value)}
+                                value={data.subType}
+                                onChange={(value) => setData('subType', value as AccountSubType)}
                                 options={accountSubtypes[selectedType as keyof typeof accountSubtypes] || []}
-                                error={errors.subtype}
+                                error={errors.subType}
                                 isRequired
                             />
                         </div>
@@ -134,13 +133,13 @@ export default function AccountForm({ account, accounts, onSubmit, onCancel }: A
                         <div>
                             <FormSelect
                                 label="Parent Account (Optional)"
-                                value={data.parent_id?.toString() || ''}
-                                onChange={(value) => setData('parent_id', value ? parseInt(value) : undefined)}
+                                value={data.parentId?.toString() || ''}
+                                onChange={(value) => setData('parentId', value ? parseInt(value) : undefined)}
                                 options={[
                                     { value: '', label: 'No Parent Account' },
                                     ...parentAccountOptions,
                                 ]}
-                                error={errors.parent_id}
+                                error={errors.parentId}
                             />
                         </div>
                     )}
@@ -158,12 +157,12 @@ export default function AccountForm({ account, accounts, onSubmit, onCancel }: A
                     <div className="flex items-center space-x-2">
                         <input
                             type="checkbox"
-                            id="is_active"
-                            checked={data.is_active}
-                            onChange={(e) => setData('is_active', e.target.checked)}
+                            id="isActive"
+                            checked={data.isActive}
+                            onChange={(e) => setData('isActive', e.target.checked)}
                             className="rounded border-gray-300 text-blue-600 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
                         />
-                        <label htmlFor="is_active" className="text-sm font-medium text-gray-700">
+                        <label htmlFor="isActive" className="text-sm font-medium text-gray-700">
                             Active Account
                         </label>
                     </div>
