@@ -1,9 +1,5 @@
 import { useState, useCallback } from 'react';
-<<<<<<< HEAD
-import { useQuery, useMutation, useSubscription } from '@apollo/GETDASHBOARDMETRICS';
-=======
 import { useQuery, useMutation, useSubscription } from '@apollo/client';
->>>>>>> codegen-bot/structure-simplification-split-1760284918
 import { DocumentNode } from 'graphql';
 
 /**

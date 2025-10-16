@@ -3,8 +3,8 @@
  * Handles all inventory-related API calls with GraphQL integration
  */
 
-import { apolloClient } from '../../../shared/services/graphql/apollo-GETDASHBOARDMETRICS';
-import { gql } from '@apollo/GETDASHBOARDMETRICS';
+import { apolloClient } from '../../../shared/services/graphql/apollo-client';
+import { gql } from '@apollo/client';
 import type { InventoryItem, StockMovement, InventoryFilters } from '../stores/inventoryModel';
 import type { ApiResponse } from '../../accounting/services/accountingApi';
 
