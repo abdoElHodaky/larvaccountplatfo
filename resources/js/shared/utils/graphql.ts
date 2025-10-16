@@ -1,53 +1,37 @@
-import React from 'react';
-
 /**
- * Performance-Optimized GraphQL Client
- * Advanced GraphQL integration with caching, batching, and error recovery
+ * GraphQL Utilities - Unified Export
+ * Re-exports all GraphQL utilities from the modular structure
+ * 
+ * @deprecated This file is maintained for backward compatibility.
+ * Please import directly from the GraphQL modules:
+ * import { query, mutate, gql } from '../graphql/client';
+ * import { GET_ACCOUNTS } from '../graphql/queries';
+ * import { CREATE_ACCOUNT } from '../graphql/mutations';
  */
 
-export interface GraphQLQuery {
-  query: string;
-  variables?: Record<string, any>;
-  operationName?: string;
-}
+// Re-export GraphQL client
+export * from '../graphql/client';
 
-export interface GraphQLResponse<T = any> {
-  data?: T;
-  errors?: Array<{
-    message: string;
-    locations?: Array<{ line: number; column: number }>;
-    path?: Array<string | number>;
-    extensions?: Record<string, any>;
-  }>;
-  extensions?: Record<string, any>;
-}
+// Re-export all queries
+export * from '../graphql/queries';
 
-export interface GraphQLClientOptions {
-  endpoint: string;
-  headers?: Record<string, string>;
-  timeout?: number;
-  retries?: number;
-  retryDelay?: number;
-  enableBatching?: boolean;
-  batchInterval?: number;
-  enableCaching?: boolean;
-  cacheTimeout?: number;
-  enablePersistence?: boolean;
-  debug?: boolean;
-}
+// Re-export all mutations
+export * from '../graphql/mutations';
 
-export interface CacheEntry<T = any> {
-  data: T;
-  timestamp: number;
-  ttl: number;
-  key: string;
-}
+// Re-export all fragments
+export * from '../graphql/fragments';
 
-export interface BatchRequest {
-  query: GraphQLQuery;
-  resolve: (value: any) => void;
-  reject: (error: any) => void;
-  timestamp: number;
+// Re-export all types
+export * from '../graphql/types';
+
+// Legacy exports for backward compatibility
+export {
+  query as executeQuery,
+  mutate as executeMutation,
+  queueQuery as queueOperation,
+  batchExecute as executeBatch,
+  GraphQLClient as PerformanceGraphQLClient
+} from '../graphql/client';
 }
 
 /**

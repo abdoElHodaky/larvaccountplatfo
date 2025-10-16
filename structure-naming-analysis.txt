@@ -1,0 +1,380 @@
+Advanced Backend Structure & Naming Analysis Report
+Generated: Sun Oct 12 18:06:12 UTC 2025
+=================================================
+
+Features found:
+  - Accounting
+    📊 PHP files: 27
+  - Authentication
+    ⚠️  Missing standard directories: Routes
+    📊 PHP files: 11
+  - Dashboard
+    📊 PHP files: 11
+  - Inventory
+    📊 PHP files: 15
+  - Organization
+    ⚠️  Missing standard directories: Models
+    📊 PHP files: 4
+    💡 SUGGESTION: Small feature (4 files) - consider consolidation
+  - Purchase
+    ⚠️  Missing standard directories: Controllers Routes
+    📊 PHP files: 4
+    💡 SUGGESTION: Small feature (4 files) - consider consolidation
+  - Reporting
+    ⚠️  Missing standard directories: Controllers Models Routes
+    📊 PHP files: 1
+    💡 SUGGESTION: Small feature (1 files) - consider consolidation
+  - Sales
+    📊 PHP files: 8
+  - TenantManagement
+    📊 PHP files: 10
+
+NAMING ANALYSIS:
+===============
+  ⚠️  Class/File mismatch: app/Shared/Services/InterModuleBus.php
+      Class: InterModuleBus
+ServiceProxy, File: InterModuleBus
+  ℹ️  Non-camelCase methods in AuthService.php:
+      - __construct
+  ℹ️  Non-camelCase methods in MessageQueueService.php:
+      - __construct
+  ℹ️  Non-camelCase methods in BaseService.php:
+      - __construct
+  ℹ️  Non-camelCase methods in TenantProvisioningService.php:
+      - __construct
+  ℹ️  Non-camelCase methods in helpers.php:
+      - current_tenant
+      - current_organization
+      - tenant_database
+      - format_currency
+      - format_percentage
+      - generate_account_code
+      - generate_journal_entry_number
+      - generate_purchase_order_number
+      - is_shared_database
+      - is_dedicated_database
+      - is_clustered_database
+      - audit_log
+      - broadcast_inventory_update
+      - calculate_account_balance
+      - get_financial_year_start
+      - get_financial_year_end
+      - is_within_financial_year
+      - module_enabled
+      - get_module_service
+      - tenant_cache_key
+      - organization_cache_key
+  ℹ️  Non-camelCase methods in HybridUserProvider.php:
+      - __construct
+  ℹ️  Non-camelCase methods in TenantAwareAuthManager.php:
+      - __construct
+  ℹ️  Non-camelCase methods in TenantUserGuard.php:
+      - __construct
+  ℹ️  Non-camelCase methods in GlobalUserGuard.php:
+      - __construct
+  ℹ️  Non-camelCase methods in AuthService.php:
+      - __construct
+  ℹ️  Non-camelCase methods in LoginController.php:
+      - __construct
+  ℹ️  Non-camelCase methods in AccountingController.php:
+      - __construct
+  ℹ️  Non-camelCase methods in CreateJournalEntry.php:
+      - __construct
+      - __invoke
+  ℹ️  Non-camelCase methods in AccountingDashboard.php:
+      - __construct
+      - __invoke
+  ℹ️  Non-camelCase methods in BalanceSheet.php:
+      - __construct
+      - __invoke
+  ℹ️  Non-camelCase methods in ProfitLoss.php:
+      - __construct
+      - __invoke
+  ℹ️  Non-camelCase methods in TransactionUpdated.php:
+      - __construct
+  ℹ️  Non-camelCase methods in TransactionCreated.php:
+      - __construct
+  ℹ️  Non-camelCase methods in OrganizationController.php:
+      - __construct
+  ℹ️  Non-camelCase methods in SalesApiController.php:
+      - __construct
+  ℹ️  Non-camelCase methods in SalesController.php:
+      - __construct
+  ℹ️  Non-camelCase methods in TenantProvisioningService.php:
+      - __construct
+  ℹ️  Non-camelCase methods in TenantController.php:
+      - __construct
+  ℹ️  Non-camelCase methods in ResolveTenant.php:
+      - __construct
+  ℹ️  Non-camelCase methods in TenantMiddleware.php:
+      - __construct
+  ℹ️  Non-camelCase methods in AuthenticateTenant.php:
+      - __construct
+  ℹ️  Non-camelCase methods in InventoryDashboard.php:
+      - __construct
+      - __invoke
+  ℹ️  Non-camelCase methods in LowStockProducts.php:
+      - __construct
+      - __invoke
+  ℹ️  Non-camelCase methods in OutOfStockProducts.php:
+      - __construct
+      - __invoke
+  ℹ️  Non-camelCase methods in UpdateStock.php:
+      - __construct
+      - __invoke
+  ℹ️  Non-camelCase methods in StockUpdated.php:
+      - __construct
+  ℹ️  Non-camelCase methods in InventoryController.php:
+      - __construct
+  ℹ️  Non-camelCase methods in MetricsUpdated.php:
+      - __construct
+  ℹ️  Non-camelCase methods in DashboardController.php:
+      - __construct
+  ℹ️  Non-camelCase methods in AdvancedDashboardController.php:
+      - __construct
+  ℹ️  Non-camelCase methods in AdvancedDashboardService.php:
+      - __construct
+  ℹ️  Non-camelCase methods in DashboardService.php:
+      - __construct
+  ℹ️  Non-camelCase methods in WidgetService.php:
+      - __construct
+  ℹ️  Non-camelCase methods in PerformanceMonitoringService.php:
+      - __construct
+  ℹ️  Non-camelCase methods in ServiceManager.php:
+      - __construct
+  ℹ️  Non-camelCase methods in That.php:
+      - __construct
+  ℹ️  Non-camelCase methods in BaseRepository.php:
+      - __construct
+  ℹ️  Non-camelCase methods in HorizonPerformanceMonitor.php:
+      - __construct
+  ℹ️  Non-camelCase methods in ServiceRegistry.php:
+      - __construct
+  ℹ️  Non-camelCase methods in PerformanceOptimizer.php:
+      - __construct
+  ℹ️  Non-camelCase methods in InterModuleBus.php:
+      - __construct
+      - __call
+  ℹ️  Non-camelCase methods in TelescopePerformanceAdapter.php:
+      - __construct
+  ℹ️  Non-camelCase methods in PerformanceMonitor.php:
+      - __construct
+  ℹ️  Non-camelCase methods in DomainEvent.php:
+      - __construct
+  ℹ️  Non-camelCase methods in QueueableDomainEvent.php:
+      - __construct
+  ℹ️  Non-camelCase methods in HybridModel.php:
+      - __call
+      - __call
+  ℹ️  Non-camelCase methods in TenantMigrationService.php:
+      - __construct
+  ℹ️  Non-camelCase methods in EmailVerificationPromptController.php:
+      - __invoke
+  ℹ️  Non-camelCase methods in VerifyEmailController.php:
+      - __invoke
+  ℹ️  Non-camelCase methods in LoginController.php:
+      - __construct
+  ℹ️  Non-camelCase methods in TenantMiddleware.php:
+      - __construct
+  ℹ️  Non-camelCase methods in ResolveTenant.php:
+      - __construct
+  ℹ️  Non-camelCase methods in AuthenticateTenant.php:
+      - __construct
+  ℹ️  Non-camelCase methods in SetDatabaseShard.php:
+      - __construct
+
+DUPLICATION ANALYSIS:
+====================
+  ✅ No duplicate service names found
+  💡 Similar class name patterns (potential consolidation opportunities):
+      - Classes starting with: Accounting
+      - Classes starting with: AdvancedDashboard
+      - Classes starting with: Auth
+      - Classes starting with: Authenticated
+      - Classes starting with: Dashboard
+      - Classes starting with: Inventory
+      - Classes starting with: Login
+      - Classes starting with: Organization
+      - Classes starting with: Register
+      - Classes starting with: RegisteredUser
+      - Classes starting with: Tenant
+      - Classes starting with: TenantProvisioning
+
+COMPLEXITY ANALYSIS:
+===================
+  ⚠️  High complexity: AuthService.php (score: 48)
+      Lines: 469, Decision points: 39
+  ⚠️  High complexity: TenantResolver.php (score: 38)
+      Lines: 388, Decision points: 31
+  ⚠️  High complexity: TenantIsolationService.php (score: 23)
+      Lines: 466, Decision points: 14
+  ⚠️  High complexity: MessageQueueService.php (score: 41)
+      Lines: 402, Decision points: 33
+  ⚠️  High complexity: QueryOptimizationService.php (score: 31)
+      Lines: 290, Decision points: 26
+  ⚠️  High complexity: TenantProvisioningService.php (score: 49)
+      Lines: 473, Decision points: 40
+  ⚠️  High complexity: User.php (score: 46)
+      Lines: 509, Decision points: 36
+  ⚠️  High complexity: Team.php (score: 29)
+      Lines: 392, Decision points: 22
+  ⚠️  High complexity: helpers.php (score: 43)
+      Lines: 319, Decision points: 37
+  ⚠️  High complexity: HybridUserProvider.php (score: 27)
+      Lines: 292, Decision points: 22
+  ⚠️  High complexity: TenantAwareAuthManager.php (score: 21)
+      Lines: 248, Decision points: 17
+  ⚠️  High complexity: TenantUserGuard.php (score: 45)
+      Lines: 302, Decision points: 39
+  ⚠️  High complexity: GlobalUserGuard.php (score: 34)
+      Lines: 235, Decision points: 30
+  ⚠️  High complexity: AuthService.php (score: 48)
+      Lines: 469, Decision points: 39
+  ⚠️  High complexity: LoginController.php (score: 24)
+      Lines: 374, Decision points: 17
+  ⚠️  High complexity: AccountingService.php (score: 31)
+      Lines: 438, Decision points: 23
+  ⚠️  High complexity: TaxService.php (score: 31)
+      Lines: 370, Decision points: 24
+  ⚠️  High complexity: BudgetService.php (score: 25)
+      Lines: 402, Decision points: 17
+  ⚠️  High complexity: ForecastingService.php (score: 44)
+      Lines: 597, Decision points: 33
+  ⚠️  High complexity: AccountingApiController.php (score: 37)
+      Lines: 446, Decision points: 29
+  ⚠️  High complexity: AccountingController.php (score: 32)
+      Lines: 466, Decision points: 23
+  ⚠️  High complexity: Transaction.php (score: 32)
+      Lines: 344, Decision points: 26
+  ⚠️  High complexity: OrganizationService.php (score: 30)
+      Lines: 312, Decision points: 24
+  ⚠️  High complexity: TenantResolver.php (score: 38)
+      Lines: 388, Decision points: 31
+  ⚠️  High complexity: TenantProvisioningService.php (score: 49)
+      Lines: 479, Decision points: 40
+  ⚠️  High complexity: ResolveTenant.php (score: 25)
+      Lines: 190, Decision points: 22
+  ⚠️  High complexity: TenantMiddleware.php (score: 25)
+      Lines: 187, Decision points: 22
+  ⚠️  High complexity: AuthenticateTenant.php (score: 38)
+      Lines: 258, Decision points: 33
+  ⚠️  High complexity: InventoryService.php (score: 35)
+      Lines: 380, Decision points: 28
+  ⚠️  High complexity: InventoryController.php (score: 23)
+      Lines: 413, Decision points: 15
+  ⚠️  High complexity: InventoryApiController.php (score: 25)
+      Lines: 329, Decision points: 19
+  ⚠️  High complexity: DashboardWidget.php (score: 22)
+      Lines: 377, Decision points: 15
+  ⚠️  High complexity: MetricsUpdated.php (score: 30)
+      Lines: 250, Decision points: 25
+  ⚠️  High complexity: AdvancedDashboardController.php (score: 27)
+      Lines: 512, Decision points: 17
+  ⚠️  High complexity: AdvancedDashboardService.php (score: 29)
+      Lines: 559, Decision points: 18
+  ⚠️  High complexity: WidgetService.php (score: 22)
+      Lines: 596, Decision points: 11
+  ⚠️  High complexity: ValidatableTrait.php (score: 24)
+      Lines: 307, Decision points: 18
+  ⚠️  High complexity: OrganizationScopedTrait.php (score: 26)
+      Lines: 197, Decision points: 23
+  ⚠️  High complexity: PerformanceMonitoringService.php (score: 25)
+      Lines: 584, Decision points: 14
+  ⚠️  High complexity: ServiceManager.php (score: 46)
+      Lines: 404, Decision points: 38
+  ⚠️  High complexity: That.php (score: 27)
+      Lines: 324, Decision points: 21
+  ⚠️  High complexity: BaseRepository.php (score: 35)
+      Lines: 476, Decision points: 26
+  ⚠️  High complexity: HorizonPerformanceMonitor.php (score: 37)
+      Lines: 527, Decision points: 27
+  ⚠️  High complexity: ServiceRegistry.php (score: 32)
+      Lines: 328, Decision points: 26
+  ⚠️  High complexity: PerformanceOptimizer.php (score: 45)
+      Lines: 565, Decision points: 34
+  ⚠️  High complexity: ModuleDiscoveryService.php (score: 33)
+      Lines: 397, Decision points: 26
+  ⚠️  High complexity: InterModuleBus.php (score: 49)
+      Lines: 483, Decision points: 40
+  ⚠️  High complexity: TelescopePerformanceAdapter.php (score: 30)
+      Lines: 380, Decision points: 23
+  ⚠️  High complexity: PerformanceMonitor.php (score: 27)
+      Lines: 429, Decision points: 19
+  ⚠️  High complexity: QueueableDomainEvent.php (score: 22)
+      Lines: 308, Decision points: 16
+  ⚠️  High complexity: Team.php (score: 29)
+      Lines: 392, Decision points: 22
+  ⚠️  High complexity: HybridModel.php (score: 38)
+      Lines: 250, Decision points: 33
+  ⚠️  High complexity: User.php (score: 46)
+      Lines: 509, Decision points: 36
+  ⚠️  High complexity: TenantMigrationService.php (score: 26)
+      Lines: 318, Decision points: 20
+  ⚠️  High complexity: LoginController.php (score: 24)
+      Lines: 374, Decision points: 17
+  ⚠️  High complexity: BaseApiController.php (score: 22)
+      Lines: 258, Decision points: 17
+  ⚠️  High complexity: TenantMiddleware.php (score: 25)
+      Lines: 187, Decision points: 22
+  ⚠️  High complexity: ResolveTenant.php (score: 25)
+      Lines: 190, Decision points: 22
+  ⚠️  High complexity: AuthenticateTenant.php (score: 38)
+      Lines: 258, Decision points: 33
+  ⚠️  High complexity: HealthCheckCommand.php (score: 21)
+      Lines: 241, Decision points: 17
+
+ARCHITECTURAL ANALYSIS:
+======================
+  ⚠️  Business logic in controller: LoginController.php
+  ⚠️  Business logic in controller: AdvancedDashboardController.php
+  💡 SUGGESTION: Move business logic from 2 controllers to services
+  📊 Most common service methods:
+      - __construct (appears 5 times)
+      - getDashboardOverview (appears 4 times)
+      - getTaxSummary (appears 2 times)
+      - getRecentActivity (appears 2 times)
+
+RECOMMENDATIONS:
+===============
+📂 STRUCTURE IMPROVEMENTS:
+  1. Standardize feature directory structure
+     - Ensure all features have: Controllers, Models, Services, Routes
+  2. Consider consolidating small features (< 5 files)
+  3. Create shared components for common functionality
+
+🏷️ NAMING IMPROVEMENTS:
+  1. Ensure class names match file names exactly
+  2. Use consistent camelCase for method names
+  3. Use descriptive, intention-revealing names
+  4. Follow Laravel naming conventions:
+     - Controllers: PascalCase + Controller suffix
+     - Models: Singular PascalCase
+     - Services: PascalCase + Service suffix
+
+🏗️ ARCHITECTURAL IMPROVEMENTS:
+  1. Implement Repository pattern for data access
+  2. Use Service layer for business logic
+  3. Implement proper dependency injection
+  4. Use Events for cross-feature communication
+  5. Create base classes for common functionality
+
+🎯 PRIORITY ACTIONS:
+  HIGH PRIORITY:
+    - Fix class/filename mismatches (1 found)
+    - Move business logic out of controllers (2 found)
+  MEDIUM PRIORITY:
+    - Standardize feature structures (4 inconsistencies)
+    - Reduce code complexity (60 high-complexity files)
+  LOW PRIORITY:
+    - Consolidate duplicate patterns (0 found)
+    - Improve method naming consistency
+
+SUMMARY STATISTICS:
+==================
+Total PHP Files Analyzed: 175
+Structure Issues: 4
+Naming Issues: 1
+Complexity Issues: 60
+Duplication Issues: 0
+Total Issues Found: 65
+Structure Quality Score: 0/100

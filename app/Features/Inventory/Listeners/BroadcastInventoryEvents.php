@@ -2,10 +2,18 @@
 
 namespace App\Features\Inventory\Listeners;
 
+<<<<<<< HEAD
 use App\Features\Dashboard\Events\MetricsUpdated;
 use App\Features\Inventory\Events\StockUpdated;
 use Illuminate\Events\Dispatcher;
 
+=======
+use Illuminate\Events\Dispatcher;
+
+/**
+ * Event subscriber for broadcasting inventory events
+ */
+>>>>>>> codegen-bot/structure-simplification-split-1760284918
 class BroadcastInventoryEvents
 {
     /**
@@ -13,6 +21,7 @@ class BroadcastInventoryEvents
      */
     public function subscribe(Dispatcher $events): void
     {
+<<<<<<< HEAD
         $events->listen(
             'eloquent.updated: App\Features\Inventory\Models\Product',
             [BroadcastInventoryEvents::class, 'handleProductUpdated']
@@ -207,5 +216,37 @@ class BroadcastInventoryEvents
         }
 
         return 0.0;
+=======
+        // Register event listeners here when needed
+        // Example:
+        // $events->listen(
+        //     InventoryUpdated::class,
+        //     [BroadcastInventoryEvents::class, 'handleInventoryUpdated']
+        // );
+    }
+
+    /**
+     * Handle inventory updated events.
+     */
+    public function handleInventoryUpdated($event): void
+    {
+        // Handle the event
+    }
+
+    /**
+     * Handle stock level changed events.
+     */
+    public function handleStockLevelChanged($event): void
+    {
+        // Handle the event
+    }
+
+    /**
+     * Handle product created events.
+     */
+    public function handleProductCreated($event): void
+    {
+        // Handle the event
+>>>>>>> codegen-bot/structure-simplification-split-1760284918
     }
 }

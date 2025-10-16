@@ -4,7 +4,10 @@
  */
 
 import React, { useState } from 'react';
-import { Card, Widget, List } from '../APIENDPOINTS';
+// Simple placeholder components
+const Card: React.FC<{children: React.ReactNode}> = ({children}) => <div className="bg-white rounded-lg shadow p-4">{children}</div>;
+const Widget: React.FC<{children: React.ReactNode}> = ({children}) => <div className="bg-gray-50 rounded p-3">{children}</div>;
+const List: React.FC<{children: React.ReactNode}> = ({children}) => <ul className="space-y-2">{children}</ul>;
 import { EnhancedMenu, EnhancedDialog, ConfirmDialog } from '../enhanced';
 import {
   // Navigation Icons

@@ -3,8 +3,11 @@
 namespace App\Features\Purchase\Models;
 
 use App\Shared\Models\HybridModel;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Builder;
 
 class Supplier extends HybridModel
 {
@@ -46,21 +49,21 @@ class Supplier extends HybridModel
         'deleted_at' => 'datetime',
     ];
 
-    const TYPE_MANUFACTURER = 'manufacturer';
+    public const TYPE_MANUFACTURER = 'manufacturer';
 
-    const TYPE_DISTRIBUTOR = 'distributor';
+    public const TYPE_DISTRIBUTOR = 'distributor';
 
-    const TYPE_WHOLESALER = 'wholesaler';
+    public const TYPE_WHOLESALER = 'wholesaler';
 
-    const TYPE_SERVICE_PROVIDER = 'service_provider';
+    public const TYPE_SERVICE_PROVIDER = 'service_provider';
 
-    const PAYMENT_TERMS_CASH = 'cash';
+    public const PAYMENT_TERMS_CASH = 'cash';
 
-    const PAYMENT_TERMS_NET_15 = 'net_15';
+    public const PAYMENT_TERMS_NET_15 = 'net_15';
 
-    const PAYMENT_TERMS_NET_30 = 'net_30';
+    public const PAYMENT_TERMS_NET_30 = 'net_30';
 
-    const PAYMENT_TERMS_NET_60 = 'net_60';
+    public const PAYMENT_TERMS_NET_60 = 'net_60';
 
     public function purchaseOrders(): HasMany
     {

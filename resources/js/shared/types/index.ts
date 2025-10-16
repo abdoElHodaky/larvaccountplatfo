@@ -35,7 +35,7 @@ export type {
   TransactionType,
   BalanceSheetItem,
   IncomeStatementItem,
-} from '@/features/accounting/ICONSIZES';
+} from './ACCOUNTTYPES';
 
 // Legacy compatibility - keep existing types
 export interface BaseEntity {

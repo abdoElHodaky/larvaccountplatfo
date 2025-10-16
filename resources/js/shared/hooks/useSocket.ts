@@ -1,380 +1,443 @@
-import { useEffect, useCallback, useRef, useState } from 'react';
-import { socketManager, SocketEventCallback } from '../services/socket/socketManager';
-import { getAuthToken, getCurrentOrganizationId } from '../services/alova/alova.config';
+/**
+ * Socket.IO React Hooks
+ * Provides React hooks for real-time Socket.IO functionality
+ */
+
+import { useEffect, useState, useCallback, useRef } from 'react';
+import { socketManager } from '../services/socket/socketManager';
+import { AllSocketEvents, RoomNames } from '../services/socket/eventTypes';
+
+export interface SocketState {
+  isConnected: boolean;
+  isConnecting: boolean;
+  error: string | null;
+  socketId?: string;
+  reconnectAttempts: number;
+}
+
+export interface SocketHookReturn extends SocketState {
+  emit: (event: string, data?: any) => void;
+  on: <K extends keyof AllSocketEvents>(
+    event: K,
+    callback: AllSocketEvents[K]
+  ) => () => void;
+  off: (event: string, callback?: (...args: any[]) => void) => void;
+  joinRoom: (room: string) => void;
+  leaveRoom: (room: string) => void;
+  connect: () => Promise<void>;
+  disconnect: () => void;
+}
 
 /**
- * Hook for managing Socket.io connection and events
+ * Main Socket.IO hook
  */
-export function useSocket() {
-  const [isConnected, setIsConnected] = useState(false);
-  const [socketId, setSocketId] = useState<string | undefined>();
-  const _socketRef = useRef(socketManager);
+export function useSocket(): SocketHookReturn {
+  const [state, setState] = useState<SocketState>({
+    isConnected: false,
+    isConnecting: false,
+    error: null,
+    reconnectAttempts: 0
+  });
 
-  useEffect(() => {
-    const token = getAuthToken();
-    if (!token) {
-      console.warn('No auth token available for socket connection');
+  const stateRef = useRef(state);
+  stateRef.current = state;
+
+  // Connect to socket
+  const connect = useCallback(async () => {
+    if (stateRef.current.isConnected || stateRef.current.isConnecting) {
       return;
     }
 
-    // Connect to socket
-    socketManager.connect(token).then(() => {
-      setIsConnected(true);
-      setSocketId(socketManager.socketId);
-    }).catch(error => {
-      console.error('Socket connection failed:', error);
-      setIsConnected(false);
-    });
+    setState(prev => ({ ...prev, isConnecting: true, error: null }));
 
-    // Listen for connection status changes
-    const handleConnect = () => {
-      setIsConnected(true);
-      setSocketId(socketManager.socketId);
-    };
+    try {
+      const token = localStorage.getItem('auth_token');
+      if (!token) {
+        throw new Error('No authentication token found');
+      }
 
-    const handleDisconnect = () => {
-      setIsConnected(false);
-      setSocketId(undefined);
-    };
-
-    socketManager.on('connect', handleConnect);
-    socketManager.on('disconnect', handleDisconnect);
-
-    // Cleanup on unmount
-    return () => {
-      socketManager.off('connect', handleConnect);
-      socketManager.off('disconnect', handleDisconnect);
-    };
+      await socketManager.connect(token);
+      
+      setState(prev => ({
+        ...prev,
+        isConnected: true,
+        isConnecting: false,
+        socketId: socketManager.socketId,
+        error: null
+      }));
+    } catch (error) {
+      setState(prev => ({
+        ...prev,
+        isConnected: false,
+        isConnecting: false,
+        error: error instanceof Error ? error.message : 'Connection failed'
+      }));
+    }
   }, []);
 
+  // Disconnect from socket
+  const disconnect = useCallback(() => {
+    socketManager.disconnect();
+    setState(prev => ({
+      ...prev,
+      isConnected: false,
+      isConnecting: false,
+      socketId: undefined,
+      error: null
+    }));
+  }, []);
+
+  // Emit event
   const emit = useCallback((event: string, data?: any) => {
     socketManager.emit(event, data);
   }, []);
 
-  const on = useCallback((event: string, callback: SocketEventCallback) => {
-    return socketManager.on(event, callback);
+  // Listen for events
+  const on = useCallback(<K extends keyof AllSocketEvents>(
+    event: K,
+    callback: AllSocketEvents[K]
+  ) => {
+    return socketManager.on(event as string, callback as any);
   }, []);
 
-  const off = useCallback((event: string, callback?: SocketEventCallback) => {
+  // Remove event listeners
+  const off = useCallback((event: string, callback?: (...args: any[]) => void) => {
     socketManager.off(event, callback);
   }, []);
 
+  // Join room
   const joinRoom = useCallback((room: string) => {
     socketManager.joinRoom(room);
   }, []);
 
+  // Leave room
   const leaveRoom = useCallback((room: string) => {
     socketManager.leaveRoom(room);
   }, []);
 
-  const sendToRoom = useCallback((room: string, event: string, data?: any) => {
-    socketManager.sendToRoom(room, event, data);
-  }, []);
+  // Setup connection event listeners
+  useEffect(() => {
+    const handleConnect = () => {
+      setState(prev => ({
+        ...prev,
+        isConnected: true,
+        isConnecting: false,
+        socketId: socketManager.socketId,
+        error: null,
+        reconnectAttempts: 0
+      }));
+    };
 
-  const broadcastToOrganization = useCallback((event: string, data?: any) => {
-    socketManager.broadcastToOrganization(event, data);
-  }, []);
+    const handleDisconnect = (reason: string) => {
+      setState(prev => ({
+        ...prev,
+        isConnected: false,
+        socketId: undefined,
+        error: `Disconnected: ${reason}`
+      }));
+    };
 
-  const sendToUser = useCallback((userId: string, event: string, data?: any) => {
-    socketManager.sendToUser(userId, event, data);
-  }, []);
+    const handleConnectError = (error: Error) => {
+      setState(prev => ({
+        ...prev,
+        isConnected: false,
+        isConnecting: false,
+        error: error.message
+      }));
+    };
+
+    const handleReconnectAttempt = (attemptNumber: number) => {
+      setState(prev => ({
+        ...prev,
+        reconnectAttempts: attemptNumber,
+        isConnecting: true
+      }));
+    };
+
+    const unsubscribeConnect = socketManager.on('connect', handleConnect);
+    const unsubscribeDisconnect = socketManager.on('disconnect', handleDisconnect);
+    const unsubscribeConnectError = socketManager.on('connect_error', handleConnectError);
+    const unsubscribeReconnectAttempt = socketManager.on('reconnect_attempt', handleReconnectAttempt);
+
+    // Auto-connect if token is available
+    const token = localStorage.getItem('auth_token');
+    if (token && !socketManager.isConnected) {
+      connect();
+    }
+
+    return () => {
+      unsubscribeConnect();
+      unsubscribeDisconnect();
+      unsubscribeConnectError();
+      unsubscribeReconnectAttempt();
+    };
+  }, [connect]);
 
   return {
-    isConnected,
-    socketId,
+    ...state,
     emit,
     on,
     off,
     joinRoom,
     leaveRoom,
-    sendToRoom,
-    broadcastToOrganization,
-    sendToUser,
-    stats: socketManager.getStats()
+    connect,
+    disconnect
   };
 }
 
 /**
- * Hook for real-time dashboard updates
+ * Hook for dashboard real-time updates
  */
-export function useRealtimeDashboard(organizationId?: number) {
-  const { on, joinRoom, leaveRoom, isConnected } = useSocket();
-  const [metrics, setMetrics] = useState<any[]>([]);
-  const [widgets, setWidgets] = useState<any[]>([]);
-  const [lastUpdate, setLastUpdate] = useState<Date | null>(null);
-
-  const orgId = organizationId || getCurrentOrganizationId();
+export function useRealtimeDashboard(organizationId: string) {
+  const socket = useSocket();
+  const [dashboardData, setDashboardData] = useState<{
+    metrics?: any;
+    widgets?: any[];
+    lastUpdated?: string;
+  }>({});
 
   useEffect(() => {
-    if (!orgId || !isConnected) return;
+    if (!socket.isConnected || !organizationId) return;
 
-    const room = `dashboard:${orgId}`;
-    joinRoom(room);
+    const roomName = RoomNames.dashboard(organizationId);
+    socket.joinRoom(roomName);
 
-    // Listen for dashboard metric updates
-    const unsubscribeMetrics = on('dashboard:metrics_updated', (data) => {
-      console.log('📊 Dashboard metrics updated:', data);
-      setMetrics(prevMetrics => {
-        const updatedMetrics = [...prevMetrics];
-        const index = updatedMetrics.findIndex(m => m.id === data.id);
-        
-        if (index >= 0) {
-          updatedMetrics[index] = { ...updatedMetrics[index], ...data };
-        } else {
-          updatedMetrics.push(data);
-        }
-        
-        return updatedMetrics;
-      });
-      setLastUpdate(new Date());
+    // Listen for dashboard events
+    const unsubscribeMetrics = socket.on('dashboard:metrics_updated', (data) => {
+      if (data.organizationId === organizationId) {
+        setDashboardData(prev => ({
+          ...prev,
+          metrics: data.metrics,
+          lastUpdated: data.timestamp
+        }));
+      }
     });
 
-    // Listen for widget updates
-    const unsubscribeWidgets = on('dashboard:widget_updated', (data) => {
-      console.log('🎛️ Dashboard widget updated:', data);
-      setWidgets(prevWidgets => {
-        const updatedWidgets = [...prevWidgets];
-        const index = updatedWidgets.findIndex(w => w.id === data.id);
-        
-        if (index >= 0) {
-          updatedWidgets[index] = { ...updatedWidgets[index], ...data };
-        } else {
-          updatedWidgets.push(data);
-        }
-        
-        return updatedWidgets;
-      });
-      setLastUpdate(new Date());
+    const unsubscribeWidget = socket.on('dashboard:widget_updated', (data) => {
+      if (data.organizationId === organizationId) {
+        setDashboardData(prev => ({
+          ...prev,
+          widgets: prev.widgets?.map(w => 
+            w.id === data.widgetId ? { ...w, ...data.widget } : w
+          ) || [data.widget],
+          lastUpdated: data.timestamp
+        }));
+      }
     });
 
-    // Listen for widget position updates
-    const unsubscribePositions = on('dashboard:widget_position_updated', (data) => {
-      console.log('📍 Widget position updated:', data);
-      setWidgets(prevWidgets => 
-        prevWidgets.map(widget => 
-          widget.id === data.widgetId 
-            ? { ...widget, position: data.position }
-            : widget
-        )
-      );
+    const unsubscribeWidgetAdded = socket.on('dashboard:widget_added', (data) => {
+      if (data.organizationId === organizationId) {
+        setDashboardData(prev => ({
+          ...prev,
+          widgets: [...(prev.widgets || []), data.widget],
+          lastUpdated: data.timestamp
+        }));
+      }
     });
 
-    // Listen for new widgets added
-    const unsubscribeNewWidget = on('dashboard:widget_added', (data) => {
-      console.log('➕ New widget added:', data);
-      setWidgets(prevWidgets => [...prevWidgets, data]);
-      setLastUpdate(new Date());
-    });
-
-    // Listen for widgets removed
-    const unsubscribeRemovedWidget = on('dashboard:widget_removed', (data) => {
-      console.log('➖ Widget removed:', data);
-      setWidgets(prevWidgets => 
-        prevWidgets.filter(widget => widget.id !== data.widgetId)
-      );
-      setLastUpdate(new Date());
+    const unsubscribeWidgetRemoved = socket.on('dashboard:widget_removed', (data) => {
+      if (data.organizationId === organizationId) {
+        setDashboardData(prev => ({
+          ...prev,
+          widgets: prev.widgets?.filter(w => w.id !== data.widgetId) || [],
+          lastUpdated: data.timestamp
+        }));
+      }
     });
 
     return () => {
-      leaveRoom(room);
+      socket.leaveRoom(roomName);
       unsubscribeMetrics();
-      unsubscribeWidgets();
-      unsubscribePositions();
-      unsubscribeNewWidget();
-      unsubscribeRemovedWidget();
+      unsubscribeWidget();
+      unsubscribeWidgetAdded();
+      unsubscribeWidgetRemoved();
     };
-  }, [orgId, isConnected, on, joinRoom, leaveRoom]);
+  }, [socket.isConnected, organizationId, socket]);
 
   return {
-    metrics,
-    widgets,
-    lastUpdate,
-    isConnected
+    ...dashboardData,
+    isConnected: socket.isConnected,
+    error: socket.error
   };
 }
 
 /**
- * Hook for real-time accounting updates
+ * Hook for accounting real-time updates
  */
-export function useRealtimeAccounting(organizationId?: number) {
-  const { on, joinRoom, leaveRoom, isConnected } = useSocket();
-  const [transactions, setTransactions] = useState<any[]>([]);
-  const [accounts, setAccounts] = useState<any[]>([]);
-  const [lastUpdate, setLastUpdate] = useState<Date | null>(null);
-
-  const orgId = organizationId || getCurrentOrganizationId();
+export function useRealtimeAccounting(organizationId: string) {
+  const socket = useSocket();
+  const [accountingData, setAccountingData] = useState<{
+    transactions?: any[];
+    balances?: any[];
+    lastUpdated?: string;
+  }>({});
 
   useEffect(() => {
-    if (!orgId || !isConnected) return;
+    if (!socket.isConnected || !organizationId) return;
 
-    const room = `accounting:${orgId}`;
-    joinRoom(room);
+    const roomName = RoomNames.accounting(organizationId);
+    socket.joinRoom(roomName);
 
-    // Listen for new transactions
-    const unsubscribeTransactions = on('accounting:transaction_created', (data) => {
-      console.log('💰 New transaction:', data);
-      setTransactions(prevTransactions => [data, ...prevTransactions]);
-      setLastUpdate(new Date());
+    // Listen for accounting events
+    const unsubscribeTransactionCreated = socket.on('accounting:transaction_created', (data) => {
+      if (data.organizationId === organizationId) {
+        setAccountingData(prev => ({
+          ...prev,
+          transactions: [data.transaction, ...(prev.transactions || [])],
+          lastUpdated: data.timestamp
+        }));
+      }
     });
 
-    // Listen for transaction updates
-    const unsubscribeTransactionUpdates = on('accounting:transaction_updated', (data) => {
-      console.log('💰 Transaction updated:', data);
-      setTransactions(prevTransactions => 
-        prevTransactions.map(transaction => 
-          transaction.id === data.id ? { ...transaction, ...data } : transaction
-        )
-      );
-      setLastUpdate(new Date());
+    const unsubscribeTransactionUpdated = socket.on('accounting:transaction_updated', (data) => {
+      if (data.organizationId === organizationId) {
+        setAccountingData(prev => ({
+          ...prev,
+          transactions: prev.transactions?.map(t => 
+            t.id === data.transaction.id ? { ...t, ...data.transaction } : t
+          ) || [],
+          lastUpdated: data.timestamp
+        }));
+      }
     });
 
-    // Listen for account balance updates
-    const unsubscribeAccountUpdates = on('accounting:account_balance_updated', (data) => {
-      console.log('🏦 Account balance updated:', data);
-      setAccounts(prevAccounts => 
-        prevAccounts.map(account => 
-          account.id === data.accountId 
-            ? { ...account, balance: data.balance }
-            : account
-        )
-      );
-      setLastUpdate(new Date());
+    const unsubscribeBalanceUpdated = socket.on('accounting:account_balance_updated', (data) => {
+      if (data.organizationId === organizationId) {
+        setAccountingData(prev => ({
+          ...prev,
+          balances: prev.balances?.map(b => 
+            b.id === data.account.id ? { ...b, ...data.account } : b
+          ) || [data.account],
+          lastUpdated: data.timestamp
+        }));
+      }
     });
 
     return () => {
-      leaveRoom(room);
-      unsubscribeTransactions();
-      unsubscribeTransactionUpdates();
-      unsubscribeAccountUpdates();
+      socket.leaveRoom(roomName);
+      unsubscribeTransactionCreated();
+      unsubscribeTransactionUpdated();
+      unsubscribeBalanceUpdated();
     };
-  }, [orgId, isConnected, on, joinRoom, leaveRoom]);
+  }, [socket.isConnected, organizationId, socket]);
 
   return {
-    transactions,
-    accounts,
-    lastUpdate,
-    isConnected
+    ...accountingData,
+    isConnected: socket.isConnected,
+    error: socket.error
   };
 }
 
 /**
- * Hook for real-time inventory updates
+ * Hook for inventory real-time updates
  */
-export function useRealtimeInventory(organizationId?: number) {
-  const { on, joinRoom, leaveRoom, isConnected } = useSocket();
-  const [products, setProducts] = useState<any[]>([]);
-  const [stockMovements, setStockMovements] = useState<any[]>([]);
-  const [lastUpdate, setLastUpdate] = useState<Date | null>(null);
-
-  const orgId = organizationId || getCurrentOrganizationId();
+export function useRealtimeInventory(organizationId: string) {
+  const socket = useSocket();
+  const [inventoryData, setInventoryData] = useState<{
+    stockUpdates?: any[];
+    lowStockAlerts?: any[];
+    lastUpdated?: string;
+  }>({});
 
   useEffect(() => {
-    if (!orgId || !isConnected) return;
+    if (!socket.isConnected || !organizationId) return;
 
-    const room = `inventory:${orgId}`;
-    joinRoom(room);
+    const roomName = RoomNames.inventory(organizationId);
+    socket.joinRoom(roomName);
 
-    // Listen for stock level updates
-    const unsubscribeStockUpdates = on('inventory:stock_updated', (data) => {
-      console.log('📦 Stock updated:', data);
-      setProducts(prevProducts => 
-        prevProducts.map(product => 
-          product.id === data.productId 
-            ? { ...product, stockLevel: data.stockLevel }
-            : product
-        )
-      );
-      setLastUpdate(new Date());
+    // Listen for inventory events
+    const unsubscribeStockUpdated = socket.on('inventory:stock_updated', (data) => {
+      if (data.organizationId === organizationId) {
+        setInventoryData(prev => ({
+          ...prev,
+          stockUpdates: [data, ...(prev.stockUpdates || [])].slice(0, 50), // Keep last 50 updates
+          lastUpdated: data.timestamp
+        }));
+      }
     });
 
-    // Listen for new stock movements
-    const unsubscribeMovements = on('inventory:movement_created', (data) => {
-      console.log('📦 Stock movement:', data);
-      setStockMovements(prevMovements => [data, ...prevMovements]);
-      setLastUpdate(new Date());
-    });
-
-    // Listen for low stock alerts
-    const unsubscribeLowStock = on('inventory:low_stock_alert', (data) => {
-      console.log('⚠️ Low stock alert:', data);
-      // Handle low stock notification
-      setLastUpdate(new Date());
+    const unsubscribeLowStockAlert = socket.on('inventory:low_stock_alert', (data) => {
+      if (data.organizationId === organizationId) {
+        setInventoryData(prev => ({
+          ...prev,
+          lowStockAlerts: [data, ...(prev.lowStockAlerts || [])],
+          lastUpdated: data.timestamp
+        }));
+      }
     });
 
     return () => {
-      leaveRoom(room);
-      unsubscribeStockUpdates();
-      unsubscribeMovements();
-      unsubscribeLowStock();
+      socket.leaveRoom(roomName);
+      unsubscribeStockUpdated();
+      unsubscribeLowStockAlert();
     };
-  }, [orgId, isConnected, on, joinRoom, leaveRoom]);
+  }, [socket.isConnected, organizationId, socket]);
 
   return {
-    products,
-    stockMovements,
-    lastUpdate,
-    isConnected
+    ...inventoryData,
+    isConnected: socket.isConnected,
+    error: socket.error
   };
 }
 
 /**
- * Hook for real-time notifications
+ * Hook for notifications
  */
-export function useRealtimeNotifications(userId?: string) {
-  const { on, joinRoom, leaveRoom, isConnected } = useSocket();
+export function useRealtimeNotifications(userId: string) {
+  const socket = useSocket();
   const [notifications, setNotifications] = useState<any[]>([]);
-  const [unreadCount, setUnreadCount] = useState(0);
 
   useEffect(() => {
-    if (!userId || !isConnected) return;
+    if (!socket.isConnected || !userId) return;
 
-    const room = `user:${userId}`;
-    joinRoom(room);
+    const roomName = RoomNames.user(userId);
+    socket.joinRoom(roomName);
 
-    // Listen for new notifications
-    const unsubscribeNotifications = on('notification:new', (data) => {
-      console.log('🔔 New notification:', data);
-      setNotifications(prevNotifications => [data, ...prevNotifications]);
-      setUnreadCount(prevCount => prevCount + 1);
+    // Listen for notification events
+    const unsubscribeNew = socket.on('notification:new', (data) => {
+      if (data.userId === userId) {
+        setNotifications(prev => [data, ...prev]);
+      }
     });
 
-    // Listen for notification read status
-    const unsubscribeRead = on('notification:read', (data) => {
-      console.log('👁️ Notification read:', data);
-      setNotifications(prevNotifications => 
-        prevNotifications.map(notification => 
-          notification.id === data.notificationId 
-            ? { ...notification, read: true }
-            : notification
-        )
-      );
-      setUnreadCount(prevCount => Math.max(0, prevCount - 1));
+    const unsubscribeRead = socket.on('notification:read', (data) => {
+      if (data.userId === userId) {
+        setNotifications(prev => 
+          prev.map(n => n.id === data.notificationId ? { ...n, read: true } : n)
+        );
+      }
+    });
+
+    const unsubscribeDismissed = socket.on('notification:dismissed', (data) => {
+      if (data.userId === userId) {
+        setNotifications(prev => 
+          prev.filter(n => n.id !== data.notificationId)
+        );
+      }
     });
 
     return () => {
-      leaveRoom(room);
-      unsubscribeNotifications();
+      socket.leaveRoom(roomName);
+      unsubscribeNew();
       unsubscribeRead();
+      unsubscribeDismissed();
     };
-  }, [userId, isConnected, on, joinRoom, leaveRoom]);
+  }, [socket.isConnected, userId, socket]);
 
   const markAsRead = useCallback((notificationId: string) => {
-    socketManager.emit('notification:mark_read', { notificationId });
-  }, []);
+    socket.emit('notification:mark_read', { notificationId });
+  }, [socket]);
 
-  const markAllAsRead = useCallback(() => {
-    socketManager.emit('notification:mark_all_read');
-    setUnreadCount(0);
-    setNotifications(prevNotifications => 
-      prevNotifications.map(notification => ({ ...notification, read: true }))
-    );
-  }, []);
+  const dismiss = useCallback((notificationId: string) => {
+    socket.emit('notification:dismiss', { notificationId });
+  }, [socket]);
 
   return {
     notifications,
-    unreadCount,
     markAsRead,
-    markAllAsRead,
-    isConnected
+    dismiss,
+    isConnected: socket.isConnected,
+    error: socket.error
   };
 }
+

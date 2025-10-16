@@ -2,11 +2,19 @@
 
 namespace App\Features\Accounting\Listeners;
 
+<<<<<<< HEAD
 use App\Features\Accounting\Events\TransactionCreated;
 use App\Features\Accounting\Events\TransactionUpdated;
 use App\Features\Dashboard\Events\MetricsUpdated;
 use Illuminate\Events\Dispatcher;
 
+=======
+use Illuminate\Events\Dispatcher;
+
+/**
+ * Event subscriber for broadcasting transaction events
+ */
+>>>>>>> codegen-bot/structure-simplification-split-1760284918
 class BroadcastTransactionEvents
 {
     /**
@@ -14,6 +22,7 @@ class BroadcastTransactionEvents
      */
     public function subscribe(Dispatcher $events): void
     {
+<<<<<<< HEAD
         $events->listen(
             'eloquent.created: App\Features\Accounting\Models\Transaction',
             [BroadcastTransactionEvents::class, 'handleTransactionCreated']
@@ -143,5 +152,37 @@ class BroadcastTransactionEvents
             ],
             'updated_at' => now()->toISOString(),
         ];
+=======
+        // Register event listeners here when needed
+        // Example:
+        // $events->listen(
+        //     TransactionCreated::class,
+        //     [BroadcastTransactionEvents::class, 'handleTransactionCreated']
+        // );
+    }
+
+    /**
+     * Handle transaction created events.
+     */
+    public function handleTransactionCreated($event): void
+    {
+        // Handle the event
+    }
+
+    /**
+     * Handle transaction updated events.
+     */
+    public function handleTransactionUpdated($event): void
+    {
+        // Handle the event
+    }
+
+    /**
+     * Handle transaction deleted events.
+     */
+    public function handleTransactionDeleted($event): void
+    {
+        // Handle the event
+>>>>>>> codegen-bot/structure-simplification-split-1760284918
     }
 }

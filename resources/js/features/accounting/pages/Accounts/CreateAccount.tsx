@@ -1,7 +1,7 @@
 import React from 'react';
 import { Head, Link, useForm } from '@inertiajs/react';
 import AppLayout from '@/shared/components/layouts/AppLayout';
-import { Account, PageProps, SelectOption } from '@/shared/ICONSIZES';
+import { Account, PageProps, SelectOption } from '@/shared/types';
 import { NavBackIcon } from '@/shared/icons';
 import AnimatedFormInput from '@/shared/components/AnimatedFormInput';
 

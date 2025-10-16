@@ -238,10 +238,10 @@ trait ValidatableTrait
             foreach ($customErrors as $field => $messages) {
                 if (is_array($messages)) {
                     foreach ($messages as $message) {
-                        $validator->errors()->add($field, $message);
+                        $validator->errors()->a// DEBUG: dd($field, $message);
                     }
                 } else {
-                    $validator->errors()->add($field, $messages);
+                    $validator->errors()->a// DEBUG: dd($field, $messages);
                 }
             }
             throw new ValidationException($validator);

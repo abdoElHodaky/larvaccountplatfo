@@ -1,5 +1,8 @@
 <?php
 
+namespace App;
+
+
 /**
  * Global helper functions for the Laravel Modular Accounting Platform
  */

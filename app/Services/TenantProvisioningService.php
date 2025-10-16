@@ -8,8 +8,8 @@ use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
-use Modules\Shared\Models\Organization;
-use Modules\Shared\Models\User;
+use App\Shared\Models\Organization;
+use App\Shared\Models\User;
 
 class TenantProvisioningService
 {

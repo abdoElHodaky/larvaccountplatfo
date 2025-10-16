@@ -20,68 +20,11 @@ Professional system architecture diagrams with clean, consistent styling for the
 
 ## 🎯 System Overview
 
-### **🌐 High-Level Architecture**
+### **🌐 Architecture Reference**
 
-```mermaid
-graph TB
-    subgraph "🌐 Client Layer"
-        WEB[Web Application]
-        MOBILE[Mobile App]
-        API_CLIENTS[API Clients]
-    end
-    
-    subgraph "🛡️ Security Layer"
-        WAF[Web Application Firewall]
-        RATE_LIMIT[Rate Limiting]
-        AUTH[Authentication]
-    end
-    
-    subgraph "🚀 Application Layer"
-        LB[Load Balancer]
-        API[Laravel 11 API]
-        QUEUE[Queue Workers]
-        SCHEDULER[Task Scheduler]
-    end
-    
-    subgraph "💾 Data Layer"
-        PRIMARY[(PostgreSQL Primary)]
-        REPLICA[(PostgreSQL Replica)]
-        CACHE[(Redis Cache)]
-        SEARCH[(Elasticsearch)]
-    end
-    
-    subgraph "📁 Storage Layer"
-        LOCAL[Local Storage]
-        S3[S3 Compatible]
-        CDN[Content Delivery Network]
-    end
-    
-    WEB --> WAF
-    MOBILE --> WAF
-    API_CLIENTS --> WAF
-    
-    WAF --> RATE_LIMIT
-    RATE_LIMIT --> AUTH
-    AUTH --> LB
-    
-    LB --> API
-    API --> QUEUE
-    API --> SCHEDULER
-    
-    API --> PRIMARY
-    API --> REPLICA
-    API --> CACHE
-    API --> SEARCH
-    
-    API --> LOCAL
-    API --> S3
-    S3 --> CDN
-    
-    style API fill:#eff6ff,stroke:#2563eb,stroke-width:3px
-    style PRIMARY fill:#ecfdf5,stroke:#059669,stroke-width:2px
-    style CACHE fill:#fef2f2,stroke:#dc2626,stroke-width:2px
-    style AUTH fill:#fef3c7,stroke:#d97706,stroke-width:2px
-```
+> **📋 For the authoritative high-level architecture diagram, see [System Architecture Overview](../../README.md#-complete-system-architecture) in the main README.**
+
+This document provides specialized architectural diagrams for specific components and use cases.
 
 ### **🔧 Service Architecture**
 

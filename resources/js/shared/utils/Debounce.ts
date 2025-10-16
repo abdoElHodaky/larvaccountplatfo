@@ -1,54 +1,63 @@
 /**
- * Performance Monitoring and Optimization Utilities
- * Advanced performance tracking, monitoring, and optimization tools
+ * Performance Utilities - Unified Export
+ * Re-exports all performance utilities from the modular structure
+ * 
+ * @deprecated This file is maintained for backward compatibility.
+ * Please import directly from the performance module:
+ * import { debounce, throttle } from '../performance';
  */
 
-import React from 'react';
+// Re-export all performance utilities from the new modular structure
+export * from './performance';
 
-/**
- * Debounce function for performance optimization
- * Delays function execution until after wait milliseconds have elapsed
- */
-export function debounce<T extends (...args: any[]) => any>(
-  func: T,
-  wait: number,
-  immediate?: boolean
-): (...args: Parameters<T>) => void {
-  let timeout: NodeJS.Timeout | null = null;
-  
-  return function executedFunction(...args: Parameters<T>) {
-    const later = () => {
-      timeout = null;
-      if (!immediate) func(...args);
-    };
-    
-    const callNow = immediate && !timeout;
-    
-    if (timeout) clearTimeout(timeout);
-    timeout = setTimeout(later, wait);
-    
-    if (callNow) func(...args);
-  };
-}
+// Maintain backward compatibility with named exports
+export {
+  debounce,
+  throttle,
+  createDebouncedCallback,
+  createThrottledCallback,
+  createAdvancedDebounce,
+  createBatchedDebounce
+} from './performance/debounce';
 
-/**
- * Throttle function for performance optimization
- * Limits function execution to once per specified time period
- */
-export function throttle<T extends (...args: any[]) => any>(
-  func: T,
-  limit: number
-): (...args: Parameters<T>) => void {
-  let inThrottle: boolean;
-  
-  return function executedFunction(...args: Parameters<T>) {
-    if (!inThrottle) {
-      func.apply(this, args);
-      inThrottle = true;
-      setTimeout(() => inThrottle = false, limit);
-    }
-  };
-}
+export {
+  memoize,
+  createMemoizedFunction,
+  createLRUMemoize,
+  createTTLMemoize,
+  createWeakMemoize,
+  clearMemoizeCache,
+  getMemoizeStats
+} from './performance/memoization';
+
+export {
+  deepEqual,
+  shallowEqual,
+  createCustomComparator,
+  arrayEqual,
+  objectEqual,
+  primitiveEqual
+} from './performance/comparison';
+
+export {
+  usePerformanceMonitor,
+  withPerformanceTracking,
+  useDebouncedState,
+  useExpensiveComputation,
+  useRenderPerformance,
+  useIntersectionObserver,
+  ReactPerformanceUtils
+} from './performance/reactUtils';
+
+export {
+  FinancialPerformanceUtils
+} from './performance/financialUtils';
+
+export {
+  PerformanceMonitor,
+  type PerformanceMetric,
+  type PerformanceReport
+} from './performance/monitor';
 
 /**
  * Memoization utility for expensive calculations

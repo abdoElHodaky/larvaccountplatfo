@@ -210,7 +210,7 @@ class MessageQueueService
             // Check if message exists in deduplication window
             if (! $this->redis->zscore($dedupeKey, $messageHash)) {
                 $uniqueMessages[] = $message;
-                $this->redis->zadd($dedupeKey, $currentTime, $messageHash);
+                $this->redis->za// DEBUG: dd($dedupeKey, $currentTime, $messageHash);
             } else {
                 $duplicatesRemoved++;
             }
@@ -349,7 +349,7 @@ class MessageQueueService
     private function scheduleRetry(array $messageData, int $delayMs): void
     {
         $retryTime = microtime(true) + ($delayMs / 1000);
-        $this->redis->zadd('retry_queue', $retryTime, json_encode($messageData));
+        $this->redis->za// DEBUG: dd('retry_queue', $retryTime, json_encode($messageData));
     }
 
     private function moveToDeadLetterQueue(array $messageData): void

@@ -3,8 +3,11 @@
 namespace App\Features\Accounting\Models;
 
 use App\Shared\Models\HybridModel;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Builder;
 
 class ForecastLineItem extends HybridModel
 {
