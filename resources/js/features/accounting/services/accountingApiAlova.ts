@@ -1,10 +1,17 @@
 /**
- * Accounting API Service using Alova.js
- * Modern GraphQL client for accounting operations
+ * Accounting API Service - Unified Export
+ * Re-exports all accounting services from the modular structure
+ * 
+ * @deprecated This file is maintained for backward compatibility.
+ * Please import directly from specific service modules:
+ * import { accountService } from './accounts/accountService';
+ * import { transactionService } from './transactions/transactionService';
  */
 
-import { gql, mutation } from '../../../shared/services/alova/alova.config';
-import { useRequest } from 'alova';
+// Re-export all accounting services from the new modular structure
+export * from './accounts/accountService';
+export * from './transactions/transactionService';
+export * from './reports/reportService';
 
 // TypeScript interfaces
 export interface Account {

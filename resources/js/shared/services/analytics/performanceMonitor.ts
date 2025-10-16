@@ -1,10 +1,22 @@
 /**
- * Performance Monitoring & Analytics Service
- * Tracks API performance, user interactions, and system metrics
+ * Performance Monitoring & Analytics Service - Unified Export
+ * Re-exports all analytics services from the modular structure
+ * 
+ * @deprecated This file is maintained for backward compatibility.
+ * Please import directly from the performance utilities:
+ * import { PerformanceMonitor } from '../../utils/performance/monitor';
  */
 
-import { socketManager } from '../socket/socketManager';
-import { dataSyncService } from '../dataSync/dataSyncService';
+// Re-export performance monitoring from the new modular structure
+export {
+  PerformanceMonitor,
+  type PerformanceMetric,
+  type PerformanceReport
+} from '../../utils/performance/monitor';
+
+// Re-export analytics utilities
+export * from './metricsCollector';
+export * from './analyticsReporter';
 
 // Performance metric types
 export interface PerformanceMetric {
