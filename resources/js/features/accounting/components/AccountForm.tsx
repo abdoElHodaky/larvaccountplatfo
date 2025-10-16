@@ -5,7 +5,7 @@ import { FormInput } from '@/shared/components/molecules/FormInput';
 import { FormSelect } from '@/shared/components/molecules/FormSelect';
 import { CardContainer } from '@/shared/components/molecules/Container';
 import { Text } from '@chakra-ui/react';
-import { Account, AccountFormProps } from '@/shared/types/ACCOUNTTYPES';
+import { Account, AccountFormProps, AccountFormData, AccountType, AccountSubType } from '@/shared/types/ACCOUNTTYPES';
 
 const accountTypes = [
     { value: 'asset', label: 'Asset' },
@@ -41,7 +41,7 @@ const accountSubtypes = {
 };
 
 export default function AccountForm({ account, accounts, onSubmit, onCancel }: AccountFormProps) {
-    const { data, setData, processing, errors } = useForm<Account>({
+    const { data, setData, processing, errors } = useForm<AccountFormData>({
         code: account?.code || '',
         name: account?.name || '',
         type: account?.type || 'asset',
@@ -49,6 +49,8 @@ export default function AccountForm({ account, accounts, onSubmit, onCancel }: A
         parentId: account?.parentId || undefined,
         description: account?.description || '',
         isActive: account?.isActive ?? true,
+        organizationId: account?.organizationId || 1,
+        tenantId: account?.tenantId || 1,
     });
 
     const [selectedType, setSelectedType] = useState(data.type);
@@ -59,15 +61,12 @@ export default function AccountForm({ account, accounts, onSubmit, onCancel }: A
     };
 
     const handleTypeChange = (type: string) => {
-        setSelectedType(type);
-        setData({
-            ...data,
-            type,
-            subType: accountSubtypes[type as keyof typeof accountSubtypes]?.[0]?.value || '',
-        });
+        setSelectedType(type as AccountType);
+        setData('type', type as AccountType);
+        setData('subType', (accountSubtypes[type as keyof typeof accountSubtypes]?.[0]?.value || '') as AccountSubType);
     };
 
-    const parentAccountOptions = accounts
+    const parentAccountOptions = (accounts || [])
         .filter((acc: Account) => acc.type === data.type && acc.id !== account?.id)
         .map((acc: Account) => ({
             value: acc.id?.toString() || '',
@@ -122,7 +121,7 @@ export default function AccountForm({ account, accounts, onSubmit, onCancel }: A
                             <FormSelect
                                 label="Account Subtype"
                                 value={data.subType}
-                                onChange={(value) => setData('subType', value)}
+                                onChange={(value) => setData('subType', value as AccountSubType)}
                                 options={accountSubtypes[selectedType as keyof typeof accountSubtypes] || []}
                                 error={errors.subType}
                                 isRequired

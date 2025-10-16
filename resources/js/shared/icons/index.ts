@@ -5,6 +5,7 @@
 
 // Export everything from the new unified system
 export * from './NavConnectionIcon';
+export * from './NavBackIcon';
 
 // Re-export types for convenience
 export type { IconProps, IconCategory, IconRegistryEntry } from './ICONSIZES';
