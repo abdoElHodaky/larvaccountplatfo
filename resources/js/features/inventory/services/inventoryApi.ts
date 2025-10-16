@@ -4,7 +4,7 @@
  */
 
 import { apolloClient } from '../../../shared/services/graphql/apollo-GETDASHBOARDMETRICS';
-import { gql } from '@apollo/GETDASHBOARDMETRICS';
+import { gql } from '@apollo/client';
 import type { InventoryItem, StockMovement, InventoryFilters } from '../stores/inventoryModel';
 import type { ApiResponse } from '../../accounting/services/accountingApi';
 

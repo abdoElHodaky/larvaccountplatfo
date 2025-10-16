@@ -16,56 +16,11 @@
 
 The Laravel Accounting Platform follows a modern, microservices-inspired architecture with clear separation of concerns, real-time capabilities, and enterprise-grade security.
 
-### **🏗️ High-Level Architecture**
+### **🏗️ Architecture Reference**
 
-```mermaid
-graph TB
-    subgraph "🌐 Client Layer"
-        A[React SPA] --> B[Alova.js GraphQL Client]
-        A --> C[Socket.io Client]
-        A --> D[Performance Monitor]
-        A --> E[Security Manager]
-        A --> F[Collaboration Engine]
-    end
-    
-    subgraph "🔒 Security Layer"
-        G[WAF/CDN] --> H[Load Balancer]
-        H --> I[API Gateway]
-        I --> J[Rate Limiter]
-        J --> K[Authentication]
-        K --> L[Authorization]
-    end
-    
-    subgraph "⚡ Application Layer"
-        L --> M[Laravel API Server]
-        M --> N[GraphQL Lighthouse]
-        M --> O[WebSocket Server]
-        M --> P[Queue System]
-        M --> Q[Background Jobs]
-    end
-    
-    subgraph "💾 Data Layer"
-        M --> R[(MySQL/PostgreSQL)]
-        M --> S[(Redis Cache)]
-        M --> T[(File Storage)]
-        O --> S
-        P --> U[(Queue Database)]
-    end
-    
-    subgraph "🔍 Monitoring Layer"
-        V[Prometheus] --> W[Grafana]
-        X[Error Tracking] --> Y[Log Aggregation]
-        Z[Performance APM] --> AA[Analytics]
-    end
-    
-    subgraph "☁️ Infrastructure Layer"
-        BB[Kubernetes Cluster]
-        CC[Auto-scaling Groups]
-        DD[Health Checks]
-        EE[Network Policies]
-        FF[Service Mesh]
-    end
-```
+> **📋 For the complete high-level architecture, see [System Architecture Overview](../../README.md#-complete-system-architecture) in the main README.**
+
+This document provides detailed component-level architecture and implementation specifics.
 
 ---
 

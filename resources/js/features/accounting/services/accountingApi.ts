@@ -4,7 +4,7 @@
  */
 
 import { apolloClient } from '../../../shared/services/graphql/apollo-GETDASHBOARDMETRICS';
-import { gql } from '@apollo/GETDASHBOARDMETRICS';
+import { gql } from '@apollo/client';
 import type { Account, Transaction, JournalEntry, AccountingFilters } from '../stores/accountingModel';
 
 // GraphQL Queries

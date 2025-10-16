@@ -4,7 +4,7 @@
  */
 
 import { apolloClient } from '../../../shared/services/graphql/apollo-GETDASHBOARDMETRICS';
-import { gql } from '@apollo/GETDASHBOARDMETRICS';
+import { gql } from '@apollo/client';
 import { log } from '../../../shared/utils/logger';
 import type { DashboardLayout, Widget, MetricData, ChartData, DashboardFilters } from '../stores/dashboardModel';
 import type { ApiResponse } from '../../accounting/services/accountingApi';
