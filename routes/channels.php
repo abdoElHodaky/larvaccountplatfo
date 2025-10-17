@@ -42,9 +42,14 @@ Broadcast::channel('inventory', function ($user) {
     return $user !== null;
 });
 
-// Dashboard updates
+// Dashboard updates (general)
 Broadcast::channel('dashboard', function ($user) {
     return $user !== null;
+});
+
+// Organization-specific dashboard channels
+Broadcast::channel('dashboard.{organizationId}', function ($user, $organizationId) {
+    return $user && $user->hasAccessToOrganization($organizationId);
 });
 
 // Legacy tenant channels (keeping for compatibility)

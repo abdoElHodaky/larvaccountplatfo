@@ -2,6 +2,7 @@
 
 use App\Features\Dashboard\Controllers\AdvancedDashboardController;
 use App\Features\Dashboard\Controllers\DashboardApiController;
+use App\Features\Dashboard\Controllers\WebSocketController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -141,4 +142,38 @@ Route::prefix('v2')->name('v2.')->group(function () {
         Route::patch('/positions', [AdvancedDashboardController::class, 'updateWidgetPositions'])
             ->name('update-positions');
     });
+});
+
+/*
+|--------------------------------------------------------------------------
+| WebSocket Dashboard Routes
+|--------------------------------------------------------------------------
+|
+| Routes for real-time dashboard functionality using WebSocket connections.
+| These routes handle authentication, subscriptions, and real-time updates.
+|
+*/
+
+Route::prefix('websocket')->name('websocket.')->group(function () {
+    // WebSocket authentication
+    Route::post('/auth', [WebSocketController::class, 'authenticate'])
+        ->name('authenticate');
+
+    // Channel subscription management
+    Route::post('/subscribe', [WebSocketController::class, 'subscribe'])
+        ->name('subscribe');
+
+    Route::post('/unsubscribe', [WebSocketController::class, 'unsubscribe'])
+        ->name('unsubscribe');
+
+    // Real-time update triggers
+    Route::post('/trigger-update', [WebSocketController::class, 'triggerUpdate'])
+        ->name('trigger-update');
+
+    Route::post('/trigger-metrics-update', [WebSocketController::class, 'triggerMetricsUpdate'])
+        ->name('trigger-metrics-update');
+
+    // Connection status
+    Route::get('/status', [WebSocketController::class, 'getConnectionStatus'])
+        ->name('status');
 });

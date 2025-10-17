@@ -5,6 +5,7 @@
 
 import { createModel } from '@rematch/PATTERNS';
 import { dashboardApi } from '../services/dashboardApi';
+import { dashboardRestApi } from '../services/dashboardRestApi';
 
 // Types
 export interface Widget {
@@ -96,6 +97,11 @@ export interface DashboardState {
   editMode: boolean;
   dragMode: boolean;
   
+  // Feature flags and API state
+  useRestApi: boolean;
+  useRealTime: boolean;
+  connectionStatus: 'connected' | 'disconnected' | 'connecting' | 'error';
+  
   // General
   error: string | null;
   lastRefresh: string | null;
@@ -122,6 +128,9 @@ const initialState: DashboardState = {
   filters: initialFilters,
   editMode: false,
   dragMode: false,
+  useRestApi: true, // Default to using REST API
+  useRealTime: true, // Default to using real-time updates
+  connectionStatus: 'disconnected',
   error: null,
   lastRefresh: null,
 };
@@ -267,6 +276,22 @@ export const dashboardModel = createModel()({
       dragMode,
     }),
     
+    // Feature flag reducers
+    setUseRestApi: (state, useRestApi: boolean) => ({
+      ...state,
+      useRestApi,
+    }),
+    
+    setUseRealTime: (state, useRealTime: boolean) => ({
+      ...state,
+      useRealTime,
+    }),
+    
+    setConnectionStatus: (state, status: 'connected' | 'disconnected' | 'connecting' | 'error') => ({
+      ...state,
+      connectionStatus: status,
+    }),
+    
     // General reducers
     setError: (state, error: string | null) => ({
       ...state,
@@ -294,16 +319,78 @@ export const dashboardModel = createModel()({
       dispatch.dashboard.clearError();
       
       try {
-        const response = await dashboardApi.getLayouts();
-        dispatch.dashboard.setLayouts(response.data);
+        const state = this as DashboardState;
+        let response;
+        
+        if (state.useRestApi) {
+          // Use new REST API
+          response = await dashboardRestApi.getLayouts();
+        } else {
+          // Use legacy GraphQL API
+          response = await dashboardApi.getLayouts();
+        }
+        
+        const layouts = state.useRestApi ? response : response.data;
+        dispatch.dashboard.setLayouts(layouts);
         
         // Set default layout if none is current
-        if (!this.currentLayout && response.data.length > 0) {
-          const defaultLayout = response.data.find(l => l.isDefault) || response.data[0];
+        if (!state.currentLayout && layouts.length > 0) {
+          const defaultLayout = layouts.find(l => l.isDefault) || layouts[0];
           dispatch.dashboard.setCurrentLayout(defaultLayout);
         }
       } catch (error: any) {
         dispatch.dashboard.setError(error.message || 'Failed to fetch dashboard layouts');
+      }
+    },
+
+    // New effect for fetching complete dashboard data via REST API
+    async fetchDashboardData() {
+      dispatch.dashboard.setDataLoading(true);
+      dispatch.dashboard.clearError();
+      
+      try {
+        const state = this as DashboardState;
+        
+        if (state.useRestApi) {
+          // Use new REST API to get complete dashboard data
+          const dashboardData = await dashboardRestApi.getDashboard();
+          
+          // Update state with the received data
+          if (dashboardData.layouts) {
+            dispatch.dashboard.setLayouts(dashboardData.layouts);
+            
+            // Set current layout if available
+            if (dashboardData.currentLayout) {
+              dispatch.dashboard.setCurrentLayout(dashboardData.currentLayout);
+            } else if (dashboardData.layouts.length > 0) {
+              const defaultLayout = dashboardData.layouts.find(l => l.isDefault) || dashboardData.layouts[0];
+              dispatch.dashboard.setCurrentLayout(defaultLayout);
+            }
+          }
+          
+          if (dashboardData.widgets) {
+            dispatch.dashboard.setWidgets(dashboardData.widgets);
+          }
+          
+          if (dashboardData.metrics) {
+            dispatch.dashboard.setMetrics(dashboardData.metrics);
+          }
+          
+          if (dashboardData.charts) {
+            dispatch.dashboard.setCharts(dashboardData.charts);
+          }
+          
+          dispatch.dashboard.setLastRefresh(new Date().toISOString());
+        } else {
+          // Fall back to individual API calls for legacy support
+          await dispatch.dashboard.fetchLayouts();
+          await dispatch.dashboard.fetchMetrics();
+          await dispatch.dashboard.fetchCharts();
+        }
+      } catch (error: any) {
+        dispatch.dashboard.setError(error.message || 'Failed to fetch dashboard data');
+      } finally {
+        dispatch.dashboard.setDataLoading(false);
       }
     },
     
