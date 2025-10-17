@@ -32,7 +32,6 @@ export {
   batchExecute as executeBatch,
   GraphQLClient as PerformanceGraphQLClient
 } from '../graphql/client';
-}
 
 /**
  * GraphQL Client Class

@@ -45,7 +45,7 @@ export function withPerformanceTracking<P extends object>(
   const PerformanceTrackedComponent = React.memo((props: P) => {
     const performanceData = usePerformanceMonitor(displayName);
     
-    return <WrappedComponent {...props} />;
+    return React.createElement(WrappedComponent, props);
   });
 
   PerformanceTrackedComponent.displayName = `withPerformanceTracking(${displayName})`;
@@ -182,11 +182,11 @@ export const ReactPerformanceUtils = {
   ) => {
     const LazyComponent = React.lazy(importFn);
     
-    return (props: P) => (
-      <React.Suspense fallback={fallback ? <fallback /> : <div>Loading...</div>}>
-        <LazyComponent {...props} />
-      </React.Suspense>
-    );
+    return (props: P) => 
+      React.createElement(React.Suspense, 
+        { fallback: fallback ? React.createElement(fallback) : React.createElement('div', null, 'Loading...') },
+        React.createElement(LazyComponent, props)
+      );
   },
 
   /**
@@ -219,4 +219,3 @@ export const ReactPerformanceUtils = {
     };
   }
 };
-

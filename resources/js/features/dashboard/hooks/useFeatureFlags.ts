@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 
 interface FeatureFlags {
   useRestApi: boolean;
@@ -128,10 +128,10 @@ export const withFeatureFlag = <P extends object>(
     
     if (!isEnabled && fallback) {
       const FallbackComponent = fallback;
-      return <FallbackComponent {...props} />;
+      return React.createElement(FallbackComponent, props);
     }
     
-    return isEnabled ? <Component {...props} /> : null;
+    return isEnabled ? React.createElement(Component, props) : null;
   };
 };
 
