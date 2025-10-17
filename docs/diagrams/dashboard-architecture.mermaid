@@ -1,0 +1,125 @@
+%% Dashboard System Architecture Diagram
+%% Shows the complete system architecture with all components
+
+graph TB
+    %% Frontend Layer
+    subgraph "Frontend Layer"
+        UI[React Dashboard UI]
+        Mobile[Mobile Dashboard]
+        PWA[PWA Service Worker]
+        WS_Client[WebSocket Client]
+    end
+
+    %% API Layer
+    subgraph "API Layer"
+        API_Gateway[API Gateway]
+        Dashboard_API[Dashboard API Controller]
+        Widget_API[Widget API Controller]
+        Auth[Authentication Middleware]
+        Rate_Limiter[Rate Limiting]
+    end
+
+    %% Service Layer
+    subgraph "Application Services"
+        Widget_Mgmt[Widget Management Service]
+        Widget_Render[Widget Rendering Service]
+        Widget_Config[Widget Configuration Service]
+        Dashboard_Analytics[Dashboard Analytics Service]
+        Dashboard_Custom[Dashboard Customization Service]
+        Dashboard_Export[Dashboard Export Service]
+    end
+
+    %% Domain Layer
+    subgraph "Domain Layer"
+        Orchestration[Dashboard Orchestration Service]
+        Events[Event System]
+        Models[Domain Models]
+    end
+
+    %% Data Layer
+    subgraph "Data Layer"
+        Cache[Redis Cache]
+        DB[(PostgreSQL Database)]
+        Files[File Storage]
+        Search[Search Index]
+    end
+
+    %% External Services
+    subgraph "External Services"
+        Accounting[Accounting Service]
+        Budget[Budget Service]
+        Reporting[Reporting Service]
+        Notifications[Notification Service]
+    end
+
+    %% Real-time Layer
+    subgraph "Real-time Layer"
+        WS_Server[WebSocket Server]
+        Queue[Message Queue]
+        Background[Background Jobs]
+    end
+
+    %% Connections
+    UI --> API_Gateway
+    Mobile --> API_Gateway
+    PWA --> API_Gateway
+    WS_Client --> WS_Server
+
+    API_Gateway --> Auth
+    Auth --> Rate_Limiter
+    Rate_Limiter --> Dashboard_API
+    Rate_Limiter --> Widget_API
+
+    Dashboard_API --> Orchestration
+    Widget_API --> Widget_Mgmt
+    Widget_API --> Widget_Render
+    Widget_API --> Widget_Config
+
+    Orchestration --> Widget_Mgmt
+    Orchestration --> Widget_Render
+    Orchestration --> Widget_Config
+    Orchestration --> Dashboard_Analytics
+    Orchestration --> Dashboard_Custom
+    Orchestration --> Dashboard_Export
+
+    Widget_Mgmt --> Models
+    Widget_Render --> Models
+    Widget_Config --> Models
+    Dashboard_Analytics --> Models
+    Dashboard_Custom --> Models
+    Dashboard_Export --> Models
+
+    Models --> Events
+    Events --> Queue
+    Queue --> Background
+    Background --> WS_Server
+
+    Widget_Mgmt --> Cache
+    Widget_Render --> Cache
+    Dashboard_Analytics --> Cache
+
+    Models --> DB
+    Dashboard_Export --> Files
+    Dashboard_Analytics --> Search
+
+    Widget_Render --> Accounting
+    Widget_Render --> Budget
+    Dashboard_Export --> Reporting
+    Events --> Notifications
+
+    %% Styling
+    classDef frontend fill:#e1f5fe
+    classDef api fill:#f3e5f5
+    classDef service fill:#e8f5e8
+    classDef domain fill:#fff3e0
+    classDef data fill:#fce4ec
+    classDef external fill:#f1f8e9
+    classDef realtime fill:#e0f2f1
+
+    class UI,Mobile,PWA,WS_Client frontend
+    class API_Gateway,Dashboard_API,Widget_API,Auth,Rate_Limiter api
+    class Widget_Mgmt,Widget_Render,Widget_Config,Dashboard_Analytics,Dashboard_Custom,Dashboard_Export service
+    class Orchestration,Events,Models domain
+    class Cache,DB,Files,Search data
+    class Accounting,Budget,Reporting,Notifications external
+    class WS_Server,Queue,Background realtime
