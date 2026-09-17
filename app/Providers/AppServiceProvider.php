@@ -16,66 +16,24 @@ class AppServiceProvider extends ServiceProvider
 {
     /**
      * Register any application services.
+     * (Only use this for container bindings. NO facades allowed here.)
      */
     public function register(): void
     {
         // Register core tenant services
-        $this->registerTenantServices();
+        $this->app->singleton(TenantResolver::class, fn () => new TenantResolver);
 
-        // Register authentication services
-        $this->registerAuthenticationServices();
-
-        // Register module services
-        $this->registerModuleServices();
-
-        // Register organization services
-        $this->registerOrganizationServices();
-    }
-
-    /**
-     * Bootstrap any application services.
-     */
-    public function boot(): void
-    {
-        // Boot authentication manager
-        $this->bootAuthenticationManager();
-
-        // Boot module discovery
-        $this->bootModuleDiscovery();
-
-        // Boot inter-module communication
-        $this->bootInterModuleBus();
-    }
-
-    /**
-     * Register tenant-related services.
-     */
-    protected function registerTenantServices(): void
-    {
-        // Tenant Resolver Service
-        $this->app->singleton(TenantResolver::class, function ($app) {
-            return new TenantResolver;
-        });
-
-        // Tenant Provisioning Service
         $this->app->singleton(TenantProvisioningService::class, function ($app) {
             return new TenantProvisioningService(
                 $app->make(TenantResolver::class)
             );
         });
-    }
 
-    /**
-     * Register authentication services.
-     */
-    protected function registerAuthenticationServices(): void
-    {
-        // Tenant-Aware Authentication Manager
+        // Register authentication container bindings
         $this->app->singleton(TenantAwareAuthManager::class, function ($app) {
             return new TenantAwareAuthManager($app);
         });
 
-        // Authentication Service
         $this->app->singleton(AuthService::class, function ($app) {
             return new AuthService(
                 $app->make(TenantAwareAuthManager::class),
@@ -83,7 +41,21 @@ class AppServiceProvider extends ServiceProvider
             );
         });
 
-        // Register custom authentication guards
+        // Register module services
+        $this->app->singleton(ModuleDiscoveryService::class, fn () => new ModuleDiscoveryService);
+        $this->app->singleton(InterModuleBus::class, fn () => new InterModuleBus);
+
+        // Register organization services
+        $this->app->singleton(OrganizationService::class, fn () => new OrganizationService);
+    }
+
+    /**
+     * Bootstrap any application services.
+     * (Safe to use facades and extend core managers here.)
+     */
+    public function boot(): void
+    {
+        // 1. Register custom authentication guards and providers using the Auth facade safely
         Auth::extend('global_user', function ($app, $name, array $config) {
             return $app->make(TenantAwareAuthManager::class)->createGlobalUserDriver($config);
         });
@@ -92,37 +64,18 @@ class AppServiceProvider extends ServiceProvider
             return $app->make(TenantAwareAuthManager::class)->createTenantUserDriver($config);
         });
 
-        // Register custom user provider
         Auth::provider('hybrid', function ($app, array $config) {
             return $app->make(TenantAwareAuthManager::class)->createHybridProvider($config);
         });
-    }
 
-    /**
-     * Register module services.
-     */
-    protected function registerModuleServices(): void
-    {
-        // Module Discovery Service
-        $this->app->singleton(ModuleDiscoveryService::class, function ($app) {
-            return new ModuleDiscoveryService;
-        });
+        // 2. Boot authentication manager
+        $this->bootAuthenticationManager();
 
-        // Inter-Module Communication Bus
-        $this->app->singleton(InterModuleBus::class, function ($app) {
-            return new InterModuleBus;
-        });
-    }
+        // 3. Boot module discovery
+        $this->bootModuleDiscovery();
 
-    /**
-     * Register organization services.
-     */
-    protected function registerOrganizationServices(): void
-    {
-        // Organization Service
-        $this->app->singleton(OrganizationService::class, function ($app) {
-            return new OrganizationService;
-        });
+        // 4. Boot inter-module communication bus
+        $this->bootInterModuleBus();
     }
 
     /**
@@ -130,12 +83,10 @@ class AppServiceProvider extends ServiceProvider
      */
     protected function bootAuthenticationManager(): void
     {
-        // Replace the default auth manager with our tenant-aware version
         $this->app->singleton('auth', function ($app) {
             return $app->make(TenantAwareAuthManager::class);
         });
 
-        // Ensure the auth manager is properly configured
         $this->app->resolving('auth', function ($auth, $app) {
             $auth->userResolver(function ($guard = null) use ($app) {
                 return call_user_func($app['auth']->userResolver(), $guard);
@@ -150,11 +101,8 @@ class AppServiceProvider extends ServiceProvider
     {
         if (config('modules.discovery.enabled', true)) {
             $discoveryService = $this->app->make(ModuleDiscoveryService::class);
-
-            // Load modules from cache or discover them
             $modules = $discoveryService->loadModules();
 
-            // Register discovered modules
             foreach ($modules as $module) {
                 if ($module['enabled'] ?? true) {
                     $this->registerDiscoveredModule($module);
@@ -171,11 +119,10 @@ class AppServiceProvider extends ServiceProvider
         if (config('modules.communication.bus_enabled', true)) {
             $bus = $this->app->make(InterModuleBus::class);
 
-            // Register core services with the bus
             $bus->registerService('Shared', 'ModuleDiscovery', $this->app->make(ModuleDiscoveryService::class));
             $bus->registerService('Shared', 'TenantResolver', $this->app->make(TenantResolver::class));
             $bus->registerService('Shared', 'AuthService', $this->app->make(AuthService::class));
-            $bus->registerService('Organization', 'OrganizationService', $this->app->make(OrganizationService::class));
+            $bus->renderService('Organization', 'OrganizationService', $this->app->make(OrganizationService::class));
         }
     }
 
