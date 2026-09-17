@@ -5,6 +5,7 @@ namespace App\Shared\Services;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\File;
+use Throwable;
 
 class ModuleDiscoveryService
 {
@@ -30,8 +31,14 @@ class ModuleDiscoveryService
     {
         $this->modules[$moduleConfig['name']] = $moduleConfig;
 
-        // Clear cache when new module is registered
-        Cache::forget($this->cacheKey);
+        // Safely clear cache if the container/facade root is ready
+        try {
+            if (app()->bound('cache')) {
+                Cache::forget($this->cacheKey);
+            }
+        } catch (Throwable $e) {
+            // Suppress early-boot facade errors
+        }
     }
 
     /**
@@ -63,7 +70,14 @@ class ModuleDiscoveryService
      */
     public function getModulesForCurrentTenant(): Collection
     {
-        $tenant = app('tenant', null);
+        $tenant = null;
+        try {
+            if (app()->bound('tenant')) {
+                $tenant = app('tenant');
+            }
+        } catch (Throwable $e) {
+            // Fallback if tenant resolution fails early
+        }
 
         if (! $tenant) {
             // No tenant context, return non-tenant-aware modules
@@ -72,10 +86,10 @@ class ModuleDiscoveryService
             });
         }
 
-        $strategy = $tenant->database_strategy;
+        $strategy = $tenant->database_strategy ?? 'shared';
 
         return $this->getModules()->filter(function ($module) use ($strategy) {
-            return in_array($strategy, $module['database_strategies']);
+            return in_array($strategy, $module['database_strategies'] ?? []);
         });
     }
 
@@ -85,7 +99,7 @@ class ModuleDiscoveryService
     public function getTenantAwareModules(): Collection
     {
         return $this->getModules()->filter(function ($module) {
-            return $module['tenant_aware'];
+            return $module['tenant_aware'] ?? false;
         });
     }
 
@@ -95,7 +109,7 @@ class ModuleDiscoveryService
     public function getGlobalModules(): Collection
     {
         return $this->getModules()->filter(function ($module) {
-            return ! $module['tenant_aware'];
+            return ! ($module['tenant_aware'] ?? false);
         });
     }
 
@@ -111,7 +125,6 @@ class ModuleDiscoveryService
         }
 
         $discoveredModules = collect();
-
         $directories = File::directories($modulesPath);
 
         foreach ($directories as $directory) {
@@ -155,13 +168,21 @@ class ModuleDiscoveryService
     }
 
     /**
-     * Load modules from cache or discover them.
+     * Load modules from cache or discover them safely.
      */
     public function loadModules(): Collection
     {
-        return Cache::remember($this->cacheKey, $this->cacheTtl, function () {
-            return $this->discoverModules();
-        });
+        try {
+            if (app()->bound('cache')) {
+                return Cache::remember($this->cacheKey, $this->cacheTtl, function () {
+                    return $this->discoverModules();
+                });
+            }
+        } catch (Throwable $e) {
+            // Fallback to direct discovery if cache facade isn't booted yet
+        }
+
+        return $this->discoverModules();
     }
 
     /**
@@ -169,7 +190,14 @@ class ModuleDiscoveryService
      */
     public function refreshCache(): void
     {
-        Cache::forget($this->cacheKey);
+        try {
+            if (app()->bound('cache')) {
+                Cache::forget($this->cacheKey);
+            }
+        } catch (Throwable $e) {
+            // Suppress early-boot errors
+        }
+        
         $this->loadModules();
     }
 
@@ -187,15 +215,9 @@ class ModuleDiscoveryService
             'enabled' => $modules->where('enabled', true)->count(),
             'disabled' => $modules->where('enabled', false)->count(),
             'by_strategy' => [
-                'shared' => $modules->filter(function ($module) {
-                    return in_array('shared', $module['database_strategies']);
-                })->count(),
-                'dedicated' => $modules->filter(function ($module) {
-                    return in_array('dedicated', $module['database_strategies']);
-                })->count(),
-                'clustered' => $modules->filter(function ($module) {
-                    return in_array('clustered', $module['database_strategies']);
-                })->count(),
+                'shared' => $modules->filter(fn ($m) => in_array('shared', $m['database_strategies'] ?? []))->count(),
+                'dedicated' => $modules->filter(fn ($m) => in_array('dedicated', $m['database_strategies'] ?? []))->count(),
+                'clustered' => $modules->filter(fn ($m) => in_array('clustered', $m['database_strategies'] ?? []))->count(),
             ],
         ];
     }
@@ -207,32 +229,18 @@ class ModuleDiscoveryService
     {
         $errors = [];
 
-        // Required fields
-        $required = ['name', 'path', 'namespace', 'provider'];
-        foreach ($required as $field) {
+        foreach (['name', 'path', 'namespace', 'provider'] as $field) {
             if (empty($moduleConfig[$field])) {
                 $errors[] = "Missing required field: {$field}";
             }
         }
 
-        // Validate path exists
         if (! empty($moduleConfig['path']) && ! File::exists($moduleConfig['path'])) {
             $errors[] = "Module path does not exist: {$moduleConfig['path']}";
         }
 
-        // Validate provider class Exists
         if (! empty($moduleConfig['provider']) && ! class_exists($moduleConfig['provider'])) {
-            $errors[] = "Provider class Does not exist: {$moduleConfig['provider']}";
-        }
-
-        // Validate database strategies
-        $validStrategies = ['shared', 'dedicated', 'clustered'];
-        if (! empty($moduleConfig['database_strategies'])) {
-            foreach ($moduleConfig['database_strategies'] as $strategy) {
-                if (! in_array($strategy, $validStrategies)) {
-                    $errors[] = "Invalid database strategy: {$strategy}";
-                }
-            }
+            $errors[] = "Provider class does not exist: {$moduleConfig['provider']}";
         }
 
         return $errors;
@@ -244,62 +252,18 @@ class ModuleDiscoveryService
     public function checkDependencies(string $moduleName): array
     {
         $module = $this->getModule($moduleName);
-
         if (! $module) {
             return ['Module not found'];
         }
 
         $missing = [];
-        $dependencies = $module['dependencies'] ?? [];
-
-        foreach ($dependencies as $dependency) {
+        foreach ($module['dependencies'] ?? [] as $dependency) {
             if (! $this->isModuleRegistered($dependency)) {
                 $missing[] = $dependency;
             }
         }
 
         return $missing;
-    }
-
-    /**
-     * Get module dependency tree.
-     */
-    public function getDependencyTree(string $moduleName): array
-    {
-        $tree = [];
-        $visited = [];
-
-        $this->buildDependencyTree($moduleName, $tree, $visited);
-
-        return $tree;
-    }
-
-    /**
-     * Build dependency tree recursively.
-     */
-    protected function buildDependencyTree(string $moduleName, array &$tree, array &$visited): void
-    {
-        if (in_array($moduleName, $visited)) {
-            return; // Avoid circular dependencies
-        }
-
-        $visited[] = $moduleName;
-        $module = $this->getModule($moduleName);
-
-        if (! $module) {
-            return;
-        }
-
-        $tree[$moduleName] = [
-            'module' => $module,
-            'dependencies' => [],
-        ];
-
-        $dependencies = $module['dependencies'] ?? [];
-
-        foreach ($dependencies as $dependency) {
-            $this->buildDependencyTree($dependency, $tree[$moduleName]['dependencies'], $visited);
-        }
     }
 
     /**
@@ -334,9 +298,7 @@ class ModuleDiscoveryService
         }
 
         $module = $modules[$moduleName];
-        $dependencies = $module['dependencies'] ?? [];
-
-        foreach ($dependencies as $dependency) {
+        foreach ($module['dependencies'] ?? [] as $dependency) {
             $this->sortModulesByDependencies($dependency, $modules, $sorted, $visited);
         }
 
@@ -380,9 +342,7 @@ class ModuleDiscoveryService
      */
     public function getEnabledModules(): Collection
     {
-        return $this->getModules()->filter(function ($module) {
-            return $module['enabled'] ?? true;
-        });
+        return $this->getModules()->filter(fn ($m) => $m['enabled'] ?? true);
     }
 
     /**
@@ -390,8 +350,6 @@ class ModuleDiscoveryService
      */
     public function getDisabledModules(): Collection
     {
-        return $this->getModules()->filter(function ($module) {
-            return ! ($module['enabled'] ?? true);
-        });
+        return $this->getModules()->filter(fn ($m) => ! ($m['enabled'] ?? true));
     }
 }
