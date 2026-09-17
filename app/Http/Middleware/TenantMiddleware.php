@@ -26,12 +26,9 @@ class TenantMiddleware
 
     /**
      * Handle an incoming request.
-     *
-     * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
      */
     public function handle(Request $request, Closure $next): Response
     {
-        // Skip tenant resolution for certain routes
         if ($this->shouldSkipTenantResolution($request)) {
             return $next($request);
         }
@@ -42,13 +39,9 @@ class TenantMiddleware
             return $this->handleMissingTenant($request);
         }
 
-        // Set tenant in container
+        // Set tenant in container and session
         app()->instance('tenant', $tenant);
-
-        // Configure database connection for tenant
         $this->tenantResolver->configureDatabaseForTenant($tenant);
-
-        // Set tenant context in session
         session(['current_tenant_id' => $tenant->id]);
 
         return $next($request);
@@ -59,31 +52,27 @@ class TenantMiddleware
      */
     protected function resolveTenant(Request $request): ?Tenant
     {
-        // Method 1: From subdomain
-        $tenant = $this->resolveTenantFromSubdomain($request);
-        if ($tenant) {
+        // 1. From subdomain
+        if ($tenant = $this->resolveTenantFromSubdomain($request)) {
             return $tenant;
         }
 
-        // Method 2: From authenticated user's active tenant
+        // 2. From authenticated user
         if (Auth::check()) {
             $user = Auth::user();
             $activeTenantId = session('active_tenant_id');
 
-            if ($activeTenantId) {
-                $tenant = $user->tenants()->where('tenant_id', $activeTenantId)->first();
-                if ($tenant && $user->hasAccessToTenant($tenant)) {
+            if ($activeTenantId && $tenant = $user->tenants()->where('tenant_id', $activeTenantId)->first()) {
+                if ($user->hasAccessToTenant($tenant)) {
                     return $tenant;
                 }
             }
 
-            // Fall back to user's first available tenant
             return $user->getActiveTenant();
         }
 
-        // Method 3: From session (for guest users with tenant context)
-        $tenantId = session('current_tenant_id');
-        if ($tenantId) {
+        // 3. From session fallback
+        if ($tenantId = session('current_tenant_id')) {
             return Tenant::find($tenantId);
         }
 
@@ -95,23 +84,18 @@ class TenantMiddleware
      */
     protected function resolveTenantFromSubdomain(Request $request): ?Tenant
     {
-        $host = $request->getHost();
-        $parts = explode('.', $host);
+        $parts = explode('.', $request->getHost());
 
-        // Skip if no subdomain or if it's www
         if (count($parts) < 3 || $parts[0] === 'www') {
             return null;
         }
 
-        $subdomain = $parts[0];
-
-        // Skip certain reserved subdomains
         $reservedSubdomains = ['api', 'admin', 'app', 'mail', 'ftp', 'www'];
-        if (in_array($subdomain, $reservedSubdomains)) {
+        if (in_array($parts[0], $reservedSubdomains)) {
             return null;
         }
 
-        return Tenant::where('subdomain', $subdomain)
+        return Tenant::where('subdomain', $parts[0])
             ->where('status', 'active')
             ->first();
     }
@@ -121,7 +105,6 @@ class TenantMiddleware
      */
     protected function handleMissingTenant(Request $request): Response
     {
-        // For API requests, return JSON error
         if ($request->expectsJson()) {
             return response()->json([
                 'error' => 'Tenant not found or access denied',
@@ -129,13 +112,11 @@ class TenantMiddleware
             ], 403);
         }
 
-        // For authenticated users, redirect to tenant selection
         if (Auth::check()) {
             return redirect()->route('tenant.select')
                 ->with('error', 'Please select an organization to continue.');
         }
 
-        // For guest users, redirect to login
         return redirect()->route('login')
             ->with('error', 'Please log in to access this organization.');
     }
@@ -146,34 +127,20 @@ class TenantMiddleware
     protected function shouldSkipTenantResolution(Request $request): bool
     {
         $skipRoutes = [
-            'login',
-            'register',
-            'password.*',
-            'verification.*',
-            'tenant.select',
-            'tenant.create',
-            'health-check',
-            'api/health',
+            'login', 'register', 'password.*', 'verification.*',
+            'tenant.select', 'tenant.create', 'health-check', 'api/health',
         ];
 
         $currentRoute = $request->route()?->getName();
-
-        foreach ($skipRoutes as $pattern) {
-            if (fnmatch($pattern, $currentRoute)) {
-                return true;
+        if ($currentRoute) {
+            foreach ($skipRoutes as $pattern) {
+                if (fnmatch($pattern, $currentRoute)) {
+                    return true;
+                }
             }
         }
 
-        // Skip for certain paths
-        $skipPaths = [
-            '/health',
-            '/api/health',
-            '/login',
-            '/register',
-            '/password',
-            '/email/verify',
-        ];
-
+        $skipPaths = ['health', 'api/health', 'login', 'register', 'password', 'email/verify'];
         $currentPath = $request->path();
 
         foreach ($skipPaths as $path) {
