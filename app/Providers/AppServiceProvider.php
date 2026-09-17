@@ -98,18 +98,26 @@ class AppServiceProvider extends ServiceProvider
      * Boot module discovery.
      */
     protected function bootModuleDiscovery(): void
-    {
-        if (config('modules.discovery.enabled', true)) {
-            $discoveryService = $this->app->make(ModuleDiscoveryService::class);
-            $modules = $discoveryService->loadModules();
+   {
+    // Prevent modules from loading during early artisan discovery/cache commands
+    if ($this->app->runningInConsole() && request()->server('argv')) {
+        $command = $_SERVER['argv'][1] ?? null;
+        if (in_array($command, ['package:discover', 'discover', 'config:clear', 'cache:clear', 'optimize:clear'])) {
+            return;
+        }
+    }
 
-            foreach ($modules as $module) {
-                if ($module['enabled'] ?? true) {
-                    $this->registerDiscoveredModule($module);
-                }
+    if (config('modules.discovery.enabled', true)) {
+        $discoveryService = $this->app->make(ModuleDiscoveryService::class);
+        $modules = $discoveryService->loadModules();
+
+        foreach ($modules as $module) {
+            if ($module['enabled'] ?? true) {
+                $this->registerDiscoveredModule($module);
             }
         }
     }
+   }
 
     /**
      * Boot inter-module communication bus.
