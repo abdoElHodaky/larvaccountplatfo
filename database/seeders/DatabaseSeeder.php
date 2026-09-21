@@ -16,11 +16,7 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         // 1. Create a global admin user explicitly on the 'landlord' connection
-        GlobalUser::factory()->create([
-            'name' => 'Global Admin',
-            'email' => 'admin@example.com',
-            'is_super_admin' => true,
-        ]);
+        
 
         // 2. Create sample tenants
         $tenant1 = Tenant::factory()->create([
@@ -36,7 +32,11 @@ class DatabaseSeeder extends Seeder
             'plan' => 'startup',
             'database_strategy' => 'shared',
         ]);
-
+         GlobalUser::factory()->create([
+            'name' => 'Global Admin',
+            'email' => 'admin@example.com',
+            'is_super_admin' => true,
+        ]);
         // 3. Seed module-specific data if in development environment
         if (app()->environment('local', 'development', 'testing')) {
             // Loop through created tenants to seed tenant-scoped data
