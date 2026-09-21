@@ -6,13 +6,13 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
+    protected $connection = 'landlord';
     /**
      * Run the migrations.
      */
     public function up(): void
     {
         Schema::table('tenants', function (Blueprint $table) {
-            // Add organization-specific fields if they don't exist
             if (! Schema::hasColumn('tenants', 'status')) {
                 $table->string('status')->default('active')->after('plan');
             }
@@ -21,7 +21,6 @@ return new class extends Migration
                 $table->json('enabled_modules')->nullable()->after('settings');
             }
 
-            // Add indexes for better performance
             $table->index('status');
             $table->index('plan');
             $table->index('subdomain');
