@@ -15,16 +15,14 @@ class AppServiceProvider extends ServiceProvider
 {
     /**
      * Register any application services.
-     * (Only container bindings here.)
      */
     public function register(): void
     {
-        // 1. Rebind core 'auth' singleton to TenantAwareAuthManager BEFORE anything else resolves it
+        // 1. Rebind 'auth' singleton to TenantAwareAuthManager before Laravel resolves default auth
         $this->app->singleton('auth', function ($app) {
             return new TenantAwareAuthManager($app);
         });
 
-        // Alias class name to 'auth' singleton for dependency injection
         $this->app->alias('auth', TenantAwareAuthManager::class);
 
         // 2. Register core tenant services
@@ -44,24 +42,18 @@ class AppServiceProvider extends ServiceProvider
             );
         });
 
-        // 4. Register module services
+        // 4. Register module and organizational services
         $this->app->singleton(ModuleDiscoveryService::class, fn () => new ModuleDiscoveryService);
         $this->app->singleton(InterModuleBus::class, fn () => new InterModuleBus);
-
-        // 5. Register organization services
         $this->app->singleton(OrganizationService::class, fn () => new OrganizationService);
     }
 
     /**
      * Bootstrap any application services.
-     * (Safe to use facades and run post-registration logic here.)
      */
     public function boot(): void
     {
-        // 1. Boot module discovery
         $this->bootModuleDiscovery();
-
-        // 2. Boot inter-module communication bus
         $this->bootInterModuleBus();
     }
 
@@ -70,24 +62,9 @@ class AppServiceProvider extends ServiceProvider
      */
     protected function bootModuleDiscovery(): void
     {
-        // Prevent modules from loading during early artisan discovery/cache commands
-
         if ($this->app->runningInConsole() && request()->server('argv')) {
             $command = $_SERVER['argv'][1] ?? null;
             if (in_array($command, ['package:discover', 'discover', 'config:clear', 'cache:clear', 'optimize:clear'])) {
-
-        if ($this->app->runningInConsole()) {
-            $command = isset($_SERVER['argv'][1]) ? $_SERVER['argv'][1] : null;
-            $blacklistedCommands = [
-                'package:discover',
-                'discover',
-                'config:clear',
-                'cache:clear',
-                'optimize:clear',
-            ];
-
-            if (in_array($command, $blacklistedCommands)) {
-
                 return;
             }
         }
