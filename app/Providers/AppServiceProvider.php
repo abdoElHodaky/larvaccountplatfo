@@ -61,7 +61,6 @@ class AppServiceProvider extends ServiceProvider
             app()->forgetInstance('tenant');
         });
     }
-    }
 
     /**
      * Boot module discovery.
