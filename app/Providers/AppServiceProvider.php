@@ -60,12 +60,12 @@ class AppServiceProvider extends ServiceProvider
         $this->bootInterModuleBus();
         // 1. Extend Auth to define the 'global_user' guard driver
         Auth::extend('global_user', function ($app, $name, array $config) {
-            return $app->make(TenantAwareAuthManager::class)->createGlobalUserDriver($name, $config);
+            return $app->make(TenantAwareAuthManager::class)->createGlobalUserDriver( $config);
         });
 
         // 2. Extend Auth to define the 'tenant_user' guard driver
         Auth::extend('tenant_user', function ($app, $name, array $config) {
-            return $app->make(TenantAwareAuthManager::class)->createTenantUserDriver($name, $config);
+            return $app->make(TenantAwareAuthManager::class)->createTenantUserDriver( $config);
         });
 
         // 3. Extend Auth to define the 'hybrid' user provider if needed
