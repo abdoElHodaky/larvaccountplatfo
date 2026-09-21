@@ -7,12 +7,25 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Telescope Master Switch
+    |--------------------------------------------------------------------------
+    |
+    | This option may be used to disable all Telescope watchers regardless
+    | of their individual configuration, which simply provides a single
+    | and convenient way to enable or disable Telescope data storage.
+    |
+    */
+
+    'enabled' => env('TELESCOPE_ENABLED', true),
+
+    /*
+    |--------------------------------------------------------------------------
     | Telescope Domain
     |--------------------------------------------------------------------------
     |
-    | This is the subdomain where Telescope will be accessible from. If this
+    | This is the subdomain where Telescope will be accessible from. If the
     | setting is null, Telescope will reside under the same domain as the
-    | application. Otherwise, this value will serve as the subdomain.
+    | application. Otherwise, this value will be used as the subdomain.
     |
     */
 
@@ -53,23 +66,27 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Telescope Master Switch
+    | Telescope Queue
     |--------------------------------------------------------------------------
     |
-    | This option may be used to disable all Telescope watchers regardless
-    | of their individual configuration, which simply provides a single
-    | and convenient way to enable or disable Telescope data storage.
+    | This configuration options determines the queue connection and queue
+    | which will be used to process ProcessPendingUpdate jobs. This can
+    | be changed if you would prefer to use a non-default connection.
     |
     */
 
-    'enabled' => env('TELESCOPE_ENABLED', true),
+    'queue' => [
+        'connection' => env('TELESCOPE_QUEUE_CONNECTION'),
+        'queue' => env('TELESCOPE_QUEUE'),
+        'delay' => env('TELESCOPE_QUEUE_DELAY', 10),
+    ],
 
     /*
     |--------------------------------------------------------------------------
     | Telescope Route Middleware
     |--------------------------------------------------------------------------
     |
-    | These middleware will get attached to every Telescope route, giving you
+    | These middleware will be assigned to every Telescope route, giving you
     | the chance to add your own middleware to this list or change any of
     | the existing middleware. Or, you can simply stick with this list.
     |
@@ -92,13 +109,14 @@ return [
     */
 
     'only_paths' => [
-        // 'api/*',
+        // 'api/*'
     ],
 
     'ignore_paths' => [
+        'livewire*',
         'nova-api*',
-        'telescope*',
-        'vendor/telescope*',
+        'pulse*',
+        '_boost*',
     ],
 
     'ignore_commands' => [
@@ -111,8 +129,8 @@ return [
     |--------------------------------------------------------------------------
     |
     | The following array lists the "watchers" that will be registered with
-    | Telescope. The watchers gather application information when a request
-    | is handled. Feel free to customize this list based on your needs.
+    | Telescope. The watchers gather the application's profile data when
+    | a request or task is executed. Feel free to customize this list.
     |
     */
 
@@ -121,14 +139,15 @@ return [
 
         Watchers\CacheWatcher::class => [
             'enabled' => env('TELESCOPE_CACHE_WATCHER', true),
+            'hidden' => [],
+            'ignore' => [],
         ],
+
+        Watchers\ClientRequestWatcher::class => env('TELESCOPE_CLIENT_REQUEST_WATCHER', true),
 
         Watchers\CommandWatcher::class => [
             'enabled' => env('TELESCOPE_COMMAND_WATCHER', true),
-            'ignore' => [
-                'telescope:*',
-                'queue:*',
-            ],
+            'ignore' => [],
         ],
 
         Watchers\DumpWatcher::class => [
@@ -138,22 +157,31 @@ return [
 
         Watchers\EventWatcher::class => [
             'enabled' => env('TELESCOPE_EVENT_WATCHER', true),
-            'ignore' => [
-                // Ignore noisy events
-                'Illuminate\Database\Events\QueryExecuted',
-                'Illuminate\Log\Events\MessageLogged',
-            ],
+            'ignore' => [],
         ],
 
         Watchers\ExceptionWatcher::class => env('TELESCOPE_EXCEPTION_WATCHER', true),
-        Watchers\GateWatcher::class => env('TELESCOPE_GATE_WATCHER', true),
+
+        Watchers\GateWatcher::class => [
+            'enabled' => env('TELESCOPE_GATE_WATCHER', true),
+            'ignore_abilities' => [],
+            'ignore_packages' => true,
+            'ignore_paths' => [],
+        ],
+
         Watchers\JobWatcher::class => env('TELESCOPE_JOB_WATCHER', true),
-        Watchers\LogWatcher::class => env('TELESCOPE_LOG_WATCHER', true),
+
+        Watchers\LogWatcher::class => [
+            'enabled' => env('TELESCOPE_LOG_WATCHER', true),
+            'level' => 'error',
+        ],
+
         Watchers\MailWatcher::class => env('TELESCOPE_MAIL_WATCHER', true),
 
         Watchers\ModelWatcher::class => [
             'enabled' => env('TELESCOPE_MODEL_WATCHER', true),
             'events' => ['eloquent.*'],
+            'hydrations' => true,
         ],
 
         Watchers\NotificationWatcher::class => env('TELESCOPE_NOTIFICATION_WATCHER', true),
@@ -161,10 +189,8 @@ return [
         Watchers\QueryWatcher::class => [
             'enabled' => env('TELESCOPE_QUERY_WATCHER', true),
             'ignore_packages' => true,
-            'ignore_paths' => [
-                'telescope*',
-            ],
-            'slow' => env('TELESCOPE_SLOW_QUERY_THRESHOLD', 100), // milliseconds
+            'ignore_paths' => [],
+            'slow' => 100,
         ],
 
         Watchers\RedisWatcher::class => env('TELESCOPE_REDIS_WATCHER', true),
@@ -178,82 +204,5 @@ return [
 
         Watchers\ScheduleWatcher::class => env('TELESCOPE_SCHEDULE_WATCHER', true),
         Watchers\ViewWatcher::class => env('TELESCOPE_VIEW_WATCHER', true),
-
-        // Custom Watchers for Laravel Accounting Platform
-        \Modules\Shared\Telescope\Watchers\DomainEventWatcher::class => [
-            'enabled' => env('TELESCOPE_DOMAIN_EVENT_WATCHER', true),
-        ],
-
-        \Modules\Shared\Telescope\Watchers\TenantWatcher::class => [
-            'enabled' => env('TELESCOPE_TENANT_WATCHER', true),
-        ],
-
-        \Modules\Shared\Telescope\Watchers\PerformanceWatcher::class => [
-            'enabled' => env('TELESCOPE_PERFORMANCE_WATCHER', true),
-            'slow_threshold' => env('TELESCOPE_SLOW_OPERATION_THRESHOLD', 1000), // milliseconds
-        ],
-    ],
-
-    /*
-    |--------------------------------------------------------------------------
-    | Telescope Avatar Provider
-    |--------------------------------------------------------------------------
-    |
-    | This configuration option determines the avatar provider that will be
-    | used to retrieve avatar images for users in Telescope. By default,
-    | Gravatar will be used to retrieve avatar images for users.
-    |
-    */
-
-    'avatar' => 'gravatar',
-
-    /*
-    |--------------------------------------------------------------------------
-    | Telescope Pruning
-    |--------------------------------------------------------------------------
-    |
-    | Here you may configure how long Telescope should retain entries. By
-    | default, Telescope will keep entries for 24 hours. You may also
-    | configure the maximum number of entries to keep in the database.
-    |
-    */
-
-    'prune' => [
-        'hours' => env('TELESCOPE_PRUNE_HOURS', 24),
-        'keep' => env('TELESCOPE_PRUNE_KEEP', 10000),
-    ],
-
-    /*
-    |--------------------------------------------------------------------------
-    | Multi-Tenant Configuration
-    |--------------------------------------------------------------------------
-    |
-    | Configuration specific to multi-tenant monitoring with Telescope.
-    | This allows tenant-specific data isolation and performance tracking.
-    |
-    */
-
-    'multi_tenant' => [
-        'enabled' => env('TELESCOPE_MULTI_TENANT', true),
-        'tenant_column' => 'tenant_id',
-        'isolate_data' => env('TELESCOPE_ISOLATE_TENANT_DATA', true),
-        'tenant_resolver' => \Modules\Shared\Services\TenantResolver::class,
-    ],
-
-    /*
-    |--------------------------------------------------------------------------
-    | Performance Monitoring Integration
-    |--------------------------------------------------------------------------
-    |
-    | Configuration for integrating Telescope with the custom performance
-    | monitoring system. This allows hybrid monitoring capabilities.
-    |
-    */
-
-    'performance_integration' => [
-        'enabled' => env('TELESCOPE_PERFORMANCE_INTEGRATION', true),
-        'custom_monitor' => \Modules\Shared\Services\PerformanceMonitor::class,
-        'sync_metrics' => env('TELESCOPE_SYNC_CUSTOM_METRICS', true),
-        'aggregate_data' => env('TELESCOPE_AGGREGATE_PERFORMANCE_DATA', true),
     ],
 ];
