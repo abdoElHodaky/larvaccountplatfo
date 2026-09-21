@@ -10,6 +10,7 @@ use App\Services\TenantResolver;
 use App\Shared\Services\InterModuleBus;
 use App\Shared\Services\ModuleDiscoveryService;
 use Illuminate\Support\Facades\Event;
+use Illuminate\Support\Facades\Auth;
 use Laravel\Octane\Events\RequestReceived;
 use Illuminate\Support\ServiceProvider;
 
@@ -57,8 +58,25 @@ class AppServiceProvider extends ServiceProvider
     {
         $this->bootModuleDiscovery();
         $this->bootInterModuleBus();
+        // 1. Extend Auth to define the 'global_user' guard driver
+        Auth::extend('global_user', function ($app, $name, array $config) {
+            return $app->make(TenantAwareAuthManager::class)->createGlobalUserDriver($name, $config);
+        });
+
+        // 2. Extend Auth to define the 'tenant_user' guard driver
+        Auth::extend('tenant_user', function ($app, $name, array $config) {
+            return $app->make(TenantAwareAuthManager::class)->createTenantUserDriver($name, $config);
+        });
+
+        // 3. Extend Auth to define the 'hybrid' user provider if needed
+        Auth::provider('hybrid', function ($app, array $config) {
+            return $app->make(TenantAwareAuthManager::class)->createHybridProvider($config);
+        });
         Event::listen(RequestReceived::class, function () {
-            app()->forgetInstance('tenant');
+        // Forget user resolution state on the Auth facade between requests
+         Auth::forgetGuards();
+        // Forget bound tenant context in container
+         app()->forgetInstance('tenant');
         });
     }
 
