@@ -22,7 +22,7 @@ class DatabaseSeeder extends Seeder
         $tenant1 = Tenant::create([
             'name' => 'Acme Corporation',
             'subdomain' => 'acme',
-            'plan' => 'business',
+            'plan' => '',
             'database_strategy' => 'shared',
         ]);
 
