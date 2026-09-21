@@ -23,13 +23,13 @@ return new class extends Migration
 
         Schema::table('tenants', function (Blueprint $table) {
             // 2. Safe column additions
-            if (! Schema::connection('landlord')->hasColumn('tenants', 'status')) {
+          //  if (! Schema::connection('landlord')->hasColumn('tenants', 'status')) {
                 $table->string('status')->default('active')->after('plan');
-            }
+           // }
 
-            if (! Schema::connection('landlord')->hasColumn('tenants', 'enabled_modules')) {
+         //   if (! Schema::connection('landlord')->hasColumn('tenants', 'enabled_modules')) {
                 $table->json('enabled_modules')->nullable()->after('settings');
-            }
+           // }
 
             // 3. Add indexes
             $table->index('status');
@@ -52,13 +52,13 @@ return new class extends Migration
             $table->dropIndex(['plan']);
             $table->dropIndex(['subdomain']);
 
-            if (Schema::connection('landlord')->hasColumn('tenants', 'enabled_modules')) {
+         //   if (Schema::connection('landlord')->hasColumn('tenants', 'enabled_modules')) {
                 $table->dropColumn('enabled_modules');
-            }
+          //  }
 
-            if (Schema::connection('landlord')->hasColumn('tenants', 'status')) {
+           // if (Schema::connection('landlord')->hasColumn('tenants', 'status')) {
                 $table->dropColumn('status');
-            }
+           // }
         });
     }
 };
