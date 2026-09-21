@@ -18,13 +18,9 @@ class GlobalUserFactory extends UserFactory {
             'email' => fake()->unique()->safeEmail(),
             'password' => bcrypt('password'),
             // Automatically creates or assigns a tenant if none is provided
-            'tenant_id' => Tenant::factory(),
+            'tenant_id' => function () {
+                return \App\Models\Tenant::inRandomOrder()->value('id');},
             'is_super_admin' => false,
         ];
     }
-
-
-
-
-
 }
