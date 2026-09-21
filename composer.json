@@ -35,6 +35,7 @@
         "brick/money": "^0.9",
         "doctrine/dbal": "^4.0",
         "guzzlehttp/guzzle": "^7.8",
+        "inertiajs/inertia-laravel": "^3.3",
         "intervention/image": "^3.0",
         "jenssegers/agent": "^2.6",
         "laravel/framework": "^11.0",
