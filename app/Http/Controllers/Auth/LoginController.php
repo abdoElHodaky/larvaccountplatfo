@@ -43,7 +43,7 @@ class LoginController extends Controller
      */
     public function showLoginForm(): Response
     {
-        $tenant = app('tenant', null);
+        $tenant = app()->bound('tenant') ? app('tenant') : null;
 
         return Inertia::render('Auth/Login', [
             'tenant' => $tenant ? [
