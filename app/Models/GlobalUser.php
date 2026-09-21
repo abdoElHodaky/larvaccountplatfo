@@ -12,6 +12,7 @@ class GlobalUser extends Authenticatable
     use HasFactory, Notifiable;
 
     protected $connection = 'landlord';
+    protected $table = 'global_users';
 
     protected $fillable = [
         'tenant_id',
