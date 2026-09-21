@@ -9,4 +9,4 @@ use Database\Factories\UserFactory;
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\User>
  */
-class UserFactory extends UserFactory {}
+class GlobalUserFactory extends UserFactory {}
