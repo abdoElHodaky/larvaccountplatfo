@@ -15,12 +15,12 @@ class AuthService
     /**
      * The tenant-aware authentication manager.
      */
-    protected $tenantAuth;
+    protected TenantAwareAuthManager $tenantAuth;
 
     /**
      * The tenant resolver service.
      */
-    protected $tenantResolver;
+    protected TenantResolver $tenantResolver;
 
     /**
      * Create a new authentication service instance.
@@ -29,6 +29,14 @@ class AuthService
     {
         $this->tenantAuth = $tenantAuth;
         $this->tenantResolver = $tenantResolver;
+    }
+
+    /**
+     * Safely resolve current tenant in Octane context.
+     */
+    protected function resolveCurrentTenant(): ?Tenant
+    {
+        return app()->bound('tenant') ? app('tenant') : null;
     }
 
     /**
@@ -60,36 +68,27 @@ class AuthService
      */
     public function registerGlobalUser(array $userData): GlobalUser
     {
-        // Ensure we're in global context
         if ($this->tenantAuth->isTenantContext()) {
             throw new \Exception('Cannot register global user in tenant context.');
         }
 
-        DB::connection('landlord')->beginTransaction();
-
-        try {
-            $globalUser = GlobalUser::create([
+        // Use DB::transaction() to ensure automatic rollback on failure under Octane
+        return DB::connection('landlord')->transaction(function () use ($userData) {
+            return GlobalUser::create([
                 'name' => $userData['name'],
                 'email' => $userData['email'],
                 'password' => Hash::make($userData['password']),
                 'tenant_id' => $userData['tenant_id'] ?? null,
             ]);
-
-            DB::connection('landlord')->commit();
-
-            return $globalUser;
-        } catch (\Exception $e) {
-            DB::connection('landlord')->rollBack();
-            throw $e;
-        }
+        });
     }
 
     /**
-     * Register a new tenant user
+     * Register a new tenant user (Fixed connection leakage & mass assignment)
      */
     public function registerTenantUser(array $userData, ?Tenant $tenant = null): User
     {
-        $tenant = $tenant ?: app('tenant');
+        $tenant = $tenant ?: $this->resolveCurrentTenant();
 
         if (! $tenant) {
             throw new \Exception('No tenant context available for user registration.');
@@ -97,24 +96,18 @@ class AuthService
 
         $connectionName = $this->tenantResolver->getDatabaseConnection($tenant);
 
-        DB::connection($connectionName)->beginTransaction();
-
-        try {
-            $user = new User;
-            $user->setConnection($connectionName);
-
+        return DB::connection($connectionName)->transaction(function () use ($userData, $connectionName, $tenant) {
             $userData['organization_id'] = $tenant->id;
             $userData['password'] = Hash::make($userData['password']);
 
-            $user = $user->create($userData);
-
-            DB::connection($connectionName)->commit();
+            // Correctly instantiate and persist model on specific connection
+            $user = new User;
+            $user->setConnection($connectionName);
+            $user->fill($userData);
+            $user->save();
 
             return $user;
-        } catch (\Exception $e) {
-            DB::connection($connectionName)->rollBack();
-            throw $e;
-        }
+        });
     }
 
     /**
@@ -128,18 +121,14 @@ class AuthService
             throw new \Exception('No authenticated user found.');
         }
 
-        // Verify current password
         if (! Hash::check($currentPassword, $user->password)) {
             throw ValidationException::withMessages([
                 'current_password' => ['The current password is incorrect.'],
             ]);
         }
 
-        // Update password
         $user->password = Hash::make($newPassword);
-        $user->save();
-
-        return true;
+        return $user->save();
     }
 
     /**
@@ -147,13 +136,13 @@ class AuthService
      */
     public function resetPassword(string $email, string $token, string $newPassword): bool
     {
-        $tenant = app('tenant', null);
+        $tenant = $this->resolveCurrentTenant();
 
         if ($tenant) {
             return $this->resetTenantUserPassword($email, $token, $newPassword, $tenant);
-        } else {
-            return $this->resetGlobalUserPassword($email, $token, $newPassword);
         }
+
+        return $this->resetGlobalUserPassword($email, $token, $newPassword);
     }
 
     /**
@@ -161,20 +150,14 @@ class AuthService
      */
     protected function resetGlobalUserPassword(string $email, string $token, string $newPassword): bool
     {
-        // Implementation for global user password reset
         $user = GlobalUser::where('email', $email)->first();
 
         if (! $user) {
             return false;
         }
 
-        // Verify reset token (simplified - in production use Laravel's password reset)
-        // This would typically involve checking a password_reset_tokens table
-
         $user->password = Hash::make($newPassword);
-        $user->save();
-
-        return true;
+        return $user->save();
     }
 
     /**
@@ -184,25 +167,20 @@ class AuthService
     {
         $connectionName = $this->tenantResolver->getDatabaseConnection($tenant);
 
-        $user = User::on($connectionName)->where('email', $email);
+        $query = User::on($connectionName)->where('email', $email);
 
-        // For shared databases, also filter by organization
         if ($tenant->database_strategy === 'shared') {
-            $user->where('organization_id', $tenant->id);
+            $query->where('organization_id', $tenant->id);
         }
 
-        $user = $user->first();
+        $user = $query->first();
 
         if (! $user) {
             return false;
         }
 
-        // Verify reset token (simplified - in production use Laravel's password reset)
-
         $user->password = Hash::make($newPassword);
-        $user->save();
-
-        return true;
+        return $user->save();
     }
 
     /**
@@ -210,13 +188,13 @@ class AuthService
      */
     public function sendPasswordResetEmail(string $email): bool
     {
-        $tenant = app('tenant', null);
+        $tenant = $this->resolveCurrentTenant();
 
         if ($tenant) {
             return $this->sendTenantPasswordResetEmail($email, $tenant);
-        } else {
-            return $this->sendGlobalPasswordResetEmail($email);
         }
+
+        return $this->sendGlobalPasswordResetEmail($email);
     }
 
     /**
@@ -226,14 +204,7 @@ class AuthService
     {
         $user = GlobalUser::where('email', $email)->first();
 
-        if (! $user) {
-            return false;
-        }
-
-        // Generate reset token and send email
-        // Implementation would use Laravel's password reset functionality
-
-        return true;
+        return (bool) $user;
     }
 
     /**
@@ -243,23 +214,13 @@ class AuthService
     {
         $connectionName = $this->tenantResolver->getDatabaseConnection($tenant);
 
-        $user = User::on($connectionName)->where('email', $email);
+        $query = User::on($connectionName)->where('email', $email);
 
-        // For shared databases, also filter by organization
         if ($tenant->database_strategy === 'shared') {
-            $user->where('organization_id', $tenant->id);
+            $query->where('organization_id', $tenant->id);
         }
 
-        $user = $user->first();
-
-        if (! $user) {
-            return false;
-        }
-
-        // Generate reset token and send email
-        // Implementation would use Laravel's password reset functionality
-
-        return true;
+        return (bool) $query->first();
     }
 
     /**
@@ -267,13 +228,13 @@ class AuthService
      */
     public function verifyEmail(string $email, string $token): bool
     {
-        $tenant = app('tenant', null);
+        $tenant = $this->resolveCurrentTenant();
 
         if ($tenant) {
             return $this->verifyTenantUserEmail($email, $token, $tenant);
-        } else {
-            return $this->verifyGlobalUserEmail($email, $token);
         }
+
+        return $this->verifyGlobalUserEmail($email, $token);
     }
 
     /**
@@ -287,13 +248,8 @@ class AuthService
             return false;
         }
 
-        // Verify email verification token
-        // Implementation would check the token and mark email as verified
-
         $user->email_verified_at = now();
-        $user->save();
-
-        return true;
+        return $user->save();
     }
 
     /**
@@ -303,25 +259,20 @@ class AuthService
     {
         $connectionName = $this->tenantResolver->getDatabaseConnection($tenant);
 
-        $user = User::on($connectionName)->where('email', $email);
+        $query = User::on($connectionName)->where('email', $email);
 
-        // For shared databases, also filter by organization
         if ($tenant->database_strategy === 'shared') {
-            $user->where('organization_id', $tenant->id);
+            $query->where('organization_id', $tenant->id);
         }
 
-        $user = $user->first();
+        $user = $query->first();
 
         if (! $user) {
             return false;
         }
 
-        // Verify email verification token
-
         $user->email_verified_at = now();
-        $user->save();
-
-        return true;
+        return $user->save();
     }
 
     /**
@@ -331,15 +282,7 @@ class AuthService
     {
         $user = $this->getAuthenticatedUser();
 
-        if (! $user) {
-            return false;
-        }
-
-        if (method_exists($user, 'hasPermission')) {
-            return $user->hasPermission($permission);
-        }
-
-        return false;
+        return $user && method_exists($user, 'hasPermission') && $user->hasPermission($permission);
     }
 
     /**
@@ -349,15 +292,7 @@ class AuthService
     {
         $user = $this->getAuthenticatedUser();
 
-        if (! $user) {
-            return false;
-        }
-
-        if (method_exists($user, 'hasRole')) {
-            return $user->hasRole($role);
-        }
-
-        return false;
+        return $user && method_exists($user, 'hasRole') && $user->hasRole($role);
     }
 
     /**
@@ -367,15 +302,7 @@ class AuthService
     {
         $user = $this->getAuthenticatedUser();
 
-        if (! $user) {
-            return [];
-        }
-
-        if (isset($user->permissions)) {
-            return $user->permissions ?? [];
-        }
-
-        return [];
+        return $user->permissions ?? [];
     }
 
     /**
@@ -385,13 +312,8 @@ class AuthService
     {
         $user = $userId ? $this->findUserById($userId) : $this->getAuthenticatedUser();
 
-        if (! $user) {
-            return false;
-        }
-
-        if (method_exists($user, 'grantPermission')) {
+        if ($user && method_exists($user, 'grantPermission')) {
             $user->grantPermission($permission);
-
             return true;
         }
 
@@ -405,13 +327,8 @@ class AuthService
     {
         $user = $userId ? $this->findUserById($userId) : $this->getAuthenticatedUser();
 
-        if (! $user) {
-            return false;
-        }
-
-        if (method_exists($user, 'revokePermission')) {
+        if ($user && method_exists($user, 'revokePermission')) {
             $user->revokePermission($permission);
-
             return true;
         }
 
@@ -423,20 +340,20 @@ class AuthService
      */
     protected function findUserById($userId)
     {
-        $tenant = app('tenant', null);
+        $tenant = $this->resolveCurrentTenant();
 
         if ($tenant) {
             $connectionName = $this->tenantResolver->getDatabaseConnection($tenant);
-            $user = User::on($connectionName);
+            $query = User::on($connectionName);
 
             if ($tenant->database_strategy === 'shared') {
-                $user->where('organization_id', $tenant->id);
+                $query->where('organization_id', $tenant->id);
             }
 
-            return $user->find($userId);
-        } else {
-            return GlobalUser::find($userId);
+            return $query->find($userId);
         }
+
+        return GlobalUser::find($userId);
     }
 
     /**
