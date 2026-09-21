@@ -21,7 +21,7 @@ return new class extends Migration
             return;
         }
 
-        Schema::connection('landlord')->table('tenants', function (Blueprint $table) {
+        Schema::table('tenants', function (Blueprint $table) {
             // 2. Safe column additions
             if (! Schema::connection('landlord')->hasColumn('tenants', 'status')) {
                 $table->string('status')->default('active')->after('plan');
@@ -47,7 +47,7 @@ return new class extends Migration
             return;
         }
 
-        Schema::connection('landlord')->table('tenants', function (Blueprint $table) {
+        Schema::table('tenants', function (Blueprint $table) {
             $table->dropIndex(['status']);
             $table->dropIndex(['plan']);
             $table->dropIndex(['subdomain']);
