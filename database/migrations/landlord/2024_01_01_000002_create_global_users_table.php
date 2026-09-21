@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('global_users', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('tenant_id')->constrained('tenants')->onDelete('cascade');
+            $table->foreignId('tenant_id')->nullable()->constrained('tenants')->onDelete('cascade');
             $table->string('email')->unique();
             $table->string('name');
             $table->timestamp('email_verified_at')->nullable();
