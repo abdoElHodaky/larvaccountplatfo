@@ -29,46 +29,53 @@ class HandleInertiaRequests extends Middleware
      */
     public function share(Request $request): array
     {
+        $user = $request->user();
+        $permissions = $user ? $user->getAllPermissions()->pluck('name')->toArray() : [];
+
+        // Safely resolve tenant and organization without throwing exceptions if unbound
+        $tenant = app()->bound('tenant') ? app('tenant') : null;
+        $organization = app()->bound('organization') ? app('organization') : null;
+
         return [
             ...parent::share($request),
             'auth' => [
-                'user' => $request->user() ? [
-                    'id' => $request->user()->id,
-                    'name' => $request->user()->name,
-                    'email' => $request->user()->email,
-                    'email_verified_at' => $request->user()->email_verified_at,
-                    'avatar' => $request->user()->avatar ?? null,
-                    'role' => $request->user()->role ?? null,
-                    'permissions' => $request->user()->getAllPermissions()->pluck('name')->toArray(),
-                    'created_at' => $request->user()->created_at,
-                    'updated_at' => $request->user()->updated_at,
+                'user' => $user ? [
+                    'id' => $user->id,
+                    'name' => $user->name,
+                    'email' => $user->email,
+                    'email_verified_at' => $user->email_verified_at,
+                    'avatar' => $user->avatar ?? null,
+                    'role' => $user->role ?? null,
+                    'permissions' => $permissions,
+                    'created_at' => $user->created_at,
+                    'updated_at' => $user->updated_at,
                 ] : null,
-                'tenant' => app('tenant') ? [
-                    'id' => app('tenant')->id,
-                    'name' => app('tenant')->name,
-                    'slug' => app('tenant')->slug ?? null,
-                    'domain' => app('tenant')->domain ?? null,
-                    'subdomain' => app('tenant')->subdomain ?? null,
-                    'logo' => app('tenant')->logo ?? null,
-                    'settings' => app('tenant')->settings ?? [],
-                    'subscription_status' => app('tenant')->subscription_status ?? null,
-                    'created_at' => app('tenant')->created_at,
-                    'updated_at' => app('tenant')->updated_at,
+                'tenant' => $tenant ? [
+                    'id' => $tenant->id,
+                    'name' => $tenant->name,
+                    'slug' => $tenant->slug ?? null,
+                    'domain' => $tenant->domain ?? null,
+                    'subdomain' => $tenant->subdomain ?? null,
+                    'logo' => $tenant->logo ?? null,
+                    'settings' => $tenant->settings ?? [],
+                    'subscription_status' => $tenant->subscription_status ?? null,
+                    'created_at' => $tenant->created_at,
+                    'updated_at' => $tenant->updated_at,
                 ] : null,
-                'organization' => app('organization') ? [
-                    'id' => app('organization')->id,
-                    'name' => app('organization')->name,
-                    'slug' => app('organization')->slug ?? null,
-                    'description' => app('organization')->description ?? null,
-                    'logo' => app('organization')->logo ?? null,
-                    'website' => app('organization')->website ?? null,
-                    'industry' => app('organization')->industry ?? null,
-                    'size' => app('organization')->size ?? null,
-                    'settings' => app('organization')->settings ?? [],
-                    'created_at' => app('organization')->created_at,
-                    'updated_at' => app('organization')->updated_at,
+                'organization' => $organization ? [
+                    'id' => $organization->id,
+                    'name' => $organization->name,
+                    'slug' => $organization->slug ?? null,
+                    'description' => $organization->description ?? null,
+                    'logo' => $organization->logo ?? null,
+                    'website' => $organization->website ?? null,
+                    'industry' => $organization->industry ?? null,
+                    'size' => $organization->size ?? null,
+                    'settings' => $organization->settings ?? [],
+                    'created_at' => $organization->created_at,
+                    'updated_at' => $organization->updated_at,
                 ] : null,
-                'permissions' => $request->user() ? $request->user()->getAllPermissions()->pluck('name')->toArray() : [],
+                'permissions' => $permissions,
             ],
             'flash' => [
                 'message' => fn () => $request->session()->get('message'),
