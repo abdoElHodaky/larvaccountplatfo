@@ -22,7 +22,6 @@ class DatabaseSeeder extends Seeder
         $tenant1 = Tenant::create([
             'name' => 'Acme Corporation',
             'subdomain' => 'acme',
-            'plan' => '',
             'database_strategy' => 'shared',
         ]);
 
@@ -35,7 +34,6 @@ class DatabaseSeeder extends Seeder
          GlobalUser::create ([
             'name' => 'Global Admin',
             'email' => 'admin@example.com',
-            'is_super_admin' => true,
             'tenant_id'=>$tenant1->id
         ]);
         // 3. Seed module-specific data if in development environment
