@@ -5,32 +5,35 @@ namespace App\Http\Controllers\Auth;
 use App\Features\Authentication\Auth\TenantAwareAuthManager;
 use App\Http\Controllers\Controller;
 use App\Services\AuthService;
-use Illuminate\Foundation\Auth\AuthenticatesUsers;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\RateLimiter;
+use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
 use Inertia\Inertia;
+use Inertia\Response;
 
 class LoginController extends Controller
 {
-    use AuthenticatesUsers;
-
     /**
      * The authentication service.
      */
-    protected $authService;
+    protected AuthService $authService;
 
     /**
      * The tenant-aware authentication manager.
      */
-    protected $tenantAuth;
+    protected TenantAwareAuthManager $tenantAuth;
 
     /**
      * Create a new controller instance.
      */
     public function __construct(AuthService $authService, TenantAwareAuthManager $tenantAuth)
     {
-        $this->middleware('guest')->except('logout');
+        $this->middleware('guest')->except('logout', 'destroy', 'apiLogout');
         $this->authService = $authService;
         $this->tenantAuth = $tenantAuth;
     }
@@ -38,7 +41,7 @@ class LoginController extends Controller
     /**
      * Show the application's login form.
      */
-    public function showLoginForm()
+    public function showLoginForm(): Response
     {
         $tenant = app('tenant', null);
 
@@ -55,25 +58,25 @@ class LoginController extends Controller
     }
 
     /**
-     * Display the login view (alias for Inertia routing)
+     * Display the login view (Inertia route alias)
      */
-    public function create()
+    public function create(): Response
     {
         return $this->showLoginForm();
     }
 
     /**
-     * Handle login form submission (alias for Inertia routing)
+     * Handle login form submission (Inertia route alias)
      */
-    public function store(Request $request)
+    public function store(Request $request): JsonResponse|RedirectResponse
     {
         return $this->login($request);
     }
 
     /**
-     * Handle logout (alias for Inertia routing)
+     * Handle logout (Inertia route alias)
      */
-    public function destroy(Request $request)
+    public function destroy(Request $request): JsonResponse|RedirectResponse
     {
         return $this->logout($request);
     }
@@ -81,17 +84,12 @@ class LoginController extends Controller
     /**
      * Handle a login request to the application.
      */
-    public function login(Request $request)
+    public function login(Request $request): JsonResponse|RedirectResponse
     {
         $this->validateLogin($request);
 
-        // If the class Is using the ThrottlesLogins trait, we can automatically throttle
-        // the login attempts for this application. We'll key this by the username and
-        // the IP address of the client making these requests into this application.
-        if (method_exists($this, 'hasTooManyLoginAttempts') &&
-            $this->hasTooManyLoginAttempts($request)) {
-            $this->fireLockoutEvent($request);
-
+        // Check rate limiting / throttling
+        if ($this->hasTooManyLoginAttempts($request)) {
             return $this->sendLockoutResponse($request);
         }
 
@@ -103,9 +101,7 @@ class LoginController extends Controller
             return $this->sendLoginResponse($request);
         }
 
-        // If the login attempt was unsuccessful we will increment the number of attempts
-        // to login and redirect the user back to the login form. Of course, when this
-        // user surpasses their maximum number of attempts they will get locked out.
+        // Increment rate limit attempts on failure
         $this->incrementLoginAttempts($request);
 
         return $this->sendFailedLoginResponse($request);
@@ -114,7 +110,7 @@ class LoginController extends Controller
     /**
      * Attempt to log the user into the application.
      */
-    protected function attemptLogin(Request $request)
+    protected function attemptLogin(Request $request): bool
     {
         $credentials = $this->credentials($request);
         $remember = $request->boolean('remember');
@@ -125,7 +121,7 @@ class LoginController extends Controller
     /**
      * Get the needed authorization credentials from the request.
      */
-    protected function credentials(Request $request)
+    protected function credentials(Request $request): array
     {
         return $request->only($this->username(), 'password');
     }
@@ -133,7 +129,7 @@ class LoginController extends Controller
     /**
      * Get the login username to be used by the controller.
      */
-    public function username()
+    public function username(): string
     {
         return 'email';
     }
@@ -141,7 +137,7 @@ class LoginController extends Controller
     /**
      * Send the response after the user was authenticated.
      */
-    protected function sendLoginResponse(Request $request)
+    protected function sendLoginResponse(Request $request): JsonResponse|RedirectResponse
     {
         $request->session()->regenerate();
 
@@ -152,34 +148,34 @@ class LoginController extends Controller
         }
 
         return $request->wantsJson()
-                    ? new \Illuminate\Http\JsonResponse([], 204)
-                    : redirect()->intended($this->redirectPath());
+            ? new JsonResponse([], 204)
+            : redirect()->intended($this->redirectPath());
     }
 
     /**
      * The user has been authenticated.
      */
-    protected function authenticated(Request $request, $user)
+    protected function authenticated(Request $request, $user): mixed
     {
-        // Update last login timestamp
         if (method_exists($user, 'updateLastLogin')) {
             $user->updateLastLogin();
         }
 
-        // Log successful authentication
-        \Log::info('User authenticated', [
+        Log::info('User authenticated', [
             'user_id' => $user->id,
             'email' => $user->email,
             'tenant_id' => app('tenant_id', null),
             'ip' => $request->ip(),
             'user_agent' => $request->userAgent(),
         ]);
+
+        return null;
     }
 
     /**
      * Get the failed login response instance.
      */
-    protected function sendFailedLoginResponse(Request $request)
+    protected function sendFailedLoginResponse(Request $request): never
     {
         throw ValidationException::withMessages([
             $this->username() => [trans('auth.failed')],
@@ -189,23 +185,17 @@ class LoginController extends Controller
     /**
      * Log the user out of the application.
      */
-    public function logout(Request $request)
+    public function logout(Request $request): JsonResponse|RedirectResponse
     {
         $user = $this->guard()->user();
 
         $this->guard()->logout();
 
         $request->session()->invalidate();
-
         $request->session()->regenerateToken();
 
-        if ($response = $this->loggedOut($request)) {
-            return $response;
-        }
-
-        // Log successful logout
         if ($user) {
-            \Log::info('User logged out', [
+            Log::info('User logged out', [
                 'user_id' => $user->id,
                 'email' => $user->email,
                 'tenant_id' => app('tenant_id', null),
@@ -214,7 +204,7 @@ class LoginController extends Controller
         }
 
         return $request->wantsJson()
-            ? new \Illuminate\Http\JsonResponse([], 204)
+            ? new JsonResponse([], 204)
             : redirect('/');
     }
 
@@ -229,37 +219,31 @@ class LoginController extends Controller
     /**
      * Get the post-register / post-login redirect path.
      */
-    public function redirectPath()
+    public function redirectPath(): string
     {
         $tenant = app('tenant', null);
 
         if ($tenant) {
-            // Tenant-specific dashboard
             return route('dashboard');
-        } else {
-            // Check if user has multiple tenants
-            $user = Auth::user();
-            $tenants = $user->tenants ?? collect();
-
-            if ($tenants->count() > 1) {
-                // Redirect to tenant selection
-                return route('tenant.select');
-            } elseif ($tenants->count() === 1) {
-                // Set the single tenant and redirect to dashboard
-                session(['tenant_id' => $tenants->first()->id]);
-
-                return route('dashboard');
-            } else {
-                // No tenants - redirect to tenant selection with warning
-                return route('tenant.select');
-            }
         }
+
+        $user = Auth::user();
+        $tenants = $user->tenants ?? collect();
+
+        if ($tenants->count() > 1) {
+            return route('tenant.select');
+        } elseif ($tenants->count() === 1) {
+            session(['tenant_id' => $tenants->first()->id]);
+            return route('dashboard');
+        }
+
+        return route('tenant.select');
     }
 
     /**
      * Validate the user login request.
      */
-    protected function validateLogin(Request $request)
+    protected function validateLogin(Request $request): void
     {
         $request->validate([
             $this->username() => 'required|string|email',
@@ -268,11 +252,10 @@ class LoginController extends Controller
     }
 
     /**
-     * Handle tenant-specific login
+     * Handle tenant-specific login.
      */
-    public function tenantLogin(Request $request)
+    public function tenantLogin(Request $request): JsonResponse|RedirectResponse
     {
-        // Ensure we have a tenant context
         $tenant = app('tenant', null);
         if (! $tenant) {
             return redirect()->route('tenant.select')
@@ -283,11 +266,10 @@ class LoginController extends Controller
     }
 
     /**
-     * Handle landlord login
+     * Handle landlord login.
      */
-    public function landlordLogin(Request $request)
+    public function landlordLogin(Request $request): JsonResponse|RedirectResponse
     {
-        // Ensure we're not in a tenant context
         if (app('tenant', null)) {
             return redirect()->route('landlord.login');
         }
@@ -296,9 +278,9 @@ class LoginController extends Controller
     }
 
     /**
-     * Show tenant selection form
+     * Show tenant selection form.
      */
-    public function showTenantSelection()
+    public function showTenantSelection(): Response
     {
         $user = Auth::user();
         $tenants = $user ? $user->tenants : collect();
@@ -318,17 +300,15 @@ class LoginController extends Controller
     }
 
     /**
-     * Handle tenant selection
+     * Handle tenant selection.
      */
-    public function selectTenant(Request $request)
+    public function selectTenant(Request $request): RedirectResponse
     {
         $request->validate([
             'subdomain' => 'required|string|max:255',
         ]);
 
         $subdomain = $request->input('subdomain');
-
-        // Redirect to tenant-specific login
         $protocol = $request->isSecure() ? 'https' : 'http';
         $domain = config('app.domain', $request->getHost());
 
@@ -336,9 +316,9 @@ class LoginController extends Controller
     }
 
     /**
-     * Handle API login
+     * Handle API login.
      */
-    public function apiLogin(Request $request)
+    public function apiLogin(Request $request): JsonResponse
     {
         $this->validateLogin($request);
 
@@ -361,14 +341,67 @@ class LoginController extends Controller
     }
 
     /**
-     * Handle API logout
+     * Handle API logout.
      */
-    public function apiLogout(Request $request)
+    public function apiLogout(Request $request): JsonResponse
     {
         $request->user()->currentAccessToken()->delete();
 
         return response()->json([
             'message' => 'Successfully logged out',
         ]);
+    }
+
+    /* -------------------------------------------------------------------------- */
+    /*                        Rate Limiting (Throttling)                          */
+    /* -------------------------------------------------------------------------- */
+
+    /**
+     * Determine if the user has too many failed login attempts.
+     */
+    protected function hasTooManyLoginAttempts(Request $request): bool
+    {
+        return RateLimiter::tooManyAttempts($this->throttleKey($request), 5);
+    }
+
+    /**
+     * Increment the login attempts for the user.
+     */
+    protected function incrementLoginAttempts(Request $request): void
+    {
+        RateLimiter::hit($this->throttleKey($request), 60);
+    }
+
+    /**
+     * Clear the login locks for the given user credentials.
+     */
+    protected function clearLoginAttempts(Request $request): void
+    {
+        RateLimiter::clear($this->throttleKey($request));
+    }
+
+    /**
+     * Redirect the user after determining they are locked out.
+     */
+    protected function sendLockoutResponse(Request $request): never
+    {
+        $seconds = RateLimiter::availableIn($this->throttleKey($request));
+
+        throw ValidationException::withMessages([
+            $this->username() => [
+                trans('auth.throttle', [
+                    'seconds' => $seconds,
+                    'minutes' => ceil($seconds / 60),
+                ]),
+            ],
+        ])->status(429);
+    }
+
+    /**
+     * Get the rate limiting throttle key for the request.
+     */
+    protected function throttleKey(Request $request): string
+    {
+        return Str::transliterate(Str::lower($request->input($this->username())).'|'.$request->ip());
     }
 }
