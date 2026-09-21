@@ -16,22 +16,15 @@ return new class extends Migration
      */
     public function up(): void
     {
-        // 1. Guard check: Only proceed if the 'tenants' table actually exists
-        if (! Schema::connection('landlord')->hasTable('tenants')) {
-            return;
-        }
+        // Alter existing tenants table
+        Schema::connection('landlord')->table('tenants', function (Blueprint $table) {
+            // Add columns safely (will skip if column already exists)
+            $table->string('status')->default('active')->after('plan')->change(); // Use change() if modifying, or use simple add:
+            // $table->string('status')->default('active')->after('plan');
+            
+            $table->json('enabled_modules')->nullable()->after('settings');
 
-        Schema::table('tenants', function (Blueprint $table) {
-            // 2. Safe column additions
-          //  if (! Schema::connection('landlord')->hasColumn('tenants', 'status')) {
-                $table->string('status')->default('active')->after('plan');
-           // }
-
-         //   if (! Schema::connection('landlord')->hasColumn('tenants', 'enabled_modules')) {
-                $table->json('enabled_modules')->nullable()->after('settings');
-           // }
-
-            // 3. Add indexes
+            // Add indexes
             $table->index('status');
             $table->index('plan');
             $table->index('subdomain');
@@ -43,22 +36,14 @@ return new class extends Migration
      */
     public function down(): void
     {
-        if (! Schema::connection('landlord')->hasTable('tenants')) {
-            return;
-        }
-
-        Schema::table('tenants', function (Blueprint $table) {
+        Schema::connection('landlord')->table('tenants', function (Blueprint $table) {
+            // Drop indexes first
             $table->dropIndex(['status']);
             $table->dropIndex(['plan']);
             $table->dropIndex(['subdomain']);
 
-         //   if (Schema::connection('landlord')->hasColumn('tenants', 'enabled_modules')) {
-                $table->dropColumn('enabled_modules');
-          //  }
-
-           // if (Schema::connection('landlord')->hasColumn('tenants', 'status')) {
-                $table->dropColumn('status');
-           // }
+            // Drop columns
+            $table->dropColumn(['enabled_modules', 'status']);
         });
     }
 };
