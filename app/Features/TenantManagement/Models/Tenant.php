@@ -218,4 +218,24 @@ class Tenant extends Model
         data_set($settings, $key, $value);
         $this->update(['settings' => $settings]);
     }
+
+    protected static function booted(): void
+  {
+    static::creating(function (Tenant $tenant) {
+        if (empty($tenant->database_name)) {
+            $tenant->database_name = "tenant_{$tenant->subdomain}";
+        }
+        if (empty($tenant->status)) {
+            $tenant->status = 'active';
+        }
+        if (empty($tenant->region)) {
+            $tenant->region = config('app.default_region', 'us-east-1');
+        }
+    });
+  }
+
+
+
+
+    
 }
