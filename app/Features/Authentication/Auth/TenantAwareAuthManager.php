@@ -9,13 +9,24 @@ use Illuminate\Auth\AuthManager;
 use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Contracts\Auth\StatefulGuard;
 use Illuminate\Contracts\Auth\UserProvider;
+use Illuminate\Contracts\Foundation\Application;
 
 class TenantAwareAuthManager extends AuthManager
 {
+    public function __construct(Application $app)
+    {
+        parent::__construct($app);
+
+        // Register custom hybrid user provider driver automatically
+        $this->provider('hybrid', function ($app, array $config) {
+            return $this->createHybridProvider($config);
+        });
+    }
+
     /**
      * Create the global user guard for landlord authentication
      */
-    protected function createGlobalUserDriver(array $config): Guard
+    public function createGlobalUserDriver(array $config): Guard
     {
         $provider = $this->createUserProvider($config['provider'] ?? null);
 
@@ -31,7 +42,7 @@ class TenantAwareAuthManager extends AuthManager
     /**
      * Create the tenant user guard for tenant-specific authentication
      */
-    protected function createTenantUserDriver(array $config): Guard
+    public function createTenantUserDriver(array $config): Guard
     {
         $provider = $this->createUserProvider($config['provider'] ?? null);
 
@@ -45,7 +56,7 @@ class TenantAwareAuthManager extends AuthManager
     }
 
     /**
-     * Bootstraps standard guard dependencies (Cookies, Events, Requests)
+     * Configure guard settings safely
      */
     protected function configureGuard(Guard $guard): Guard
     {
@@ -67,7 +78,7 @@ class TenantAwareAuthManager extends AuthManager
     /**
      * Create the hybrid user provider
      */
-    protected function createHybridProvider(array $config): UserProvider
+    public function createHybridProvider(array $config): UserProvider
     {
         return new HybridUserProvider(
             $this->app['hash'],
@@ -141,7 +152,7 @@ class TenantAwareAuthManager extends AuthManager
     }
 
     /**
-     * Switch authentication context to global user safely (Octane compatible)
+     * Switch authentication context to global user
      */
     public function switchToGlobalContext(): void
     {
@@ -149,7 +160,7 @@ class TenantAwareAuthManager extends AuthManager
     }
 
     /**
-     * Switch authentication context to tenant user safely (Octane compatible)
+     * Switch authentication context to tenant user
      */
     public function switchToTenantContext(): void
     {
@@ -157,7 +168,7 @@ class TenantAwareAuthManager extends AuthManager
     }
 
     /**
-     * Get the current tenant if bound in the container
+     * Get the current tenant if in tenant context
      */
     public function getCurrentTenant(): mixed
     {
@@ -187,7 +198,6 @@ class TenantAwareAuthManager extends AuthManager
     {
         $guard = $this->resolveGuard();
 
-        // Use Laravel's native StatefulGuard contract check
         if ($guard instanceof StatefulGuard) {
             return $guard->attempt($credentials, $remember);
         }
