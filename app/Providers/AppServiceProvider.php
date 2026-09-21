@@ -71,9 +71,23 @@ class AppServiceProvider extends ServiceProvider
     protected function bootModuleDiscovery(): void
     {
         // Prevent modules from loading during early artisan discovery/cache commands
+<<<<<<< HEAD
         if ($this->app->runningInConsole() && request()->server('argv')) {
             $command = $_SERVER['argv'][1] ?? null;
             if (in_array($command, ['package:discover', 'discover', 'config:clear', 'cache:clear', 'optimize:clear'])) {
+=======
+        if ($this->app->runningInConsole()) {
+            $command = isset($_SERVER['argv'][1]) ? $_SERVER['argv'][1] : null;
+            $blacklistedCommands = [
+                'package:discover',
+                'discover',
+                'config:clear',
+                'cache:clear',
+                'optimize:clear',
+            ];
+
+            if (in_array($command, $blacklistedCommands)) {
+>>>>>>> f9138cb (fixes)
                 return;
             }
         }

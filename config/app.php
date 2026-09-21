@@ -156,32 +156,32 @@ return [
     */
 
     'providers' => ServiceProvider::defaultProviders()->merge([
-        /*
-         * Package Service Providers...
-         */
+            /*
+             * Package Service Providers...
+             */
 
-        /*
-         * Application Service Providers...
-         */
-        App\Providers\AppServiceProvider::class,
-        App\Providers\AuthServiceProvider::class,
-        // App\Providers\BroadcastServiceProvider::class,
-        App\Providers\EventServiceProvider::class,
-        App\Providers\RouteServiceProvider::class,
+            /*
+             * Application Service Providers...
+             */
+            App\Providers\AppServiceProvider::class,
+            App\Providers\AuthServiceProvider::class,
+            // App\Providers\BroadcastServiceProvider::class,
+            App\Providers\EventServiceProvider::class,
+            App\Providers\RouteServiceProvider::class,
 
-        /*
-         * Feature Service Providers...
-         */
-        App\Features\Accounting\Providers\AccountingServiceProvider::class,
-        App\Features\Inventory\Providers\InventoryServiceProvider::class,
-        App\Features\Sales\Providers\SalesServiceProvider::class,
-        App\Features\Organization\Providers\OrganizationServiceProvider::class,
+            /*
+             * Feature Service Providers...
+             */
+            App\Features\Accounting\Providers\AccountingServiceProvider::class,
+            App\Features\Inventory\Providers\InventoryServiceProvider::class,
+            App\Features\Sales\Providers\SalesServiceProvider::class,
+            App\Features\Organization\Providers\OrganizationServiceProvider::class,
 
-        /*
-         * GraphQL Service Provider...
-         */
-        App\Providers\GraphQLServiceProvider::class,
-    ])->toArray(),
+            /*
+             * GraphQL Service Provider...
+             */
+            App\Providers\GraphQLServiceProvider::class,
+        ])->toArray(),
 
     /*
     |--------------------------------------------------------------------------

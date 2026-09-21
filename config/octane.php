@@ -171,12 +171,37 @@ return [
         ],
 
         RequestReceived::class => [
-            // Only load Octane listeners if not in testing environment
-            ...(env('APP_ENV') === 'testing' ? [] : \Laravel\Octane\Facades\Octane::prepareApplicationForNextOperation()),
-            ...(env('APP_ENV') === 'testing' ? [] : \Laravel\Octane\Facades\Octane::prepareApplicationForNextRequest()),
-            // Custom listeners for multi-tenant setup
-            FlushTenantContext::class,
-            SetupDatabaseConnection::class,
+            // Skip ALL Octane listeners during CLI (Artisan) commands to prevent facade issues
+            php_sapi_name() === 'cli'
+                ? []
+                : [
+                    \Laravel\Octane\Listeners\EnsureUploadedFilesAreValid::class,
+                    \Laravel\Octane\Listeners\EnsureUploadedFilesCanBeMoved::class,
+                    // Use dynamic facades resolution to prevent issues during early bootstrap
+                    (function() {
+                        try {
+                            if (php_sapi_name() !== 'cli' && \Illuminate\Support\Facades\Facade::getFacadeApplication()) {
+                                return \Laravel\Octane\Facades\Octane::prepareApplicationForNextOperation();
+                            }
+                        } catch (\Exception $e) {
+                            // Ignore any facade-related errors during bootstrap
+                        }
+                        return []; // Return empty if facades not ready
+                    })(),
+                    (function() {
+                        try {
+                            if (php_sapi_name() !== 'cli' && \Illuminate\Support\Facades\Facade::getFacadeApplication()) {
+                                return \Laravel\Octane\Facades\Octane::prepareApplicationForNextRequest();
+                            }
+                        } catch (\Exception $e) {
+                            // Ignore any facade-related errors during bootstrap
+                        }
+                        return []; // Return empty if facades not ready
+                    })(),
+                    // Custom listeners for multi-tenant setup
+                    FlushTenantContext::class,
+                    SetupDatabaseConnection::class,
+                ],
         ],
 
         RequestHandled::class => [
@@ -192,7 +217,19 @@ return [
         ],
 
         TaskReceived::class => [
-            ...(env('APP_ENV') === 'testing' ? [] : \Laravel\Octane\Facades\Octane::prepareApplicationForNextOperation()),
+            // Skip ALL Octane listeners during CLI (Artisan) commands to prevent facade issues
+            php_sapi_name() === 'cli'
+                ? []
+                : (function() {
+                    try {
+                        if (php_sapi_name() !== 'cli' && \Illuminate\Support\Facades\Facade::getFacadeApplication()) {
+                            return \Laravel\Octane\Facades\Octane::prepareApplicationForNextOperation();
+                        }
+                    } catch (\Exception $e) {
+                        // Ignore any facade-related errors during bootstrap
+                    }
+                    return []; // Return empty if facades not ready
+                })(),
         ],
 
         TaskTerminated::class => [
@@ -200,7 +237,19 @@ return [
         ],
 
         TickReceived::class => [
-            ...(env('APP_ENV') === 'testing' ? [] : \Laravel\Octane\Facades\Octane::prepareApplicationForNextOperation()),
+            // Skip ALL Octane listeners during CLI (Artisan) commands to prevent facade issues
+            php_sapi_name() === 'cli'
+                ? []
+                : (function() {
+                    try {
+                        if (php_sapi_name() !== 'cli' && \Illuminate\Support\Facades\Facade::getFacadeApplication()) {
+                            return \Laravel\Octane\Facades\Octane::prepareApplicationForNextOperation();
+                        }
+                    } catch (\Exception $e) {
+                        // Ignore any facade-related errors during bootstrap
+                    }
+                    return []; // Return empty if facades not ready
+                })(),
         ],
 
         TickTerminated::class => [
