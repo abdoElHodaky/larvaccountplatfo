@@ -16,7 +16,7 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         // 1. Create a global admin user explicitly on the 'landlord' connection
-        GlobalUser::on('landlord')->factory()->create([
+        GlobalUser::factory()->create([
             'name' => 'Global Admin',
             'email' => 'admin@example.com',
             'is_super_admin' => true,
