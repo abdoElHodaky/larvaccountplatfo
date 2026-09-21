@@ -19,23 +19,24 @@ class DatabaseSeeder extends Seeder
         
 
         // 2. Create sample tenants
-        $tenant1 = Tenant::factory()->create([
+        $tenant1 = Tenant::create([
             'name' => 'Acme Corporation',
             'subdomain' => 'acme',
             'plan' => 'business',
             'database_strategy' => 'shared',
         ]);
 
-        $tenant2 = Tenant::factory()->create([
+        $tenant2 = Tenant::create([
             'name' => 'TechStart Inc',
             'subdomain' => 'techstart',
             'plan' => 'startup',
             'database_strategy' => 'shared',
         ]);
-         GlobalUser::factory()->create([
+         GlobalUser::create ([
             'name' => 'Global Admin',
             'email' => 'admin@example.com',
             'is_super_admin' => true,
+            'tenant_id'=>$tenant1->id
         ]);
         // 3. Seed module-specific data if in development environment
         if (app()->environment('local', 'development', 'testing')) {
