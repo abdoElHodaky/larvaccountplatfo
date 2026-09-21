@@ -39,6 +39,13 @@ return new class extends Migration
             $table->index(['is_active']);
             $table->index(['user_count']);
             $table->index(['monthly_transaction_count']);
+            $table->string('status')->default('active')->after('plan')->change(); // Use change() if modifying, or use simple add:
+            // $table->string('status')->default('active')->after('plan');
+            
+            $table->json('enabled_modules')->nullable()->after('settings');
+
+            // Add indexes
+            $table->index('status');
         });
     }
 
