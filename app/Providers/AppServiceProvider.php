@@ -9,6 +9,8 @@ use App\Services\TenantProvisioningService;
 use App\Services\TenantResolver;
 use App\Shared\Services\InterModuleBus;
 use App\Shared\Services\ModuleDiscoveryService;
+use Illuminate\Support\Facades\Event;
+use Laravel\Octane\Events\RequestReceived;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -55,6 +57,10 @@ class AppServiceProvider extends ServiceProvider
     {
         $this->bootModuleDiscovery();
         $this->bootInterModuleBus();
+        Event::listen(RequestReceived::class, function () {
+            app()->forgetInstance('tenant');
+        });
+    }
     }
 
     /**
