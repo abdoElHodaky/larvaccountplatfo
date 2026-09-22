@@ -9,7 +9,7 @@ import { routePreloader } from './shared/utils/LoadingSkeleton';
 import { MobileOptimizationManager } from './shared/utils/mobileOptimization';
 import { PWAEnhancementManager } from './shared/utils/pwaEnhancements';
 import { PerformanceAnalyticsDashboard } from './shared/utils/performanceAnalytics';
-
+import { Ziggy } from './ziggy'; // Optional if using generated ziggy.js
 const appName = (import.meta as any).env?.VITE_APP_NAME || 'Laravel Accounting Platform';
 
 // Enhanced page resolver with lazy loading and preloading
