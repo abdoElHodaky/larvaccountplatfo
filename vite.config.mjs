@@ -8,7 +8,7 @@ export default defineConfig({
         laravel({
             input: [
                 'resources/css/app.css',
-                'resources/js/app.tsx',
+                'resources/js/App.tsx',
             ],
             ssr: 'resources/js/ssr.tsx',
             refresh: true,
