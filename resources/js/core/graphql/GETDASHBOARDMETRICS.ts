@@ -83,3 +83,5 @@ export function createGraphQLMutation(mutation: string, variables?: Record<strin
     type: 'mutation' as const,
   };
 }
+export default GET_DASHBOARD_METRICS;
+export default GET_REALTIME_UPDATES;
