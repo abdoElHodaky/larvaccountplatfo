@@ -15,42 +15,42 @@ use Illuminate\Support\Facades\Route;
 */
 
 // Main Dashboard
-Route::get('/', [DashboardApiController::class, 'index'])
-    ->name('dashboard.index');
+//Route::get('/', [DashboardApiController::class, 'index'])
+    //->name('dashboard.index');
 
-Route::get('/overview', [DashboardApiController::class, 'overview'])
+/*Route::get('/overview', [AdvancedDashboardController::class, 'overview'])
     ->name('dashboard.overview');
 
 // Widget Data
-Route::get('/widgets/financial-summary', [DashboardApiController::class, 'financialSummaryWidget'])
+Route::get('/widgets/financial-summary', [AdvancedDashboardController::class, 'financialSummaryWidget'])
     ->name('dashboard.widgets.financial-summary');
 
-Route::get('/widgets/inventory-status', [DashboardApiController::class, 'inventoryStatusWidget'])
+Route::get('/widgets/inventory-status', [AdvancedDashboardController::class, 'inventoryStatusWidget'])
     ->name('dashboard.widgets.inventory-status');
 
-Route::get('/widgets/recent-transactions', [DashboardApiController::class, 'recentTransactionsWidget'])
+Route::get('/widgets/recent-transactions', [AdvancedDashboardController::class, 'recentTransactionsWidget'])
     ->name('dashboard.widgets.recent-transactions');
 
-Route::get('/widgets/cash-flow', [DashboardApiController::class, 'cashFlowWidget'])
+Route::get('/widgets/cash-flow', [AdvancedDashboardController::class, 'cashFlowWidget'])
     ->name('dashboard.widgets.cash-flow');
 
-Route::get('/widgets/top-products', [DashboardApiController::class, 'topProductsWidget'])
+Route::get('/widgets/top-products', [AdvancedDashboardController::class, 'topProductsWidget'])
     ->name('dashboard.widgets.top-products');
 
-Route::get('/widgets/alerts', [DashboardApiController::class, 'alertsWidget'])
+Route::get('/widgets/alerts', [AdvancedDashboardController::class, 'alertsWidget'])
     ->name('dashboard.widgets.alerts');
 
 // Analytics
-Route::get('/analytics/revenue-trends', [DashboardApiController::class, 'revenueTrends'])
+Route::get('/analytics/revenue-trends', [AdvancedDashboardController::class, 'revenueTrends'])
     ->name('dashboard.analytics.revenue-trends');
 
-Route::get('/analytics/expense-breakdown', [DashboardApiController::class, 'expenseBreakdown'])
+Route::get('/analytics/expense-breakdown', [AdvancedDashboardController::class, 'expenseBreakdown'])
     ->name('dashboard.analytics.expense-breakdown');
 
-Route::get('/analytics/inventory-turnover', [DashboardApiController::class, 'inventoryTurnover'])
+Route::get('/analytics/inventory-turnover', [AdvancedDashboardController::class, 'inventoryTurnover'])
     ->name('dashboard.analytics.inventory-turnover');
 
-Route::get('/analytics/profit-margins', [DashboardApiController::class, 'profitMargins'])
+Route::get('/analytics/profit-margins', [AdvancedDashboardController::class, 'profitMargins'])
     ->name('dashboard.analytics.profit-margins');
 
 // KPIs (Key Performance Indicators)
@@ -93,6 +93,7 @@ Route::get('/export/summary', [DashboardApiController::class, 'exportSummary'])
 
 Route::get('/export/analytics', [DashboardApiController::class, 'exportAnalytics'])
     ->name('dashboard.export.analytics');
+*/
 
 /*
 |--------------------------------------------------------------------------
