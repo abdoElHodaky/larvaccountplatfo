@@ -1,6 +1,7 @@
 import { defineConfig } from 'vite';
 import laravel from 'laravel-vite-plugin';
 import react from '@vitejs/plugin-react';
+import checker from 'vite-plugin-checker';
 import { resolve } from 'path';
 
 export default defineConfig({
@@ -14,6 +15,14 @@ export default defineConfig({
             refresh: true,
         }),
         react(),
+        checker({
+        typescript: true, // Enables tsc checking in browser overlay & terminal
+        overlay: {
+          initialIsOpen: true, // Opens the browser overlay automatically on error
+          position: 'tr',      // 'tr' (top-right), 'tl', 'br', or 'bl'
+         },
+      }),
+        
     ],
     resolve: {
         alias: {
