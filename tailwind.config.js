@@ -8,29 +8,22 @@ export default {
         './vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php',
         './storage/framework/views/*.php',
         './resources/views/**/*.blade.php',
-        './resources/js/**/*.tsx',
-        './resources/js/**/*.ts',
+        './resources/js/**/*.{ts,tsx,js,jsx}',
     ],
     
-    // Prevent conflicts with Chakra UI
+    // Disable Tailwind's Preflight CSS reset to prevent resetting Chakra UI's CSS baseline
     corePlugins: {
-        preflight: false, // Disable Tailwind's base styles to avoid conflicts with Chakra UI
+        preflight: false,
     },
     
-    // Safelist Chakra UI classes to prevent purging
+    // Safelist only explicit dynamic patterns required by custom components
     safelist: [
-        // Chakra UI class patterns
-        { pattern: /^chakra-.*/ },
-        { pattern: /^css-.*/ },
-        // Emotion class patterns (used by Chakra UI)
-        { pattern: /^emotion-.*/ },
-        // Common Chakra UI utility patterns
-        { pattern: /^(bg|text|border|shadow|rounded|p|m|w|h|flex|grid)-.*/ },
-        // Phase 5: LiveIcons patterns
-        { pattern: /^(primary|secondary|success|warning|danger|gray)-(50|100|200|300|400|500|600|700|800|900|950)$/ },
-        { pattern: /^(w|h)-(3|4|5|6|8)$/ },
+        // LiveIcons dynamic color & animation classes
+        { 
+            pattern: /^(primary|secondary|success|warning|danger|gray)-(50|100|200|300|400|500|600|700|800|900|950)$/,
+            variants: ['hover'],
+        },
         { pattern: /^animate-(icon-bounce|icon-pulse|icon-rotate|icon-shake|icon-float)$/ },
-        { pattern: /^(hover:)?(text|bg)-(primary|secondary|success|warning|danger|gray)-(500|600|700)$/ },
     ],
 
     theme: {
@@ -113,7 +106,6 @@ export default {
                 'fade-in': 'fadeIn 0.5s ease-in-out',
                 'slide-in': 'slideIn 0.3s ease-out',
                 'bounce-in': 'bounceIn 0.6s ease-out',
-                // Phase 5: LiveIcons animations
                 'icon-bounce': 'iconBounce 0.3s ease-out',
                 'icon-pulse': 'iconPulse 0.6s ease-in-out infinite',
                 'icon-rotate': 'iconRotate 0.5s ease-in-out',
@@ -135,7 +127,6 @@ export default {
                     '70%': { transform: 'scale(0.9)' },
                     '100%': { transform: 'scale(1)', opacity: '1' },
                 },
-                // Phase 5: LiveIcons keyframes
                 iconBounce: {
                     '0%, 100%': { transform: 'scale(1)' },
                     '50%': { transform: 'scale(1.2)' },
