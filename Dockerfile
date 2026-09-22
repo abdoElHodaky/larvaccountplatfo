@@ -1,8 +1,9 @@
 #FROM spacetabio/roadrunner-alpine:8.2-base-1.11.0
 FROM shinsenter/roadrunner:php8.3-alpine
-RUN apk add -U --no-cache nghttp2-dev nodejs npm unzip tzdata
+RUN apk add -U --no-cache nghttp2-dev nodejs npm unzip  sqlite tzdata
+COPY --from=mlocati/php-extension-installer /usr/bin/install-php-extensions /usr/local/bin/
 COPY --from=composer:latest /usr/bin/composer /usr/local/bin/composer
-#RUN docker-php-ext-install bcmath 
+RUN install-php-extensions pdo_sqlite sqlite3 redis 
 COPY . /var/www/html
 WORKDIR /var/www/html
 
