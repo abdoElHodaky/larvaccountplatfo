@@ -27,6 +27,7 @@ export default defineConfig({
             '@/shared': resolve(__dirname, 'resources/js/shared'),
             '@/features': resolve(__dirname, 'resources/js/features'),
             '@/app': resolve(__dirname, 'resources/js/app'),
+            'ziggy-js': resolve('vendor/tightenco/ziggy'),
         },
     },
     define: {
