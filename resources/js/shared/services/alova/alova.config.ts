@@ -1,5 +1,5 @@
 import { createAlova } from 'alova';
-import ReactHook from 'alova/react';
+import ReactHook from 'alova/client';
 import adapterFetch from 'alova/fetch';
 
 /**

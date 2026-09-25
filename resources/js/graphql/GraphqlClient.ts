@@ -1,6 +1,6 @@
 import { createAlova } from 'alova';
 import adapterFetch from 'alova/fetch';
-import ReactHook from 'alova/react';
+import ReactHook from 'alova/client';
 
 // Simplified GraphQL client with Alova.js
 export const graphqlClient = createAlova({

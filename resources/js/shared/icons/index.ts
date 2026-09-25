@@ -3,65 +3,153 @@
  * Centralized icon system with improved performance and simplified naming
  */
 
-// Export everything from the new unified system
-export * from './NavConnectionIcon';
-
 // Re-export types for convenience
 export type { IconProps, IconCategory, IconRegistryEntry } from './ICONSIZES';
 
 // Legacy type alias for backward compatibility
 export type LiveIconProps = IconProps;
 
-// Re-export utilities
-export { 
-  createLiveIcon, 
-  DynamicIcon, 
+// Re-export core icon creation utilities from CreateLiveIcon
+export {
+  createLiveIcon,
+  DynamicIcon,
   preloadIcons,
   iconExists,
   getIconSuggestions,
-  iconRegistry
-} from './NavConnectionIcon';
+  iconRegistry,
+  createIconPerformanceMonitor
+} from './CreateLiveIcon';
 
-// Legacy compatibility exports (deprecated - use new naming convention)
-/** @deprecated Use NavHomeIcon instead */
-export { NavHomeIcon as LiveHomeIcon } from './NavConnectionIcon';
-/** @deprecated Use NavLeftIcon instead */
-export { NavLeftIcon as LiveChevronLeftIcon } from './NavConnectionIcon';
-/** @deprecated Use NavRightIcon instead */
-export { NavRightIcon as LiveChevronRightIcon } from './NavConnectionIcon';
-/** @deprecated Use NavUpIcon instead */
-export { NavUpIcon as LiveChevronUpIcon } from './NavConnectionIcon';
-/** @deprecated Use NavDownIcon instead */
-export { NavDownIcon as LiveChevronDownIcon } from './NavConnectionIcon';
-/** @deprecated Use NavBackIcon instead */
-export { NavBackIcon as LiveArrowLeftIcon } from './NavConnectionIcon';
-/** @deprecated Use NavForwardIcon instead */
-export { NavForwardIcon as LiveArrowRightIcon } from './NavConnectionIcon';
+// Re-export icon sets from NavIcons.ts (the source of truth)
+export { NavIcons, ActionIcons, FormIcons, StatusIcons } from './NavIcons';
 
-// Additional legacy exports for dialog components
-export { LiveXMarkIcon } from './FormConnectionIcon';
-export { LiveInfoIcon } from './StatusConnectionIcon';
-export { LiveWarningIcon } from './StatusConnectionIcon';
-export { LiveErrorIcon } from './StatusConnectionIcon';
-export { LiveSuccessIcon } from './StatusConnectionIcon';
+// Individual icon exports for tree-shaking (from NavIcons.ts)
+// Navigation Icons
+export {
+  NavHomeIcon,
+  NavBackIcon,
+  NavForwardIcon,
+  NavUpIcon,
+  NavDownIcon,
+  NavLeftIcon,
+  NavRightIcon,
+  NavMenuIcon,
+  NavCloseIcon
+} from './NavIcons';
 
-// Status icons
-export { StatusIndicator, ConnectionStatus, BatteryStatus, ProgressStatus } from './StatusConnectionIcon';
+// Action Icons (from ActionAnimations.tsx)
+export {
+  ActionEditIcon,
+  ActionDeleteIcon,
+  ActionCopyIcon,
+  ActionShareIcon,
+  ActionDownloadIcon,
+  ActionUploadIcon,
+  ActionAddIcon,
+  ActionViewIcon,
+  ActionSettingsIcon,
+  LiveEditIcon,
+  LiveDeleteIcon,
+  LiveShareIcon
+} from './ActionAnimations';
 
-// Navigation icons
-export { LiveMenuToggleIcon, LiveBackIcon } from './NavigationConnectionIcon';
+// Form Icons (from FormAnimations.tsx)
+export {
+  FormSearchIcon,
+  FormFilterIcon,
+  FormCalendarIcon,
+  FormClockIcon,
+  FormUserIcon,
+  FormEmailIcon,
+  ValidationIcon,
+  PasswordToggleIcon,
+  SearchInputIcon,
+  AddRemoveIcon
+} from './FormAnimations';
 
-// Form icons
-export { ValidationIcon, PasswordToggleIcon, SearchInputIcon, AddRemoveIcon } from './FormConnectionIcon';
+// Status Icons (from StatusAnimations.tsx)
+export {
+  StatusSuccessIcon,
+  StatusErrorIcon,
+  StatusWarningIcon,
+  StatusInfoIcon,
+  StatusLoadingIcon,
+  StatusChartIcon,
+  StatusDocumentIcon,
+  StatusBankIcon,
+  StatusBoxIcon,
+  StatusTrendUpIcon,
+  StatusTrendDownIcon,
+  StatusTrendRightIcon,
+  StatusFreeIcon,
+  StatusBusinessIcon,
+  StatusEnterpriseIcon,
+  StatusWaveIcon
+} from './StatusAnimations';
 
-// Action icons
-export { LikeIcon, BookmarkIcon, StarRating, ThumbsVote, SendIcon, ActionButton } from './ActionConnectionIcon';
-export { LiveEditIcon, LiveDeleteIcon, LiveShareIcon } from './ActionConnectionIcon';
+// Convenience aliases for common icons (backward compatibility)
+export { HomeIcon } from './NavIcons';
+export { BackIcon } from './NavIcons';
+export { EditIcon } from './ActionAnimations';
+export { DeleteIcon } from './ActionAnimations';
+export { AddIcon } from './ActionAnimations';
+export { SearchIcon } from './FormAnimations';
+export { LoadingIcon } from './StatusAnimations';
+export { SuccessIcon } from './StatusAnimations';
+export { ErrorIcon } from './StatusAnimations';
 
 // Constants for backward compatibility
-/** @deprecated Use ICON_SIZES from './ICONSIZES' instead */
-export { ICON_SIZES as iconSizes } from './ICONSIZES';
-/** @deprecated Use ICON_COLORS from './ICONSIZES' instead */
-export { ICON_COLORS as iconColors } from './ICONSIZES';
-/** @deprecated Use ICON_ANIMATIONS from './ICONSIZES' instead */
-export { ICON_ANIMATIONS as iconAnimations } from './ICONSIZES';
+export { ICON_SIZES, ICON_COLORS, ICON_ANIMATIONS } from './ICONSIZES';
+
+// Type exports (already exported above, but keep for clarity if needed)
+// export type { IconProps, IconCategory, IconRegistryEntry } from './ICONSIZES';
+
+// All available icons map for dynamic access
+export const ALL_ICONS = {
+  // Navigation
+  'nav-home': NavHomeIcon,
+  'nav-back': NavBackIcon,
+  'nav-forward': NavForwardIcon,
+  'nav-up': NavUpIcon,
+  'nav-down': NavDownIcon,
+  'nav-left': NavLeftIcon,
+  'nav-right': NavRightIcon,
+  'nav-menu': NavMenuIcon,
+  'nav-close': NavCloseIcon,
+
+  // Actions
+  'action-edit': ActionEditIcon,
+  'action-delete': ActionDeleteIcon,
+  'action-copy': ActionCopyIcon,
+  'action-share': ActionShareIcon,
+  'action-download': ActionDownloadIcon,
+  'action-upload': ActionUploadIcon,
+  'action-add': ActionAddIcon,
+  'action-view': ActionViewIcon,
+  'action-settings': ActionSettingsIcon,
+
+  // Forms
+  'form-search': FormSearchIcon,
+  'form-filter': FormFilterIcon,
+  'form-calendar': FormCalendarIcon,
+  'form-clock': FormClockIcon,
+  'form-user': FormUserIcon,
+  'form-email': FormEmailIcon,
+
+  // Status
+  'status-success': StatusSuccessIcon,
+  'status-error': StatusErrorIcon,
+  'status-warning': StatusWarningIcon,
+  'status-info': StatusInfoIcon,
+  'status-loading': StatusLoadingIcon
+} as const;
+
+// Helper function to get icon by name
+export const getIcon = (iconName: keyof typeof ALL_ICONS) => {
+  return ALL_ICONS[iconName];
+};
+
+// Helper function to check if icon exists
+export const hasIcon = (iconName: string): iconName is keyof typeof ALL_ICONS => {
+  return iconName in ALL_ICONS;
+};

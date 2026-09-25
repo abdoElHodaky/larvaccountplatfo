@@ -1,4 +1,4 @@
-import { useRequest } from 'alova/react';
+import { useRequest } from 'alova/client';
 import { 
   createGraphQLQuery, 
   createGraphQLMutation,

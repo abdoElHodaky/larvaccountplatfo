@@ -1,6 +1,5 @@
 import { useState, useCallback } from 'react';
 import { useQuery, useMutation, useSubscription } from '@apollo/client';
-import { GET_DASHBOARD_METRICS, GET_REALTIME_UPDATES, graphqlClient, createGraphQLQuery, createGraphQLMutation } from '@/core/graphql/GETDASHBOARDMETRICS';
 import { DocumentNode } from 'graphql';
 
 /**

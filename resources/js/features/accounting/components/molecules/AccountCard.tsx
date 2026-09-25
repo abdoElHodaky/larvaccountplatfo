@@ -33,18 +33,18 @@ export const AccountCard: React.FC<AccountCardProps> = memo(({
   const hoverBg = useColorModeValue('gray.50', 'gray.700');
   
   // Memoized formatted values to prevent recalculation
-  const formattedBalance = useMemo(() => 
-    FinancialPerformanceUtils.formatCurrency(account.balance, account.currency),
+  const formattedBalance = useMemo(() =>
+    FinancialPerformanceUtils.formatCurrency(account.balance ?? 0, account.currency ?? 'USD'),
     [account.balance, account.currency]
   );
 
-  const formattedChange = useMemo(() => 
-    FinancialPerformanceUtils.formatCurrency(Math.abs(account.change), account.currency),
+  const formattedChange = useMemo(() =>
+    FinancialPerformanceUtils.formatCurrency(Math.abs(account.change ?? 0), account.currency ?? 'USD'),
     [account.change, account.currency]
   );
 
-  const formattedChangePercent = useMemo(() => 
-    FinancialPerformanceUtils.formatPercentage(Math.abs(account.changePercent)),
+  const formattedChangePercent = useMemo(() =>
+    FinancialPerformanceUtils.formatPercentage(Math.abs(account.changePercent ?? 0)),
     [account.changePercent]
   );
 

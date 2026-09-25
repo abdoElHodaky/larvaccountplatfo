@@ -17,7 +17,7 @@ import { GraphQLWsLink } from '@apollo/client/link/subscriptions';
 import { createClient } from 'graphql-ws';
 import { createAlova } from 'alova';
 import adapterFetch from 'alova/fetch';
-import ReactHook from 'alova/react';
+import ReactHook from 'alova/client';
 
 // Types
 interface GraphQLConfig {

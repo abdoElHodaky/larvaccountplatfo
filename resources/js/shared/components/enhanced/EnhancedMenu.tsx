@@ -6,16 +6,14 @@
 import React, { Fragment } from 'react';
 import { Menu, Transition } from '@headlessui/react';
 
-import { 
-  LiveChevronDownIcon, 
-  type LiveIconProps 
+import {
+  LiveChevronDownIcon,
+  type LiveIconProps,
+  LiveEditIcon,
+  LiveCopyIcon,
+  LiveShareIcon,
+  LiveDeleteIcon
 } from '../../icons';
-import { 
-  LiveEditIcon, 
-  LiveCopyIcon, 
-  LiveShareIcon, 
-  LiveDeleteIcon 
-} from '../../icons/ActionConnectionIcon';
 
 interface MenuItem {
   label: string;

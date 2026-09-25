@@ -64,24 +64,26 @@
         "spiral/roadrunner": "^2025.1",
         "spiral/roadrunner-cli": "^2.7",
         "spiral/roadrunner-http": "^4.1",
+        "symfony/console": "<7.4",
         "tightenco/ziggy": "^2.6"
     },
     "require-dev": {
+        "barryvdh/laravel-debugbar": "^3.9",
+        "barryvdh/laravel-ide-helper": "^3.0",
+        "beyondcode/laravel-dump-server": "^2.0",
         "fakerphp/faker": "^1.23",
+        "filp/whoops": "^2.15",
+        "friendsofphp/php-cs-fixer": "^3.48",
+        "larastan/larastan": "^2.8",
+        "laravel/boost": "^2.10",
         "laravel/pint": "^1.13",
         "laravel/sail": "^1.26",
         "mockery/mockery": "^1.6",
         "nunomaduro/collision": "^8.0",
-        "phpunit/phpunit": "^11.0",
-        "spatie/laravel-ignition": "^2.4",
-        "barryvdh/laravel-debugbar": "^3.9",
-        "barryvdh/laravel-ide-helper": "^3.0",
-        "beyondcode/laravel-dump-server": "^2.0",
-        "filp/whoops": "^2.15",
-        "friendsofphp/php-cs-fixer": "^3.48",
-        "larastan/larastan": "^2.8",
         "pestphp/pest": "^3.0",
-        "pestphp/pest-plugin-laravel": "^3.0"
+        "pestphp/pest-plugin-laravel": "^3.0",
+        "phpunit/phpunit": "^11.0",
+        "spatie/laravel-ignition": "^2.4"
     },
     "autoload": {
         "psr-4": {
@@ -176,6 +178,11 @@
         "allow-plugins": {
             "pestphp/pest-plugin": true,
             "php-http/discovery": true
+        },
+        "policy": {
+            "advisories": {
+                "block": false
+            }
         }
     },
     "minimum-stability": "stable",
