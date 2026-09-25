@@ -3,7 +3,8 @@
  * Domain-specific state management for accounting features
  */
 
-import { createModel } from '@rematch/PATTERNS';
+// Rematch model creation - using any for PATTERNS since types are not available
+import { createModel } from '@rematch/core';
 import { accountingApi } from '../services/accountingApi';
 
 // Types
@@ -124,148 +125,148 @@ export const accountingModel = createModel()({
   
   reducers: {
     // Loading states
-    setAccountsLoading: (state, payload: boolean) => ({
+    setAccountsLoading: (state: AccountingState, payload: boolean) => ({
       ...state,
       accountsLoading: payload,
     }),
-    
-    setTransactionsLoading: (state, payload: boolean) => ({
+
+    setTransactionsLoading: (state: AccountingState, payload: boolean) => ({
       ...state,
       transactionsLoading: payload,
     }),
-    
-    setJournalEntriesLoading: (state, payload: boolean) => ({
+
+    setJournalEntriesLoading: (state: AccountingState, payload: boolean) => ({
       ...state,
       journalEntriesLoading: payload,
     }),
-    
+
     // Error handling
-    setError: (state, payload: string | null) => ({
+    setError: (state: AccountingState, payload: string | null) => ({
       ...state,
       error: payload,
     }),
-    
-    clearError: (state) => ({
+
+    clearError: (state: AccountingState) => ({
       ...state,
       error: null,
     }),
     
     // Accounts
-    setAccounts: (state, payload: Account[]) => ({
+    setAccounts: (state: AccountingState, payload: Account[]) => ({
       ...state,
       accounts: payload,
       accountsLoading: false,
     }),
-    
-    addAccount: (state, payload: Account) => ({
+
+    addAccount: (state: AccountingState, payload: Account) => ({
       ...state,
       accounts: [...state.accounts, payload],
     }),
     
-    updateAccount: (state, payload: Account) => ({
+    updateAccount: (state: AccountingState, payload: Account) => ({
       ...state,
       accounts: state.accounts.map(account =>
         account.id === payload.id ? payload : account
       ),
       selectedAccount: state.selectedAccount?.id === payload.id ? payload : state.selectedAccount,
     }),
-    
-    removeAccount: (state, payload: string) => ({
+
+    removeAccount: (state: AccountingState, payload: string) => ({
       ...state,
       accounts: state.accounts.filter(account => account.id !== payload),
       selectedAccount: state.selectedAccount?.id === payload ? null : state.selectedAccount,
     }),
     
-    setSelectedAccount: (state, payload: Account | null) => ({
+    setSelectedAccount: (state: AccountingState, payload: Account | null) => ({
       ...state,
       selectedAccount: payload,
     }),
     
     // Transactions
-    setTransactions: (state, payload: Transaction[]) => ({
+    setTransactions: (state: AccountingState, payload: Transaction[]) => ({
       ...state,
       transactions: payload,
       transactionsLoading: false,
     }),
-    
-    addTransaction: (state, payload: Transaction) => ({
+
+    addTransaction: (state: AccountingState, payload: Transaction) => ({
       ...state,
       transactions: [...state.transactions, payload],
     }),
-    
-    updateTransaction: (state, payload: Transaction) => ({
+
+    updateTransaction: (state: AccountingState, payload: Transaction) => ({
       ...state,
       transactions: state.transactions.map(transaction =>
         transaction.id === payload.id ? payload : transaction
       ),
       selectedTransaction: state.selectedTransaction?.id === payload.id ? payload : state.selectedTransaction,
     }),
-    
-    removeTransaction: (state, payload: string) => ({
+
+    removeTransaction: (state: AccountingState, payload: string) => ({
       ...state,
       transactions: state.transactions.filter(transaction => transaction.id !== payload),
       selectedTransaction: state.selectedTransaction?.id === payload ? null : state.selectedTransaction,
     }),
-    
-    setSelectedTransaction: (state, payload: Transaction | null) => ({
+
+    setSelectedTransaction: (state: AccountingState, payload: Transaction | null) => ({
       ...state,
       selectedTransaction: payload,
     }),
     
     // Journal Entries
-    setJournalEntries: (state, payload: JournalEntry[]) => ({
+    setJournalEntries: (state: AccountingState, payload: JournalEntry[]) => ({
       ...state,
       journalEntries: payload,
       journalEntriesLoading: false,
     }),
     
-    addJournalEntry: (state, payload: JournalEntry) => ({
+    addJournalEntry: (state: AccountingState, payload: JournalEntry) => ({
       ...state,
       journalEntries: [...state.journalEntries, payload],
     }),
-    
-    updateJournalEntry: (state, payload: JournalEntry) => ({
+
+    updateJournalEntry: (state: AccountingState, payload: JournalEntry) => ({
       ...state,
       journalEntries: state.journalEntries.map(entry =>
         entry.id === payload.id ? payload : entry
       ),
       selectedJournalEntry: state.selectedJournalEntry?.id === payload.id ? payload : state.selectedJournalEntry,
     }),
-    
-    removeJournalEntry: (state, payload: string) => ({
+
+    removeJournalEntry: (state: AccountingState, payload: string) => ({
       ...state,
       journalEntries: state.journalEntries.filter(entry => entry.id !== payload),
       selectedJournalEntry: state.selectedJournalEntry?.id === payload ? null : state.selectedJournalEntry,
     }),
-    
-    setSelectedJournalEntry: (state, payload: JournalEntry | null) => ({
+
+    setSelectedJournalEntry: (state: AccountingState, payload: JournalEntry | null) => ({
       ...state,
       selectedJournalEntry: payload,
     }),
     
     // Filters and UI
-    updateFilters: (state, payload: Partial<AccountingFilters>) => ({
+    updateFilters: (state: AccountingState, payload: Partial<AccountingFilters>) => ({
       ...state,
       filters: { ...state.filters, ...payload },
     }),
-    
-    resetFilters: (state) => ({
+
+    resetFilters: (state: AccountingState) => ({
       ...state,
       filters: initialFilters,
     }),
-    
-    setCurrentView: (state, payload: AccountingState['currentView']) => ({
+
+    setCurrentView: (state: AccountingState, payload: AccountingState['currentView']) => ({
       ...state,
       currentView: payload,
     }),
     
     // Bulk operations
-    bulkUpdateAccounts: (state, payload: Account[]) => ({
+    bulkUpdateAccounts: (state: AccountingState, payload: Account[]) => ({
       ...state,
       accounts: payload,
     }),
-    
-    bulkUpdateTransactions: (state, payload: Transaction[]) => ({
+
+    bulkUpdateTransactions: (state: AccountingState, payload: Transaction[]) => ({
       ...state,
       transactions: payload,
     }),
@@ -276,7 +277,7 @@ export const accountingModel = createModel()({
     async fetchAccounts(filters?: Partial<AccountingFilters>) {
       dispatch.accounting.setAccountsLoading(true);
       dispatch.accounting.clearError();
-      
+
       try {
         const response = await accountingApi.getAccounts(filters);
         dispatch.accounting.setAccounts(response.data);
@@ -310,7 +311,7 @@ export const accountingModel = createModel()({
         
         // Mock implementation
         const state = this.getState() as any;
-        const existingAccount = state.accounting.accounts.find((a: any) => a.id === payload.id);
+        const existingAccount = state.accounting.accounts.find((a) => a.id === payload.id);
         if (existingAccount) {
           const updatedAccount = {
             ...existingAccount,

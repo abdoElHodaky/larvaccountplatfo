@@ -289,7 +289,7 @@ export const BalanceSheet: React.FC<BalanceSheetProps> = memo(({
       <HStack spacing={4} wrap="wrap">
         <Select
           value={viewMode}
-          onChange={(e) => setViewMode(e.target.value as 'detailed' | 'summary')}
+          onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setViewMode(e.target.value as 'detailed' | 'summary')}
           size="sm"
           maxW="150px"
         >
@@ -299,7 +299,7 @@ export const BalanceSheet: React.FC<BalanceSheetProps> = memo(({
 
         <Select
           value={sortBy}
-          onChange={(e) => setSortBy(e.target.value as 'name' | 'amount' | 'percentage')}
+          onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setSortBy(e.target.value as 'name' | 'amount' | 'percentage')}
           size="sm"
           maxW="150px"
         >

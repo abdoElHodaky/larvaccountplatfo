@@ -1,6 +1,6 @@
 import { DocumentHead } from '@/shared/components/seo/DocumentHead';
 import AppLayout from '@/shared/components/layouts/AppLayout';
-import { formatCurrency, formatDate } from '@/shared/CreateLiveIcon';
+import { formatCurrency, formatDate } from '@/shared/icons/CreateLiveIcon';
 import { Account, Transaction } from '../ICONSIZES';
 
 interface DashboardProps {

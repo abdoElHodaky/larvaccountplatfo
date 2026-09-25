@@ -228,7 +228,7 @@ export const TrialBalance: React.FC<TrialBalanceProps> = memo(({
       <HStack spacing={4} wrap="wrap">
         <Select
           value={filterType}
-          onChange={(e) => setFilterType(e.target.value)}
+          onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setFilterType(e.target.value)}
           size="sm"
           maxW="200px"
         >
@@ -243,7 +243,7 @@ export const TrialBalance: React.FC<TrialBalanceProps> = memo(({
         <Input
           placeholder="Search accounts..."
           value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSearchTerm(e.target.value)}
           size="sm"
           maxW="300px"
         />

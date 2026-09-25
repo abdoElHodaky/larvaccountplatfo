@@ -47,10 +47,15 @@ export interface Account extends BaseEntity, OrganizationScoped, Auditable, Hier
   bankAccountNumber?: string;
   taxCode?: string;
   notes?: string;
+  // Financial performance fields for display
+  change?: number;
+  changePercent?: number;
+  currency?: string;
+  lastUpdated?: string;
 }
 
 // Account form data for creating/editing accounts
-export interface AccountFormData extends Omit<Account, 'id' | 'createdAt' | 'updatedAt' | 'balance'> {
+export interface AccountFormData extends Omit<Account, 'id' | 'createdAt' | 'updatedAt' | 'balance' | 'organizationId' | 'createdBy' | 'updatedBy'> {
   initialBalance?: number;
 }
 
@@ -367,6 +372,7 @@ export interface ReconciliationAdjustment {
 // Component Props Interfaces
 export interface AccountFormProps {
   account?: Account;
+  accounts: Account[];
   onSubmit: (data: AccountFormData) => Promise<void>;
   onCancel: () => void;
   loading?: boolean;
@@ -380,6 +386,7 @@ export interface AccountCardProps {
   onEdit?: (account: Account) => void;
   onDelete?: (id: number) => void;
   onView?: (account: Account) => void;
+  onClick?: (account: Account) => void;
   className?: string;
 }
 

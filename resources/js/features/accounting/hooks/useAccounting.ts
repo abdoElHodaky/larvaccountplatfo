@@ -148,21 +148,21 @@ export const useAccountingStats = () => {
   // Compute statistics from current data
   const stats = {
     totalAccounts: accounts.length,
-    activeAccounts: accounts.filter(a => a.isActive).length,
+    activeAccounts: accounts.filter((a: Account) => a.isActive).length,
     totalTransactions: transactions.length,
-    reconciledTransactions: transactions.filter(t => t.reconciled).length,
+    reconciledTransactions: transactions.filter((t: Transaction) => t.reconciled).length,
     
     // Account type breakdown
-    accountsByType: accounts.reduce((acc, account) => {
+    accountsByType: accounts.reduce<Record<string, number>>((acc: Record<string, number>, account: Account) => {
       acc[account.type] = (acc[account.type] || 0) + 1;
       return acc;
-    }, {} as Record<string, number>),
-    
+    }, {}),
+
     // Balance totals by account type
-    balancesByType: accounts.reduce((acc, account) => {
+    balancesByType: accounts.reduce<Record<string, number>>((acc: Record<string, number>, account: Account) => {
       acc[account.type] = (acc[account.type] || 0) + account.balance;
       return acc;
-    }, {} as Record<string, number>),
+    }, {}),
   };
   
   return stats;

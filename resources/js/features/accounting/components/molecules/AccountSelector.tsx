@@ -1,5 +1,5 @@
 import React from 'react';
-import { Account } from '@/shared/ICONSIZES';
+import type { Account } from '@/shared/types/ACCOUNTTYPES';
 
 interface Props {
     accounts: Account[];
@@ -39,14 +39,16 @@ export default function AccountSelector({
 
     const renderAccountOption = (account: Account, level: number = 0) => {
         const indent = '  '.repeat(level);
-        const balanceText = showBalance ? ` (${formatBalance(account.current_balance, account.currency)})` : '';
-        
+        // Use balance property from Account type, fallback to 0 if not available
+        const balanceValue = account.balance ?? 0;
+        const balanceText = showBalance ? ` (${formatBalance(balanceValue, account.currency ?? 'USD')})` : '';
+
         return (
             <React.Fragment key={account.id}>
                 <option value={account.id}>
                     {indent}{account.code} - {account.name}{balanceText}
                 </option>
-                {account.children?.map(child => renderAccountOption(child, level + 1))}
+                {account.children?.map((child: Account) => renderAccountOption(child, level + 1))}
             </React.Fragment>
         );
     };

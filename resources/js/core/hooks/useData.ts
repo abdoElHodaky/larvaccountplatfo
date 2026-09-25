@@ -1,5 +1,6 @@
 import { useState, useCallback } from 'react';
-import { useQuery, useMutation, useSubscription } from '@apollo/GETDASHBOARDMETRICS';
+import { useQuery, useMutation, useSubscription } from '@apollo/client';
+import { GET_DASHBOARD_METRICS, GET_REALTIME_UPDATES, graphqlClient, createGraphQLQuery, createGraphQLMutation } from '@/core/graphql/GETDASHBOARDMETRICS';
 import { DocumentNode } from 'graphql';
 
 /**
@@ -246,7 +247,7 @@ export function usePaginatedData<T = any>(
   }, [currentPage]);
 
   // Extract pagination info from data
-  const paginationInfo = queryResult.data?.pagination || {};
+  const paginationInfo = (queryResult.data as { pagination: any } | null)?.pagination || {};
   const hasNextPage = paginationInfo.hasNextPage || false;
   const hasPreviousPage = currentPage > 1;
   const totalPages = paginationInfo.totalPages || 1;

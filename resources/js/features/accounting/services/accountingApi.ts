@@ -203,7 +203,7 @@ export class AccountingApiService {
       const { data } = await apolloClient.mutate({
         mutation: CREATE_ACCOUNT,
         variables: { input: accountData },
-        update: (cache, { data: mutationData }) => {
+        update: (cache: any, { data: mutationData }) => {
           // Update cache with new account
           const existingAccounts = cache.readQuery({ query: GET_ACCOUNTS });
           if (existingAccounts) {
@@ -233,7 +233,7 @@ export class AccountingApiService {
       const { data } = await apolloClient.mutate({
         mutation: UPDATE_ACCOUNT,
         variables: { id, input: accountData },
-        update: (cache, { data: mutationData }) => {
+        update: (cache: any, { data: mutationData }) => {
           // Update cache
           cache.modify({
             id: cache.identify({ __typename: 'Account', id }),
@@ -260,7 +260,7 @@ export class AccountingApiService {
       const { data } = await apolloClient.mutate({
         mutation: DELETE_ACCOUNT,
         variables: { id },
-        update: (cache) => {
+        update: (cache: any) => {
           // Remove from cache
           cache.evict({ id: cache.identify({ __typename: 'Account', id }) });
           cache.gc();
@@ -321,7 +321,7 @@ export class AccountingApiService {
       const { data } = await apolloClient.mutate({
         mutation: CREATE_JOURNAL_ENTRY,
         variables: { input: entryData },
-        update: (cache, { data: mutationData }) => {
+        update: (cache: any, { data: mutationData }) => {
           // Update cache with new journal entry
           const existingEntries = cache.readQuery({ query: GET_JOURNAL_ENTRIES });
           if (existingEntries) {

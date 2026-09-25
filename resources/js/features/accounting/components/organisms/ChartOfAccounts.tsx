@@ -50,14 +50,14 @@ export const ChartOfAccounts: React.FC<ChartOfAccountsProps> = ({
     }
   };
 
-  const groupedAccounts = accounts.reduce((groups, account) => {
+  const groupedAccounts = accounts.reduce<Record<string, Account[]>>((groups, account: Account) => {
     const type = account.type;
     if (!groups[type]) {
       groups[type] = [];
     }
     groups[type].push(account);
     return groups;
-  }, {} as Record<string, Account[]>);
+  }, {});
 
   const accountTypeLabels = {
     asset: 'Assets',
@@ -141,12 +141,12 @@ export const ChartOfAccounts: React.FC<ChartOfAccountsProps> = ({
 
       {/* Account Groups */}
       <div className="divide-y divide-gray-200">
-        {Object.entries(groupedAccounts).map(([type, typeAccounts]) => (
+        {Object.entries(groupedAccounts).map(([type, typeAccounts]: [string, Account[]]) => (
           <div key={type} className="p-6">
             <h3 className="text-base font-medium text-gray-900 mb-4">
               {accountTypeLabels[type as keyof typeof accountTypeLabels]} ({typeAccounts.length})
             </h3>
-            
+
             <div className="space-y-2">
               {typeAccounts.map((account) => (
                 <div

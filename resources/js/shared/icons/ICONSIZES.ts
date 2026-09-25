@@ -90,3 +90,8 @@ export const ICON_ANIMATIONS = {
     { transform: 'translateX(0)' }
   ] as Keyframe[]
 };
+
+// Export the icon registry
+export const iconRegistry: IconRegistry = {
+  // This would normally be populated with actual icon components
+};

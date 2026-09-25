@@ -40,8 +40,8 @@ const resolvePageWithPreload = (name: string) => {
   // Add preload hints for likely next pages
   const preloadHints = getPreloadHints(name);
   
-  return component.then(module => ({
-    ...module,
+  return component.then((module) => ({
+    ...(module as Record<string, any>),
     preloadHints,
   }));
 };
