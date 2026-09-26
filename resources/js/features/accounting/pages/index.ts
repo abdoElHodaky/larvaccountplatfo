@@ -9,15 +9,15 @@
 export { default as Dashboard } from './Dashboard';
 
 // Account pages
-export { default as AccountsIndex } from './Accounts';
+export { default as AccountsIndex } from './Accounts/AccountsIndex';
 export { default as AccountsCreate } from './Accounts/CreateAccount';
 export { default as AccountsShow } from './Accounts/ShowAccount';
 
 // Transaction pages
-export { default as TransactionsIndex } from './Transactions';
+export { default as TransactionsIndex } = './Transactions/TransactionsIndex';
 
 // Journal Entry pages
-export { default as JournalEntriesIndex } from './JournalEntries';
+export { default as JournalEntriesIndex } = './JournalEntries/JournalEntriesIndex';
 
 // Journal Entries Page
-export { default as JournalEntriesPage } from './JournalEntriesPage';
+export { default as JournalEntriesPage } = './JournalEntriesPage';
