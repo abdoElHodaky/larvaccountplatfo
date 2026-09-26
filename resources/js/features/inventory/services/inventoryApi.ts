@@ -6,7 +6,7 @@
 import { apolloClient } from '../../../shared/services/graphql/apolloClient';
 import { gql } from '@apollo/client';
 import type { InventoryItem, StockMovement, InventoryFilters } from '../stores/inventoryModel';
-import type { ApiResponse } from '../../accounting/services/accountingApi';
+import type { ApiResponse, PaginatedResponse } from '@/shared/types';
 
 // GraphQL Queries
 const GET_INVENTORY_ITEMS = gql`

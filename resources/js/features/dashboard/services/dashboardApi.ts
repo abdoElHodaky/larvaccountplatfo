@@ -7,7 +7,7 @@ import { apolloClient } from '../../../shared/services/graphql/apolloClient';
 import { gql } from '@apollo/client';
 import { log } from '../../../shared/utils/logger';
 import type { DashboardLayout, Widget, MetricData, ChartData, DashboardFilters } from '../stores/dashboardModel';
-import type { ApiResponse } from '../../accounting/services/accountingApi';
+import type { ApiResponse } from '@/shared/types';
 
 // GraphQL Queries
 const GET_DASHBOARD_LAYOUTS = gql`

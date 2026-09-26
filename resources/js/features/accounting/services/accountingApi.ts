@@ -1,10 +1,11 @@
-import { apolloClient } from '@/shared/services/apolloClient';
-import type { ApiResponse } from '@/shared/types/apiResponse';
-import type { Account, AccountFormData } from '@/stores/accountingModel';
+import { apolloClient } from '@/shared/services/graphql/apolloClient';
+import type { ApiResponse } from '@/shared/types';
+import type { Account } from '../stores/accountingModel';
+import type { AccountingFilters } from '../stores/accountingModel';
 import { GET_ACCOUNTS, CREATE_ACCOUNT, UPDATE_ACCOUNT, DELETE_ACCOUNT } from './queries';
 
 export const accountingApi = {
-  async getAccounts(filters?: Partial<AccountFormData>): Promise<ApiResponse<Account[]>> {
+  async getAccounts(filters?: Partial<AccountingFilters>): Promise<ApiResponse<Account[]>> {
     try {
       const { data } = await apolloClient.query({
         query: GET_ACCOUNTS,
@@ -56,16 +57,25 @@ export const accountingApi = {
       const { data } = await apolloClient.mutate({
         mutation: UPDATE_ACCOUNT,
         variables: { id, input: accountData },
-        update: (cache: any, { data: mutationData }) => {
-          // Update cache
-          cache.modify({
-            id: cache.identify({ __typename: 'Account', id }),
-            fields: {
-              balance: () => accountData.balance ?? 0,
-              isActive: () => accountData.isActive ?? true,
-              // ... other fields
-            },
-          });
+        update: (cache: any, { data: mutationData }: { data: { updateAccount: Account } | null }) => {
+          const updatedAccount = mutationData?.updateAccount;
+          if (updatedAccount) {
+            // Update the cache by replacing the account in the GET_ACCOUNTS query result
+            const existingAccounts = cache.readQuery({ query: GET_ACCOUNTS });
+            if (existingAccounts) {
+              const accounts = (existingAccounts as any).accounts;
+              const index = accounts.findIndex((acc: Account) => acc.id === updatedAccount.id);
+              if (index !== -1) {
+                accounts[index] = updatedAccount;
+                cache.writeQuery({
+                  query: GET_ACCOUNTS,
+                  data: {
+                    accounts: accounts,
+                  },
+                });
+              }
+            }
+          }
         },
       });
 
@@ -98,6 +108,7 @@ export const accountingApi = {
 
       return {
         success: true,
+        data: undefined,
         message: 'Account deleted successfully',
       };
     } catch (error: any) {

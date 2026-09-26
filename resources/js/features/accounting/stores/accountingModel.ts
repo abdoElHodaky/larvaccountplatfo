@@ -316,7 +316,7 @@ export const accountingModel = createModel()({
 
         // Mock implementation
         const state = this.getState() as any;
-        const existingAccount = state.accounting.accounts.find((a) => a.id === payload.id);
+        const existingAccount = state.accounting.accounts.find((a: Account) => a.id === payload.id);
         if (existingAccount) {
           const updatedAccount = {
             ...existingAccount,

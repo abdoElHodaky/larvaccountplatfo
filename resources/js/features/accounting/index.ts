@@ -16,7 +16,7 @@ export type {
 
 // API exports
 export { accountingApi } from './services/accountingApi';
-export type { ApiResponse, PaginatedResponse } from './services/accountingApi';
+export type { ApiResponse, PaginatedResponse } from '@/shared/types';
 
 // Hook exports
 export {
