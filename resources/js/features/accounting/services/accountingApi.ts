@@ -26,14 +26,14 @@ export const accountingApi = {
       const { data } = await apolloClient.mutate({
         mutation: CREATE_ACCOUNT,
         variables: { input: accountData },
-        update: (cache: any, { data: mutationData }) => {
+        update: (cache: any, { data: mutationData }: { data: { createAccount: Account } | null }) => {
           // Update cache with new account
           const existingAccounts = cache.readQuery({ query: GET_ACCOUNTS });
           if (existingAccounts) {
             cache.writeQuery({
               query: GET_ACCOUNTS,
               data: {
-                accounts: [...(existingAccounts as any).accounts, mutationData.createAccount],
+                accounts: [...(existingAccounts as any).accounts, mutationData?.createAccount ?? []],
               },
             });
           }
@@ -46,8 +46,8 @@ export const accountingApi = {
         message: 'Account created successfully',
       };
     } catch (error: any) {
-      console.error('Failed to create account:', error);
-      throw new Error(error.message || 'Failed to create account');
+        console.error('Failed to create account:', error);
+        throw new Error(error.message || 'Failed to create account');
     }
   },
 
@@ -75,8 +75,8 @@ export const accountingApi = {
         message: 'Account updated successfully',
       };
     } catch (error: any) {
-      console.error('Failed to update account:', error);
-      throw new Error(error.message || 'Failed to update account');
+        console.error('Failed to update account:', error);
+        throw new Error(error.message || 'Failed to update account');
     }
   },
 
@@ -101,8 +101,8 @@ export const accountingApi = {
         message: 'Account deleted successfully',
       };
     } catch (error: any) {
-      console.error('Failed to delete account:', error);
-      throw new Error(error.message || 'Failed to delete account');
+        console.error('Failed to delete account:', error);
+        throw new Error(error.message || 'Failed to delete account');
     }
   },
 };
