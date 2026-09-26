@@ -357,7 +357,7 @@ export const UserManagement = memo<UserManagementProps>(({
                 <FormLabel>Name</FormLabel>
                 <Input
                   value={formData.name}
-                  onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFormData(prev => ({ ...prev, name: e.target.value }))}
                   placeholder="Enter user name"
                 />
               </FormControl>
@@ -366,7 +366,7 @@ export const UserManagement = memo<UserManagementProps>(({
                 <Input
                   type="email"
                   value={formData.email}
-                  onChange={(e) => setFormData(prev => ({ ...prev, email: e.target.value }))}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFormData(prev => ({ ...prev, email: e.target.value }))}
                   placeholder="Enter email address"
                 />
               </FormControl>
@@ -418,7 +418,7 @@ export const UserManagement = memo<UserManagementProps>(({
                 <FormLabel>Name</FormLabel>
                 <Input
                   value={formData.name}
-                  onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFormData(prev => ({ ...prev, name: e.target.value }))}
                   placeholder="Enter user name"
                 />
               </FormControl>
@@ -427,7 +427,7 @@ export const UserManagement = memo<UserManagementProps>(({
                 <Input
                   type="email"
                   value={formData.email}
-                  onChange={(e) => setFormData(prev => ({ ...prev, email: e.target.value }))}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFormData(prev => ({ ...prev, email: e.target.value }))}
                   placeholder="Enter email address"
                 />
               </FormControl>

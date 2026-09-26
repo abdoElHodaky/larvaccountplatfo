@@ -407,7 +407,7 @@ export const IntegrationSettings = memo<IntegrationSettingsProps>(({
                   <Switch
                     size="sm"
                     isChecked={integration.isEnabled}
-                    onChange={(e) => onIntegrationUpdate?.(integration.id, { isEnabled: e.target.checked })}
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => onIntegrationUpdate?.(integration.id, { isEnabled: e.target.checked })}
                   />
                   <Text fontSize="sm">Enabled</Text>
                   <Spacer />
@@ -471,7 +471,7 @@ export const IntegrationSettings = memo<IntegrationSettingsProps>(({
                       <FormLabel>Integration Name</FormLabel>
                       <Input
                         value={formData.name}
-                        onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))}
+                        onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFormData(prev => ({ ...prev, name: e.target.value }))}
                         placeholder="Enter integration name"
                       />
                     </FormControl>
@@ -479,7 +479,7 @@ export const IntegrationSettings = memo<IntegrationSettingsProps>(({
                       <FormLabel>Provider</FormLabel>
                       <Input
                         value={formData.provider}
-                        onChange={(e) => setFormData(prev => ({ ...prev, provider: e.target.value }))}
+                        onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFormData(prev => ({ ...prev, provider: e.target.value }))}
                         placeholder="e.g., QuickBooks, Stripe, Xero"
                       />
                     </FormControl>
@@ -494,7 +494,7 @@ export const IntegrationSettings = memo<IntegrationSettingsProps>(({
                             border="2px"
                             borderColor={formData.type === type.value ? 'blue.500' : borderColor}
                             cursor="pointer"
-                            onClick={() => setFormData(prev => ({ ...prev, type: type.value }))}
+                            onClick={(e: React.MouseEvent<HTMLDivElement, MouseEvent>) => setFormData(prev => ({ ...prev, type: type.value }))}
                           >
                             <Text fontWeight="medium">{type.label}</Text>
                             <Text fontSize="sm" color="gray.500">{type.description}</Text>
@@ -506,7 +506,7 @@ export const IntegrationSettings = memo<IntegrationSettingsProps>(({
                       <FormLabel>Description</FormLabel>
                       <Textarea
                         value={formData.description}
-                        onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
+                        onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setFormData(prev => ({ ...prev, description: e.target.value }))}
                         placeholder="Describe what this integration does"
                       />
                     </FormControl>
@@ -519,7 +519,7 @@ export const IntegrationSettings = memo<IntegrationSettingsProps>(({
                         <FormLabel>Webhook URL</FormLabel>
                         <Input
                           value={formData.webhookUrl}
-                          onChange={(e) => setFormData(prev => ({ ...prev, webhookUrl: e.target.value }))}
+                          onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFormData(prev => ({ ...prev, webhookUrl: e.target.value }))}
                           placeholder="https://your-app.com/webhook"
                         />
                       </FormControl>
@@ -530,7 +530,7 @@ export const IntegrationSettings = memo<IntegrationSettingsProps>(({
                         <Input
                           type="password"
                           value={formData.apiKey}
-                          onChange={(e) => setFormData(prev => ({ ...prev, apiKey: e.target.value }))}
+                          onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFormData(prev => ({ ...prev, apiKey: e.target.value }))}
                           placeholder="Enter API key or token"
                         />
                       </FormControl>
@@ -570,7 +570,7 @@ export const IntegrationSettings = memo<IntegrationSettingsProps>(({
                 <FormLabel>Integration Name</FormLabel>
                 <Input
                   value={formData.name}
-                  onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFormData(prev => ({ ...prev, name: e.target.value }))}
                   placeholder="Enter integration name"
                 />
               </FormControl>
@@ -578,7 +578,7 @@ export const IntegrationSettings = memo<IntegrationSettingsProps>(({
                 <FormLabel>Description</FormLabel>
                 <Textarea
                   value={formData.description}
-                  onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
+                  onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setFormData(prev => ({ ...prev, description: e.target.value }))}
                   placeholder="Describe what this integration does"
                 />
               </FormControl>
@@ -587,7 +587,7 @@ export const IntegrationSettings = memo<IntegrationSettingsProps>(({
                   <FormLabel>Webhook URL</FormLabel>
                   <Input
                     value={formData.webhookUrl}
-                    onChange={(e) => setFormData(prev => ({ ...prev, webhookUrl: e.target.value }))}
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFormData(prev => ({ ...prev, webhookUrl: e.target.value }))}
                     placeholder="https://your-app.com/webhook"
                   />
                 </FormControl>
@@ -598,7 +598,7 @@ export const IntegrationSettings = memo<IntegrationSettingsProps>(({
                   <Input
                     type="password"
                     value={formData.apiKey}
-                    onChange={(e) => setFormData(prev => ({ ...prev, apiKey: e.target.value }))}
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFormData(prev => ({ ...prev, apiKey: e.target.value }))}
                     placeholder="Enter API key or token"
                   />
                 </FormControl>

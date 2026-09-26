@@ -262,7 +262,7 @@ export class InventoryApiService {
       const { data } = await apolloClient.mutate({
         mutation: UPDATE_INVENTORY_ITEM,
         variables: { id, input: itemData },
-        update: (cache: ApolloCache<any>, { data: mutationData }: { data: { updateInventoryItem: InventoryItem } }) => {
+        update: (cache: ApolloCache<any>, { data: mutationData }: { data: { updateInventoryItem: InventoryItem; } }) => {
           // Update cache
           const updatedItem = mutationData.updateInventoryItem;
           if (updatedItem) {
@@ -341,7 +341,7 @@ export class InventoryApiService {
       const { data } = await apolloClient.mutate({
         mutation: CREATE_STOCK_MOVEMENT,
         variables: { input: movementData },
-        update: (cache, { data: mutationData }) => {
+        update: (cache: ApolloCache<any>, { data: mutationData }: { data: { createStockMovement: StockMovement; } }) => {
           // Update cache with new movement
           const existingMovements = cache.readQuery({ query: GET_STOCK_MOVEMENTS });
           if (existingMovements) {

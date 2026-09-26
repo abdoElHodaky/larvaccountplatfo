@@ -31,7 +31,7 @@ export function useRealtime(organizationId: string) {
     });
 
     // Real-time event listeners
-    socketInstance.on('accounting:transaction_created', (data) => {
+    socketInstance.on('accounting:transaction_created', (data: { transaction: any; account_balance_updated?: any }) => {
       console.log('Transaction created:', data);
       setTransactions(prev => [data.transaction, ...prev]);
       if (data.account_balance_updated) {
@@ -39,14 +39,14 @@ export function useRealtime(organizationId: string) {
       }
     });
 
-    socketInstance.on('accounting:transaction_updated', (data) => {
+    socketInstance.on('accounting:transaction_updated', (data: { transaction: any }) => {
       console.log('Transaction updated:', data);
       setTransactions(prev => 
         prev.map(t => t.id === data.transaction.id ? data.transaction : t)
       );
     });
 
-    socketInstance.on('inventory:stock_updated', (data) => {
+    socketInstance.on('inventory:stock_updated', (data: { product: any }) => {
       console.log('Stock updated:', data);
       setProducts(prev => 
         prev.map(p => p.id === data.product.id ? data.product : p)

@@ -9,7 +9,7 @@ import {
   createHttpLink,
   from,
   split,
-} from '@apollo/GETDASHBOARDMETRICS';
+} from '@apollo/client';
 import { setContext } from '@apollo/client/link/context';
 import { onError } from '@apollo/client/link/error';
 import { getMainDefinition } from '@apollo/client/utilities';

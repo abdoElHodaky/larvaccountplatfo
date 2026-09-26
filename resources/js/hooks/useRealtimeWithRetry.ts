@@ -69,7 +69,7 @@ export function useRealtimeWithRetry(
       });
 
       // Connection error
-      socketInstance.on('connect_error', (error) => {
+      socketInstance.on('connect_error', (error: any) => {
         console.error('❌ WebSocket connection error:', error);
         setState(prev => ({
           ...prev,
@@ -104,7 +104,7 @@ export function useRealtimeWithRetry(
       });
 
       // Real-time event listeners with error handling
-      socketInstance.on('accounting:transaction_created', (data) => {
+      socketInstance.on('accounting:transaction_created', (data: { transaction: any }) => {
         try {
           console.log('💰 Transaction created:', data);
           setState(prev => ({
@@ -130,7 +130,7 @@ export function useRealtimeWithRetry(
         }
       });
 
-      socketInstance.on('inventory:stock_updated', (data) => {
+      socketInstance.on('inventory:stock_updated', (data: { product: any }) => {
         try {
           console.log('📦 Stock updated:', data);
           setState(prev => ({
