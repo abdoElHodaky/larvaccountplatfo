@@ -16,7 +16,7 @@ import { useRealtimeAccounting } from '../../../shared/hooks/useSocket';
 import { useCollaborativeAccount } from '../../../shared/hooks/useCollaboration';
 import { performanceMonitor } from '../../../shared/services/analytics/performanceMonitor';
 import { getCurrentOrganizationId } from '../../../shared/services/alova/alova.config';
-import { ChartOfAccounts } from './organisms/ChartOfAccountsPage';
+import ChartOfAccounts from './organisms/ChartOfAccounts';
 import { TransactionList } from './organisms/TransactionList';
 import { AccountBalances } from './organisms/AccountBalances';
 import { TrialBalance } from './organisms/TrialBalance';

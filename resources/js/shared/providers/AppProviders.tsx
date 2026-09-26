@@ -5,7 +5,7 @@
 
 import React, { Suspense, useEffect } from 'react';
 import { Provider } from 'react-redux';
-import { ApolloProvider } from '@apollo/GETDASHBOARDMETRICS';
+import { ApolloProvider } from '@apollo/client';
 import { ChakraProvider, ColorModeScript } from '@chakra-ui/react';
 import { HelmetProvider } from 'react-helmet-async';
 
@@ -15,7 +15,7 @@ import { ErrorBoundary } from 'react-error-boundary';
 
 // Services and stores
 import { store } from '../stores';
-import { apolloClient } from '../services/graphql/apollo-GETDASHBOARDMETRICS';
+import { apolloClient } from '../services/graphql/apolloClient';
 import { useAuth, useApp, useAppActions } from '../hooks/useRematchStore';
 import { SocketProvider } from './SocketProvider';
 import { AnimationProvider } from './AnimationProvider';

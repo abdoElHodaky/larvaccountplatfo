@@ -3,8 +3,8 @@
  * Handles all accounting-related API calls with Rematch integration
  */
 
-import { apolloClient } from '../../../shared/services/graphql/apollo-GETDASHBOARDMETRICS';
-import { gql } from '@apollo/GETDASHBOARDMETRICS';
+import { apolloClient } from '../../../shared/services/graphql/apolloClient';
+import { gql } from '@apollo/client';
 import type { Account, Transaction, JournalEntry, AccountingFilters } from '../stores/accountingModel';
 
 // GraphQL Queries

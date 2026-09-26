@@ -1,4 +1,4 @@
 // GraphQL Services
-export { apolloClient } from './apollo-GETDASHBOARDMETRICS';
+export { apolloClient } from './apolloClient';
 export * from './LOGIN';
 export * from './TENANTFRAGMENT';

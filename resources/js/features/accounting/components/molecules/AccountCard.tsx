@@ -86,7 +86,7 @@ export const AccountCard: React.FC<AccountCardProps> = memo(({
             {formattedBalance}
           </StatNumber>
           <StatHelpText mb={0}>
-            <StatArrow type={account.change >= 0 ? 'increase' : 'decrease'} />
+            <StatArrow type={(account.change ?? 0) >= 0 ? 'increase' : 'decrease'} />
             {formattedChange} ({formattedChangePercent})
           </StatHelpText>
         </Stat>
@@ -94,7 +94,7 @@ export const AccountCard: React.FC<AccountCardProps> = memo(({
         {/* Additional Info */}
         <Box>
           <Text fontSize="xs" color="text-subtle">
-            Last updated: {new Date(account.lastUpdated).toLocaleDateString()}
+            Last updated: {account.lastUpdated ? new Date(account.lastUpdated).toLocaleDateString() : 'N/A'}
           </Text>
         </Box>
       </VStack>
