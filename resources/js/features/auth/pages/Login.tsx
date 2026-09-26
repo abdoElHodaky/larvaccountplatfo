@@ -5,7 +5,7 @@ import InputError from '@/shared/components/atoms/inputError';
 import InputLabel from '@/shared/components/atoms/InputLabel';
 import { PrimaryButton } from '@/shared/components/atoms/Button';
 import TextInput from '@/shared/components/atoms/TextInput';
-import { DocumentHead } from '@/shared/Button';
+import { DocumentHead } from '@/shared/components/seo/DocumentHead';
 
 interface LoginProps {
     canResetPassword: boolean;

@@ -19,6 +19,7 @@ export interface Account {
   isActive: boolean;
   description?: string;
   taxCode?: string;
+  current_balance?: number;
   createdAt: string;
   updatedAt: string;
 }
@@ -34,6 +35,10 @@ export interface Transaction {
   account?: Account;
   journalEntryId: string;
   reconciled: boolean;
+  status: 'posted' | 'pending' | 'draft';
+  transaction_number: string;
+  total_amount: number;
+  transaction_date: string;
   tags: string[];
   attachments: string[];
   createdAt: string;
@@ -71,21 +76,21 @@ export interface AccountingState {
   accounts: Account[];
   accountsLoading: boolean;
   selectedAccount: Account | null;
-  
+
   // Transactions
   transactions: Transaction[];
   transactionsLoading: boolean;
   selectedTransaction: Transaction | null;
-  
+
   // Journal Entries
   journalEntries: JournalEntry[];
   journalEntriesLoading: boolean;
   selectedJournalEntry: JournalEntry | null;
-  
+
   // Filters and UI
   filters: AccountingFilters;
   currentView: 'accounts' | 'transactions' | 'journal-entries' | 'reports';
-  
+
   // Error handling
   error: string | null;
 }
@@ -105,24 +110,24 @@ const initialState: AccountingState = {
   accounts: [],
   accountsLoading: false,
   selectedAccount: null,
-  
+
   transactions: [],
   transactionsLoading: false,
   selectedTransaction: null,
-  
+
   journalEntries: [],
   journalEntriesLoading: false,
   selectedJournalEntry: null,
-  
+
   filters: initialFilters,
   currentView: 'accounts',
-  
+
   error: null,
 };
 
 export const accountingModel = createModel()({
   state: initialState,
-  
+
   reducers: {
     // Loading states
     setAccountsLoading: (state: AccountingState, payload: boolean) => ({
@@ -150,7 +155,7 @@ export const accountingModel = createModel()({
       ...state,
       error: null,
     }),
-    
+
     // Accounts
     setAccounts: (state: AccountingState, payload: Account[]) => ({
       ...state,
@@ -162,7 +167,7 @@ export const accountingModel = createModel()({
       ...state,
       accounts: [...state.accounts, payload],
     }),
-    
+
     updateAccount: (state: AccountingState, payload: Account) => ({
       ...state,
       accounts: state.accounts.map(account =>
@@ -176,12 +181,12 @@ export const accountingModel = createModel()({
       accounts: state.accounts.filter(account => account.id !== payload),
       selectedAccount: state.selectedAccount?.id === payload ? null : state.selectedAccount,
     }),
-    
+
     setSelectedAccount: (state: AccountingState, payload: Account | null) => ({
       ...state,
       selectedAccount: payload,
     }),
-    
+
     // Transactions
     setTransactions: (state: AccountingState, payload: Transaction[]) => ({
       ...state,
@@ -212,14 +217,14 @@ export const accountingModel = createModel()({
       ...state,
       selectedTransaction: payload,
     }),
-    
+
     // Journal Entries
     setJournalEntries: (state: AccountingState, payload: JournalEntry[]) => ({
       ...state,
       journalEntries: payload,
       journalEntriesLoading: false,
     }),
-    
+
     addJournalEntry: (state: AccountingState, payload: JournalEntry) => ({
       ...state,
       journalEntries: [...state.journalEntries, payload],
@@ -243,7 +248,7 @@ export const accountingModel = createModel()({
       ...state,
       selectedJournalEntry: payload,
     }),
-    
+
     // Filters and UI
     updateFilters: (state: AccountingState, payload: Partial<AccountingFilters>) => ({
       ...state,
@@ -259,7 +264,7 @@ export const accountingModel = createModel()({
       ...state,
       currentView: payload,
     }),
-    
+
     // Bulk operations
     bulkUpdateAccounts: (state: AccountingState, payload: Account[]) => ({
       ...state,
@@ -271,7 +276,7 @@ export const accountingModel = createModel()({
       transactions: payload,
     }),
   },
-  
+
   effects: (dispatch) => ({
     // Account effects
     async fetchAccounts(filters?: Partial<AccountingFilters>) {
@@ -286,10 +291,10 @@ export const accountingModel = createModel()({
         dispatch.accounting.setAccountsLoading(false);
       }
     },
-    
+
     async createAccount(accountData: Omit<Account, 'id' | 'createdAt' | 'updatedAt'>) {
       dispatch.accounting.clearError();
-      
+
       try {
         const response = await accountingApi.createAccount(accountData);
         dispatch.accounting.addAccount(response.data);
@@ -300,15 +305,15 @@ export const accountingModel = createModel()({
         return { success: false, error: errorMessage };
       }
     },
-    
+
     async updateAccountData(payload: { id: string; data: Partial<Account> }) {
       dispatch.accounting.clearError();
-      
+
       try {
         // TODO: Replace with actual API call
         // const response = await accountingApi.updateAccount(payload.id, payload.data);
         // dispatch.accounting.updateAccount(response.data);
-        
+
         // Mock implementation
         const state = this.getState() as any;
         const existingAccount = state.accounting.accounts.find((a) => a.id === payload.id);
@@ -321,75 +326,75 @@ export const accountingModel = createModel()({
           dispatch.accounting.updateAccount(updatedAccount);
           return { success: true, data: updatedAccount };
         }
-        
+
         throw new Error('Account not found');
-        
+
       } catch (error: any) {
         const errorMessage = error.message || 'Failed to update account';
         dispatch.accounting.setError(errorMessage);
         return { success: false, error: errorMessage };
       }
     },
-    
+
     async deleteAccount(accountId: string) {
       dispatch.accounting.clearError();
-      
+
       try {
         // TODO: Replace with actual API call
         // await accountingApi.deleteAccount(accountId);
-        
+
         dispatch.accounting.removeAccount(accountId);
         return { success: true };
-        
+
       } catch (error: any) {
         const errorMessage = error.message || 'Failed to delete account';
         dispatch.accounting.setError(errorMessage);
         return { success: false, error: errorMessage };
       }
     },
-    
+
     // Transaction effects
     async fetchTransactions(_filters?: Partial<AccountingFilters>) {
       dispatch.accounting.setTransactionsLoading(true);
       dispatch.accounting.clearError();
-      
+
       try {
         // TODO: Replace with actual API call
         // const response = await accountingApi.getTransactions(filters);
         // dispatch.accounting.setTransactions(response.data);
-        
+
         // Mock implementation
         setTimeout(() => {
           dispatch.accounting.setTransactions([]);
         }, 1000);
-        
+
       } catch (error: any) {
         dispatch.accounting.setError(error.message || 'Failed to fetch transactions');
         dispatch.accounting.setTransactionsLoading(false);
       }
     },
-    
+
     // Journal Entry effects
     async fetchJournalEntries(_filters?: Partial<AccountingFilters>) {
       dispatch.accounting.setJournalEntriesLoading(true);
       dispatch.accounting.clearError();
-      
+
       try {
         // TODO: Replace with actual API call
         // const response = await accountingApi.getJournalEntries(filters);
         // dispatch.accounting.setJournalEntries(response.data);
-        
+
         // Mock implementation
         setTimeout(() => {
           dispatch.accounting.setJournalEntries([]);
         }, 1000);
-        
+
       } catch (error: any) {
         dispatch.accounting.setError(error.message || 'Failed to fetch journal entries');
         dispatch.accounting.setJournalEntriesLoading(false);
       }
     },
-    
+
     // Initialize accounting module
     async initializeAccounting() {
       await Promise.all([

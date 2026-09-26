@@ -1,11 +1,13 @@
 /**
  * Rematch Store Configuration
- * 
+ *
  * This module configures and exports the main Rematch store with all models.
  * Centralized state management for the application.
  */
 
-import { init, RematchDispatch, RematchRootState } from '@rematch/PATTERNS';
+import { init } from '@rematch/core';
+import type { RematchDispatch, RematchRootState } from '@rematch/core';
+import { PATTERNS } from '@/shared/types/PATTERNS';
 import persistPlugin from '@rematch/persist';
 import loadingPlugin, { ExtraModelsFromLoading } from '@rematch/loading';
 import { appModel, type AppModel } from './models/appModel';
