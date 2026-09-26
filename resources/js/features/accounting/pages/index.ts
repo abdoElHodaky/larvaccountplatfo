@@ -14,10 +14,10 @@ export { default as AccountsCreate } from './Accounts/CreateAccount';
 export { default as AccountsShow } from './Accounts/ShowAccount';
 
 // Transaction pages
-export { default as TransactionsIndex } = './Transactions/TransactionsIndex';
+export { default as TransactionsIndex } from './Transactions/TransactionsIndex';
 
 // Journal Entry pages
-export { default as JournalEntriesIndex } = './JournalEntries/JournalEntriesIndex';
+export { default as JournalEntriesIndex } from './JournalEntries/JournalEntriesIndex';
 
 // Journal Entries Page
-export { default as JournalEntriesPage } = './JournalEntriesPage';
+export { default as JournalEntriesPage } from './JournalEntriesPage';
