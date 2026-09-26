@@ -1,7 +1,7 @@
 import { Head, Link } from '@inertiajs/react';
 import AppLayout from '@/shared/components/layouts/AppLayout';
 import { formatCurrency, formatDate, formatNumber } from '@/shared/icons/CreateLiveIcon';
-import { Product, StockMovement, InventoryStats } from './types';
+import type { Product, StockMovement, InventoryStats } from '@/features/inventory/types';
 
 interface DashboardProps {
     products: Product[];

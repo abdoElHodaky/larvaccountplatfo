@@ -1,7 +1,7 @@
 
 import { Head, Link } from '@inertiajs/react';
 import AppLayout from '@/shared/components/layouts/AppLayout';
-import { Product, ProductCategory } from './types';
+import type { Product, ProductCategory } from '@/features/inventory/types';
 
 interface ProductDetailProps {
     product: {

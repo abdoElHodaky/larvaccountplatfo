@@ -6,12 +6,7 @@
  */
 
 // Feature Components
-export * from './accounting/Button';
-export * from './dashboard/Button';
-export * from './inventory/Button';
-export * from './reporting/Button';
-export * from './organization/Button';
-export * from './sales/Button';
+export { Button } from '@/shared/components/atoms/Button';
 
 // Feature Pages
 export * as AuthPages from './auth/pages';
@@ -23,8 +18,6 @@ export * as SalesPages from './sales/pages';
 // Note: Additional feature pages will be added as features are implemented
 
 // Feature Types
-export * as AccountingTypes from './accounting/ICONSIZES';
-export * as InventoryTypes from './inventory/ICONSIZES';
-export * as SalesTypes from './sales/ICONSIZES';
-export * as OrganizationTypes from './organization/ICONSIZES';
+export type { AccountType } from '@/shared/types/ACCOUNTTYPES';
+export type { TransactionType } from '@/shared/types/ACCOUNTTYPES';
 // Note: Additional feature types will be added as features are implemented

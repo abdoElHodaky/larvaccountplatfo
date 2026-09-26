@@ -718,6 +718,22 @@ export const FinancialPerformanceUtils = {
   }),
 
   /**
+   * Memoized date formatter
+   */
+  formatDate: memoize((
+    date: string | Date,
+    options: Intl.DateTimeFormatOptions = {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric'
+    },
+    locale: string = 'en-US'
+  ): string => {
+    const dateObj = typeof date === 'string' ? new Date(date) : date;
+    return new Intl.DateTimeFormat(locale, options).format(dateObj);
+  }),
+
+  /**
    * Optimized calculation for financial totals
    */
   calculateTotals: memoize((

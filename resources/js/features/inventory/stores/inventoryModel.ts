@@ -4,7 +4,6 @@
  */
 
 import { createModel } from '@rematch/core';
-import { PATTERNS } from '@/shared/types/PATTERNS';
 import { inventoryApi } from '../services/inventoryApi';
 
 // Types
@@ -94,6 +93,9 @@ export interface InventoryState {
   filters: InventoryFilters;
   currentView: 'items' | 'movements' | 'reports';
   error: string | null;
+
+  // Index signature for Rematch model compatibility
+  [key: string]: any;
 }
 
 const initialFilters: InventoryFilters = {

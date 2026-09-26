@@ -4,7 +4,6 @@
  */
 
 import { createModel } from '@rematch/core';
-import { PATTERNS } from '@/shared/types/PATTERNS';
 import { dashboardApi } from '../services/dashboardApi';
 
 // Types
@@ -100,6 +99,9 @@ export interface DashboardState {
   // General
   error: string | null;
   lastRefresh: string | null;
+
+  // Index signature for Rematch model compatibility
+  [key: string]: any;
 }
 
 const initialFilters: DashboardFilters = {

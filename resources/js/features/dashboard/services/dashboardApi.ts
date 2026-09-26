@@ -4,196 +4,22 @@
  */
 
 import { apolloClient } from '../../../shared/services/graphql/apolloClient';
-import { gql } from '@apollo/client';
 import { log } from '../../../shared/utils/logger';
 import type { DashboardLayout, Widget, MetricData, ChartData, DashboardFilters } from '../stores/dashboardModel';
 import type { ApiResponse } from '@/shared/types';
-
-// GraphQL Queries
-const GET_DASHBOARD_LAYOUTS = gql`
-  query GetDashboardLayouts {
-    dashboardLayouts {
-      id
-      name
-      description
-      isDefault
-      widgets {
-        id
-        type
-        title
-        description
-        position {
-          x
-          y
-          width
-          height
-        }
-        config
-        lastUpdated
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-
-const GET_DASHBOARD_METRICS = gql`
-  query GetDashboardMetrics($filters: DashboardFiltersInput) {
-    dashboardMetrics(filters: $filters) {
-      id
-      name
-      value
-      previousValue
-      change
-      changePercent
-      trend
-      format
-      period
-    }
-  }
-`;
-
-const GET_DASHBOARD_CHARTS = gql`
-  query GetDashboardCharts($filters: DashboardFiltersInput) {
-    dashboardCharts(filters: $filters) {
-      id
-      type
-      title
-      data {
-        labels
-        datasets {
-          label
-          data
-          backgroundColor
-          borderColor
-          borderWidth
-        }
-      }
-      options
-    }
-  }
-`;
-
-const GET_WIDGET_DATA = gql`
-  query GetWidgetData($widgetId: ID!, $filters: DashboardFiltersInput) {
-    widgetData(widgetId: $widgetId, filters: $filters) {
-      id
-      data
-      lastUpdated
-    }
-  }
-`;
-
-// GraphQL Mutations
-const CREATE_DASHBOARD_LAYOUT = gql`
-  mutation CreateDashboardLayout($input: CreateDashboardLayoutInput!) {
-    createDashboardLayout(input: $input) {
-      id
-      name
-      description
-      isDefault
-      widgets {
-        id
-        type
-        title
-        description
-        position {
-          x
-          y
-          width
-          height
-        }
-        config
-        lastUpdated
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-
-const UPDATE_DASHBOARD_LAYOUT = gql`
-  mutation UpdateDashboardLayout($id: ID!, $input: UpdateDashboardLayoutInput!) {
-    updateDashboardLayout(id: $id, input: $input) {
-      id
-      name
-      description
-      isDefault
-      widgets {
-        id
-        type
-        title
-        description
-        position {
-          x
-          y
-          width
-          height
-        }
-        config
-        lastUpdated
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-
-const DELETE_DASHBOARD_LAYOUT = gql`
-  mutation DeleteDashboardLayout($id: ID!) {
-    deleteDashboardLayout(id: $id) {
-      success
-      message
-    }
-  }
-`;
-
-const CREATE_WIDGET = gql`
-  mutation CreateWidget($input: CreateWidgetInput!) {
-    createWidget(input: $input) {
-      id
-      type
-      title
-      description
-      position {
-        x
-        y
-        width
-        height
-      }
-      config
-      lastUpdated
-    }
-  }
-`;
-
-const UPDATE_WIDGET = gql`
-  mutation UpdateWidget($id: ID!, $input: UpdateWidgetInput!) {
-    updateWidget(id: $id, input: $input) {
-      id
-      type
-      title
-      description
-      position {
-        x
-        y
-        width
-        height
-      }
-      config
-      lastUpdated
-    }
-  }
-`;
-
-const DELETE_WIDGET = gql`
-  mutation DeleteWidget($id: ID!) {
-    deleteWidget(id: $id) {
-      success
-      message
-    }
-  }
-`;
+import type { ApolloCache } from '@apollo/client';
+import {
+  GET_DASHBOARD_LAYOUTS,
+  CREATE_DASHBOARD_LAYOUT,
+  UPDATE_DASHBOARD_LAYOUT,
+  DELETE_DASHBOARD_LAYOUT,
+  GET_DASHBOARD_METRICS,
+  GET_DASHBOARD_CHARTS,
+  CREATE_WIDGET,
+  UPDATE_WIDGET,
+  DELETE_WIDGET,
+  GET_WIDGET_DATA
+} from './queries';
 
 // API Service Class
 export class DashboardApiService {
@@ -221,7 +47,7 @@ export class DashboardApiService {
       const { data } = await apolloClient.mutate({
         mutation: CREATE_DASHBOARD_LAYOUT,
         variables: { input: layoutData },
-        update: (cache, { data: mutationData }) => {
+        update: (cache: ApolloCache<any>, { data: mutationData }: { data: { createDashboardLayout: DashboardLayout } }) => {
           // Update cache with new layout
           const existingLayouts = cache.readQuery({ query: GET_DASHBOARD_LAYOUTS });
           if (existingLayouts) {
@@ -252,14 +78,24 @@ export class DashboardApiService {
       const { data } = await apolloClient.mutate({
         mutation: UPDATE_DASHBOARD_LAYOUT,
         variables: { id, input: layoutData },
-        update: (cache, { data: mutationData }) => {
+        update: (cache: ApolloCache<any>, { data: mutationData }: { data: { updateDashboardLayout: DashboardLayout } }) => {
           // Update cache
-          cache.modify({
-            id: cache.identify({ __typename: 'DashboardLayout', id }),
-            fields: {
-              ...mutationData.updateDashboardLayout,
-            },
-          });
+          const updatedLayout = mutationData.updateDashboardLayout;
+          if (updatedLayout) {
+            const layoutId = cache.identify({ __typename: 'DashboardLayout', id: updatedLayout.id });
+            // Update each field in the layout
+            Object.keys(updatedLayout).forEach(key => {
+              // Skip __typename as it's used for identification
+              if (key !== '__typename' && updatedLayout.hasOwnProperty(key)) {
+                cache.modify({
+                  id: layoutId,
+                  fields: {
+                    [key]: () => updatedLayout[key as keyof DashboardLayout],
+                  },
+                });
+              }
+            });
+          }
         },
       });
 
@@ -280,7 +116,7 @@ export class DashboardApiService {
       const { data } = await apolloClient.mutate({
         mutation: DELETE_DASHBOARD_LAYOUT,
         variables: { id },
-        update: (cache) => {
+        update: (cache: ApolloCache<any>) => {
           // Remove from cache
           cache.evict({ id: cache.identify({ __typename: 'DashboardLayout', id }) });
           cache.gc();

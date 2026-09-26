@@ -6,7 +6,8 @@
 import { apolloClient } from '../../../shared/services/graphql/apolloClient';
 import { gql } from '@apollo/client';
 import type { InventoryItem, StockMovement, InventoryFilters } from '../stores/inventoryModel';
-import type { ApiResponse, PaginatedResponse } from '@/shared/types';
+import type { ApiResponse } from '@/shared/types';
+import type { ApolloCache } from '@apollo/client';
 
 // GraphQL Queries
 const GET_INVENTORY_ITEMS = gql`
@@ -231,7 +232,7 @@ export class InventoryApiService {
       const { data } = await apolloClient.mutate({
         mutation: CREATE_INVENTORY_ITEM,
         variables: { input: itemData },
-        update: (cache, { data: mutationData }) => {
+        update: (cache: ApolloCache<any>, { data: mutationData }: { data: { createInventoryItem: InventoryItem } }) => {
           // Update cache with new item
           const existingItems = cache.readQuery({ query: GET_INVENTORY_ITEMS });
           if (existingItems) {
@@ -261,14 +262,24 @@ export class InventoryApiService {
       const { data } = await apolloClient.mutate({
         mutation: UPDATE_INVENTORY_ITEM,
         variables: { id, input: itemData },
-        update: (cache, { data: mutationData }) => {
+        update: (cache: ApolloCache<any>, { data: mutationData }: { data: { updateInventoryItem: InventoryItem } }) => {
           // Update cache
-          cache.modify({
-            id: cache.identify({ __typename: 'InventoryItem', id }),
-            fields: {
-              ...mutationData.updateInventoryItem,
-            },
-          });
+          const updatedItem = mutationData.updateInventoryItem;
+          if (updatedItem) {
+            const itemId = cache.identify({ __typename: 'InventoryItem', id: updatedItem.id });
+            // Update each field in the item
+            Object.keys(updatedItem).forEach(key => {
+              // Skip __typename as it's used for identification
+              if (key !== '__typename') {
+                cache.modify({
+                  id: itemId,
+                  fields: {
+                    [key]: () => updatedItem[key as keyof InventoryItem],
+                  },
+                });
+              }
+            });
+          }
         },
       });
 

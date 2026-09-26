@@ -8,7 +8,7 @@ import { ErrorBoundary } from 'react-error-boundary';
 import { useDashboardMetrics, useDashboardWidgets } from '../services/dashboardApiAlova';
 import { useRealtimeDashboard } from '../../../shared/hooks/useSocket';
 import { useCollaborativeDashboard } from '../../../shared/hooks/useCollaboration';
-import performanceMonitor from '../../../shared/services/analytics/performanceMonitor';
+import { performanceMonitor } from '../../../shared/services/analytics/performanceMonitor';
 import { getCurrentOrganizationId } from '../../../shared/services/alova/alova.config';
 import { DashboardGrid } from './DashboardGrid';
 import { DashboardMetrics } from './DashboardMetrics';
