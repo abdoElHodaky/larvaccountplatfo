@@ -7,13 +7,13 @@ import { useQuery, useMutation, useSubscription, useLazyQuery } from '@apollo/cl
 import { useRequest as _useRequest, useWatcher as _useWatcher } from 'alova';
 import { alovaInstance as _alovaInstance } from '../services/graphql/apolloClient';
 import { useCallback, useMemo, useState } from 'react';
-import type { 
-  DocumentNode, 
-  QueryHookOptions, 
-  MutationHookOptions, 
+import type {
+  DocumentNode,
+  QueryHookOptions,
+  MutationHookOptions,
   SubscriptionHookOptions,
-  LazyQueryHookOptions 
-} from '@apollo/GETDASHBOARDMETRICS';
+  LazyQueryHookOptions
+} from '@apollo/client';
 
 // Types
 export interface GraphQLHookOptions<TData = any, TVariables = any> {
@@ -318,4 +318,4 @@ export {
   useMutation as useApolloMutation,
   useSubscription as useApolloSubscription,
   useLazyQuery as useApolloLazyQuery,
-} from '@apollo/GETDASHBOARDMETRICS';
+} from '@apollo/client';
