@@ -1,6 +1,6 @@
 import { createAlova } from 'alova';
-import ReactHook from 'alova/client';
-import adapterFetch from 'alova/fetch';
+import ReactHook from 'alova/react';
+import adapterFetch from 'alova/GlobalFetch';
 
 /**
  * Main Alova instance for REST API calls
@@ -10,7 +10,7 @@ export const alovaInstance = createAlova({
   statesHook: ReactHook,
   requestAdapter: adapterFetch(),
   timeout: 10000,
-  
+
   // Global request interceptor
   beforeRequest(method) {
     // Add authentication token
@@ -18,29 +18,29 @@ export const alovaInstance = createAlova({
     if (token) {
       method.config.headers.Authorization = `Bearer ${token}`;
     }
-    
+
     // Add CSRF token for Laravel
     const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
     if (csrfToken) {
       method.config.headers['X-CSRF-TOKEN'] = csrfToken;
     }
-    
+
     // Add common headers
     method.config.headers['Accept'] = 'application/json';
     method.config.headers['Content-Type'] = 'application/json';
-    
+
     // Add organization context if available
     const organizationId = localStorage.getItem('current_organization_id');
     if (organizationId) {
       method.config.headers['X-Organization-ID'] = organizationId;
     }
-    
+
     console.log(`🚀 API Request: ${method.type} ${method.url}`, {
       headers: method.config.headers,
       data: method.data
     });
   },
-  
+
   // Global response interceptor
   responded: {
     onSuccess: async (response, method) => {
@@ -48,22 +48,22 @@ export const alovaInstance = createAlova({
         status: response.status,
         statusText: response.statusText
       });
-      
+
       if (response.status >= 400) {
         throw new Error(`HTTP ${response.status}: ${response.statusText}`);
       }
-      
+
       const contentType = response.headers.get('content-type');
       if (contentType && contentType.includes('application/json')) {
         return response.json();
       }
-      
+
       return response.text();
     },
-    
+
     onError: (error, method) => {
       console.error(`❌ API Error: ${method.type} ${method.url}`, error);
-      
+
       // Handle specific error cases
       if (error.message.includes('401')) {
         // Unauthorized - redirect to login
@@ -79,20 +79,14 @@ export const alovaInstance = createAlova({
         // Server error
         console.error('Server error occurred');
       }
-      
+
       throw error;
     }
   },
-  
+
   // Cache configuration
-  cacheFor: {
-    GET: {
-      expire: 300000, // 5 minutes default cache
-      mode: 'memory'
-    },
-    POST: false, // Don't cache POST requests
-    PUT: false,
-    DELETE: false
+  localCache: {
+    GET: 300000 // 5 minutes default cache
   }
 });
 
@@ -104,87 +98,87 @@ export const graphqlClient = createAlova({
   statesHook: ReactHook,
   requestAdapter: adapterFetch(),
   timeout: 15000, // Longer timeout for complex GraphQL queries
-  
+
   // GraphQL-specific request interceptor
   beforeRequest(method) {
     // Always POST for GraphQL
-    method.config.method = 'POST';
+    method.type = 'POST';
     method.config.headers['Content-Type'] = 'application/json';
     method.config.headers['Accept'] = 'application/json';
-    
+
     // Add authentication token
     const token = localStorage.getItem('auth_token');
     if (token) {
       method.config.headers.Authorization = `Bearer ${token}`;
     }
-    
+
     // Add CSRF token
     const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
     if (csrfToken) {
       method.config.headers['X-CSRF-TOKEN'] = csrfToken;
     }
-    
+
     // Add organization context
     const organizationId = localStorage.getItem('current_organization_id');
     if (organizationId) {
       method.config.headers['X-Organization-ID'] = organizationId;
     }
-    
+
+    let query = '';
+    let variables: Record<string, any> = {};
+    if (method.data && typeof method.data === 'object' && !Array.isArray(method.data)) {
+      const data = method.data as { query?: string; variables?: Record<string, any> };
+      query = data.query ?? '';
+      variables = data.variables ?? {};
+    }
+
     console.log(`🔍 GraphQL Request:`, {
-      query: method.data?.query?.substring(0, 100) + '...',
-      variables: method.data?.variables
+      query: query.substring(0, 100) + '...',
+      variables
     });
   },
-  
+
   // GraphQL response interceptor
   responded: {
     onSuccess: async (response, _method) => {
       const result = await response.json();
-      
+
       console.log(`✅ GraphQL Success:`, {
         data: result.data ? 'Present' : 'None',
         errors: result.errors?.length || 0
       });
-      
+
       // Handle GraphQL errors
       if (result.errors && result.errors.length > 0) {
         console.error('GraphQL Errors:', result.errors);
-        
+
         // Check for authentication errors
-        const authError = result.errors.find((error: any) => 
-          error.message.includes('Unauthenticated') || 
+        const authError = result.errors.find((error: any) =>
+          error.message.includes('Unauthenticated') ||
           error.extensions?.category === 'authentication'
         );
-        
+
         if (authError) {
           localStorage.removeItem('auth_token');
           window.location.href = '/login';
           return;
         }
-        
+
         // For other errors, still return the result so components can handle them
       }
-      
+
       return result;
     },
-    
+
     onError: (error, _method) => {
       console.error(`❌ GraphQL Error:`, error);
       throw error;
     }
   },
-  
+
   // GraphQL-specific caching
-  cacheFor: {
-    POST: {
-      expire: 300000, // 5 minutes for queries
-      mode: 'memory',
-      // Custom cache key for GraphQL queries
-      key: (method) => {
-        const { query, variables } = method.data || {};
-        return `gql:${btoa(query || '')}:${btoa(JSON.stringify(variables || {}))}`;
-      }
-    }
+  localCache: {
+    POST: 300000 // 5 minutes for GraphQL queries
   }
 });
 
@@ -207,10 +201,10 @@ export const mutation = (query: string, variables?: Record<string, any>) => {
     query: query.trim(),
     variables: variables || {}
   });
-  
+
   // Disable caching for mutations
-  method.config.cacheFor = false;
-  
+  method.config.localCache = undefined;
+
   return method;
 };
 
@@ -233,8 +227,8 @@ export const getCurrentOrganizationId = (): number | null => {
  * Clear all Alova caches
  */
 export const clearAllCaches = (): void => {
-  alovaInstance.storage.clear();
-  graphqlClient.storage.clear();
+  alovaInstance.invalidateCache();
+  graphqlClient.invalidateCache();
   console.log('🧹 All Alova caches cleared');
 };
 

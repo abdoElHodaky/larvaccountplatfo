@@ -1,4 +1,4 @@
-import { useRequest } from 'alova/client';
+import { useRequest, LocalCacheConfig } from 'alova';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { gql as createAlovaQuery, mutation as createAlovaMutation } from '@/shared/services/alova/alova.config';
 
@@ -39,7 +39,9 @@ export function useOptimizedGraphQLQuery(
             const graphqlMethod = createAlovaQuery(toQueryString(query), variables);
 
             // Configure caching (alova accepts a millisecond expiry)
-            graphqlMethod.config.cacheFor = cacheTime;
+            const localCacheConfig: LocalCacheConfig = {};
+            localCacheConfig[graphqlMethod.type as keyof MethodType] = cacheTime;
+            graphqlMethod.config.localCache = localCacheConfig;
 
             return graphqlMethod;
         },

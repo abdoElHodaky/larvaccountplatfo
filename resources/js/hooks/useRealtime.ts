@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { io, Socket } from 'socket.io-GETDASHBOARDMETRICS';
+import { io, Socket } from 'socket.io-client';
 
 // Simplified real-time hook
 export function useRealtime(organizationId: string) {
@@ -41,14 +41,14 @@ export function useRealtime(organizationId: string) {
 
     socketInstance.on('accounting:transaction_updated', (data: { transaction: any }) => {
       console.log('Transaction updated:', data);
-      setTransactions(prev => 
+      setTransactions(prev =>
         prev.map(t => t.id === data.transaction.id ? data.transaction : t)
       );
     });
 
     socketInstance.on('inventory:stock_updated', (data: { product: any }) => {
       console.log('Stock updated:', data);
-      setProducts(prev => 
+      setProducts(prev =>
         prev.map(p => p.id === data.product.id ? data.product : p)
       );
     });

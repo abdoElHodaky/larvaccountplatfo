@@ -6,7 +6,7 @@
 import { apolloClient } from '../../../shared/services/graphql/apolloClient';
 import { log } from '../../../shared/utils/logger';
 import type { DashboardLayout, Widget, MetricData, ChartData, DashboardFilters } from '../stores/dashboardModel';
-import type { ApiResponse } from '@/shared/types';
+import type { ApiResponse } from '../../../shared/types';
 import type { ApolloCache } from '@apollo/client';
 import {
   GET_DASHBOARD_LAYOUTS,
@@ -47,16 +47,19 @@ export class DashboardApiService {
       const { data } = await apolloClient.mutate({
         mutation: CREATE_DASHBOARD_LAYOUT,
         variables: { input: layoutData },
-        update: (cache: ApolloCache<any>, { data: mutationData }: { data: { createDashboardLayout: DashboardLayout } }) => {
+        update: (cache: ApolloCache<any>, result: { data: { createDashboardLayout: DashboardLayout; } | null | undefined }, options?: any) => {
           // Update cache with new layout
-          const existingLayouts = cache.readQuery({ query: GET_DASHBOARD_LAYOUTS });
-          if (existingLayouts) {
-            cache.writeQuery({
-              query: GET_DASHBOARD_LAYOUTS,
-              data: {
-                dashboardLayouts: [...(existingLayouts as { dashboardLayouts: DashboardLayout[] }).dashboardLayouts, mutationData.createDashboardLayout],
-              },
-            });
+          const mutationData = result.data?.createDashboardLayout;
+          if (mutationData) {
+            const existingLayouts = cache.readQuery({ query: GET_DASHBOARD_LAYOUTS });
+            if (existingLayouts) {
+              cache.writeQuery({
+                query: GET_DASHBOARD_LAYOUTS,
+                data: {
+                  dashboardLayouts: [...(existingLayouts as { dashboardLayouts: DashboardLayout[] }).dashboardLayouts, mutationData],
+                },
+              });
+            }
           }
         },
       });
@@ -78,9 +81,9 @@ export class DashboardApiService {
       const { data } = await apolloClient.mutate({
         mutation: UPDATE_DASHBOARD_LAYOUT,
         variables: { id, input: layoutData },
-        update: (cache: ApolloCache<any>, { data: mutationData }: { data: { updateDashboardLayout: DashboardLayout } }) => {
+        update: (cache: ApolloCache<any>, result: { data?: { updateDashboardLayout: DashboardLayout } }, options?: any) => {
           // Update cache
-          const updatedLayout = mutationData.updateDashboardLayout;
+          const updatedLayout = result.data?.updateDashboardLayout;
           if (updatedLayout) {
             const layoutId = cache.identify({ __typename: 'DashboardLayout', id: updatedLayout.id });
             // Update each field in the layout

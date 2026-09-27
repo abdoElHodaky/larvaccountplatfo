@@ -1,82 +1,36 @@
-// Global type declarations for the application
+// Global ambient type declarations for modules missing type declarations
+declare module 'solid-js' {
+  export * from 'solid-js/web';
+}
 
-// Testing library jest-dom matchers
-import '@testing-library/jest-dom';
+declare module 'svelte/store' {
+  export * from 'svelte/store';
+}
 
-// Browser API types that might not be available in all environments
+declare module 'vue-demi' {
+  export * from 'vue';
+}
+
+declare module 'vue' {
+  // Vue type definitions are complex; we declare it as any for now to avoid errors
+  // In a real project, you might want to install @types/vue or use the official Vue 3 types
+  export type ComponentPublicInstance = any;
+  export type DefineComponent = any;
+  export * from 'vue';
+}
+
+// Augment the global scope
 declare global {
-  // Notification API types
-  type NotificationPermission = 'default' | 'denied' | 'granted';
-  
-  // Notification options interface
-  interface NotificationOptions {
-    body?: string;
-    icon?: string;
-    image?: string;
-    badge?: string;
-    sound?: string;
-    tag?: string;
-    data?: any;
-    requireInteraction?: boolean;
-    renotify?: boolean;
-    silent?: boolean;
-    timestamp?: number;
-    vibrate?: number | number[];
-    actions?: NotificationAction[];
-  }
-  
-  // Notification action interface
-  interface NotificationAction {
-    action: string;
-    title: string;
-    icon?: string;
-  }
-  
-  // Service Worker types
-  interface ServiceWorkerRegistration {
-    showNotification(title: string, options?: NotificationOptions): Promise<void>;
-  }
-  
-  // Node.js types for timers and other Node.js APIs
-  namespace NodeJS {
-    interface Timeout {
-      ref(): this;
-      unref(): this;
-    }
-    
-    interface Timer extends Timeout {}
-  }
-  
-  // Laravel route helper (if available globally)
-  declare function route(name: string, params?: any): string;
-  
-  // Make route available as a global variable
-  const route: (name: string, params?: any) => string;
-  
-  // Google Analytics gtag function
   interface Window {
-    gtag?: (command: string, targetId: string, config?: any) => void;
+    gtag: (...args: any[]) => void;
   }
-  
-  // Global gtag function
-  declare function gtag(command: string, targetId: string, config?: any): void;
-}
 
-// Vite environment variables
-interface ImportMetaEnv {
-  readonly VITE_API_URL: string;
-  readonly VITE_APP_NAME: string;
-  readonly VITE_APP_ENV: string;
-  readonly VITE_APP_DEBUG: string;
-  readonly VITE_PUSHER_APP_KEY: string;
-  readonly VITE_PUSHER_HOST: string;
-  readonly VITE_PUSHER_PORT: string;
-  readonly VITE_PUSHER_SCHEME: string;
-  readonly VITE_PUSHER_APP_CLUSTER: string;
-}
-
-interface ImportMeta {
-  readonly env: ImportMetaEnv;
+  // Laravel Ziggy route helper
+  function route(
+    name: string,
+    parameters?: Record<string, any> | string[] | number | string,
+    absolute?: boolean | string
+  ): string;
 }
 
 export {};

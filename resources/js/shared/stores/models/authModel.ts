@@ -3,10 +3,10 @@
  * Authentication and user management with Rematch
  */
 
-import { createModel } from '@rematch/PATTERNS';
-import { apolloClient } from '../../services/graphql/apollo-GETDASHBOARDMETRICS';
-import { LOGIN, LOGOUT, REGISTER, SWITCH_TENANT } from '../../services/graphql/LOGIN';
-import { GET_CURRENT_USER } from '../../services/graphql/TENANTFRAGMENT';
+import { createModel } from '@rematch/core';
+import { apolloClient } from '../../../shared/services/graphql/apolloClient';
+import { LOGIN, LOGOUT, REGISTER, SWITCH_TENANT } from '../../../shared/services/graphql/LOGIN';
+import { GET_CURRENT_USER } from '../../../shared/services/graphql/TENANTFRAGMENT';
 
 // Types
 export interface User {
@@ -155,10 +155,10 @@ export const authModel = createModel()({
   
   effects: (dispatch) => ({
     // Login effect
-    async login(payload: { email: string; password: string; remember?: boolean }) {
-      dispatch.auth.setLoading(true);
-      dispatch.auth.clearError();
-      
+    async login(payload: { email: string; password: string; remember?: boolean }, rootState: any) {
+      dispatch.setLoading(true);
+      dispatch.clearError();
+
       try {
         const { data } = await apolloClient.mutate({
           mutation: LOGIN,
@@ -168,34 +168,34 @@ export const authModel = createModel()({
             remember: payload.remember || false,
           },
         });
-        
+
         if (data?.login) {
           const { user, token, tenants } = data.login;
-          
+
           // Update state
-          dispatch.auth.setAuthenticated({ user, token, tenants });
-          
+          dispatch.setAuthenticated({ user, token, tenants });
+
           // Store token in localStorage for Apollo Client
           localStorage.setItem('auth_token', token);
           if (tenants[0]?.tenant) {
             localStorage.setItem('current_tenant', JSON.stringify(tenants[0].tenant));
           }
-          
+
           return { success: true };
         }
-        
+
         throw new Error('Login failed');
       } catch (error: any) {
         const errorMessage = error.message || 'Login failed';
-        dispatch.auth.setError(errorMessage);
-        dispatch.auth.setLoading(false);
+        dispatch.setError(errorMessage);
+        dispatch.setLoading(false);
         return { success: false, error: errorMessage };
       }
     },
     
     // Logout effect
     async logout() {
-      dispatch.auth.setLoading(true);
+      dispatch.setLoading(true);
       
       try {
         // Call logout mutation
@@ -215,13 +215,13 @@ export const authModel = createModel()({
       await apolloClient.clearStore();
       
       // Clear auth state
-      dispatch.auth.clearAuth();
+      dispatch.clearAuth();
     },
     
     // Register effect
     async register(payload: RegisterData) {
-      dispatch.auth.setLoading(true);
-      dispatch.auth.clearError();
+      dispatch.setLoading(true);
+      dispatch.clearError();
       
       try {
         const { data } = await apolloClient.mutate({
@@ -233,7 +233,7 @@ export const authModel = createModel()({
           const { user, token, tenants } = data.register;
           
           // Update state
-          dispatch.auth.setAuthenticated({ user, token, tenants });
+          dispatch.setAuthenticated({ user, token, tenants });
           
           // Store token in localStorage
           localStorage.setItem('auth_token', token);
@@ -247,54 +247,53 @@ export const authModel = createModel()({
         throw new Error('Registration failed');
       } catch (error: any) {
         const errorMessage = error.message || 'Registration failed';
-        dispatch.auth.setError(errorMessage);
-        dispatch.auth.setLoading(false);
+        dispatch.setError(errorMessage);
+        dispatch.setLoading(false);
         return { success: false, error: errorMessage };
       }
     },
     
     // Switch tenant effect
-    async switchTenant(tenantId: string) {
-      dispatch.auth.setLoading(true);
-      dispatch.auth.clearError();
-      
+    async switchTenant(tenantId: string, rootState: any) {
+      dispatch.setLoading(true);
+      dispatch.clearError();
+
       try {
         const { data } = await apolloClient.mutate({
           mutation: SWITCH_TENANT,
           variables: { tenantId },
         });
-        
+
         if (data?.switchTenant) {
           const { tenant, permissions } = data.switchTenant;
-          
+
           // Update current tenant
-          dispatch.auth.setCurrentTenant(tenant);
-          
+          dispatch.setCurrentTenant(tenant);
+
           // Update user permissions for current tenant
-          const state = this.getState();
-          if (state.user) {
-            dispatch.auth.updateUser({ permissions });
+          if (rootState.auth?.user) {
+            dispatch.updateUser({ permissions });
           }
-          
+
           // Store current tenant
           localStorage.setItem('current_tenant', JSON.stringify(tenant));
-          
-          dispatch.auth.setLoading(false);
+
+          dispatch.setLoading(false);
           return { success: true };
         }
-        
+
         throw new Error('Failed to switch tenant');
       } catch (error: any) {
         const errorMessage = error.message || 'Failed to switch tenant';
-        dispatch.auth.setError(errorMessage);
-        dispatch.auth.setLoading(false);
+        dispatch.setError(errorMessage);
+        dispatch.setLoading(false);
         return { success: false, error: errorMessage };
       }
     },
     
     // Refresh user data
     async refreshUser() {
-      dispatch.auth.setLoading(true);
+      dispatch.setLoading(true);
       
       try {
         const { data } = await apolloClient.query({
@@ -305,30 +304,30 @@ export const authModel = createModel()({
         if (data?.currentUser) {
           const { user, tenants } = data.currentUser;
           
-          dispatch.auth.updateUser(user);
-          dispatch.auth.updateTenants(tenants);
+          dispatch.updateUser(user);
+          dispatch.updateTenants(tenants);
         }
         
-        dispatch.auth.setLoading(false);
+        dispatch.setLoading(false);
       } catch (error: any) {
         console.error('Failed to refresh user:', error);
-        dispatch.auth.setLoading(false);
+        dispatch.setLoading(false);
         
         // If token is invalid, logout
         if (error.message?.includes('Unauthenticated')) {
-          dispatch.auth.logout();
+          dispatch.logout();
         }
       }
     },
     
     // Update user preferences
     async updatePreferences(preferences: Partial<User['preferences']>) {
-      const state = this.getState();
+      const state = this.getState() as AuthState;
       if (!state.user) return;
       
       try {
         // Optimistically update UI
-        dispatch.auth.updateUserPreferences(preferences);
+        dispatch.updateUserPreferences(preferences);
         
         // TODO: Add API call to update preferences on server
         // const { data } = await apolloClient.mutate({
@@ -374,9 +373,9 @@ export const authModel = createModel()({
               }
             }
             
-            dispatch.auth.setAuthenticated({ user, token, tenants });
+            dispatch.setAuthenticated({ user, token, tenants });
             if (currentTenant) {
-              dispatch.auth.setCurrentTenant(currentTenant);
+              dispatch.setCurrentTenant(currentTenant);
             }
           }
         } catch (error) {

@@ -1,8 +1,12 @@
-import { apolloClient } from '@/shared/services/graphql/apolloClient';
-import type { ApiResponse } from '@/shared/types';
-import type { Account } from '../stores/accountingModel';
-import type { AccountingFilters } from '../stores/accountingModel';
-import { GET_ACCOUNTS, CREATE_ACCOUNT, UPDATE_ACCOUNT, DELETE_ACCOUNT } from './queries';
+import { apolloClient } from '../../../shared/services/graphql/apolloClient';
+import type { ApiResponse } from '../../../shared/types';
+import type { Account, AccountingFilters } from '../stores/accountingModel';
+import {
+  GET_ACCOUNTS,
+  CREATE_ACCOUNT,
+  UPDATE_ACCOUNT,
+  DELETE_ACCOUNT
+} from './queries';
 
 export const accountingApi = {
   async getAccounts(filters?: Partial<AccountingFilters>): Promise<ApiResponse<Account[]>> {
@@ -27,16 +31,19 @@ export const accountingApi = {
       const { data } = await apolloClient.mutate({
         mutation: CREATE_ACCOUNT,
         variables: { input: accountData },
-        update: (cache: any, { data: mutationData }: { data: { createAccount: Account } | null }) => {
+        update: (cache: any, result: any) => {
           // Update cache with new account
-          const existingAccounts = cache.readQuery({ query: GET_ACCOUNTS });
-          if (existingAccounts) {
-            cache.writeQuery({
-              query: GET_ACCOUNTS,
-              data: {
-                accounts: [...(existingAccounts as any).accounts, mutationData?.createAccount ?? []],
-              },
-            });
+          const mutationData = result.data?.createAccount;
+          if (mutationData) {
+            const existingAccounts = cache.readQuery({ query: GET_ACCOUNTS });
+            if (existingAccounts) {
+              cache.writeQuery({
+                query: GET_ACCOUNTS,
+                data: {
+                  accounts: [...(existingAccounts as any).accounts, mutationData],
+                },
+              });
+            }
           }
         },
       });
@@ -57,23 +64,23 @@ export const accountingApi = {
       const { data } = await apolloClient.mutate({
         mutation: UPDATE_ACCOUNT,
         variables: { id, input: accountData },
-        update: (cache: any, { data: mutationData }: { data: { updateAccount: Account } | null }) => {
-          const updatedAccount = mutationData?.updateAccount;
+        update: (cache: any, result: any) => {
+          const updatedAccount = result.data?.updateAccount;
           if (updatedAccount) {
             // Update the cache by replacing the account in the GET_ACCOUNTS query result
             const existingAccounts = cache.readQuery({ query: GET_ACCOUNTS });
             if (existingAccounts) {
-              const accounts = (existingAccounts as any).accounts;
-              const index = accounts.findIndex((acc: Account) => acc.id === updatedAccount.id);
-              if (index !== -1) {
-                accounts[index] = updatedAccount;
-                cache.writeQuery({
-                  query: GET_ACCOUNTS,
-                  data: {
-                    accounts: accounts,
-                  },
-                });
-              }
+                const accounts = (existingAccounts as any).accounts;
+                const index = accounts.findIndex((acc: Account) => acc.id === updatedAccount.id);
+                if (index !== -1) {
+                  accounts[index] = updatedAccount;
+                  cache.writeQuery({
+                    query: GET_ACCOUNTS,
+                    data: {
+                      accounts: accounts,
+                    },
+                  });
+                }
             }
           }
         },

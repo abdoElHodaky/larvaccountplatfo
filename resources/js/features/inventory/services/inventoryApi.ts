@@ -6,8 +6,7 @@
 import { apolloClient } from '../../../shared/services/graphql/apolloClient';
 import { gql } from '@apollo/client';
 import type { InventoryItem, StockMovement, InventoryFilters } from '../stores/inventoryModel';
-import type { ApiResponse } from '@/shared/types';
-import type { ApolloCache } from '@apollo/client';
+import type { ApiResponse } from '../../../shared/types';
 
 // GraphQL Queries
 const GET_INVENTORY_ITEMS = gql`
@@ -232,16 +231,19 @@ export class InventoryApiService {
       const { data } = await apolloClient.mutate({
         mutation: CREATE_INVENTORY_ITEM,
         variables: { input: itemData },
-        update: (cache: ApolloCache<any>, { data: mutationData }: { data: { createInventoryItem: InventoryItem } }) => {
+        update: (cache: ApolloCache<any>, result: { data?: { createInventoryItem: InventoryItem } }, options?: any) => {
           // Update cache with new item
-          const existingItems = cache.readQuery({ query: GET_INVENTORY_ITEMS });
-          if (existingItems) {
-            cache.writeQuery({
-              query: GET_INVENTORY_ITEMS,
-              data: {
-                inventoryItems: [...(existingItems as any).inventoryItems, mutationData.createInventoryItem],
-              },
-            });
+          const mutationData = result.data?.createInventoryItem;
+          if (mutationData) {
+            const existingItems = cache.readQuery({ query: GET_INVENTORY_ITEMS });
+            if (existingItems) {
+              cache.writeQuery({
+                query: GET_INVENTORY_ITEMS,
+                data: {
+                  inventoryItems: [...(existingItems as any).inventoryItems, mutationData],
+                },
+              });
+            }
           }
         },
       });
@@ -262,9 +264,9 @@ export class InventoryApiService {
       const { data } = await apolloClient.mutate({
         mutation: UPDATE_INVENTORY_ITEM,
         variables: { id, input: itemData },
-        update: (cache: ApolloCache<any>, { data: mutationData }: { data: { updateInventoryItem: InventoryItem; } }) => {
+        update: (cache: ApolloCache<any>, result: { data?: { updateInventoryItem: InventoryItem; } }, options?: any) => {
           // Update cache
-          const updatedItem = mutationData.updateInventoryItem;
+          const updatedItem = data;
           if (updatedItem) {
             const itemId = cache.identify({ __typename: 'InventoryItem', id: updatedItem.id });
             // Update each field in the item
@@ -341,29 +343,32 @@ export class InventoryApiService {
       const { data } = await apolloClient.mutate({
         mutation: CREATE_STOCK_MOVEMENT,
         variables: { input: movementData },
-        update: (cache: ApolloCache<any>, { data: mutationData }: { data: { createStockMovement: StockMovement; } }) => {
+        update: (cache: ApolloCache<any>, result: { data?: { createStockMovement: StockMovement; } }, options?: any) => {
           // Update cache with new movement
-          const existingMovements = cache.readQuery({ query: GET_STOCK_MOVEMENTS });
-          if (existingMovements) {
-            cache.writeQuery({
-              query: GET_STOCK_MOVEMENTS,
-              data: {
-                stockMovements: [mutationData.createStockMovement, ...(existingMovements as any).stockMovements],
-              },
-            });
-          }
+          const mutationData = result.data?.createStockMovement;
+          if (mutationData) {
+            const existingMovements = cache.readQuery({ query: GET_STOCK_MOVEMENTS });
+            if (existingMovements) {
+              cache.writeQuery({
+                query: GET_STOCK_MOVEMENTS,
+                data: {
+                  stockMovements: [mutationData, ...(existingMovements as any).stockMovements],
+                },
+              });
+            }
 
-          // Update item stock quantity in cache
-          if (mutationData.createStockMovement.item) {
-            cache.modify({
-              id: cache.identify({ 
-                __typename: 'InventoryItem', 
-                id: mutationData.createStockMovement.itemId 
-              }),
-              fields: {
-                stockQuantity: () => mutationData.createStockMovement.item.stockQuantity,
-              },
-            });
+            // Update item stock quantity in cache
+            if (mutationData.item) {
+              cache.modify({
+                id: cache.identify({
+                  __typename: 'InventoryItem',
+                  id: mutationData.itemId
+                }),
+                fields: {
+                  stockQuantity: () => mutationData.item.stockQuantity,
+                },
+              });
+            }
           }
         },
       });

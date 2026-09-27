@@ -1,5 +1,5 @@
 import { useEffect, useState, useCallback } from 'react';
-import { io, Socket } from 'socket.io-GETDASHBOARDMETRICS';
+import { io, Socket } from 'socket.io-client';
 
 interface RealtimeConfig {
   maxRetries?: number;
@@ -19,7 +19,7 @@ interface RealtimeState {
 
 // Enhanced real-time hook with error handling and retry logic
 export function useRealtimeWithRetry(
-  organizationId: string, 
+  organizationId: string,
   config: RealtimeConfig = {}
 ) {
   const {
@@ -121,7 +121,7 @@ export function useRealtimeWithRetry(
           console.log('📝 Transaction updated:', data);
           setState(prev => ({
             ...prev,
-            transactions: prev.transactions.map(t => 
+            transactions: prev.transactions.map(t =>
               t.id === data.transaction.id ? data.transaction : t
             )
           }));
@@ -135,7 +135,7 @@ export function useRealtimeWithRetry(
           console.log('📦 Stock updated:', data);
           setState(prev => ({
             ...prev,
-            products: prev.products.map(p => 
+            products: prev.products.map(p =>
               p.id === data.product.id ? data.product : p
             )
           }));
@@ -164,9 +164,9 @@ export function useRealtimeWithRetry(
 
     } catch (error) {
       console.error('Failed to initialize WebSocket:', error);
-      setState(prev => ({ 
-        ...prev, 
-        error: error instanceof Error ? error.message : 'Initialization failed' 
+      setState(prev => ({
+        ...prev,
+        error: error instanceof Error ? error.message : 'Initialization failed'
       }));
     }
   }, [organizationId, maxRetries, retryDelay, reconnectOnError, state.retryCount]);
@@ -181,11 +181,11 @@ export function useRealtimeWithRetry(
   const disconnect = useCallback(() => {
     if (state.socket) {
       state.socket.disconnect();
-      setState(prev => ({ 
-        ...prev, 
-        socket: null, 
-        connected: false, 
-        error: null 
+      setState(prev => ({
+        ...prev,
+        socket: null,
+        connected: false,
+        error: null
       }));
     }
   }, [state.socket]);

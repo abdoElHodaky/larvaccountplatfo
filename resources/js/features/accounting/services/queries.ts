@@ -1,4 +1,6 @@
-export const GET_ACCOUNTS = `
+import { gql } from '@apollo/client';
+
+export const GET_ACCOUNTS = gql`
   query GetAccounts($filters: AccountFiltersInput) {
     accounts(filters: $filters) {
       id
@@ -32,7 +34,7 @@ export const GET_ACCOUNTS = `
   }
 `;
 
-export const CREATE_ACCOUNT = `
+export const CREATE_ACCOUNT = gql`
   mutation CreateAccount($input: CreateAccountInput!) {
     createAccount(input: $input) {
       id
@@ -52,7 +54,7 @@ export const CREATE_ACCOUNT = `
   }
 `;
 
-export const UPDATE_ACCOUNT = `
+export const UPDATE_ACCOUNT = gql`
   mutation UpdateAccount($input: UpdateAccountInput!) {
     updateAccount(input: $input) {
       id
@@ -70,7 +72,7 @@ export const UPDATE_ACCOUNT = `
   }
 `;
 
-export const DELETE_ACCOUNT = `
+export const DELETE_ACCOUNT = gql`
   mutation DeleteAccount($accountId: ID!) {
     deleteAccount(accountId: $accountId) {
       success

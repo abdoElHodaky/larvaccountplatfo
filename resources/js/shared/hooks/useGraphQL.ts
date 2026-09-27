@@ -4,7 +4,7 @@
  */
 
 import { useQuery, useMutation, useSubscription, useLazyQuery } from '@apollo/client';
-import { useRequest as _useRequest, useWatcher as _useWatcher, useAutoRequest as _useAutoRequest } from 'alova/client';
+import { useRequest as _useRequest, useWatcher as _useWatcher } from 'alova';
 import { alovaInstance as _alovaInstance } from '../services/graphql/apolloClient';
 import { useCallback, useMemo, useState } from 'react';
 import type { 

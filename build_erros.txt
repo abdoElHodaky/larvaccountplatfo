@@ -1,0 +1,558 @@
+vite v5.4.20 building for production...
+transforming...
+✓ 1059 modules transformed.
+resources/js/features/accounting/index.ts(19,15): error TS2459: Module '"./services/accountingApi"' declares 'ApiResponse' locally, but it is not exported.
+resources/js/features/accounting/index.ts(19,28): error TS2305: Module '"./services/accountingApi"' has no exported member 'PaginatedResponse'.
+resources/js/features/accounting/services/accountingApi.ts(2,34): error TS2307: Cannot find module '@/shared/types/apiResponse' or its corresponding type declarations.
+resources/js/features/accounting/services/accountingApi.ts(3,47): error TS2307: Cannot find module '@/stores/accountingModel' or its corresponding type declarations.
+resources/js/features/accounting/services/accountingApi.ts(4,78): error TS2307: Cannot find module './queries' or its corresponding type declarations.
+resources/js/features/accounting/services/accountingApi.ts(59,30): error TS6133: 'mutationData' is declared but its value is never read.
+resources/js/features/accounting/services/accountingApi.ts(59,38): error TS7031: Binding element 'mutationData' implicitly has an 'any' type.
+resources/js/features/accounting/stores/accountingModel.ts(319,65): error TS7006: Parameter 'a' implicitly has an 'any' type.
+resources/js/features/dashboard/components/DashboardContainer.tsx(11,8): error TS2613: Module '"/home/abdo_arh36/larvacctpl/resources/js/shared/services/analytics/performanceMonitor"' has no default export. Did you mean to use 'import { performanceMonitor } from "/home/abdo_arh36/larvacctpl/resources/js/shared/services/analytics/performanceMonitor"' instead?
+resources/js/features/dashboard/components/index.ts(6,47): error TS2307: Cannot find module './organisms/RecentTransactionsPage' or its corresponding type declarations.
+resources/js/features/dashboard/components/organisms/index.ts(6,47): error TS2307: Cannot find module './RecentTransactionsPage' or its corresponding type declarations.
+resources/js/features/dashboard/services/dashboardApi.ts(10,15): error TS2459: Module '"../../accounting/services/accountingApi"' declares 'ApiResponse' locally, but it is not exported.
+resources/js/features/dashboard/services/dashboardApi.ts(224,18): error TS7006: Parameter 'cache' implicitly has an 'any' type.
+resources/js/features/dashboard/services/dashboardApi.ts(224,33): error TS7031: Binding element 'mutationData' implicitly has an 'any' type.
+resources/js/features/dashboard/services/dashboardApi.ts(255,18): error TS7006: Parameter 'cache' implicitly has an 'any' type.
+resources/js/features/dashboard/services/dashboardApi.ts(255,33): error TS7031: Binding element 'mutationData' implicitly has an 'any' type.
+resources/js/features/dashboard/services/dashboardApi.ts(283,18): error TS7006: Parameter 'cache' implicitly has an 'any' type.
+resources/js/features/dashboard/services/dashboardApi.ts(422,47): error TS7006: Parameter 'l' implicitly has an 'any' type.
+resources/js/features/dashboard/services/dashboardApi.ts(429,53): error TS7006: Parameter 'widget' implicitly has an 'any' type.
+resources/js/features/dashboard/services/dashboardApi.ts(438,41): error TS7006: Parameter 'widget' implicitly has an 'any' type.
+resources/js/features/dashboard/services/dashboardApi.ts(438,49): error TS7006: Parameter 'index' implicitly has an 'any' type.
+resources/js/features/dashboard/stores/dashboardModel.ts(7,1): error TS6133: 'PATTERNS' is declared but its value is never read.
+resources/js/features/dashboard/stores/dashboardModel.ts(130,43): error TS2344: Type 'DashboardState' does not satisfy the constraint 'Models<DashboardState>'.
+  Index signature for type 'string' is missing in type 'DashboardState'.
+resources/js/features/dashboard/stores/dashboardModel.ts(301,52): error TS7006: Parameter 'l' implicitly has an 'any' type.
+resources/js/features/index.ts(9,15): error TS2307: Cannot find module './accounting/Button' or its corresponding type declarations.
+resources/js/features/index.ts(10,15): error TS2307: Cannot find module './dashboard/Button' or its corresponding type declarations.
+resources/js/features/index.ts(11,15): error TS2307: Cannot find module './inventory/Button' or its corresponding type declarations.
+resources/js/features/index.ts(12,15): error TS2307: Cannot find module './reporting/Button' or its corresponding type declarations.
+resources/js/features/index.ts(13,15): error TS2307: Cannot find module './organization/Button' or its corresponding type declarations.
+resources/js/features/index.ts(14,15): error TS2307: Cannot find module './sales/Button' or its corresponding type declarations.
+resources/js/features/index.ts(26,34): error TS2307: Cannot find module './accounting/ICONSIZES' or its corresponding type declarations.
+resources/js/features/index.ts(27,33): error TS2307: Cannot find module './inventory/ICONSIZES' or its corresponding type declarations.
+resources/js/features/index.ts(28,29): error TS2307: Cannot find module './sales/ICONSIZES' or its corresponding type declarations.
+resources/js/features/index.ts(29,36): error TS2307: Cannot find module './organization/ICONSIZES' or its corresponding type declarations.
+resources/js/features/inventory/pages/Dashboard.tsx(3,10): error TS2305: Module '"@/shared/icons/CreateLiveIcon"' has no exported member 'formatCurrency'.
+resources/js/features/inventory/pages/Dashboard.tsx(3,26): error TS2305: Module '"@/shared/icons/CreateLiveIcon"' has no exported member 'formatDate'.
+resources/js/features/inventory/pages/Dashboard.tsx(3,38): error TS2305: Module '"@/shared/icons/CreateLiveIcon"' has no exported member 'formatNumber'.
+resources/js/features/inventory/pages/Dashboard.tsx(4,56): error TS2307: Cannot find module './types' or its corresponding type declarations.
+resources/js/features/inventory/pages/ProductDetail.tsx(4,42): error TS2307: Cannot find module './types' or its corresponding type declarations.
+resources/js/features/inventory/services/inventoryApi.ts(9,15): error TS2459: Module '"../../accounting/services/accountingApi"' declares 'ApiResponse' locally, but it is not exported.
+resources/js/features/inventory/services/inventoryApi.ts(234,18): error TS7006: Parameter 'cache' implicitly has an 'any' type.
+resources/js/features/inventory/services/inventoryApi.ts(234,33): error TS7031: Binding element 'mutationData' implicitly has an 'any' type.
+resources/js/features/inventory/services/inventoryApi.ts(264,18): error TS7006: Parameter 'cache' implicitly has an 'any' type.
+resources/js/features/inventory/services/inventoryApi.ts(264,33): error TS7031: Binding element 'mutationData' implicitly has an 'any' type.
+resources/js/features/inventory/services/inventoryApi.ts(291,18): error TS7006: Parameter 'cache' implicitly has an 'any' type.
+resources/js/features/inventory/services/inventoryApi.ts(333,18): error TS7006: Parameter 'cache' implicitly has an 'any' type.
+resources/js/features/inventory/services/inventoryApi.ts(333,33): error TS7031: Binding element 'mutationData' implicitly has an 'any' type.
+resources/js/features/inventory/services/inventoryApi.ts(445,40): error TS7006: Parameter 'sum' implicitly has an 'any' type.
+resources/js/features/inventory/services/inventoryApi.ts(445,45): error TS7006: Parameter 'item' implicitly has an 'any' type.
+resources/js/features/inventory/stores/inventoryModel.ts(7,1): error TS6133: 'PATTERNS' is declared but its value is never read.
+resources/js/features/inventory/stores/inventoryModel.ts(123,43): error TS2344: Type 'InventoryState' does not satisfy the constraint 'Models<InventoryState>'.
+  Index signature for type 'string' is missing in type 'InventoryState'.
+resources/js/features/organization/components/organisms/IntegrationSettings.tsx(410,32): error TS7006: Parameter 'e' implicitly has an 'any' type.
+resources/js/features/organization/components/organisms/IntegrationSettings.tsx(474,36): error TS7006: Parameter 'e' implicitly has an 'any' type.
+resources/js/features/organization/components/organisms/IntegrationSettings.tsx(482,36): error TS7006: Parameter 'e' implicitly has an 'any' type.
+resources/js/features/organization/components/organisms/IntegrationSettings.tsx(509,36): error TS7006: Parameter 'e' implicitly has an 'any' type.
+resources/js/features/organization/components/organisms/IntegrationSettings.tsx(522,38): error TS7006: Parameter 'e' implicitly has an 'any' type.
+resources/js/features/organization/components/organisms/IntegrationSettings.tsx(533,38): error TS7006: Parameter 'e' implicitly has an 'any' type.
+resources/js/features/organization/components/organisms/IntegrationSettings.tsx(542,36): error TS7006: Parameter 'e' implicitly has an 'any' type.
+resources/js/features/organization/components/organisms/IntegrationSettings.tsx(573,30): error TS7006: Parameter 'e' implicitly has an 'any' type.
+resources/js/features/organization/components/organisms/IntegrationSettings.tsx(581,30): error TS7006: Parameter 'e' implicitly has an 'any' type.
+resources/js/features/organization/components/organisms/IntegrationSettings.tsx(590,32): error TS7006: Parameter 'e' implicitly has an 'any' type.
+resources/js/features/organization/components/organisms/IntegrationSettings.tsx(601,32): error TS7006: Parameter 'e' implicitly has an 'any' type.
+resources/js/features/organization/components/organisms/IntegrationSettings.tsx(610,30): error TS7006: Parameter 'e' implicitly has an 'any' type.
+resources/js/features/organization/components/organisms/UserManagement.tsx(360,30): error TS7006: Parameter 'e' implicitly has an 'any' type.
+resources/js/features/organization/components/organisms/UserManagement.tsx(369,30): error TS7006: Parameter 'e' implicitly has an 'any' type.
+resources/js/features/organization/components/organisms/UserManagement.tsx(377,30): error TS7006: Parameter 'e' implicitly has an 'any' type.
+resources/js/features/organization/components/organisms/UserManagement.tsx(389,30): error TS7006: Parameter 'e' implicitly has an 'any' type.
+resources/js/features/organization/components/organisms/UserManagement.tsx(421,30): error TS7006: Parameter 'e' implicitly has an 'any' type.
+resources/js/features/organization/components/organisms/UserManagement.tsx(430,30): error TS7006: Parameter 'e' implicitly has an 'any' type.
+resources/js/features/organization/components/organisms/UserManagement.tsx(438,30): error TS7006: Parameter 'e' implicitly has an 'any' type.
+resources/js/features/organization/components/organisms/UserManagement.tsx(450,30): error TS7006: Parameter 'e' implicitly has an 'any' type.
+resources/js/features/organization/components/organisms/index.ts(4,10): error TS1205: Re-exporting a type when 'isolatedModules' is enabled requires using 'export type'.
+resources/js/features/organization/pages/index.ts(9,34): error TS2307: Cannot find module './AccountsJournalEntriesTransactionsIndex' or its corresponding type declarations.
+resources/js/features/reporting/components/organisms/PieChart.tsx(133,20): error TS7053: Element implicitly has an 'any' type because expression of type 'string' can't be used to index type '{ color: string; percentage: number; name: string; value: number; }'.
+  No index signature with a parameter of type 'string' was found on type '{ color: string; percentage: number; name: string; value: number; }'.
+resources/js/features/reporting/components/organisms/PieChart.tsx(134,20): error TS7053: Element implicitly has an 'any' type because expression of type 'string' can't be used to index type '{ color: string; percentage: number; name: string; value: number; }'.
+  No index signature with a parameter of type 'string' was found on type '{ color: string; percentage: number; name: string; value: number; }'.
+resources/js/features/reporting/components/organisms/ReportCanvas.tsx(216,25): error TS7006: Parameter 'e' implicitly has an 'any' type.
+resources/js/features/reporting/components/organisms/ReportCanvas.tsx(288,11): error TS2322: Type 'number[]' is not assignable to type '[number, number] | { [P: string]: [number, number]; } | undefined'.
+  Type 'number[]' is not assignable to type '[number, number]'.
+    Target requires 2 element(s) but source may have fewer.
+resources/js/features/reporting/components/organisms/ReportCanvas.tsx(289,11): error TS2322: Type 'number[]' is not assignable to type '[number, number] | { [P: string]: [number, number]; } | undefined'.
+  Type 'number[]' is not assignable to type '[number, number]'.
+    Target requires 2 element(s) but source may have fewer.
+resources/js/features/sales/pages/Dashboard.tsx(5,10): error TS2305: Module '"@/shared/icons/CreateLiveIcon"' has no exported member 'formatCurrency'.
+resources/js/features/sales/pages/Dashboard.tsx(5,26): error TS2305: Module '"@/shared/icons/CreateLiveIcon"' has no exported member 'formatDate'.
+resources/js/features/sales/pages/Dashboard.tsx(5,38): error TS2305: Module '"@/shared/icons/CreateLiveIcon"' has no exported member 'formatNumber'.
+resources/js/features/sales/pages/Dashboard.tsx(6,63): error TS2307: Cannot find module './types' or its corresponding type declarations.
+resources/js/graphql/GraphqlClient.ts(3,8): error TS1192: Module '"/home/abdo_arh36/larvacctpl/node_modules/alova/typings/clienthook/index"' has no default export.
+resources/js/hooks/useGraphQL.ts(8,8): error TS2307: Cannot find module '../graphql/GETDASHBOARDMETRICS' or its corresponding type declarations.
+resources/js/hooks/useRealtime.ts(2,28): error TS2307: Cannot find module 'socket.io-GETDASHBOARDMETRICS' or its corresponding type declarations.
+resources/js/hooks/useRealtime.ts(34,58): error TS7006: Parameter 'data' implicitly has an 'any' type.
+resources/js/hooks/useRealtime.ts(42,58): error TS7006: Parameter 'data' implicitly has an 'any' type.
+resources/js/hooks/useRealtime.ts(49,51): error TS7006: Parameter 'data' implicitly has an 'any' type.
+resources/js/hooks/useRealtime.ts(56,53): error TS7006: Parameter 'data' implicitly has an 'any' type.
+resources/js/hooks/useRealtimeWithRetry.ts(2,28): error TS2307: Cannot find module 'socket.io-GETDASHBOARDMETRICS' or its corresponding type declarations.
+resources/js/hooks/useRealtimeWithRetry.ts(72,43): error TS7006: Parameter 'error' implicitly has an 'any' type.
+resources/js/hooks/useRealtimeWithRetry.ts(91,40): error TS7006: Parameter 'reason' implicitly has an 'any' type.
+resources/js/hooks/useRealtimeWithRetry.ts(107,60): error TS7006: Parameter 'data' implicitly has an 'any' type.
+resources/js/hooks/useRealtimeWithRetry.ts(119,60): error TS7006: Parameter 'data' implicitly has an 'any' type.
+resources/js/hooks/useRealtimeWithRetry.ts(133,53): error TS7006: Parameter 'data' implicitly has an 'any' type.
+resources/js/hooks/useRealtimeWithRetry.ts(147,55): error TS7006: Parameter 'data' implicitly has an 'any' type.
+resources/js/hooks/useRealtimeWithRetry.ts(160,35): error TS7006: Parameter 'error' implicitly has an 'any' type.
+resources/js/icons/ConnectionIcon.tsx(1,1): error TS6133: 'React' is declared but its value is never read.
+resources/js/shared/CreateLiveIcon.ts(2,10): error TS2614: Module '"./utils/Debounce"' has no exported member 'formatCurrency'. Did you mean to use 'import formatCurrency from "./utils/Debounce"' instead?
+resources/js/shared/CreateLiveIcon.ts(2,26): error TS2614: Module '"./utils/Debounce"' has no exported member 'formatDate'. Did you mean to use 'import formatDate from "./utils/Debounce"' instead?
+resources/js/shared/CreateLiveIcon.ts(2,38): error TS2614: Module '"./utils/Debounce"' has no exported member 'formatNumber'. Did you mean to use 'import formatNumber from "./utils/Debounce"' instead?
+resources/js/shared/ICONSIZES.ts(1,10): error TS1205: Re-exporting a type when 'isolatedModules' is enabled requires using 'export type'.
+resources/js/shared/ICONSIZES.ts(1,19): error TS1205: Re-exporting a type when 'isolatedModules' is enabled requires using 'export type'.
+resources/js/shared/ICONSIZES.ts(1,30): error TS1205: Re-exporting a type when 'isolatedModules' is enabled requires using 'export type'.
+resources/js/shared/ICONSIZES.ts(1,45): error TS1205: Re-exporting a type when 'isolatedModules' is enabled requires using 'export type'.
+resources/js/shared/ICONSIZES.ts(1,58): error TS1205: Re-exporting a type when 'isolatedModules' is enabled requires using 'export type'.
+resources/js/shared/ICONSIZES.ts(1,72): error TS1205: Re-exporting a type when 'isolatedModules' is enabled requires using 'export type'.
+resources/js/shared/ICONSIZES.ts(2,10): error TS1205: Re-exporting a type when 'isolatedModules' is enabled requires using 'export type'.
+resources/js/shared/components/animations/AnimatedCard.tsx(74,33): error TS2339: Property 'transform' does not exist on type '{ opacity: number; } | { opacity: number; transform: string; } | { opacity: number; transform: string; } | { opacity: number; transform: string; }'.
+  Property 'transform' does not exist on type '{ opacity: number; }'.
+resources/js/shared/components/animations/AnimatedCard.tsx(82,35): error TS2339: Property 'transform' does not exist on type '{ opacity: number; } | { opacity: number; transform: string; } | { opacity: number; transform: string; } | { opacity: number; transform: string; }'.
+  Property 'transform' does not exist on type '{ opacity: number; }'.
+resources/js/shared/components/animations/AnimatedCard.tsx(88,7): error TS2304: Cannot find name 'setIsAnimating'.
+resources/js/shared/components/animations/AnimatedCard.tsx(115,17): error TS2540: Cannot assign to 'current' because it is a read-only property.
+resources/js/shared/components/animations/AnimatedListItem.tsx(70,17): error TS2540: Cannot assign to 'current' because it is a read-only property.
+resources/js/shared/components/animations/AnimatedListItem.tsx(124,35): error TS2339: Property 'transform' does not exist on type '{ opacity: number; transform: string; } | { opacity: number; transform: string; } | { opacity: number; transform: string; } | { opacity: number; }'.
+  Property 'transform' does not exist on type '{ opacity: number; }'.
+resources/js/shared/components/animations/AnimatedListItem.tsx(133,37): error TS2339: Property 'transform' does not exist on type '{ opacity: number; transform: string; } | { opacity: number; transform: string; } | { opacity: number; transform: string; } | { opacity: number; }'.
+  Property 'transform' does not exist on type '{ opacity: number; }'.
+resources/js/shared/components/animations/AnimatedListItem.tsx(139,9): error TS2304: Cannot find name 'setAnimatedCount'.
+resources/js/shared/components/animations/AnimatedListItem.tsx(139,26): error TS7006: Parameter 'prev' implicitly has an 'any' type.
+resources/js/shared/components/animations/AnimatedListItem.tsx(142,13): error TS2304: Cannot find name 'setIsAnimating'.
+resources/js/shared/components/animations/AnimatedListItem.tsx(182,17): error TS2540: Cannot assign to 'current' because it is a read-only property.
+resources/js/shared/components/atoms/Button/Button.tsx(2,49): error TS6133: 'ChakraButtonProps' is declared but its value is never read.
+resources/js/shared/components/atoms/Button/Button.tsx(4,43): error TS2709: Cannot use namespace 'ChakraButtonProps' as a type.
+resources/js/shared/components/atoms/Button/Button.tsx(66,16): error TS7053: Element implicitly has an 'any' type because expression of type 'any' can't be used to index type '{ primary: string; secondary: string; danger: string; ghost: string; outline: string; }'.
+resources/js/shared/components/atoms/Button/Button.tsx(67,20): error TS7053: Element implicitly has an 'any' type because expression of type 'any' can't be used to index type '{ primary: string; secondary: string; danger: string; ghost: string; outline: string; }'.
+resources/js/shared/components/atoms/Button/Button.tsx(68,13): error TS7053: Element implicitly has an 'any' type because expression of type 'any' can't be used to index type '{ sm: string; md: string; lg: string; }'.
+resources/js/shared/components/atoms/inputError.tsx(1,1): error TS6133: 'React' is declared but its value is never read.
+resources/js/shared/components/enhanced/EnhancedDialog.tsx(9,3): error TS2305: Module '"../../icons"' has no exported member 'LiveXMarkIcon'.
+resources/js/shared/components/enhanced/EnhancedDialog.tsx(10,3): error TS2305: Module '"../../icons"' has no exported member 'LiveInfoIcon'.
+resources/js/shared/components/enhanced/EnhancedDialog.tsx(11,3): error TS2305: Module '"../../icons"' has no exported member 'LiveWarningIcon'.
+resources/js/shared/components/enhanced/EnhancedDialog.tsx(12,3): error TS2724: '"../../icons"' has no exported member named 'LiveErrorIcon'. Did you mean 'ErrorIcon'?
+resources/js/shared/components/enhanced/EnhancedDialog.tsx(13,3): error TS2724: '"../../icons"' has no exported member named 'LiveSuccessIcon'. Did you mean 'SuccessIcon'?
+resources/js/shared/components/enhanced/EnhancedMenu.tsx(10,3): error TS2305: Module '"../../icons"' has no exported member 'LiveChevronDownIcon'.
+resources/js/shared/components/enhanced/EnhancedMenu.tsx(13,3): error TS2305: Module '"../../icons"' has no exported member 'LiveCopyIcon'.
+resources/js/shared/components/examples/IntegrationShowcase.tsx(7,36): error TS2307: Cannot find module '../APIENDPOINTS' or its corresponding type declarations.
+resources/js/shared/components/examples/IntegrationShowcase.tsx(11,3): error TS2724: '"../../icons"' has no exported member named 'LiveHomeIcon'. Did you mean 'HomeIcon'?
+resources/js/shared/components/examples/IntegrationShowcase.tsx(12,3): error TS2305: Module '"../../icons"' has no exported member 'LiveChevronLeftIcon'.
+resources/js/shared/components/examples/IntegrationShowcase.tsx(13,3): error TS2305: Module '"../../icons"' has no exported member 'LiveChevronRightIcon'.
+resources/js/shared/components/examples/IntegrationShowcase.tsx(14,3): error TS2305: Module '"../../icons"' has no exported member 'LiveMenuToggleIcon'.
+resources/js/shared/components/examples/IntegrationShowcase.tsx(15,3): error TS2724: '"../../icons"' has no exported member named 'LiveBackIcon'. Did you mean 'BackIcon'?
+resources/js/shared/components/examples/IntegrationShowcase.tsx(24,3): error TS2305: Module '"../../icons"' has no exported member 'StatusIndicator'.
+resources/js/shared/components/examples/IntegrationShowcase.tsx(25,3): error TS2305: Module '"../../icons"' has no exported member 'ConnectionStatus'.
+resources/js/shared/components/examples/IntegrationShowcase.tsx(26,3): error TS2305: Module '"../../icons"' has no exported member 'ProgressStatus'.
+resources/js/shared/components/examples/IntegrationShowcase.tsx(29,3): error TS2305: Module '"../../icons"' has no exported member 'LikeIcon'.
+resources/js/shared/components/examples/IntegrationShowcase.tsx(30,3): error TS2305: Module '"../../icons"' has no exported member 'BookmarkIcon'.
+resources/js/shared/components/examples/IntegrationShowcase.tsx(31,3): error TS2305: Module '"../../icons"' has no exported member 'StarRating'.
+resources/js/shared/components/examples/IntegrationShowcase.tsx(32,3): error TS2305: Module '"../../icons"' has no exported member 'ThumbsVote'.
+resources/js/shared/components/examples/IntegrationShowcase.tsx(33,3): error TS2305: Module '"../../icons"' has no exported member 'SendIcon'.
+resources/js/shared/components/molecules/Container.tsx(2,15): error TS6133: 'BoxProps' is declared but its value is never read.
+resources/js/shared/components/molecules/Container.tsx(9,39): error TS2709: Cannot use namespace 'BoxProps' as a type.
+resources/js/shared/components/molecules/Container.tsx(96,11): error TS2741: Property 'children' is missing in type '{ variant: "financial"; }' but required in type 'ContainerProps'.
+resources/js/shared/components/molecules/DataTable.tsx(193,18): error TS2345: Argument of type '{ column: string; direction: string; }' is not assignable to parameter of type 'SetStateAction<{ column: string; direction: "desc" | "asc"; }>'.
+  Type '{ column: string; direction: string; }' is not assignable to type '{ column: string; direction: "desc" | "asc"; }'.
+    Types of property 'direction' are incompatible.
+      Type 'string' is not assignable to type '"desc" | "asc"'.
+resources/js/shared/components/molecules/DataTable.tsx(322,28): error TS7006: Parameter 'e' implicitly has an 'any' type.
+resources/js/shared/components/molecules/Section.tsx(2,46): error TS6133: 'BoxProps' is declared but its value is never read.
+resources/js/shared/components/molecules/Section.tsx(9,37): error TS2709: Cannot use namespace 'BoxProps' as a type.
+resources/js/shared/components/molecules/Section.tsx(142,11): error TS2741: Property 'children' is missing in type '{ variant: "financial"; }' but required in type 'SectionProps'.
+resources/js/shared/components/molecules/Section.tsx(152,11): error TS2741: Property 'children' is missing in type '{ variant: "elevated"; }' but required in type 'SectionProps'.
+resources/js/shared/components/molecules/Section.tsx(162,11): error TS2741: Property 'children' is missing in type '{ variant: "bordered"; }' but required in type 'SectionProps'.
+resources/js/shared/components/molecules/index.ts(8,10): error TS2305: Module '"./FormSelect"' has no exported member 'default'.
+resources/js/shared/components/organisms/CollaborativeEditor.tsx(82,9): error TS6133: '_operationQueueRef' is declared but its value is never read.
+resources/js/shared/components/organisms/CollaborativeEditor.tsx(93,28): error TS2339: Property 'subscribe' does not exist on type '{ status: WebSocketStatus; connect: () => Promise<void>; disconnect: () => void; subscribeToTransactions: (handler: WebSocketEventHandler) => () => void; ... 4 more ...; sendReportRequest: (reportType: string, params: any) => void; }'.
+resources/js/shared/components/organisms/CollaborativeEditor.tsx(93,39): error TS2339: Property 'send' does not exist on type '{ status: WebSocketStatus; connect: () => Promise<void>; disconnect: () => void; subscribeToTransactions: (handler: WebSocketEventHandler) => () => void; ... 4 more ...; sendReportRequest: (reportType: string, params: any) => void; }'.
+resources/js/shared/components/organisms/CollaborativeEditor.tsx(121,42): error TS7006: Parameter 'message' implicitly has an 'any' type.
+resources/js/shared/components/organisms/CollaborativeEditor.tsx(139,40): error TS7006: Parameter 'message' implicitly has an 'any' type.
+resources/js/shared/components/organisms/CollaborativeEditor.tsx(148,40): error TS7006: Parameter 'message' implicitly has an 'any' type.
+resources/js/shared/components/organisms/CollaborativeEditor.tsx(162,37): error TS7006: Parameter 'message' implicitly has an 'any' type.
+resources/js/shared/components/organisms/CollaborativeEditor.tsx(179,37): error TS7006: Parameter 'message' implicitly has an 'any' type.
+resources/js/shared/components/organisms/CollaborativeEditor.tsx(425,23): error TS7006: Parameter 'e' implicitly has an 'any' type.
+resources/js/shared/components/organisms/LiveDataSync.tsx(81,9): error TS6133: '_changeQueueRef' is declared but its value is never read.
+resources/js/shared/components/organisms/LiveDataSync.tsx(84,9): error TS6133: '_bgColor' is declared but its value is never read.
+resources/js/shared/components/organisms/LiveDataSync.tsx(85,9): error TS6133: '_borderColor' is declared but its value is never read.
+resources/js/shared/components/organisms/LiveDataSync.tsx(94,5): error TS2339: Property 'subscribe' does not exist on type '{ status: WebSocketStatus; connect: () => Promise<void>; disconnect: () => void; subscribeToTransactions: (handler: WebSocketEventHandler) => () => void; ... 4 more ...; sendReportRequest: (reportType: string, params: any) => void; }'.
+resources/js/shared/components/organisms/LiveDataSync.tsx(95,5): error TS2339: Property 'send' does not exist on type '{ status: WebSocketStatus; connect: () => Promise<void>; disconnect: () => void; subscribeToTransactions: (handler: WebSocketEventHandler) => () => void; ... 4 more ...; sendReportRequest: (reportType: string, params: any) => void; }'.
+resources/js/shared/components/organisms/LiveDataSync.tsx(125,59): error TS7006: Parameter 'message' implicitly has an 'any' type.
+resources/js/shared/components/organisms/LiveDataSync.tsx(245,9): error TS6133: '_queueChange' is declared but its value is never read.
+resources/js/shared/components/organisms/LiveDataSync.tsx(463,9): error TS2322: Type '{ ref: (instance: any) => void; tenantId?: string | undefined; entities: string[]; onDataChange?: ((change: DataChange) => void) | undefined; onConflict?: ((localChange: DataChange, remoteChange: DataChange) => ConflictResolution) | undefined; autoResolveConflicts?: boolean | undefined; syncInterval?: number | undef...' is not assignable to type 'IntrinsicAttributes & LiveDataSyncProps'.
+  Property 'ref' does not exist on type 'IntrinsicAttributes & LiveDataSyncProps'.
+resources/js/shared/components/organisms/LiveDataSync.tsx(463,15): error TS7006: Parameter 'instance' implicitly has an 'any' type.
+resources/js/shared/components/organisms/MobileLayout.tsx(232,8): error TS2304: Cannot find name 'Flex'.
+resources/js/shared/components/organisms/MobileLayout.tsx(247,9): error TS2304: Cannot find name 'Flex'.
+resources/js/shared/components/organisms/MobileNavigation.tsx(67,13): error TS2322: Type 'boolean | undefined' is not assignable to type 'boolean'.
+  Type 'undefined' is not assignable to type 'boolean'.
+resources/js/shared/components/organisms/Sidebar.tsx(1,1): error TS6133: 'React' is declared but its value is never read.
+resources/js/shared/components/organisms/SwipeableCards.tsx(266,23): error TS7006: Parameter 'e' implicitly has an 'any' type.
+resources/js/shared/components/organisms/TopBar.tsx(1,8): error TS6133: 'React' is declared but its value is never read.
+resources/js/shared/components/organisms/TouchOptimizedTable.tsx(53,3): error TS2339: Property 'onRowClick' does not exist on type 'TouchOptimizedTableProps'.
+resources/js/shared/components/organisms/TouchOptimizedTable.tsx(174,7): error TS2554: Expected 2 arguments, but got 1.
+resources/js/shared/components/organisms/TouchOptimizedTable.tsx(188,22): error TS7006: Parameter 'e' implicitly has an 'any' type.
+resources/js/shared/components/organisms/TouchOptimizedTable.tsx(197,24): error TS7006: Parameter 'e' implicitly has an 'any' type.
+resources/js/shared/components/organisms/TouchOptimizedTable.tsx(253,24): error TS7006: Parameter 'e' implicitly has an 'any' type.
+resources/js/shared/components/organisms/TouchOptimizedTable.tsx(254,23): error TS7006: Parameter 'e' implicitly has an 'any' type.
+resources/js/shared/components/organisms/TouchOptimizedTable.tsx(283,31): error TS7006: Parameter 'e' implicitly has an 'any' type.
+resources/js/shared/components/organisms/TouchOptimizedTable.tsx(310,41): error TS2554: Expected 3 arguments, but got 2.
+resources/js/shared/components/organisms/TouchOptimizedTable.tsx(391,7): error TS2322: Type '{ data: TableData[]; columns: TableColumn<TableData>[]; loading: false; error: string | undefined; onSort: ((column: string, direction: "desc" | "asc") => void) | undefined; ... 17 more ...; isVirtualized?: boolean | undefined; }' is not assignable to type 'IntrinsicAttributes & DataTableProps<TableData>'.
+  Property 'onRowClick' does not exist on type 'IntrinsicAttributes & DataTableProps<TableData>'.
+resources/js/shared/components/patterns/UseTheme.tsx(367,14): error TS2323: Cannot redeclare exported variable 'useTheme'.
+resources/js/shared/components/patterns/UseTheme.tsx(422,3): error TS2323: Cannot redeclare exported variable 'useTheme'.
+resources/js/shared/components/patterns/UseTheme.tsx(422,3): error TS2484: Export declaration conflicts with exported declaration of 'useTheme'.
+resources/js/shared/components/ui/NotificationContainer.tsx(27,69): error TS2339: Property 'notifications' does not exist on type 'AppState'.
+resources/js/shared/components/ui/NotificationContainer.tsx(48,31): error TS7006: Parameter 'notification' implicitly has an 'any' type.
+resources/js/shared/components/ui/NotificationContainer.tsx(78,50): error TS7006: Parameter 'action' implicitly has an 'any' type.
+resources/js/shared/components/ui/NotificationContainer.tsx(78,58): error TS7006: Parameter 'index' implicitly has an 'any' type.
+resources/js/shared/components/ui/NotificationContainer.tsx(86,42): error TS2339: Property 'removeNotification' does not exist on type 'never'.
+resources/js/shared/components/ui/NotificationContainer.tsx(102,47): error TS2339: Property 'removeNotification' does not exist on type 'never'.
+resources/js/shared/hooks/index.ts(37,1): error TS2308: Module './useRealTime' has already exported a member named 'useRealTimeNotifications'. Consider explicitly re-exporting to resolve the ambiguity.
+resources/js/shared/hooks/useAlovaAdvanced.ts(6,105): error TS2307: Cannot find module 'alova/GETDASHBOARDMETRICS' or its corresponding type declarations.
+resources/js/shared/hooks/useAlovaAdvanced.ts(8,49): error TS2307: Cannot find module '../services/graphql/apollo-GETDASHBOARDMETRICS' or its corresponding type declarations.
+resources/js/shared/hooks/useAlovaAdvanced.ts(12,11): error TS6196: '_UseAdvancedRequestOptions' is declared but never used.
+resources/js/shared/hooks/useAlovaAdvanced.ts(23,11): error TS6196: '_UseInfiniteScrollOptions' is declared but never used.
+resources/js/shared/hooks/useAlovaAdvanced.ts(29,11): error TS6196: '_UsePaginationOptions' is declared but never used.
+resources/js/shared/hooks/useCollaboration.ts(430,11): error TS6133: '_room' is declared but its value is never read.
+resources/js/shared/hooks/useGraphQL.ts(16,8): error TS2307: Cannot find module '@apollo/GETDASHBOARDMETRICS' or its corresponding type declarations.
+resources/js/shared/hooks/useGraphQL.ts(53,40): error TS2344: Type 'TVariables' does not satisfy the constraint 'OperationVariables'.
+resources/js/shared/hooks/useGraphQL.ts(85,54): error TS2344: Type 'TVariables' does not satisfy the constraint 'OperationVariables'.
+resources/js/shared/hooks/useGraphQL.ts(147,41): error TS2344: Type 'TVariables' does not satisfy the constraint 'OperationVariables'.
+resources/js/shared/hooks/useGraphQL.ts(161,3): error TS6133: 'url' is declared but its value is never read.
+resources/js/shared/hooks/useGraphQL.ts(192,3): error TS6133: 'url' is declared but its value is never read.
+resources/js/shared/hooks/useGraphQL.ts(193,3): error TS6133: 'watchedStates' is declared but its value is never read.
+resources/js/shared/hooks/useGraphQL.ts(321,8): error TS2307: Cannot find module '@apollo/GETDASHBOARDMETRICS' or its corresponding type declarations.
+resources/js/shared/hooks/useInertiaForm.ts(1,10): error TS2440: Import declaration conflicts with local declaration of 'useInertiaForm'.
+resources/js/shared/hooks/useRealTime.ts(7,30): error TS2307: Cannot find module '../services/socket/socket-GETDASHBOARDMETRICS' or its corresponding type declarations.
+resources/js/shared/hooks/useRealTime.ts(49,11): error TS2339: Property 'showNotification' does not exist on type '{ showSuccess: any; showError: any; showWarning: any; showInfo: any; removeNotification: any; openModal: any; closeModal: any; setGlobalLoading: any; handleGlobalError: any; loadFeatureFlags: any; initializeTheme: any; }'.
+resources/js/shared/hooks/useRealTimeNotifications.ts(49,35): error TS2339: Property 'emit' does not exist on type 'WebSocketContextType'.
+resources/js/shared/hooks/useRealTimeNotifications.ts(346,29): error TS2345: Argument of type '(event: string) => void' is not assignable to parameter of type '(value: () => void, index: number, array: (() => void)[]) => void'.
+  Types of parameters 'event' and 'value' are incompatible.
+    Type '() => void' is not assignable to type 'string'.
+resources/js/shared/hooks/useRematchStore.ts(58,34): error TS2339: Property 'setSidebarOpen' does not exist on type 'never'.
+resources/js/shared/hooks/useRematchStore.ts(59,33): error TS2339: Property 'toggleSidebar' does not exist on type 'never'.
+resources/js/shared/hooks/useRematchStore.ts(60,28): error TS2339: Property 'setTheme' does not exist on type 'never'.
+resources/js/shared/hooks/useRematchStore.ts(61,31): error TS2339: Property 'updateTheme' does not exist on type 'never'.
+resources/js/shared/hooks/useRematchStore.ts(62,36): error TS2339: Property 'showNotification' does not exist on type 'never'.
+resources/js/shared/hooks/useRematchStore.ts(63,31): error TS2339: Property 'showSuccess' does not exist on type 'never'.
+resources/js/shared/hooks/useRematchStore.ts(64,29): error TS2339: Property 'showError' does not exist on type 'never'.
+resources/js/shared/hooks/useRematchStore.ts(65,31): error TS2339: Property 'showWarning' does not exist on type 'never'.
+resources/js/shared/hooks/useRematchStore.ts(66,28): error TS2339: Property 'showInfo' does not exist on type 'never'.
+resources/js/shared/hooks/useRematchStore.ts(67,38): error TS2339: Property 'removeNotification' does not exist on type 'never'.
+resources/js/shared/hooks/useRematchStore.ts(68,38): error TS2339: Property 'clearNotifications' does not exist on type 'never'.
+resources/js/shared/hooks/useRematchStore.ts(69,29): error TS2339: Property 'openModal' does not exist on type 'never'.
+resources/js/shared/hooks/useRematchStore.ts(70,30): error TS2339: Property 'closeModal' does not exist on type 'never'.
+resources/js/shared/hooks/useRematchStore.ts(71,34): error TS2339: Property 'closeAllModals' does not exist on type 'never'.
+resources/js/shared/hooks/useRematchStore.ts(72,36): error TS2339: Property 'setGlobalLoading' does not exist on type 'never'.
+resources/js/shared/hooks/useRematchStore.ts(73,37): error TS2339: Property 'handleGlobalError' does not exist on type 'never'.
+resources/js/shared/hooks/useRematchStore.ts(74,37): error TS2339: Property 'updatePageContext' does not exist on type 'never'.
+resources/js/shared/hooks/useRematchStore.ts(75,36): error TS2339: Property 'loadFeatureFlags' does not exist on type 'never'.
+resources/js/shared/hooks/useRematchStore.ts(76,35): error TS2339: Property 'initializeTheme' does not exist on type 'never'.
+resources/js/shared/hooks/useRematchStore.ts(81,44): error TS2339: Property 'notifications' does not exist on type 'AppState'.
+resources/js/shared/hooks/useRematchStore.ts(86,55): error TS2339: Property 'colorMode' does not exist on type 'AppState'.
+resources/js/shared/hooks/useRematchStore.ts(92,31): error TS2339: Property 'updateTheme' does not exist on type 'never'.
+resources/js/shared/hooks/useRematchStore.ts(97,52): error TS2339: Property 'modals' does not exist on type 'AppState'.
+resources/js/shared/hooks/useRematchStore.ts(102,29): error TS2339: Property 'openModal' does not exist on type 'never'.
+resources/js/shared/hooks/useRematchStore.ts(103,30): error TS2339: Property 'closeModal' does not exist on type 'never'.
+resources/js/shared/hooks/useRematchStore.ts(104,34): error TS2339: Property 'closeAllModals' does not exist on type 'never'.
+resources/js/shared/hooks/useRematchStore.ts(109,44): error TS2339: Property 'features' does not exist on type 'AppState'.
+resources/js/shared/hooks/useRematchStore.ts(113,44): error TS2339: Property 'breadcrumbs' does not exist on type 'AppState'.
+resources/js/shared/hooks/useRematchStore.ts(119,9): error TS6133: '_dispatch' is declared but its value is never read.
+resources/js/shared/hooks/useRematchStore.ts(130,9): error TS6133: '_dispatch' is declared but its value is never read.
+resources/js/shared/hooks/useRematchStore.ts(141,9): error TS6133: '_dispatch' is declared but its value is never read.
+resources/js/shared/hooks/useRematchStore.ts(181,31): error TS2339: Property 'showSuccess' does not exist on type 'never'.
+resources/js/shared/hooks/useRematchStore.ts(182,29): error TS2339: Property 'showError' does not exist on type 'never'.
+resources/js/shared/hooks/useRematchStore.ts(183,31): error TS2339: Property 'showWarning' does not exist on type 'never'.
+resources/js/shared/hooks/useRematchStore.ts(184,28): error TS2339: Property 'showInfo' does not exist on type 'never'.
+resources/js/shared/hooks/useRematchStore.ts(185,38): error TS2339: Property 'removeNotification' does not exist on type 'never'.
+resources/js/shared/hooks/useRematchStore.ts(186,29): error TS2339: Property 'openModal' does not exist on type 'never'.
+resources/js/shared/hooks/useRematchStore.ts(187,30): error TS2339: Property 'closeModal' does not exist on type 'never'.
+resources/js/shared/hooks/useRematchStore.ts(188,36): error TS2339: Property 'setGlobalLoading' does not exist on type 'never'.
+resources/js/shared/hooks/useRematchStore.ts(189,37): error TS2339: Property 'handleGlobalError' does not exist on type 'never'.
+resources/js/shared/hooks/useRematchStore.ts(190,36): error TS2339: Property 'loadFeatureFlags' does not exist on type 'never'.
+resources/js/shared/hooks/useRematchStore.ts(191,35): error TS2339: Property 'initializeTheme' does not exist on type 'never'.
+resources/js/shared/hooks/useRematchStore.ts(196,9): error TS6133: '_dispatch' is declared but its value is never read.
+resources/js/shared/hooks/useRematchStore.ts(204,9): error TS6133: '_dispatch' is declared but its value is never read.
+resources/js/shared/hooks/useRematchStore.ts(212,9): error TS6133: '_dispatch' is declared but its value is never read.
+resources/js/shared/hooks/useReportBuilder.ts(107,30): error TS2304: Cannot find name 'useRef'.
+resources/js/shared/hooks/useReportBuilder.ts(110,19): error TS2304: Cannot find name 'useMemo'.
+resources/js/shared/hooks/useReportBuilder.ts(115,19): error TS2304: Cannot find name 'useMemo'.
+resources/js/shared/hooks/useReportBuilder.ts(116,19): error TS2304: Cannot find name 'useMemo'.
+resources/js/shared/hooks/useReportBuilder.ts(367,3): error TS2304: Cannot find name 'useEffect'.
+resources/js/shared/hooks/useSocket.ts(11,9): error TS6133: '_socketRef' is declared but its value is never read.
+resources/js/shared/icons/ActionAnimations.tsx(13,3): error TS2395: Individual declarations in merged declaration 'BookmarkIcon' must be all exported or all local.
+resources/js/shared/icons/ActionAnimations.tsx(13,3): error TS2440: Import declaration conflicts with local declaration of 'BookmarkIcon'.
+resources/js/shared/icons/ActionAnimations.tsx(24,52): error TS2307: Cannot find module './APIENDPOINTS' or its corresponding type declarations.
+resources/js/shared/icons/ActionAnimations.tsx(97,20): error TS2345: Argument of type 'readonly [{ readonly transform: "scale(1)"; }, { readonly transform: "scale(1.3)"; }, { readonly transform: "scale(1)"; }]' is not assignable to parameter of type 'Keyframe[] | PropertyIndexedKeyframes | null'.
+  Type 'readonly [{ readonly transform: "scale(1)"; }, { readonly transform: "scale(1.3)"; }, { readonly transform: "scale(1)"; }]' is not assignable to type 'PropertyIndexedKeyframes'.
+    Index signature for type 'string' is missing in type 'readonly [{ readonly transform: "scale(1)"; }, { readonly transform: "scale(1.3)"; }, { readonly transform: "scale(1)"; }]'.
+resources/js/shared/icons/ActionAnimations.tsx(127,14): error TS2395: Individual declarations in merged declaration 'BookmarkIcon' must be all exported or all local.
+resources/js/shared/icons/ActionAnimations.tsx(136,20): error TS2345: Argument of type 'readonly [{ readonly transform: "translateY(0)"; }, { readonly transform: "translateY(-3px)"; }, { readonly transform: "translateY(0)"; }]' is not assignable to parameter of type 'Keyframe[] | PropertyIndexedKeyframes | null'.
+  Type 'readonly [{ readonly transform: "translateY(0)"; }, { readonly transform: "translateY(-3px)"; }, { readonly transform: "translateY(0)"; }]' is not assignable to type 'PropertyIndexedKeyframes'.
+    Index signature for type 'string' is missing in type 'readonly [{ readonly transform: "translateY(0)"; }, { readonly transform: "translateY(-3px)"; }, { readonly transform: "translateY(0)"; }]'.
+resources/js/shared/icons/ActionAnimations.tsx(262,20): error TS2345: Argument of type 'readonly [{ readonly transform: "translateX(0) rotate(0deg)"; }, { readonly transform: "translateX(4px) rotate(15deg)"; }, { readonly transform: "translateX(0) rotate(0deg)"; }]' is not assignable to parameter of type 'Keyframe[] | PropertyIndexedKeyframes | null'.
+  Type 'readonly [{ readonly transform: "translateX(0) rotate(0deg)"; }, { readonly transform: "translateX(4px) rotate(15deg)"; }, { readonly transform: "translateX(0) rotate(0deg)"; }]' is not assignable to type 'PropertyIndexedKeyframes'.
+    Index signature for type 'string' is missing in type 'readonly [{ readonly transform: "translateX(0) rotate(0deg)"; }, { readonly transform: "translateX(4px) rotate(15deg)"; }, { readonly transform: "translateX(0) rotate(0deg)"; }]'.
+resources/js/shared/icons/ActionAnimations.tsx(318,56): error TS7053: Element implicitly has an 'any' type because expression of type 'any' can't be used to index type '{ primary: string; secondary: string; danger: string; success: string; }'.
+resources/js/shared/icons/FormAnimations.tsx(18,68): error TS2307: Cannot find module './APIENDPOINTS' or its corresponding type declarations.
+resources/js/shared/icons/FormAnimations.tsx(66,18): error TS7053: Element implicitly has an 'any' type because expression of type 'any' can't be used to index type '{ success: { Icon: any; color: "success"; animation: string; }; error: { Icon: any; color: "danger"; animation: string; }; warning: { Icon: any; color: "warning"; animation: string; }; info: { Icon: any; color: "primary"; animation: string; }; idle: { ...; }; }'.
+resources/js/shared/icons/FormAnimations.tsx(104,20): error TS2345: Argument of type 'readonly [{ readonly transform: "rotateY(0deg)"; }, { readonly transform: "rotateY(180deg)"; }]' is not assignable to parameter of type 'Keyframe[] | PropertyIndexedKeyframes | null'.
+  Type 'readonly [{ readonly transform: "rotateY(0deg)"; }, { readonly transform: "rotateY(180deg)"; }]' is not assignable to type 'PropertyIndexedKeyframes'.
+    Index signature for type 'string' is missing in type 'readonly [{ readonly transform: "rotateY(0deg)"; }, { readonly transform: "rotateY(180deg)"; }]'.
+resources/js/shared/icons/IconRegistry.ts(261,81): error TS2339: Property 'TrendingUpIcon' does not exist on type '{ default: typeof import("/home/abdo_arh36/larvacctpl/node_modules/@heroicons/react/24/outline/index"); AcademicCapIcon: ForwardRefExoticComponent<Omit<SVGProps<SVGSVGElement>, "ref"> & { ...; } & RefAttributes<...>>; ... 322 more ...; XMarkIcon: ForwardRefExoticComponent<...>; }'.
+resources/js/shared/icons/IconRegistry.ts(268,81): error TS2551: Property 'TrendingDownIcon' does not exist on type '{ default: typeof import("/home/abdo_arh36/larvacctpl/node_modules/@heroicons/react/24/outline/index"); AcademicCapIcon: ForwardRefExoticComponent<Omit<SVGProps<SVGSVGElement>, "ref"> & { ...; } & RefAttributes<...>>; ... 322 more ...; XMarkIcon: ForwardRefExoticComponent<...>; }'. Did you mean 'ArrowTrendingDownIcon'?
+resources/js/shared/icons/IconRegistry.ts(301,5): error TS2322: Type '"wave"' is not assignable to type '"loading" | "success" | "bounce" | "pulse" | "rotate" | "shake" | "error" | undefined'.
+resources/js/shared/icons/NavigationAnimations.tsx(18,52): error TS2307: Cannot find module './APIENDPOINTS' or its corresponding type declarations.
+resources/js/shared/icons/StatusAnimations.tsx(18,52): error TS2307: Cannot find module './APIENDPOINTS' or its corresponding type declarations.
+resources/js/shared/icons/StatusAnimations.tsx(123,18): error TS7053: Element implicitly has an 'any' type because expression of type 'any' can't be used to index type '{ success: { Icon: any; color: "success"; bgColor: string; textColor: string; defaultLabel: string; }; error: { Icon: any; color: "danger"; bgColor: string; textColor: string; defaultLabel: string; }; warning: { ...; }; info: { ...; }; loading: { ...; }; idle: { ...; }; }'.
+resources/js/shared/icons/StatusAnimations.tsx(178,27): error TS7053: Element implicitly has an 'any' type because expression of type 'any' can't be used to index type '{ weak: string; medium: string; strong: string; }'.
+resources/js/shared/icons/StatusAnimations.tsx(243,6): error TS6133: '_props' is declared but its value is never read.
+resources/js/shared/icons/index.ts(10,29): error TS2304: Cannot find name 'IconProps'.
+resources/js/shared/icons/index.ts(19,3): error TS2459: Module '"./CreateLiveIcon"' declares 'iconRegistry' locally, but it is not exported.
+resources/js/shared/icons/index.ts(42,3): error TS2305: Module '"./ActionAnimations"' has no exported member 'ActionEditIcon'.
+resources/js/shared/icons/index.ts(43,3): error TS2305: Module '"./ActionAnimations"' has no exported member 'ActionDeleteIcon'.
+resources/js/shared/icons/index.ts(44,3): error TS2305: Module '"./ActionAnimations"' has no exported member 'ActionCopyIcon'.
+resources/js/shared/icons/index.ts(45,3): error TS2305: Module '"./ActionAnimations"' has no exported member 'ActionShareIcon'.
+resources/js/shared/icons/index.ts(46,3): error TS2305: Module '"./ActionAnimations"' has no exported member 'ActionDownloadIcon'.
+resources/js/shared/icons/index.ts(47,3): error TS2305: Module '"./ActionAnimations"' has no exported member 'ActionUploadIcon'.
+resources/js/shared/icons/index.ts(48,3): error TS2305: Module '"./ActionAnimations"' has no exported member 'ActionAddIcon'.
+resources/js/shared/icons/index.ts(49,3): error TS2305: Module '"./ActionAnimations"' has no exported member 'ActionViewIcon'.
+resources/js/shared/icons/index.ts(50,3): error TS2305: Module '"./ActionAnimations"' has no exported member 'ActionSettingsIcon'.
+resources/js/shared/icons/index.ts(58,3): error TS2305: Module '"./FormAnimations"' has no exported member 'FormSearchIcon'.
+resources/js/shared/icons/index.ts(59,3): error TS2724: '"./FormAnimations"' has no exported member named 'FormFilterIcon'. Did you mean 'FormFieldIcon'?
+resources/js/shared/icons/index.ts(60,3): error TS2305: Module '"./FormAnimations"' has no exported member 'FormCalendarIcon'.
+resources/js/shared/icons/index.ts(61,3): error TS2305: Module '"./FormAnimations"' has no exported member 'FormClockIcon'.
+resources/js/shared/icons/index.ts(62,3): error TS2305: Module '"./FormAnimations"' has no exported member 'FormUserIcon'.
+resources/js/shared/icons/index.ts(63,3): error TS2305: Module '"./FormAnimations"' has no exported member 'FormEmailIcon'.
+resources/js/shared/icons/index.ts(72,3): error TS2305: Module '"./StatusAnimations"' has no exported member 'StatusSuccessIcon'.
+resources/js/shared/icons/index.ts(73,3): error TS2305: Module '"./StatusAnimations"' has no exported member 'StatusErrorIcon'.
+resources/js/shared/icons/index.ts(74,3): error TS2305: Module '"./StatusAnimations"' has no exported member 'StatusWarningIcon'.
+resources/js/shared/icons/index.ts(75,3): error TS2305: Module '"./StatusAnimations"' has no exported member 'StatusInfoIcon'.
+resources/js/shared/icons/index.ts(76,3): error TS2305: Module '"./StatusAnimations"' has no exported member 'StatusLoadingIcon'.
+resources/js/shared/icons/index.ts(77,3): error TS2305: Module '"./StatusAnimations"' has no exported member 'StatusChartIcon'.
+resources/js/shared/icons/index.ts(78,3): error TS2305: Module '"./StatusAnimations"' has no exported member 'StatusDocumentIcon'.
+resources/js/shared/icons/index.ts(79,3): error TS2305: Module '"./StatusAnimations"' has no exported member 'StatusBankIcon'.
+resources/js/shared/icons/index.ts(80,3): error TS2305: Module '"./StatusAnimations"' has no exported member 'StatusBoxIcon'.
+resources/js/shared/icons/index.ts(81,3): error TS2305: Module '"./StatusAnimations"' has no exported member 'StatusTrendUpIcon'.
+resources/js/shared/icons/index.ts(82,3): error TS2305: Module '"./StatusAnimations"' has no exported member 'StatusTrendDownIcon'.
+resources/js/shared/icons/index.ts(83,3): error TS2305: Module '"./StatusAnimations"' has no exported member 'StatusTrendRightIcon'.
+resources/js/shared/icons/index.ts(84,3): error TS2305: Module '"./StatusAnimations"' has no exported member 'StatusFreeIcon'.
+resources/js/shared/icons/index.ts(85,3): error TS2305: Module '"./StatusAnimations"' has no exported member 'StatusBusinessIcon'.
+resources/js/shared/icons/index.ts(86,3): error TS2305: Module '"./StatusAnimations"' has no exported member 'StatusEnterpriseIcon'.
+resources/js/shared/icons/index.ts(87,3): error TS2305: Module '"./StatusAnimations"' has no exported member 'StatusWaveIcon'.
+resources/js/shared/icons/index.ts(93,10): error TS2305: Module '"./ActionAnimations"' has no exported member 'EditIcon'.
+resources/js/shared/icons/index.ts(94,10): error TS2305: Module '"./ActionAnimations"' has no exported member 'DeleteIcon'.
+resources/js/shared/icons/index.ts(95,10): error TS2305: Module '"./ActionAnimations"' has no exported member 'AddIcon'.
+resources/js/shared/icons/index.ts(96,10): error TS2305: Module '"./FormAnimations"' has no exported member 'SearchIcon'.
+resources/js/shared/icons/index.ts(97,10): error TS2305: Module '"./StatusAnimations"' has no exported member 'LoadingIcon'.
+resources/js/shared/icons/index.ts(98,10): error TS2305: Module '"./StatusAnimations"' has no exported member 'SuccessIcon'.
+resources/js/shared/icons/index.ts(99,10): error TS2305: Module '"./StatusAnimations"' has no exported member 'ErrorIcon'.
+resources/js/shared/icons/index.ts(110,15): error TS2304: Cannot find name 'NavHomeIcon'.
+resources/js/shared/icons/index.ts(111,15): error TS2304: Cannot find name 'NavBackIcon'.
+resources/js/shared/icons/index.ts(112,18): error TS2304: Cannot find name 'NavForwardIcon'.
+resources/js/shared/icons/index.ts(113,13): error TS2304: Cannot find name 'NavUpIcon'.
+resources/js/shared/icons/index.ts(114,15): error TS2304: Cannot find name 'NavDownIcon'.
+resources/js/shared/icons/index.ts(115,15): error TS2304: Cannot find name 'NavLeftIcon'.
+resources/js/shared/icons/index.ts(116,16): error TS2304: Cannot find name 'NavRightIcon'.
+resources/js/shared/icons/index.ts(117,15): error TS2304: Cannot find name 'NavMenuIcon'.
+resources/js/shared/icons/index.ts(118,16): error TS2304: Cannot find name 'NavCloseIcon'.
+resources/js/shared/icons/index.ts(121,18): error TS2304: Cannot find name 'ActionEditIcon'.
+resources/js/shared/icons/index.ts(122,20): error TS2304: Cannot find name 'ActionDeleteIcon'.
+resources/js/shared/icons/index.ts(123,18): error TS2304: Cannot find name 'ActionCopyIcon'.
+resources/js/shared/icons/index.ts(124,19): error TS2304: Cannot find name 'ActionShareIcon'.
+resources/js/shared/icons/index.ts(125,22): error TS2304: Cannot find name 'ActionDownloadIcon'.
+resources/js/shared/icons/index.ts(126,20): error TS2304: Cannot find name 'ActionUploadIcon'.
+resources/js/shared/icons/index.ts(127,17): error TS2304: Cannot find name 'ActionAddIcon'.
+resources/js/shared/icons/index.ts(128,18): error TS2304: Cannot find name 'ActionViewIcon'.
+resources/js/shared/icons/index.ts(129,22): error TS2304: Cannot find name 'ActionSettingsIcon'.
+resources/js/shared/icons/index.ts(132,18): error TS2304: Cannot find name 'FormSearchIcon'.
+resources/js/shared/icons/index.ts(133,18): error TS2304: Cannot find name 'FormFilterIcon'.
+resources/js/shared/icons/index.ts(134,20): error TS2304: Cannot find name 'FormCalendarIcon'.
+resources/js/shared/icons/index.ts(135,17): error TS2304: Cannot find name 'FormClockIcon'.
+resources/js/shared/icons/index.ts(136,16): error TS2304: Cannot find name 'FormUserIcon'.
+resources/js/shared/icons/index.ts(137,17): error TS2304: Cannot find name 'FormEmailIcon'.
+resources/js/shared/icons/index.ts(140,21): error TS2304: Cannot find name 'StatusSuccessIcon'.
+resources/js/shared/icons/index.ts(141,19): error TS2304: Cannot find name 'StatusErrorIcon'.
+resources/js/shared/icons/index.ts(142,21): error TS2304: Cannot find name 'StatusWarningIcon'.
+resources/js/shared/icons/index.ts(143,18): error TS2304: Cannot find name 'StatusInfoIcon'.
+resources/js/shared/icons/index.ts(144,21): error TS2304: Cannot find name 'StatusLoadingIcon'.
+resources/js/shared/index.ts(5,15): error TS2307: Cannot find module './constants' or its corresponding type declarations.
+resources/js/shared/index.ts(7,1): error TS2308: Module './ICONSIZES' has already exported a member named 'Account'. Consider explicitly re-exporting to resolve the ambiguity.
+resources/js/shared/index.ts(7,1): error TS2308: Module './ICONSIZES' has already exported a member named 'JournalEntry'. Consider explicitly re-exporting to resolve the ambiguity.
+resources/js/shared/index.ts(7,1): error TS2308: Module './ICONSIZES' has already exported a member named 'Transaction'. Consider explicitly re-exporting to resolve the ambiguity.
+resources/js/shared/index.ts(8,15): error TS2307: Cannot find module './services' or its corresponding type declarations.
+resources/js/shared/providers/AppProviders.tsx(44,11): error TS6133: '_startTime' is declared but its value is never read.
+resources/js/shared/providers/AppProviders.tsx(59,13): error TS6133: '_memoryInfo' is declared but its value is never read.
+resources/js/shared/providers/AppProviders.tsx(65,13): error TS6133: '_endTime' is declared but its value is never read.
+resources/js/shared/providers/AppProviders.tsx(135,29): error TS2339: Property 'colorMode' does not exist on type '{ setSidebarOpen: any; toggleSidebar: any; setTheme: any; updateTheme: any; showNotification: any; showSuccess: any; showError: any; showWarning: any; showInfo: any; removeNotification: any; clearNotifications: any; ... 10 more ...; sidebarCollapsed: boolean; }'.
+resources/js/shared/providers/AppProviders.tsx(163,16): error TS2339: Property 'initialize' does not exist on type 'PWAManager'.
+resources/js/shared/providers/AppProviders.tsx(163,35): error TS7006: Parameter '_error' implicitly has an 'any' type.
+resources/js/shared/providers/AppProviders.tsx(204,7): error TS2322: Type '(_error: Error, _errorInfo: { componentStack: string; }) => void' is not assignable to type '(error: Error, info: ErrorInfo) => void'.
+  Types of parameters '_errorInfo' and 'info' are incompatible.
+    Type 'ErrorInfo' is not assignable to type '{ componentStack: string; }'.
+      Types of property 'componentStack' are incompatible.
+        Type 'string | null | undefined' is not assignable to type 'string'.
+          Type 'undefined' is not assignable to type 'string'.
+resources/js/shared/providers/SocketProvider.tsx(7,10): error TS2305: Module '"../services/socket/socketManager"' has no exported member 'socketClient'.
+resources/js/shared/providers/SocketProvider.tsx(7,24): error TS2305: Module '"../services/socket/socketManager"' has no exported member 'SocketConfig'.
+resources/js/shared/providers/SocketProvider.tsx(87,42): error TS7006: Parameter 'data' implicitly has an 'any' type.
+resources/js/shared/providers/SocketProvider.tsx(98,45): error TS7006: Parameter 'data' implicitly has an 'any' type.
+resources/js/shared/providers/SocketProvider.tsx(108,45): error TS7006: Parameter 'data' implicitly has an 'any' type.
+resources/js/shared/providers/SocketProvider.tsx(118,44): error TS7006: Parameter 'data' implicitly has an 'any' type.
+resources/js/shared/providers/SocketProvider.tsx(130,38): error TS7006: Parameter 'data' implicitly has an 'any' type.
+resources/js/shared/providers/SocketProvider.tsx(138,46): error TS7006: Parameter 'data' implicitly has an 'any' type.
+resources/js/shared/providers/SocketProvider.tsx(158,45): error TS7006: Parameter 'data' implicitly has an 'any' type.
+resources/js/shared/routing/LazyRoutes.tsx(13,46): error TS2307: Cannot find module '../../features/accounting/pages/Accounts' or its corresponding type declarations.
+resources/js/shared/routing/LazyRoutes.tsx(14,50): error TS2307: Cannot find module '../../features/accounting/pages/Transactions' or its corresponding type declarations.
+resources/js/shared/routing/LazyRoutes.tsx(15,52): error TS2307: Cannot find module '../../features/accounting/pages/JournalEntries' or its corresponding type declarations.
+resources/js/shared/routing/LazyRoutes.tsx(61,16): error TS2741: Property 'canResetPassword' is missing in type '{}' but required in type 'LoginProps'.
+resources/js/shared/routing/LazyRoutes.tsx(84,16): error TS2739: Type '{}' is missing the following properties from type 'DashboardProps': tenant, user, stats, recentActivity, quickActions
+resources/js/shared/routing/LazyRoutes.tsx(153,26): error TS2307: Cannot find module '../../features/accounting/pages/Accounts' or its corresponding type declarations.
+resources/js/shared/routing/LazyRoutes.tsx(154,30): error TS2307: Cannot find module '../../features/accounting/pages/Transactions' or its corresponding type declarations.
+resources/js/shared/routing/LazyRoutes.tsx(155,32): error TS2307: Cannot find module '../../features/accounting/pages/JournalEntries' or its corresponding type declarations.
+resources/js/shared/routing/LazyRoutes.tsx(161,35): error TS6133: 'userRole' is declared but its value is never read.
+resources/js/shared/services/alova/alova.config.ts(2,8): error TS1192: Module '"/home/abdo_arh36/larvacctpl/node_modules/alova/typings/clienthook/index"' has no default export.
+resources/js/shared/services/alova/alova.config.ts(93,5): error TS2322: Type 'false' is not assignable to type 'CacheConfig<AlovaGenerics<any, any, FetchRequestInit, Response, Headers, AlovaDefaultCacheAdapter, AlovaDefaultCacheAdapter, StatesExport<...>>> | undefined'.
+resources/js/shared/services/alova/alova.config.ts(94,5): error TS2322: Type 'false' is not assignable to type 'CacheConfig<AlovaGenerics<any, any, FetchRequestInit, Response, Headers, AlovaDefaultCacheAdapter, AlovaDefaultCacheAdapter, StatesExport<...>>> | undefined'.
+resources/js/shared/services/alova/alova.config.ts(95,5): error TS2322: Type 'false' is not assignable to type 'CacheConfig<AlovaGenerics<any, any, FetchRequestInit, Response, Headers, AlovaDefaultCacheAdapter, AlovaDefaultCacheAdapter, StatesExport<...>>> | undefined'.
+resources/js/shared/services/alova/alova.config.ts(111,19): error TS2339: Property 'method' does not exist on type 'MethodRequestConfig & { name?: string | number | undefined; timeout?: number | undefined; cacheFor?: CacheController<any> | CacheConfig<RespondedAlovaGenerics<AlovaGenerics<any, ... 6 more ..., StatesExport<...>>, any, any>> | undefined; hitSource?: string | ... 3 more ... | undefined; transform?: ((data: any, heade...'.
+resources/js/shared/services/alova/alova.config.ts(134,27): error TS2339: Property 'query' does not exist on type 'RequestBody'.
+  Property 'query' does not exist on type 'string'.
+resources/js/shared/services/alova/alova.config.ts(135,31): error TS2339: Property 'variables' does not exist on type 'RequestBody'.
+  Property 'variables' does not exist on type 'string'.
+resources/js/shared/services/alova/alova.config.ts(183,7): error TS2353: Object literal may only specify known properties, and 'key' does not exist in type 'Date | DetailCacheConfig<AlovaGenerics<any, any, FetchRequestInit, Response, Headers, AlovaDefaultCacheAdapter, AlovaDefaultCacheAdapter, StatesExport<...>>>'.
+resources/js/shared/services/alova/alova.config.ts(183,13): error TS7006: Parameter 'method' implicitly has an 'any' type.
+resources/js/shared/services/alova/alova.config.ts(212,3): error TS2322: Type 'false' is not assignable to type 'CacheConfig<RespondedAlovaGenerics<RespondedAlovaGenerics<AlovaGenerics<any, any, FetchRequestInit, Response, Headers, AlovaDefaultCacheAdapter, AlovaDefaultCacheAdapter, StatesExport<...>>, unknown, unknown>, unknown, unknown>> | CacheController<...> | undefined'.
+resources/js/shared/services/alova/alova.config.ts(236,17): error TS2339: Property 'storage' does not exist on type 'Alova<AlovaGenerics<any, any, FetchRequestInit, Response, Headers, AlovaDefaultCacheAdapter, AlovaDefaultCacheAdapter, StatesExport<...>>>'.
+resources/js/shared/services/alova/alova.config.ts(237,17): error TS2339: Property 'storage' does not exist on type 'Alova<AlovaGenerics<any, any, FetchRequestInit, Response, Headers, AlovaDefaultCacheAdapter, AlovaDefaultCacheAdapter, StatesExport<...>>>'.
+resources/js/shared/services/analytics/performanceMonitor.ts(783,3): error TS2484: Export declaration conflicts with exported declaration of 'PerformanceMetric'.
+resources/js/shared/services/analytics/performanceMonitor.ts(784,3): error TS2484: Export declaration conflicts with exported declaration of 'ApiPerformanceMetric'.
+resources/js/shared/services/analytics/performanceMonitor.ts(785,3): error TS2484: Export declaration conflicts with exported declaration of 'UIPerformanceMetric'.
+resources/js/shared/services/analytics/performanceMonitor.ts(786,3): error TS2484: Export declaration conflicts with exported declaration of 'NetworkMetric'.
+resources/js/shared/services/analytics/performanceMonitor.ts(787,3): error TS2484: Export declaration conflicts with exported declaration of 'MemoryMetric'.
+resources/js/shared/services/analytics/performanceMonitor.ts(788,3): error TS2484: Export declaration conflicts with exported declaration of 'CacheMetric'.
+resources/js/shared/services/analytics/performanceMonitor.ts(789,3): error TS2484: Export declaration conflicts with exported declaration of 'UserInteraction'.
+resources/js/shared/services/analytics/performanceMonitor.ts(790,3): error TS2484: Export declaration conflicts with exported declaration of 'ErrorEvent'.
+resources/js/shared/services/analytics/performanceMonitor.ts(791,3): error TS2484: Export declaration conflicts with exported declaration of 'AnalyticsConfig'.
+resources/js/shared/services/graphql/apolloClient.ts(12,8): error TS2307: Cannot find module '@apollo/GETDASHBOARDMETRICS' or its corresponding type declarations.
+resources/js/shared/services/graphql/apolloClient.ts(20,8): error TS1192: Module '"/home/abdo_arh36/larvacctpl/node_modules/alova/typings/clienthook/index"' has no default export.
+resources/js/shared/services/graphql/apolloClient.ts(131,24): error TS2339: Property 'statusCode' does not exist on type 'Error | ServerParseError | ServerError'.
+  Property 'statusCode' does not exist on type 'Error'.
+resources/js/shared/services/graphql/apolloClient.ts(152,12): error TS7031: Binding element 'query' implicitly has an 'any' type.
+resources/js/shared/services/graphql/apolloClient.ts(232,5): error TS2353: Object literal may only specify known properties, and 'localCache' does not exist in type 'AlovaOptions<AlovaGenerics<any, any, FetchRequestInit, Response, Headers, AlovaDefaultCacheAdapter, AlovaDefaultCacheAdapter, StatesExport<...>>>'.
+resources/js/shared/services/security/securityManager.ts(6,59): error TS2307: Cannot find module '../analytics/PerformanceMonitor' or its corresponding type declarations.
+resources/js/shared/services/socket/socketManager.ts(1,28): error TS2307: Cannot find module 'socket.io-GETDASHBOARDMETRICS' or its corresponding type declarations.
+resources/js/shared/services/socket/socketManager.ts(78,38): error TS7006: Parameter 'error' implicitly has an 'any' type.
+resources/js/shared/services/socket/socketManager.ts(89,35): error TS7006: Parameter 'reason' implicitly has an 'any' type.
+resources/js/shared/services/socket/socketManager.ts(99,42): error TS7006: Parameter 'attemptNumber' implicitly has an 'any' type.
+resources/js/shared/services/socket/socketManager.ts(104,34): error TS7006: Parameter 'attemptNumber' implicitly has an 'any' type.
+resources/js/shared/services/socket/socketManager.ts(110,35): error TS7006: Parameter 'error' implicitly has an 'any' type.
+resources/js/shared/services/socket/socketManager.ts(117,30): error TS7006: Parameter 'error' implicitly has an 'any' type.
+resources/js/shared/stores/index.ts(10,1): error TS6133: 'PATTERNS' is declared but its value is never read.
+resources/js/shared/stores/index.ts(47,19): error TS2345: Argument of type '{ key: string; storage: { getItem: (key: string) => Promise<string | null>; setItem: (key: string, value: string) => Promise<void>; removeItem: (key: string) => Promise<void>; }; ... 6 more ...; debug: boolean; }' is not assignable to parameter of type 'PersistConfig<{ [x: string]: {}; }, any, any, any>'.
+  Types of property 'transforms' are incompatible.
+    Type '{ in: (inboundState: any, key: string | number) => any; out: (outboundState: any, key: string | number) => any; }[]' is not assignable to type 'Transform<any, any, { [x: string]: {}; }, any>[]'.
+      Type '{ in: (inboundState: any, key: string | number) => any; out: (outboundState: any, key: string | number) => any; }' is not assignable to type 'Transform<any, any, { [x: string]: {}; }, any>'.
+        Types of property 'out' are incompatible.
+          Type '(outboundState: any, key: string | number) => any' is not assignable to type 'TransformOutbound<any, any, any>'.
+            Types of parameters 'key' and 'key' are incompatible.
+              Type 'string | number | symbol' is not assignable to type 'string | number'.
+                Type 'symbol' is not assignable to type 'string | number'.
+resources/js/shared/stores/index.ts(77,25): error TS2305: Module '"./models/appModel"' has no exported member 'AppSettings'.
+resources/js/shared/stores/index.ts(77,38): error TS2305: Module '"./models/appModel"' has no exported member 'UIState'.
+resources/js/shared/stores/index.ts(77,47): error TS2305: Module '"./models/appModel"' has no exported member 'Notification'.
+resources/js/shared/stores/models/appModel.ts(7,1): error TS6133: 'PATTERNS' is declared but its value is never read.
+resources/js/shared/stores/models/appModel.ts(25,37): error TS2344: Type 'AppState' does not satisfy the constraint 'Models<AppState>'.
+  Index signature for type 'string' is missing in type 'AppState'.
+resources/js/shared/stores/models/appModel.ts(48,13): error TS6133: 'dispatch' is declared but its value is never read.
+resources/js/shared/stores/models/authModel.ts(6,29): error TS2307: Cannot find module '@rematch/PATTERNS' or its corresponding type declarations.
+resources/js/shared/stores/models/authModel.ts(7,30): error TS2307: Cannot find module '../../services/graphql/apollo-GETDASHBOARDMETRICS' or its corresponding type declarations.
+resources/js/shared/stores/models/authModel.ts(96,18): error TS7006: Parameter 'state' implicitly has an 'any' type.
+resources/js/shared/stores/models/authModel.ts(102,16): error TS7006: Parameter 'state' implicitly has an 'any' type.
+resources/js/shared/stores/models/authModel.ts(107,18): error TS7006: Parameter 'state' implicitly has an 'any' type.
+resources/js/shared/stores/models/authModel.ts(113,24): error TS7006: Parameter 'state' implicitly has an 'any' type.
+resources/js/shared/stores/models/authModel.ts(130,24): error TS7006: Parameter 'state' implicitly has an 'any' type.
+resources/js/shared/stores/models/authModel.ts(136,18): error TS7006: Parameter 'state' implicitly has an 'any' type.
+resources/js/shared/stores/models/authModel.ts(141,29): error TS7006: Parameter 'state' implicitly has an 'any' type.
+resources/js/shared/stores/models/authModel.ts(150,21): error TS7006: Parameter 'state' implicitly has an 'any' type.
+resources/js/shared/stores/models/authModel.ts(156,13): error TS7006: Parameter 'dispatch' implicitly has an 'any' type.
+resources/js/shared/stores/models/authModel.ts(274,30): error TS2339: Property 'getState' does not exist on type '{ login(payload: { email: string; password: string; remember?: boolean | undefined; }): Promise<{ success: boolean; error?: undefined; } | { success: boolean; error: any; }>; logout(): Promise<...>; ... 4 more ...; initializeAuth(): Promise<...>; }'.
+resources/js/shared/stores/models/authModel.ts(326,26): error TS2339: Property 'getState' does not exist on type '{ login(payload: { email: string; password: string; remember?: boolean | undefined; }): Promise<{ success: boolean; error?: undefined; } | { success: boolean; error: any; }>; logout(): Promise<...>; ... 4 more ...; initializeAuth(): Promise<...>; }'.
+resources/js/shared/stores/models/authModel.ts(368,53): error TS7006: Parameter 't' implicitly has an 'any' type.
+resources/js/shared/stores/persistence.ts(7,46): error TS2307: Cannot find module './APIENDPOINTS' or its corresponding type declarations.
+resources/js/shared/theme/Button.ts(1,1): error TS6133: 'ComponentStyleConfig' is declared but its value is never read.
+resources/js/shared/theme/Button.ts(9,22): error TS2709: Cannot use namespace 'ComponentStyleConfig' as a type.
+resources/js/shared/theme/Button.ts(99,20): error TS2709: Cannot use namespace 'ComponentStyleConfig' as a type.
+resources/js/shared/theme/Button.ts(200,21): error TS2709: Cannot use namespace 'ComponentStyleConfig' as a type.
+resources/js/shared/theme/Button.ts(264,21): error TS2709: Cannot use namespace 'ComponentStyleConfig' as a type.
+resources/js/shared/theme/Button.ts(338,21): error TS2709: Cannot use namespace 'ComponentStyleConfig' as a type.
+resources/js/shared/theme/Button.ts(373,20): error TS2709: Cannot use namespace 'ComponentStyleConfig' as a type.
+resources/js/shared/theme/index.ts(11,15): error TS2709: Cannot use namespace 'ThemeConfig' as a type.
+resources/js/shared/types/ACCOUNTTYPES.ts(79,18): error TS2430: Interface 'AccountHierarchy' incorrectly extends interface 'Account'.
+  Types of property 'children' are incompatible.
+    Type 'AccountHierarchy[]' is not assignable to type 'this[]'.
+      Type 'AccountHierarchy' is not assignable to type 'this'.
+        'AccountHierarchy' is assignable to the constraint of type 'this', but 'this' could be instantiated with a different subtype of constraint 'AccountHierarchy'.
+resources/js/shared/types/PATTERNS.ts(303,13): error TS2456: Type alias 'Required' circularly references itself.
+resources/js/shared/types/PATTERNS.ts(303,50): error TS2315: Type 'Required' is not generic.
+resources/js/shared/types/index.ts(38,8): error TS2307: Cannot find module '@/features/accounting/ICONSIZES' or its corresponding type declarations.
+resources/js/shared/utils/DashboardOverview.tsx(78,16): error TS2307: Cannot find module '../../features/accounting/pages/Accounts' or its corresponding type declarations.
+resources/js/shared/utils/DashboardOverview.tsx(82,16): error TS2307: Cannot find module '../../features/accounting/pages/Transactions' or its corresponding type declarations.
+resources/js/shared/utils/DashboardOverview.tsx(86,16): error TS2307: Cannot find module '../../features/accounting/pages/JournalEntries' or its corresponding type declarations.
+resources/js/shared/utils/Debounce.ts(46,18): error TS2683: 'this' implicitly has type 'any' because it does not have a type annotation.
+resources/js/shared/utils/LoadingSkeleton.tsx(162,14): error TS2339: Property 'ErrorBoundary' does not exist on type 'typeof React'.
+resources/js/shared/utils/LoadingSkeleton.tsx(163,19): error TS2339: Property 'errorFallback' does not exist on type 'JSX.IntrinsicElements'.
+resources/js/shared/utils/LoadingSkeleton.tsx(168,12): error TS2322: Type '{ ref: ForwardedRef<any>; }' is not assignable to type 'T extends MemoExoticComponent<infer U extends ComponentType<any>> | LazyExoticComponent<infer U extends ComponentType<any>> ? ReactManagedAttributes<...> : ReactManagedAttributes<...>'.
+resources/js/shared/utils/LoadingSkeleton.tsx(170,15): error TS2339: Property 'ErrorBoundary' does not exist on type 'typeof React'.
+resources/js/shared/utils/LoadingSkeleton.tsx(174,62): error TS2339: Property 'displayName' does not exist on type 'LazyExoticComponent<T>'.
+resources/js/shared/utils/LoadingSkeleton.tsx(176,10): error TS2352: Conversion of type 'ForwardRefExoticComponent<Omit<any, "ref"> & RefAttributes<any>>' to type 'LazyExoticComponent<T>' may be a mistake because neither type sufficiently overlaps with the other. If this was intentional, convert the expression to 'unknown' first.
+  Property '_result' is missing in type 'ForwardRefExoticComponent<Omit<any, "ref"> & RefAttributes<any>>' but required in type 'LazyExoticComponent<T>'.
+resources/js/shared/utils/PerformanceMonitor.tsx(296,9): error TS18048: 'stats.lazyLoad.retryRate' is possibly 'undefined'.
+resources/js/shared/utils/PerformanceMonitor.tsx(297,58): error TS18048: 'stats.lazyLoad.retryRate' is possibly 'undefined'.
+resources/js/shared/utils/devTools.ts(104,20): error TS2307: Cannot find module '../../features/accounting/pages/Accounts' or its corresponding type declarations.
+resources/js/shared/utils/graphql.ts(62,11): error TS6133: 'requestId' is declared but its value is never read.
+resources/js/shared/utils/optimizationUtils.ts(412,59): error TS2307: Cannot find module '../../features/accounting/pages/Accounts' or its corresponding type declarations.
+resources/js/shared/utils/performanceAnalytics.ts(361,55): error TS2339: Property 'navigationStart' does not exist on type 'PerformanceNavigationTiming'.
+resources/js/shared/utils/performanceAnalytics.ts(362,71): error TS2339: Property 'navigationStart' does not exist on type 'PerformanceNavigationTiming'.
+resources/js/shared/utils/pwa.ts(210,9): error TS2322: Type 'Uint8Array<ArrayBufferLike>' is not assignable to type 'string | BufferSource | null | undefined'.
+  Type 'Uint8Array<ArrayBufferLike>' is not assignable to type 'ArrayBufferView<ArrayBuffer>'.
+    Types of property 'buffer' are incompatible.
+      Type 'ArrayBufferLike' is not assignable to type 'ArrayBuffer'.
+        Type 'SharedArrayBuffer' is not assignable to type 'ArrayBuffer'.
+          Types of property '[Symbol.toStringTag]' are incompatible.
+            Type '"SharedArrayBuffer"' is not assignable to type '"ArrayBuffer"'.
+resources/js/shared/utils/pwaEnhancements.ts(154,28): error TS2339: Property 'sync' does not exist on type 'ServiceWorkerRegistration'.
+resources/js/shared/utils/pwaEnhancements.ts(283,9): error TS2322: Type 'Uint8Array<ArrayBufferLike>' is not assignable to type 'string | BufferSource | null | undefined'.
+  Type 'Uint8Array<ArrayBufferLike>' is not assignable to type 'ArrayBufferView<ArrayBuffer>'.
+    Types of property 'buffer' are incompatible.
+      Type 'ArrayBufferLike' is not assignable to type 'ArrayBuffer'.
+        Type 'SharedArrayBuffer' is not assignable to type 'ArrayBuffer'.
+          Types of property '[Symbol.toStringTag]' are incompatible.
+            Type '"SharedArrayBuffer"' is not assignable to type '"ArrayBuffer"'.
+resources/js/shared/utils/serviceWorker.ts(315,29): error TS2339: Property 'sync' does not exist on type 'ServiceWorkerRegistration'.
+resources/js/shared/utils/serviceWorker.ts(430,7): error TS2322: Type 'Uint8Array<ArrayBufferLike>' is not assignable to type 'string | BufferSource | null | undefined'.
+  Type 'Uint8Array<ArrayBufferLike>' is not assignable to type 'ArrayBufferView<ArrayBuffer>'.
+    Types of property 'buffer' are incompatible.
+      Type 'ArrayBufferLike' is not assignable to type 'ArrayBuffer'.
+        Type 'SharedArrayBuffer' is not assignable to type 'ArrayBuffer'.
+          Types of property '[Symbol.toStringTag]' are incompatible.
+            Type '"SharedArrayBuffer"' is not assignable to type '"ArrayBuffer"'.
+resources/js/test-chakra-button-dts.tsx(2,34): error TS2307: Cannot find module '@/node_modules/@chakra-ui/react/dist/types/button/button.d.ts' or its corresponding type declarations.
+resources/js/test-chakra-button-dts.tsx(5,7): error TS6133: 'test' is declared but its value is never read.
+resources/js/test-chakra-button-esm.tsx(1,24): error TS2307: Cannot find module '@/node_modules/@chakra-ui/react/dist/esm/button' or its corresponding type declarations.
+resources/js/test-chakra-button-path.tsx(1,24): error TS2307: Cannot find module '@/node_modules/@chakra-ui/react/dist/types/button' or its corresponding type declarations.
+resources/js/test-chakra-button-relative-path.tsx(5,7): error TS6133: 'test' is declared but its value is never read.
+resources/js/test-chakra-button-relative.tsx(1,24): error TS2307: Cannot find module '../../node_modules/@chakra-ui/react/dist/esm/button' or its corresponding type declarations.
+resources/js/test-chakra-direct.tsx(2,34): error TS2307: Cannot find module '@/node_modules/@chakra-ui/react/dist/types/button/button-types' or its corresponding type declarations.
+resources/js/test-chakra-direct.tsx(5,7): error TS6133: 'test' is declared but its value is never read.

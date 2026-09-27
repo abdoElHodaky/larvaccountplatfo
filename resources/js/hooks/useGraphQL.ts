@@ -1,11 +1,11 @@
-import { useRequest } from 'alova/client';
-import { 
-  createGraphQLQuery, 
+import { useRequest } from 'alova';
+import {
+  createGraphQLQuery,
   createGraphQLMutation,
   GET_TRANSACTIONS,
   GET_PRODUCTS,
   GET_DASHBOARD_METRICS
-} from '../graphql/GETDASHBOARDMETRICS';
+} from '../../core/graphql/GETDASHBOARDMETRICS';
 
 // Simplified GraphQL hooks using Alova.js
 export function useGraphQLQuery(query: string, variables?: any) {
