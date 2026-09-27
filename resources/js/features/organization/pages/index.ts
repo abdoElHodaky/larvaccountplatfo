@@ -6,7 +6,7 @@
  */
 
 // Main organization pages
-export { default as Index } from './AccountsJournalEntriesTransactionsIndex';
+export { default as Index } from './Index';
 
 // Future exports (to be implemented)
 // export { default as Settings } from './Settings';

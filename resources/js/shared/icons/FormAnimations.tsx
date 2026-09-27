@@ -15,7 +15,7 @@ import {
   PlusIcon,
   MinusIcon
 } from '@heroicons/react/24/outline';
-import { createLiveIcon, iconAnimations, type LiveIconProps } from './APIENDPOINTS';
+import { createLiveIcon, type LiveIconProps } from './CreateLiveIcon';
 
 // Form-specific animations
 export const formAnimations = {

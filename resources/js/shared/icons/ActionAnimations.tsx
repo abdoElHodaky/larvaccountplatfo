@@ -21,7 +21,7 @@ import {
   PrinterIcon,
   Cog6ToothIcon
 } from '@heroicons/react/24/outline';
-import { createLiveIcon, type LiveIconProps } from './APIENDPOINTS';
+import { createLiveIcon, type LiveIconProps } from './CreateLiveIcon';
 
 // Action-specific animations
 export const actionAnimations = {
