@@ -128,11 +128,10 @@ export const PieChart: React.FC<PieChartProps> = memo(({
   // Memoized export handler
   const handleExport = useMemoizedCallback((format: 'png' | 'pdf' | 'csv' | 'excel') => {
     if (format === 'csv' || format === 'excel') {
-      // Export data as CSV/Excel
       const csvData = processedData.map(item => ({
-        [nameKey]: item[nameKey],
-        [dataKey]: item[dataKey],
-        percentage: `${item.percentage.toFixed(2)}%`,
+        [nameKey]: (item as any)[nameKey],
+        [dataKey]: (item as any)[dataKey],
+        percentage: item.percentage,
       }));
       
       // Convert to CSV string
@@ -147,7 +146,7 @@ export const PieChart: React.FC<PieChartProps> = memo(({
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
-      a.download = `pie-chart-data.${format === 'excel' ? 'csv' : 'csv'}`;
+      a.download = `pie-chart-data.${format === 'excel' ? 'xlsx' : 'csv'}`;
       a.click();
       URL.revokeObjectURL(url);
     } else {
@@ -159,12 +158,12 @@ export const PieChart: React.FC<PieChartProps> = memo(({
   // Memoized custom tooltip component
   const CustomTooltip = useMemo(() => {
     if (!showTooltip) return undefined;
-    
+
     return ({ active, payload }: any) => {
       if (!active || !payload || !payload.length) return null;
 
       const data = payload[0].payload;
-      
+
       return (
         <div
           style={{
@@ -194,11 +193,11 @@ export const PieChart: React.FC<PieChartProps> = memo(({
   // Memoized label renderer
   const renderLabel = useMemoizedCallback((entry: any) => {
     if (!showLabels) return null;
-    
+
     if (showPercentage) {
       return `${entry.percentage.toFixed(1)}%`;
     }
-    
+
     return entry[nameKey];
   }, [showLabels, showPercentage, nameKey]);
 
@@ -224,9 +223,9 @@ export const PieChart: React.FC<PieChartProps> = memo(({
             <Cell key={`cell-${index}`} fill={entry.color} />
           ))}
         </Pie>
-        
+
         {showTooltip && <Tooltip content={CustomTooltip} />}
-        
+
         {showLegend && (
           <Legend
             wrapperStyle={{ color: textColor }}
