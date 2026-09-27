@@ -47,7 +47,7 @@ export class DashboardApiService {
       const { data } = await apolloClient.mutate({
         mutation: CREATE_DASHBOARD_LAYOUT,
         variables: { input: layoutData },
-        update: (cache: ApolloCache<any>, result: { data: { createDashboardLayout: DashboardLayout; } | null | undefined }, options?: any) => {
+        update: (cache: any, result: any) => {
           // Update cache with new layout
           const mutationData = result.data?.createDashboardLayout;
           if (mutationData) {
@@ -81,7 +81,7 @@ export class DashboardApiService {
       const { data } = await apolloClient.mutate({
         mutation: UPDATE_DASHBOARD_LAYOUT,
         variables: { id, input: layoutData },
-        update: (cache: ApolloCache<any>, result: { data?: { updateDashboardLayout: DashboardLayout } }, options?: any) => {
+        update: (cache: any, result: any) => {
           // Update cache
           const updatedLayout = result.data?.updateDashboardLayout;
           if (updatedLayout) {
