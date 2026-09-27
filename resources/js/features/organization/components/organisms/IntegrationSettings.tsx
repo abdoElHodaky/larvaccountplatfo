@@ -494,7 +494,10 @@ export const IntegrationSettings = memo<IntegrationSettingsProps>(({
                             border="2px"
                             borderColor={formData.type === type.value ? 'blue.500' : borderColor}
                             cursor="pointer"
-                            onClick={(e: React.MouseEvent<HTMLDivElement, MouseEvent>) => setFormData(prev => ({ ...prev, type: type.value }))}
+                            onClick={(e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+      e.preventDefault();
+      setFormData(prev => ({ ...prev, type: type.value }));
+    }}
                           >
                             <Text fontWeight="medium">{type.label}</Text>
                             <Text fontSize="sm" color="gray.500">{type.description}</Text>
@@ -539,7 +542,7 @@ export const IntegrationSettings = memo<IntegrationSettingsProps>(({
                       <FormLabel>Enable Integration</FormLabel>
                       <Switch
                         isChecked={formData.isEnabled}
-                        onChange={(e) => setFormData(prev => ({ ...prev, isEnabled: e.target.checked }))}
+                        onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFormData(prev => ({ ...prev, isEnabled: e.target.checked }))}
                       />
                     </FormControl>
                   </VStack>
@@ -607,7 +610,7 @@ export const IntegrationSettings = memo<IntegrationSettingsProps>(({
                 <FormLabel>Enable Integration</FormLabel>
                 <Switch
                   isChecked={formData.isEnabled}
-                  onChange={(e) => setFormData(prev => ({ ...prev, isEnabled: e.target.checked }))}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFormData(prev => ({ ...prev, isEnabled: e.target.checked }))}
                 />
               </FormControl>
             </VStack>

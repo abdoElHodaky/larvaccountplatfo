@@ -374,7 +374,7 @@ export const UserManagement = memo<UserManagementProps>(({
                 <FormLabel>Role</FormLabel>
                 <Select
                   value={formData.role}
-                  onChange={(e) => setFormData(prev => ({ ...prev, role: e.target.value as User['role'] }))}
+                  onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setFormData(prev => ({ ...prev, role: e.target.value as User['role'] }))}
                 >
                   <option value="viewer">Viewer</option>
                   <option value="accountant">Accountant</option>
@@ -386,7 +386,7 @@ export const UserManagement = memo<UserManagementProps>(({
                 <FormLabel>Status</FormLabel>
                 <Select
                   value={formData.status}
-                  onChange={(e) => setFormData(prev => ({ ...prev, status: e.target.value as User['status'] }))}
+                  onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setFormData(prev => ({ ...prev, status: e.target.value as User['status'] }))}
                 >
                   <option value="active">Active</option>
                   <option value="inactive">Inactive</option>
@@ -435,7 +435,7 @@ export const UserManagement = memo<UserManagementProps>(({
                 <FormLabel>Role</FormLabel>
                 <Select
                   value={formData.role}
-                  onChange={(e) => setFormData(prev => ({ ...prev, role: e.target.value as User['role'] }))}
+                  onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setFormData(prev => ({ ...prev, role: e.target.value as User['role'] }))}
                 >
                   <option value="viewer">Viewer</option>
                   <option value="accountant">Accountant</option>
@@ -447,7 +447,7 @@ export const UserManagement = memo<UserManagementProps>(({
                 <FormLabel>Status</FormLabel>
                 <Select
                   value={formData.status}
-                  onChange={(e) => setFormData(prev => ({ ...prev, status: e.target.value as User['status'] }))}
+                  onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setFormData(prev => ({ ...prev, status: e.target.value as User['status'] }))}
                 >
                   <option value="active">Active</option>
                   <option value="inactive">Inactive</option>
