@@ -4,19 +4,17 @@ import {
   createGraphQLQuery,
   createGraphQLMutation,
   GET_DASHBOARD_METRICS,
-  GET_PRODUCTS
-} from '../graphql/GraphqlClient';
-import {
+  GET_PRODUCTS,
   GET_TRANSACTIONS
-} from '../shared/services/graphql/TENANTFRAGMENT';
+} from '../graphql/GraphqlClient';
 
 // Simplified GraphQL hooks using Alova.js
 export function useGraphQLQuery(query: string, variables?: any) {
-  const method = createGraphQLQuery(query, variables);
+  const method = createGraphQLQuery(String(query), variables);
   const { data, loading, error, send } = useRequest(method);
 
   return {
-    data: data?.data,
+    data: (data as any)?.data,
     loading,
     error,
     refetch: send
@@ -34,7 +32,7 @@ export function useGraphQLMutation(mutation: string) {
     });
   };
 
-  return [mutate, { data: data?.data, loading, error }];
+  return [mutate, { data: (data as any)?.data, loading, error }];
 }
 
 // Specific hooks for common queries
