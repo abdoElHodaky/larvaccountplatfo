@@ -3,6 +3,7 @@
  * Domain-specific state management for accounting features
  */
 import { PATTERNS } from '@/shared/types/PATTERNS';
+import type { DateRange, Filter } from '@/shared/types/PATTERNS';
 
 // Rematch model creation - using any for PATTERNS since types are not available
 import { createModel } from '@rematch/core';
@@ -62,11 +63,8 @@ export interface JournalEntry {
   updatedAt: string;
 }
 
-  dateRange: PATTERNS.DateRange;
-  accountTypes: string[];
-  status: string[];
-  searchTerm: string;
-  };
+export interface AccountingFilters {
+  dateRange: DateRange;
   accountTypes: string[];
   status: string[];
   searchTerm: string;
@@ -99,8 +97,8 @@ export interface AccountingState {
 // Initial state
 const initialFilters: AccountingFilters = {
   dateRange: {
-    start: new Date(new Date().getFullYear(), 0, 1).toISOString().split('T')[0],
-    end: new Date().toISOString().split('T')[0],
+    startDate: new Date(new Date().getFullYear(), 0, 1).toISOString().split('T')[0],
+    endDate: new Date().toISOString().split('T')[0],
   },
   accountTypes: [],
   status: [],

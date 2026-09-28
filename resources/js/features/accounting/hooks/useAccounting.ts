@@ -130,13 +130,13 @@ export const useAccountingFilters = () => {
       dispatch.accounting.resetFilters(),
     
     // Convenience methods for common filter operations
-    setDateRange: (start: string, end: string) => 
-      dispatch.accounting.updateFilters({ 
-        dateRange: { start, end } 
+    setDateRange: (start: string, end: string) =>
+      dispatch.accounting.updateFilters({
+        dateRange: { startDate: start, endDate: end }
       }),
-    setAccountTypes: (types: string[]) => 
+    setAccountTypes: (types: string[]) =>
       dispatch.accounting.updateFilters({ accountTypes: types }),
-    setSearchTerm: (term: string) => 
+    setSearchTerm: (term: string) =>
       dispatch.accounting.updateFilters({ searchTerm: term }),
   };
 };
