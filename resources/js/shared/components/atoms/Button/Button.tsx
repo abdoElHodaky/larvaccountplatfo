@@ -1,5 +1,6 @@
 import React, { memo, forwardRef } from 'react';
-import { Button as ChakraButton, ButtonProps as ChakraButtonProps, Spinner } from '@chakra-ui/react';
+import { Button as ChakraButton, Spinner } from '@chakra-ui/react';
+import type { ButtonProps as ChakraButtonProps } from '@chakra-ui/react';
 
 export interface ButtonProps extends Omit<ChakraButtonProps, 'size'> {
   variant?: 'primary' | 'secondary' | 'danger' | 'ghost' | 'outline';
@@ -28,7 +29,7 @@ export const Button = memo(forwardRef<HTMLButtonElement, ButtonProps>(({
   ...props
 }, ref) => {
   // Variant mapping to Chakra UI variants
-  const variantMap = {
+  const variantMap: Record<Exclude<ButtonProps['variant'], undefined>, keyof NonNullable<ChakraButtonProps['variant']>> = {
     primary: 'solid',
     secondary: 'outline',
     danger: 'solid',
@@ -37,7 +38,7 @@ export const Button = memo(forwardRef<HTMLButtonElement, ButtonProps>(({
   };
 
   // Color scheme mapping
-  const colorSchemeMap = {
+  const colorSchemeMap: Record<Exclude<ButtonProps['variant'], undefined>, keyof NonNullable<ChakraButtonProps['colorScheme']>> = {
     primary: 'blue',
     secondary: 'gray',
     danger: 'red',
@@ -46,7 +47,7 @@ export const Button = memo(forwardRef<HTMLButtonElement, ButtonProps>(({
   };
 
   // Size mapping
-  const sizeMap = {
+  const sizeMap: Record<Exclude<ButtonProps['size'], undefined>, keyof NonNullable<ChakraButtonProps['size']>> = {
     sm: 'sm',
     md: 'md',
     lg: 'lg',
@@ -60,12 +61,16 @@ export const Button = memo(forwardRef<HTMLButtonElement, ButtonProps>(({
     onClick?.(event);
   };
 
-  return (
+  const resolvedVariant = variant ?? 'primary';
+const resolvedColorScheme = variant ?? 'primary';
+const resolvedSize = size ?? 'md';
+
+return (
     <ChakraButton
       ref={ref}
-      variant={variantMap[variant]}
-      colorScheme={colorSchemeMap[variant]}
-      size={sizeMap[size]}
+      variant={variantMap[resolvedVariant as keyof typeof variantMap]}
+      colorScheme={colorSchemeMap[resolvedColorScheme as keyof typeof colorSchemeMap]}
+      size={sizeMap[resolvedSize as keyof typeof sizeMap]}
       isDisabled={disabled || loading}
       isLoading={loading}
       loadingText={loading ? children : undefined}

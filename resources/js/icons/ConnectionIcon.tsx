@@ -1,4 +1,4 @@
-import React from 'react';
+// React import removed as not needed with new JSX transform
 
 // Simplified icons for real-time features
 export interface IconProps {

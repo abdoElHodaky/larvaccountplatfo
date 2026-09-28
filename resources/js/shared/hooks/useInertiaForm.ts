@@ -1,4 +1,4 @@
-import { useForm as useInertiaForm } from '@inertiajs/react';
+import { useForm } from '@inertiajs/react';
 import { useCallback, useMemo } from 'react';
 import { router } from '@inertiajs/react';
 
@@ -42,7 +42,7 @@ export interface UseInertiaFormReturn<T> {
 export function useInertiaForm<T extends Record<string, any>>(
   initialData: T
 ): UseInertiaFormReturn<T> {
-  const form = useInertiaForm(initialData);
+  const form = useForm(initialData);
 
   // Enhanced setData function with better TypeScript support
   const setData = useCallback((key: keyof T | Partial<T>, value?: any) => {

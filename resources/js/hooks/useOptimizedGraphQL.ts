@@ -1,4 +1,4 @@
-import { useRequest, LocalCacheConfig, MethodType } from 'alova';
+import { useRequest, LocalCacheConfig } from 'alova';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { gql as createAlovaQuery, mutation as createAlovaMutation } from '@/shared/services/alova/alova.config';
 

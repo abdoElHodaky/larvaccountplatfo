@@ -60,7 +60,6 @@ export const AnimatedCard = forwardRef<HTMLDivElement, AnimatedCardProps>(({
   ...props
 }, ref) => {
   const cardRef = useRef<HTMLDivElement>(null);
-  const [_isAnimating, _setIsAnimating] = useState(true);
 
   useEffect(() => {
     const element = cardRef.current;
@@ -71,7 +70,7 @@ export const AnimatedCard = forwardRef<HTMLDivElement, AnimatedCardProps>(({
     // Apply initial styles
     Object.assign(element.style, {
       opacity: String(preset.initial.opacity || 1),
-      transform: preset.initial.transform || 'none',
+      transform: (preset.initial as { transform?: string }).transform || 'none',
       transition: `all ${preset.duration}ms cubic-bezier(0.4, 0, 0.2, 1)`,
     });
 
@@ -79,7 +78,7 @@ export const AnimatedCard = forwardRef<HTMLDivElement, AnimatedCardProps>(({
     const animationFrame = requestAnimationFrame(() => {
       Object.assign(element.style, {
         opacity: String(preset.animate.opacity || 1),
-        transform: preset.animate.transform || 'none',
+        transform: (preset.animate as { transform?: string }).transform || 'none',
       });
     });
 

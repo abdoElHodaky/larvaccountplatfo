@@ -10,7 +10,6 @@ import {
   DocumentDuplicateIcon,
   ShareIcon,
   HeartIcon,
-  BookmarkIcon,
   StarIcon,
   HandThumbUpIcon,
   HandThumbDownIcon,
@@ -22,6 +21,7 @@ import {
   Cog6ToothIcon
 } from '@heroicons/react/24/outline';
 import { createLiveIcon, type LiveIconProps } from './CreateLiveIcon';
+import { BookmarkIcon as HeroBookmarkIcon } from '@heroicons/react/24/outline';
 
 // Action-specific animations
 export const actionAnimations = {
@@ -124,7 +124,7 @@ export const LikeIcon: React.FC<LiveIconProps & {
 };
 
 // Bookmark toggle icon
-export const BookmarkIcon: React.FC<LiveIconProps & {
+export const LocalBookmarkIcon: React.FC<LiveIconProps & {
   isBookmarked: boolean;
   onToggle: () => void;
 }> = ({ isBookmarked, onToggle, size = 'md', className = '', ...props }) => {
@@ -141,7 +141,7 @@ export const BookmarkIcon: React.FC<LiveIconProps & {
     onToggle();
   };
 
-  const LiveIcon = createLiveIcon(BookmarkIcon);
+  const LiveIcon = createLiveIcon(HeroBookmarkIcon);
 
   return (
     <LiveIcon

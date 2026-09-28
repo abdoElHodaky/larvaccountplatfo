@@ -98,8 +98,8 @@ export const AnimatedList = forwardRef<HTMLDivElement, AnimatedListProps>(({
   ...props
 }, ref) => {
   const listRef = useRef<HTMLDivElement>(null);
-  const [_isAnimating, _setIsAnimating] = useState(true);
-  const [_animatedCount, _setAnimatedCount] = useState(0);
+  const [isAnimating, setIsAnimating] = useState(true);
+  const [animatedCount, setAnimatedCount] = useState(0);
 
   const childrenArray = useMemo(() => 
     React.Children.toArray(children), [children]
@@ -121,7 +121,7 @@ export const AnimatedList = forwardRef<HTMLDivElement, AnimatedListProps>(({
       // Apply initial styles
       Object.assign(htmlItem.style, {
         opacity: String(preset.initial.opacity || 1),
-        transform: preset.initial.transform?.replace('translateY(20px)', directionTransforms[direction]) || 'none',
+        transform: (preset.initial as { transform?: string })?.transform?.replace('translateY(20px)', directionTransforms[direction]) || 'none',
         transition: `all ${preset.duration}ms ${preset.easing}`,
         transitionDelay: `${delay}ms`,
       });
@@ -130,7 +130,7 @@ export const AnimatedList = forwardRef<HTMLDivElement, AnimatedListProps>(({
       const animationFrame = requestAnimationFrame(() => {
         Object.assign(htmlItem.style, {
           opacity: String(preset.animate.opacity || 1),
-          transform: preset.animate.transform?.replace('translateY(0px)', 'translateY(0px)') || 'none',
+          transform: (preset.animate as { transform?: string })?.transform?.replace('translateY(0px)', 'translateY(0px)') || 'none',
         });
       });
 

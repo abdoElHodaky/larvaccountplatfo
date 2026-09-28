@@ -1,7 +1,7 @@
 // Services - Re-export all service modules
-export * from './alova';
-export * from './analytics';
-export * from './dataSync';
-export * from './graphql';
-export * from './security';
-export * from './socket';
+export * from '../shared/services/alova';
+export * from '../shared/services/analytics';
+export * from '../shared/services/dataSync';
+export * from '../shared/services/graphql';
+export * from '../shared/services/security';
+export * from '../shared/services/socket';
