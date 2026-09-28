@@ -2,8 +2,7 @@
  * Accounting Rematch Model
  * Domain-specific state management for accounting features
  */
-import { PATTERNS } from '@/shared/types/PATTERNS';
-import type { DateRange, Filter } from '@/shared/types/PATTERNS';
+import type { DateRange } from '@/shared/types/PATTERNS';
 
 // Rematch model creation - using any for PATTERNS since types are not available
 import { createModel } from '@rematch/core';

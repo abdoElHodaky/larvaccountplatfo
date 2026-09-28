@@ -4,7 +4,6 @@
  */
 
 import { createModel } from '@rematch/core';
-import { PATTERNS } from '@/shared/types/PATTERNS';
 import type { DateRange, Filter } from '@/shared/types/PATTERNS';
 import { dashboardApi } from '../services/dashboardApi';
 

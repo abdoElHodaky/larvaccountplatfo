@@ -1,11 +1,14 @@
 import { useRequest } from 'alova';
+// Fixed imports: using GraphqlClient instead of GETDASHBOARDMETRICS for createGraphQLQuery/createGraphQLMutation
 import {
   createGraphQLQuery,
   createGraphQLMutation,
-  GET_TRANSACTIONS,
-  GET_PRODUCTS,
-  GET_DASHBOARD_METRICS
-} from '../core/graphql/GETDASHBOARDMETRICS';
+  GET_DASHBOARD_METRICS,
+  GET_PRODUCTS
+} from '../graphql/GraphqlClient';
+import {
+  GET_TRANSACTIONS
+} from '../shared/services/graphql/TENANTFRAGMENT';
 
 // Simplified GraphQL hooks using Alova.js
 export function useGraphQLQuery(query: string, variables?: any) {

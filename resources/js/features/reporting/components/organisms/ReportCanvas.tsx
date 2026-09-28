@@ -60,8 +60,8 @@ export const ReportCanvas: React.FC<ReportCanvasProps> = memo(({
   className,
   cols = { lg: 12, md: 10, sm: 6, xs: 4, xxs: 2 },
   rowHeight = 60,
-  margin = [10, 10],
-  containerPadding = [10, 10],
+  margin = [10, 10] as [number, number],
+  containerPadding = [10, 10] as [number, number],
 }) => {
 
 
@@ -186,7 +186,11 @@ export const ReportCanvas: React.FC<ReportCanvasProps> = memo(({
         borderRadius="md"
         bg="white"
         cursor={isEditing ? 'pointer' : 'default'}
-        onClick={() => isEditing && handleWidgetSelect(widget)}
+        onClick={() => {
+  if (isEditing) {
+    handleWidgetSelect(widget);
+  }
+}}
         _hover={isEditing ? { borderColor: selectedBorderColor } : undefined}
         overflow="hidden"
       >
@@ -213,7 +217,7 @@ export const ReportCanvas: React.FC<ReportCanvasProps> = memo(({
               size="xs"
               variant="ghost"
               aria-label="Delete widget"
-              onClick={(e) => {
+              onClick={(e: React.MouseEvent<SVGSVGElement>) => {
                 e.stopPropagation();
                 handleWidgetDelete(widget.id);
               }}
