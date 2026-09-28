@@ -4,7 +4,8 @@
  */
 
 // Re-export types for convenience
-export type { IconProps, IconCategory, IconRegistryEntry } from './ICONSIZES';
+import { IconProps, IconCategory, IconRegistryEntry } from './ICONSIZES';
+export { IconProps, IconCategory, IconRegistryEntry };
 
 // Legacy type alias for backward compatibility
 export type LiveIconProps = IconProps;
@@ -64,7 +65,18 @@ export {
   ValidationIcon,
   PasswordToggleIcon,
   SearchInputIcon,
-  AddRemoveIcon
+  AddRemoveIcon,
+  LiveCheckIcon,
+  LiveXMarkIcon,
+  LiveExclamationIcon,
+  LiveInfoIcon,
+  LiveSearchIcon,
+  LivePlusIcon,
+  LiveMinusIcon,
+  LiveCalendarIcon,
+  LiveClockIcon,
+  LiveUserIcon,
+  LiveMailIcon
 } from './FormAnimations';
 
 // Status Icons (from StatusAnimations.tsx)
@@ -84,7 +96,14 @@ export {
   StatusFreeIcon,
   StatusBusinessIcon,
   StatusEnterpriseIcon,
-  StatusWaveIcon
+  StatusWaveIcon,
+  LiveSuccessIcon,
+  LiveErrorIcon,
+  LiveWarningIcon,
+  LiveInfoIcon,
+  LiveLoadingIcon,
+  LiveActiveIcon,
+  LiveSecureIcon
 } from './StatusAnimations';
 
 // Convenience aliases for common icons (backward compatibility)

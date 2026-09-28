@@ -5,13 +5,13 @@
 
 import React, { Fragment } from 'react';
 import { Dialog, Transition } from '@headlessui/react';
-import { 
+import {
   LiveXMarkIcon,
   LiveInfoIcon,
   LiveWarningIcon,
   LiveErrorIcon,
   LiveSuccessIcon,
-  type LiveIconProps 
+  type LiveIconProps
 } from '../../icons';
 
 interface EnhancedDialogProps {
@@ -54,32 +54,32 @@ export const EnhancedDialog: React.FC<EnhancedDialogProps> = ({
   };
 
   const typeConfig = {
-    default: { 
-      icon: LiveInfoIcon, 
+    default: {
+      icon: LiveInfoIcon,
       iconColor: 'primary' as const,
       borderColor: 'border-primary-200',
       bgColor: 'bg-primary-50'
     },
-    info: { 
-      icon: LiveInfoIcon, 
+    info: {
+      icon: LiveInfoIcon,
       iconColor: 'primary' as const,
       borderColor: 'border-primary-200',
       bgColor: 'bg-primary-50'
     },
-    warning: { 
-      icon: LiveWarningIcon, 
+    warning: {
+      icon: LiveWarningIcon,
       iconColor: 'warning' as const,
       borderColor: 'border-warning-200',
       bgColor: 'bg-warning-50'
     },
-    error: { 
-      icon: LiveErrorIcon, 
+    error: {
+      icon: LiveErrorIcon,
       iconColor: 'danger' as const,
       borderColor: 'border-danger-200',
       bgColor: 'bg-danger-50'
     },
-    success: { 
-      icon: LiveSuccessIcon, 
+    success: {
+      icon: LiveSuccessIcon,
       iconColor: 'success' as const,
       borderColor: 'border-success-200',
       bgColor: 'bg-success-50'

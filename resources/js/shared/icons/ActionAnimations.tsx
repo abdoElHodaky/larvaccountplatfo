@@ -74,14 +74,23 @@ export const actionAnimations = {
 } as const;
 
 // Basic action icons
-export const LiveEditIcon = createLiveIcon(PencilIcon, 'bounce');
-export const LiveDeleteIcon = createLiveIcon(TrashIcon, 'shake');
-export const LiveCopyIcon = createLiveIcon(DocumentDuplicateIcon, 'pulse');
-export const LiveShareIcon = createLiveIcon(ShareIcon, 'bounce');
-export const LiveDownloadIcon = createLiveIcon(ArrowDownTrayIcon, 'bounce');
-export const LiveUploadIcon = createLiveIcon(ArrowUpTrayIcon, 'bounce');
-export const LivePrintIcon = createLiveIcon(PrinterIcon, 'pulse');
-export const LiveSettingsIcon = createLiveIcon(Cog6ToothIcon, 'rotate');
+export const ActionEditIcon = createLiveIcon(PencilIcon, 'bounce');
+export const ActionDeleteIcon = createLiveIcon(TrashIcon, 'shake');
+export const ActionCopyIcon = createLiveIcon(DocumentDuplicateIcon, 'pulse');
+export const ActionShareIcon = createLiveIcon(ShareIcon, 'bounce');
+export const ActionDownloadIcon = createLiveIcon(ArrowDownTrayIcon, 'bounce');
+export const ActionUploadIcon = createLiveIcon(ArrowUpTrayIcon, 'bounce');
+export const ActionPrintIcon = createLiveIcon(PrinterIcon, 'pulse');
+export const ActionSettingsIcon = createLiveIcon(Cog6ToothIcon, 'rotate');
+
+// Additional action icons
+export const ActionAddIcon = createLiveIcon(PencilIcon, 'bounce'); // Placeholder - using PencilIcon for now
+export const ActionViewIcon = createLiveIcon(ShareIcon, 'bounce'); // Placeholder - using ShareIcon for now
+
+// Live icon aliases (for backward compatibility)
+export const LiveEditIcon = ActionEditIcon;
+export const LiveDeleteIcon = ActionDeleteIcon;
+export const LiveShareIcon = ActionShareIcon;
 
 // Interactive action icons with state
 export const LikeIcon: React.FC<LiveIconProps & {

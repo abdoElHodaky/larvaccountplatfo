@@ -14,27 +14,27 @@ import {
   LiveChevronRightIcon,
   LiveMenuToggleIcon,
   LiveBackIcon,
-  
+
   // Form Icons
   ValidationIcon,
   PasswordToggleIcon,
   SearchInputIcon,
   AddRemoveIcon,
-  
+
   // Status Icons
   StatusIndicator,
   ConnectionStatus,
   ProgressStatus,
-  
+
   // Action Icons
   LikeIcon,
   BookmarkIcon,
   StarRating,
   ThumbsVote,
   SendIcon,
-  LiveEditIcon,
-  LiveDeleteIcon,
-  LiveShareIcon
+  ActionEditIcon,
+  ActionDeleteIcon,
+  ActionShareIcon
 } from '../../icons';
 
 export const IntegrationShowcase: React.FC = () => {

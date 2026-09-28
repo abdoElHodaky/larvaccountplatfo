@@ -120,6 +120,9 @@ export const LoadingIcon = StatusLoadingIcon;
 export const SuccessIcon = StatusSuccessIcon;
 export const ErrorIcon = StatusErrorIcon;
 
+// Live icon aliases for LiveIcons integration
+export const LiveChevronDownIcon = NavChevronDownIcon;
+
 // Dynamic icon component export
 export { DynamicIcon };
 

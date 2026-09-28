@@ -1,6 +1,12 @@
-import React, { memo, forwardRef } from 'react';
+import { memo, forwardRef } from 'react';
 import { Button as ChakraButton, Spinner } from '@chakra-ui/react';
-import type { ButtonProps as ChakraButtonProps } from '@chakra-ui/react';
+import type {
+  Variant as ChakraVariant,
+  ColorScheme as ChakraColorScheme,
+  Size as ChakraSize
+} from '@chakra-ui/react';
+
+type ChakraButtonProps = React.ComponentProps<typeof ChakraButton>;
 
 export interface ButtonProps extends Omit<ChakraButtonProps, 'size'> {
   variant?: 'primary' | 'secondary' | 'danger' | 'ghost' | 'outline';

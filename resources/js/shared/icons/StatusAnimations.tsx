@@ -60,6 +60,24 @@ export const LiveLoadingIcon = createLiveIcon(ClockIcon, 'loading');
 export const LiveActiveIcon = createLiveIcon(BoltIcon, 'pulse');
 export const LiveSecureIcon = createLiveIcon(ShieldCheckIcon, 'success');
 
+// Status icon exports for shared/icons/index.ts
+export const StatusSuccessIcon = LiveSuccessIcon;
+export const StatusErrorIcon = LiveErrorIcon;
+export const StatusWarningIcon = LiveWarningIcon;
+export const StatusInfoIcon = LiveInfoIcon;
+export const StatusLoadingIcon = LiveLoadingIcon;
+export const StatusChartIcon = LiveInfoIcon; // Placeholder
+export const StatusDocumentIcon = LiveInfoIcon; // Placeholder
+export const StatusBankIcon = LiveInfoIcon; // Placeholder
+export const StatusBoxIcon = LiveInfoIcon; // Placeholder
+export const StatusTrendUpIcon = LiveInfoIcon; // Placeholder
+export const StatusTrendDownIcon = LiveInfoIcon; // Placeholder
+export const StatusTrendRightIcon = LiveInfoIcon; // Placeholder
+export const StatusFreeIcon = LiveInfoIcon; // Placeholder
+export const StatusBusinessIcon = LiveInfoIcon; // Placeholder
+export const StatusEnterpriseIcon = LiveInfoIcon; // Placeholder
+export const StatusWaveIcon = LiveInfoIcon; // Placeholder
+
 // Status indicator component
 export const StatusIndicator: React.FC<LiveIconProps & {
   status: 'success' | 'error' | 'warning' | 'info' | 'loading' | 'idle';

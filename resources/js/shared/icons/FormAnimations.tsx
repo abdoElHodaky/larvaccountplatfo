@@ -13,7 +13,11 @@ import {
   EyeSlashIcon,
   MagnifyingGlassIcon,
   PlusIcon,
-  MinusIcon
+  MinusIcon,
+  CalendarIcon,
+  ClockIcon,
+  UserIcon,
+  MailIcon
 } from '@heroicons/react/24/outline';
 import { createLiveIcon, type LiveIconProps } from './CreateLiveIcon';
 
@@ -49,6 +53,10 @@ export const LiveInfoIcon = createLiveIcon(InformationCircleIcon, 'pulse');
 export const LiveSearchIcon = createLiveIcon(MagnifyingGlassIcon, 'pulse');
 export const LivePlusIcon = createLiveIcon(PlusIcon, 'bounce');
 export const LiveMinusIcon = createLiveIcon(MinusIcon, 'bounce');
+export const LiveCalendarIcon = createLiveIcon(CalendarIcon, 'pulse');
+export const LiveClockIcon = createLiveIcon(ClockIcon, 'pulse');
+export const LiveUserIcon = createLiveIcon(UserIcon, 'pulse');
+export const LiveMailIcon = createLiveIcon(MailIcon, 'pulse');
 
 // Validation state icon component
 export const ValidationIcon: React.FC<LiveIconProps & {
@@ -215,4 +223,12 @@ export const FormFieldIcon: React.FC<{
     </div>
   );
 };
+
+// Form icon exports
+export const FormSearchIcon = LiveSearchIcon;
+export const FormFilterIcon = LiveSearchIcon; // Placeholder - using SearchIcon for now
+export const FormCalendarIcon = LiveCalendarIcon;
+export const FormClockIcon = LiveClockIcon;
+export const FormUserIcon = LiveUserIcon;
+export const FormEmailIcon = LiveMailIcon;
 

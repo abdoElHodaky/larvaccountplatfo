@@ -60,13 +60,14 @@ export const AnimatedCard = forwardRef<HTMLDivElement, AnimatedCardProps>(({
   ...props
 }, ref) => {
   const cardRef = useRef<HTMLDivElement>(null);
+  const [isAnimating, setIsAnimating] = useState(false);
 
   useEffect(() => {
     const element = cardRef.current;
     if (!element) return;
 
     const preset = animationPresets[animationType];
-    
+
     // Apply initial styles
     Object.assign(element.style, {
       opacity: String(preset.initial.opacity || 1),
@@ -115,6 +116,7 @@ export const AnimatedCard = forwardRef<HTMLDivElement, AnimatedCardProps>(({
         if (typeof ref === 'function') {
           ref(node);
         } else if (ref) {
+          // $FlowFixLine
           ref.current = node;
         }
       }}
