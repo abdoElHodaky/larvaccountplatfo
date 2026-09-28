@@ -1,6 +1,7 @@
 /**
  * Inventory Rematch Model
  * Manages inventory items, stock levels, and warehouse operations
+import { PATTERNS } from '@/shared/types/PATTERNS';
  */
 
 import { createModel } from '@rematch/core';

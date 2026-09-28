@@ -2,6 +2,7 @@
  * Accounting Rematch Model
  * Domain-specific state management for accounting features
  */
+import { PATTERNS } from '@/shared/types/PATTERNS';
 
 // Rematch model creation - using any for PATTERNS since types are not available
 import { createModel } from '@rematch/core';
@@ -61,10 +62,10 @@ export interface JournalEntry {
   updatedAt: string;
 }
 
-export interface AccountingFilters {
-  dateRange: {
-    start: string;
-    end: string;
+  dateRange: PATTERNS.DateRange;
+  accountTypes: string[];
+  status: string[];
+  searchTerm: string;
   };
   accountTypes: string[];
   status: string[];

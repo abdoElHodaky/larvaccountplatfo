@@ -1,6 +1,7 @@
 /**
  * Auth Rematch Model
  * Authentication and user management with Rematch
+import { PATTERNS } from '@/shared/types/PATTERNS';
  */
 
 import { createModel } from '@rematch/core';

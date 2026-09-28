@@ -4,6 +4,7 @@
  */
 
 import { createModel } from '@rematch/core';
+import { PATTERNS } from '@/shared/types/PATTERNS';
 import { dashboardApi } from '../services/dashboardApi';
 
 // Types
@@ -64,11 +65,11 @@ export interface ChartData {
   options?: Record<string, any>;
 }
 
-export interface DashboardFilters {
-  dateRange: {
-    start: string;
-    end: string;
-  } | null;
+  dateRange: PATTERNS.DateRange | null;
+  period: 'today' | 'week' | 'month' | 'quarter' | 'year';
+  accounts: string[];
+  categories: string[];
+  customFilters: Record<string, PATTERNS.Filter>;
   period: 'today' | 'week' | 'month' | 'quarter' | 'year';
   accounts: string[];
   categories: string[];
@@ -105,11 +106,13 @@ export interface DashboardState {
 }
 
 const initialFilters: DashboardFilters = {
+const initialFilters: DashboardFilters = {
   dateRange: null,
   period: 'month',
   accounts: [],
   categories: [],
-  customFilters: {},
+  customFilters: {};
+};
 };
 
 const initialState: DashboardState = {

@@ -9,6 +9,7 @@ import { Provider } from 'react-redux';
 import { BrowserRouter } from 'react-router-dom';
 import { init } from '@rematch/core';
 import { models } from '../../shared/stores';
+import { PATTERNS } from '@/shared/types/PATTERNS';
 import { vi } from 'vitest';
 
 // Mock Apollo Client for testing
