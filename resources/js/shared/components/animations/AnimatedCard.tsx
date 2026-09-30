@@ -12,6 +12,7 @@ interface AnimatedCardProps extends React.HTMLAttributes<HTMLDivElement> {
   elevated?: boolean;
   children: React.ReactNode;
   onAnimationComplete?: () => void;
+  className?: string;
 }
 
 const cardSizes = {

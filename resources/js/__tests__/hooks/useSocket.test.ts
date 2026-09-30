@@ -8,6 +8,7 @@ import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { useSocket, useRealtimeDashboard, useRealtimeAccounting } from '../../shared/hooks/useSocket';
 // import { socketManager } from '../../shared/services/socket/socketManager';
 import { testUtils, localStorageMock } from '../setup/testSetup';
+import '@testing-library/jest-dom';
 
 // Mock the socket manager
 const mockSocketManager = {
@@ -36,7 +37,6 @@ vi.mock('../../shared/services/socket/socketManager', () => ({
   socketManager: mockSocketManager,
 }));
 
-// Remove duplicate declaration
 
 describe('useSocket Hook', () => {
   beforeEach(() => {

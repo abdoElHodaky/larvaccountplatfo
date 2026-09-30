@@ -1,5 +1,5 @@
 /// <reference types="vitest/globals" />
-import React from 'react';
+import * as React from 'react';
 import { render, screen } from '@testing-library/react';
 import { describe, it, expect, vi } from 'vitest';
 import { ChakraProvider } from '@chakra-ui/react';
