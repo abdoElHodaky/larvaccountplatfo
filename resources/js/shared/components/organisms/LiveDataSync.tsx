@@ -1,4 +1,4 @@
-import React, { memo, useMemo, useState, useEffect, useRef } from 'react';
+import React, { memo, useMemo, useState, useEffect, useRef, useImperativeHandle } from 'react';
 import {
   Box,
   VStack,
@@ -70,6 +70,9 @@ export const LiveDataSync: React.FC<LiveDataSyncProps> = memo(({
     conflictCount: 0,
     progress: 0,
   });
+  const syncRef = useRef<{
+    queueChange: (change: Omit<DataChange, 'id' | 'timestamp'>) => void;
+  } | null>(null);
 
   const [pendingChanges, setPendingChanges] = useState<DataChange[]>([]);
   const [conflicts, setConflicts] = useState<Array<{
@@ -237,7 +240,7 @@ export const LiveDataSync: React.FC<LiveDataSyncProps> = memo(({
   }, [onDataChange]);
 
   // Add a local change to the sync queue
-  const queueChange = useMemoizedCallback((change: Omit<DataChange, 'id' | 'timestamp'>) => {
+  const internalQueueChange = useMemoizedCallback((change: Omit<DataChange, 'id' | 'timestamp'>) => {
     const fullChange: DataChange = {
       ...change,
       id: `local-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
@@ -257,6 +260,11 @@ export const LiveDataSync: React.FC<LiveDataSyncProps> = memo(({
       });
     }
   }, [wsStatus.connected]);
+
+  // Expose queueChange via ref for external access
+  useImperativeHandle(syncRef, () => ({
+    queueChange: internalQueueChange
+  }), [internalQueueChange]);
 
   // Sync a single change
   const syncChange = useMemoizedCallback(async (change: DataChange) => {
@@ -442,35 +450,19 @@ LiveDataSync.displayName = 'LiveDataSync';
  * Hook for using live data synchronization
  */
 export function useLiveDataSync(options: Omit<LiveDataSyncProps, 'className'>) {
-  const syncRef = useRef<{
-    queueChange: (change: Omit<DataChange, 'id' | 'timestamp'>) => void;
-  } | null>(null);
-
-  const queueChange = useMemoizedCallback((change: Omit<DataChange, 'id' | 'timestamp'>) => {
-    if (syncRef.current) {
-      syncRef.current.queueChange(change);
-    }
-  }, []);
-
   const SyncComponent = useMemo(() => {
-    return React.forwardRef<any, LiveDataSyncProps>((props, ref) => (
-      <LiveDataSync
-        {...options}
-        {...props}
-        ref={(instance) => {
-          syncRef.current = instance;
-          if (typeof ref === 'function') {
-            ref(instance);
-          } else if (ref) {
-            ref.current = instance;
-          }
-        }}
-      />
-    ));
+    return React.forwardRef<LiveDataSyncProps, any>((props, ref) => {
+      return (
+        <LiveDataSync
+          {...options}
+          {...props}
+          ref={ref}
+        />
+      );
+    });
   }, [options]);
 
   return {
-    queueChange,
     SyncComponent,
   };
 }
