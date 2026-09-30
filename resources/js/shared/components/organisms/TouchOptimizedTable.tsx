@@ -186,7 +186,7 @@ export const TouchOptimizedTable: React.FC<TouchOptimizedTableProps> = memo(({
         <Input
           placeholder="Search..."
           value={searchTerm}
-          onChange={(e) => handleSearch(e.target.value)}
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleSearch(e.target.value)}
           size="sm"
         />
         
@@ -195,7 +195,7 @@ export const TouchOptimizedTable: React.FC<TouchOptimizedTableProps> = memo(({
           <Select
             placeholder="Sort by..."
             value={sortColumn}
-            onChange={(e) => handleSort(e.target.value)}
+            onChange={(e: React.ChangeEvent<HTMLSelectElement>) => handleSort(e.target.value)}
             size="sm"
             flex={1}
           >
