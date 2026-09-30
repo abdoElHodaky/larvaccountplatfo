@@ -41,6 +41,7 @@ export interface TouchOptimizedTableProps extends Omit<DataTableProps, 'variant'
   compactMode?: boolean;
   showMobileFilters?: boolean;
   mobileBreakpoint?: number;
+  onRowClick?: (item: any) => void;
 }
 
 export const TouchOptimizedTable: React.FC<TouchOptimizedTableProps> = memo(({
@@ -171,7 +172,7 @@ export const TouchOptimizedTable: React.FC<TouchOptimizedTableProps> = memo(({
     setSortDirection(newDirection);
     
     if (onSort) {
-      onSort({ column, direction: newDirection });
+      onSort(column, newDirection);
     }
   }, [sortColumn, sortDirection, onSort]);
 

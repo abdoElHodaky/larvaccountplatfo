@@ -56,6 +56,7 @@ export interface DataTableProps<T = TableData> {
   onPageChange?: (page: number) => void;
   onSort?: (column: string, direction: 'asc' | 'desc') => void;
   onFilter?: (filters: Record<string, string>) => void;
+  onRowClick?: (row: T) => void;
   sortColumn?: string;
   sortDirection?: 'asc' | 'desc';
   filters?: Record<string, string>;
@@ -122,7 +123,7 @@ export const DataTable = <T extends TableData = TableData>({
 
       result = result.filter(row => {
         const cellValue = row[columnKey];
-        
+
         if (column.filterFn) {
           return column.filterFn(cellValue, filterValue);
         }
@@ -130,7 +131,7 @@ export const DataTable = <T extends TableData = TableData>({
         // Default filtering logic
         const stringValue = String(cellValue || '').toLowerCase();
         const filterString = filterValue.toLowerCase();
-        
+
         return stringValue.includes(filterString);
       });
     });
@@ -184,12 +185,12 @@ export const DataTable = <T extends TableData = TableData>({
     const column = columns.find(col => col.key === columnKey);
     if (!column?.sortable) return;
 
-    const newDirection = 
-      localSort.column === columnKey && localSort.direction === 'asc' 
-        ? 'desc' 
+    const newDirection =
+      localSort.column === columnKey && localSort.direction === 'asc'
+        ? 'desc'
         : 'asc';
 
-    const newSort = { column: columnKey, direction: newDirection };
+    const newSort: { column: string; direction: 'asc' | 'desc' } = { column: columnKey, direction: newDirection };
     setLocalSort(newSort);
 
     if (onSort) {
@@ -319,7 +320,7 @@ export const DataTable = <T extends TableData = TableData>({
                 size="sm"
                 placeholder={`Filter ${column.label.toLowerCase()}...`}
                 value={localFilters[column.key] || ''}
-                onChange={(e) => handleFilter(column.key, e.target.value)}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleFilter(column.key, e.target.value)}
               />
             )}
           </Th>

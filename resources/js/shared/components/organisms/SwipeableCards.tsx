@@ -263,7 +263,7 @@ const SwipeableCard: React.FC<SwipeableCardProps> = memo(({
             variant="ghost"
             color={action.color}
             aria-label={action.label}
-            onClick={(e) => handleActionClick(action, e)}
+            onClick={(e: React.MouseEvent) => handleActionClick(action, e)}
           />
         ))}
       </HStack>
