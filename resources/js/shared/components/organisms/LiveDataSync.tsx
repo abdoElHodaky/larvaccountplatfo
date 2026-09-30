@@ -78,23 +78,18 @@ export const LiveDataSync: React.FC<LiveDataSyncProps> = memo(({
   }>>([]);
 
   const syncIntervalRef = useRef<NodeJS.Timeout | null>(null);
-  const _changeQueueRef = useRef<DataChange[]>([]);
 
   // Memoized color values
-  const _bgColor = useColorModeValue('white', 'gray.800');
-  const _borderColor = useColorModeValue('gray.200', 'gray.600');
   const successColor = useColorModeValue('green.500', 'green.400');
   const errorColor = useColorModeValue('red.500', 'red.400');
   const warningColor = useColorModeValue('orange.500', 'orange.400');
 
   // WebSocket connection
-  const { 
-    status: wsStatus, 
-    connect, 
-    subscribe, 
+  const {
+    status: wsStatus,
+    connect,
     send,
-    subscribeToTransactions: _subscribeToTransactions,
-    subscribeToAccountUpdates: _subscribeToAccountUpdates,
+    subscribe,
   } = useFinancialWebSocket(tenantId);
 
   // Connect on mount
@@ -242,7 +237,7 @@ export const LiveDataSync: React.FC<LiveDataSyncProps> = memo(({
   }, [onDataChange]);
 
   // Add a local change to the sync queue
-  const _queueChange = useMemoizedCallback((change: Omit<DataChange, 'id' | 'timestamp'>) => {
+  const queueChange = useMemoizedCallback((change: Omit<DataChange, 'id' | 'timestamp'>) => {
     const fullChange: DataChange = {
       ...change,
       id: `local-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
@@ -257,7 +252,9 @@ export const LiveDataSync: React.FC<LiveDataSyncProps> = memo(({
 
     // Try to sync immediately if connected
     if (wsStatus.connected) {
-      syncChange(fullChange);
+      syncChange(fullChange).catch(error => {
+        console.error('Failed to sync change:', error);
+      });
     }
   }, [wsStatus.connected]);
 
