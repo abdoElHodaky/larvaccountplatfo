@@ -91,6 +91,7 @@ export const ActionViewIcon = createLiveIcon(ShareIcon, 'bounce'); // Placeholde
 export const LiveEditIcon = ActionEditIcon;
 export const LiveDeleteIcon = ActionDeleteIcon;
 export const LiveShareIcon = ActionShareIcon;
+export const LiveCopyIcon = ActionCopyIcon;
 
 // Interactive action icons with state
 export const LikeIcon: React.FC<LiveIconProps & {

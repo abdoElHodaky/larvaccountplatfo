@@ -448,6 +448,8 @@ export function useFinancialWebSocket(tenantId?: string) {
     status,
     connect,
     disconnect,
+    send,
+    subscribe,
     subscribeToTransactions,
     subscribeToAccountUpdates,
     subscribeToReportUpdates,

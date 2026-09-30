@@ -72,6 +72,10 @@ export const NavRightIcon = createLiveIcon('nav-right');
 export const NavMenuIcon = createLiveIcon('nav-menu');
 export const NavCloseIcon = createLiveIcon('nav-close');
 
+// Chevron icons for navigation
+export const NavChevronLeftIcon = createLiveIcon('nav-left');
+export const NavChevronRightIcon = createLiveIcon('nav-right');
+
 // Action Icons
 export const ActionEditIcon = createLiveIcon('action-edit');
 export const ActionDeleteIcon = createLiveIcon('action-delete');

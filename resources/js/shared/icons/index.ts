@@ -35,7 +35,10 @@ export {
   NavLeftIcon,
   NavRightIcon,
   NavMenuIcon,
-  NavCloseIcon
+  NavCloseIcon,
+  LiveChevronDownIcon,
+  NavChevronLeftIcon,
+  NavChevronRightIcon
 } from './NavIcons';
 
 // Action Icons (from ActionAnimations.tsx)
@@ -51,7 +54,13 @@ export {
   ActionSettingsIcon,
   LiveEditIcon,
   LiveDeleteIcon,
-  LiveShareIcon
+  LiveShareIcon,
+  LiveCopyIcon,
+  LikeIcon,
+  LocalBookmarkIcon as BookmarkIcon,
+  StarRating,
+  ThumbsVote,
+  SendIcon
 } from './ActionAnimations';
 
 // Form Icons (from FormAnimations.tsx)
@@ -103,7 +112,10 @@ export {
   LiveInfoIcon,
   LiveLoadingIcon,
   LiveActiveIcon,
-  LiveSecureIcon
+  LiveSecureIcon,
+  StatusIndicator,
+  ConnectionStatus,
+  ProgressStatus
 } from './StatusAnimations';
 
 // Convenience aliases for common icons (backward compatibility)

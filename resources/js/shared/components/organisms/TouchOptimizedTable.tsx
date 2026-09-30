@@ -251,9 +251,9 @@ export const TouchOptimizedTable: React.FC<TouchOptimizedTableProps> = memo(({
         bg={bgColor}
         borderBottom="1px solid"
         borderBottomColor={borderColor}
-        onTouchStart={(e) => handleTouchStart(e, rowId)}
-        onTouchMove={(e) => handleTouchMove(e, rowId)}
-        onTouchEnd={handleTouchEnd}
+        onTouchStart={(e: React.TouchEvent<HTMLDivElement>) => handleTouchStart(e, rowId)}
+        onTouchMove={(e: React.TouchEvent<HTMLDivElement>) => handleTouchMove(e, rowId)}
+        onTouchEnd={(e: React.TouchEvent<HTMLDivElement>) => handleTouchEnd(e)}
         onClick={() => onRowClick?.(item)}
         cursor={onRowClick ? 'pointer' : 'default'}
         _hover={onRowClick ? { bg: hoverBg } : undefined}

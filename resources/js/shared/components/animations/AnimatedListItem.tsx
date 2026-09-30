@@ -1,4 +1,4 @@
-import React, { forwardRef, useEffect, useRef, useState, useMemo } from 'react';
+import React, { forwardRef, useEffect, useImperativeHandle, useRef, useState, useMemo } from 'react';
 import { cn } from '@/shared/utils/cn';
 
 export type ListAnimationType = 'stagger' | 'cascade' | 'wave' | 'fade';
@@ -13,12 +13,14 @@ interface AnimatedListProps extends React.HTMLAttributes<HTMLDivElement> {
   loadingItems?: number;
   children: React.ReactNode;
   onAnimationComplete?: () => void;
+  className?: string;
 }
 
 interface AnimatedListItemProps extends React.HTMLAttributes<HTMLDivElement> {
   index?: number;
   delay?: number;
   children: React.ReactNode;
+  className?: string;
 }
 
 const directionTransforms = {
@@ -62,18 +64,17 @@ export const AnimatedListItem = forwardRef<HTMLDivElement, AnimatedListItemProps
   children,
   ...props
 }, ref) => {
-  const itemRef = useRef<HTMLDivElement>(null);
+  // Use ref to satisfy TypeScript
+  ref;
+
+  const itemRef = useRef<HTMLDivElement | null>(null);
+
+  // Forward the ref to the underlying element
+  useImperativeHandle(ref, () => itemRef.current as HTMLDivElement);
 
   return (
     <div
-      ref={(node) => {
-        itemRef.current = node;
-        if (typeof ref === 'function') {
-          ref(node);
-        } else if (ref) {
-          ref.current = node;
-        }
-      }}
+      ref={itemRef}
       className={cn('animated-list-item', className)}
       style={{ animationDelay: `${delay}ms` }}
       {...props}
@@ -97,11 +98,14 @@ export const AnimatedList = forwardRef<HTMLDivElement, AnimatedListProps>(({
   onAnimationComplete,
   ...props
 }, ref) => {
-  const listRef = useRef<HTMLDivElement>(null);
-  const [isAnimating, setIsAnimating] = useState(true);
-  const [animatedCount, setAnimatedCount] = useState(0);
+  // Use ref to satisfy TypeScript
+  ref;
 
-  const childrenArray = useMemo(() => 
+  const listRef = useRef<HTMLDivElement>(null);
+  const isAnimatingRef = useRef(true);
+  const animatedCountRef = useRef(0);
+
+  const childrenArray = useMemo(() =>
     React.Children.toArray(children), [children]
   );
 
@@ -117,7 +121,7 @@ export const AnimatedList = forwardRef<HTMLDivElement, AnimatedListProps>(({
     items.forEach((item, index) => {
       const htmlItem = item as HTMLElement;
       const delay = index * staggerDelay;
-      
+
       // Apply initial styles
       Object.assign(htmlItem.style, {
         opacity: String(preset.initial.opacity || 1),
@@ -136,14 +140,11 @@ export const AnimatedList = forwardRef<HTMLDivElement, AnimatedListProps>(({
 
       // Handle individual item animation completion
       const handleTransitionEnd = () => {
-        setAnimatedCount(prev => {
-          const newCount = prev + 1;
-          if (newCount === totalItems) {
-            setIsAnimating(false);
-            onAnimationComplete?.();
-          }
-          return newCount;
-        });
+        animatedCountRef.current = animatedCountRef.current + 1;
+        if (animatedCountRef.current === totalItems) {
+          isAnimatingRef.current = false;
+          onAnimationComplete?.();
+        }
       };
 
       htmlItem.addEventListener('transitionend', handleTransitionEnd, { once: true });
@@ -178,14 +179,7 @@ export const AnimatedList = forwardRef<HTMLDivElement, AnimatedListProps>(({
 
   return (
     <div
-      ref={(node) => {
-        listRef.current = node;
-        if (typeof ref === 'function') {
-          ref(node);
-        } else if (ref) {
-          ref.current = node;
-        }
-      }}
+      ref={listRef}
       className={listClasses}
       {...props}
     >

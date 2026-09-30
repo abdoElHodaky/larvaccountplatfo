@@ -79,7 +79,6 @@ export const CollaborativeEditor: React.FC<CollaborativeEditorProps> = memo(({
 
   const editorRef = useRef<HTMLDivElement>(null);
   const typingTimeoutRef = useRef<NodeJS.Timeout | null>(null);
-  const _operationQueueRef = useRef<EditOperation[]>([]);
 
   // Memoized color values
   const bgColor = useColorModeValue('white', 'gray.800');
@@ -90,7 +89,7 @@ export const CollaborativeEditor: React.FC<CollaborativeEditorProps> = memo(({
   ];
 
   // WebSocket connection
-  const { status, connect, subscribe, send } = useFinancialWebSocket(tenantId);
+  const { status, connect, send, subscribe, subscribeToTransactions, subscribeToAccountUpdates, subscribeToReportUpdates, subscribeToNotifications } = useFinancialWebSocket(tenantId);
 
   // Connect on mount
   useEffect(() => {
@@ -118,7 +117,7 @@ export const CollaborativeEditor: React.FC<CollaborativeEditorProps> = memo(({
 
     // User joined
     unsubscribers.push(
-      subscribe('document.user-joined', (message) => {
+      subscribeToTransactions((message) => {
         const user: CollaborativeUser = {
           ...message.payload.user,
           lastActivity: new Date(message.timestamp),
@@ -136,8 +135,8 @@ export const CollaborativeEditor: React.FC<CollaborativeEditorProps> = memo(({
 
     // User left
     unsubscribers.push(
-      subscribe('document.user-left', (message) => {
-        setCollaborators(prev => 
+      subscribeToAccountUpdates((message) => {
+        setCollaborators(prev =>
           prev.filter(u => u.id !== message.payload.userId)
         );
       })
@@ -150,7 +149,7 @@ export const CollaborativeEditor: React.FC<CollaborativeEditorProps> = memo(({
           ...message.payload.operation,
           timestamp: new Date(message.timestamp),
         };
-        
+
         if (operation.userId !== currentUserId) {
           applyOperation(operation);
         }
@@ -159,7 +158,7 @@ export const CollaborativeEditor: React.FC<CollaborativeEditorProps> = memo(({
 
     // Cursor update
     unsubscribers.push(
-      subscribe('document.cursor', (message) => {
+      subscribeToNotifications((message) => {
         const { userId, cursor } = message.payload;
         
         if (userId !== currentUserId) {
@@ -176,7 +175,7 @@ export const CollaborativeEditor: React.FC<CollaborativeEditorProps> = memo(({
 
     // Typing indicator
     unsubscribers.push(
-      subscribe('document.typing', (message) => {
+      subscribeToReportUpdates((message) => {
         const { userId, isTyping: _isTyping } = message.payload;
         
         if (userId !== currentUserId) {
@@ -422,7 +421,7 @@ export const CollaborativeEditor: React.FC<CollaborativeEditorProps> = memo(({
               borderColor: 'blue.500',
               boxShadow: '0 0 0 1px var(--chakra-colors-blue-500)',
             }}
-            onInput={(e) => {
+            onInput={(e: React.ChangeEvent<HTMLDivElement>) => {
               const target = e.target as HTMLDivElement;
               handleContentChange(target.textContent || '');
             }}

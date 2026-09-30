@@ -1,5 +1,6 @@
 import React, { Fragment, memo, useMemo } from 'react';
-import { Box, Heading, Text, VStack, HStack, BoxProps } from '@chakra-ui/react';
+import { Box, Heading, Text, VStack, HStack } from '@chakra-ui/react';
+type BoxProps = React.ComponentProps<typeof Box>;
 
 /**
  * Performance-Optimized Section Component
@@ -138,8 +139,8 @@ Section.displayName = 'Section';
  * Financial Section Component
  * Specialized for financial data with proper number formatting
  */
-export const FinancialSection: React.FC<Omit<SectionProps, 'variant'>> = memo((props) => {
-  return <Section {...props} variant="financial" />;
+export const FinancialSection: React.FC<Omit<SectionProps, 'variant'>> = memo(({ children, ...rest }) => {
+  return <Section variant="financial" children={children} {...rest} />;
 });
 
 FinancialSection.displayName = 'FinancialSection';
@@ -148,8 +149,8 @@ FinancialSection.displayName = 'FinancialSection';
  * Card Section Component
  * Elevated section with card-like appearance
  */
-export const CardSection: React.FC<Omit<SectionProps, 'variant'>> = memo((props) => {
-  return <Section {...props} variant="elevated" />;
+export const CardSection: React.FC<Omit<SectionProps, 'variant'>> = memo(({ children, ...rest }) => {
+  return <Section variant="elevated" children={children} {...rest} />;
 });
 
 CardSection.displayName = 'CardSection';
@@ -158,8 +159,8 @@ CardSection.displayName = 'CardSection';
  * Bordered Section Component
  * Section with border styling
  */
-export const BorderedSection: React.FC<Omit<SectionProps, 'variant'>> = memo((props) => {
-  return <Section {...props} variant="bordered" />;
+export const BorderedSection: React.FC<Omit<SectionProps, 'variant'>> = memo(({ children, ...rest }) => {
+  return <Section variant="bordered" children={children} {...rest} />;
 });
 
 BorderedSection.displayName = 'BorderedSection';

@@ -58,8 +58,8 @@ export const MobileNavigation: React.FC<MobileNavigationProps> = memo(({
   const navigationItems = useMemo(() => (
     <HStack spacing={0} w="full" justify="space-around">
       {items.map((item) => {
-        const isActive = activeItemId === item.id || item.isActive;
-        
+        const isActive = activeItemId === item.id || !!item.isActive;
+
         return (
           <NavigationItem
             key={item.id}

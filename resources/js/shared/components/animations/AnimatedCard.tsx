@@ -1,4 +1,4 @@
-import React, { forwardRef, useEffect, useRef, useState } from 'react';
+import React, { forwardRef, useEffect, useImperativeHandle, useRef, useState } from 'react';
 import { cn } from '@/shared/utils/cn';
 
 export type CardAnimationType = 'fade' | 'slide' | 'scale' | 'flip';
@@ -60,11 +60,10 @@ export const AnimatedCard = forwardRef<HTMLDivElement, AnimatedCardProps>(({
   onAnimationComplete,
   ...props
 }, ref) => {
-  const cardRef = useRef<HTMLDivElement>(null);
-  const [isAnimating, setIsAnimating] = useState(false);
+  const elementRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
-    const element = cardRef.current;
+    const element = elementRef.current;
     if (!element) return;
 
     const preset = animationPresets[animationType];
@@ -86,7 +85,6 @@ export const AnimatedCard = forwardRef<HTMLDivElement, AnimatedCardProps>(({
 
     // Handle animation completion
     const handleTransitionEnd = () => {
-      setIsAnimating(false);
       onAnimationComplete?.();
     };
 
@@ -110,17 +108,12 @@ export const AnimatedCard = forwardRef<HTMLDivElement, AnimatedCardProps>(({
     className
   );
 
+  // Forward the ref to the underlying element
+  useImperativeHandle(ref, () => elementRef.current as HTMLDivElement);
+
   return (
     <div
-      ref={(node) => {
-        cardRef.current = node;
-        if (typeof ref === 'function') {
-          ref(node);
-        } else if (ref) {
-          // $FlowFixLine
-          ref.current = node;
-        }
-      }}
+      ref={elementRef}
       className={cardClasses}
       {...props}
     >

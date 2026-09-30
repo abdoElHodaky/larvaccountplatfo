@@ -1,4 +1,4 @@
-import React from 'react';
+// File intentionally does not use React directly, but keeping for consistency with other components
 import { Link, usePage } from '@inertiajs/react';
 
 interface SidebarProps {

@@ -1,5 +1,6 @@
 import React, { Fragment, memo, useMemo } from 'react';
-import { Box, BoxProps, useColorModeValue } from '@chakra-ui/react';
+import { Box, useColorModeValue } from '@chakra-ui/react';
+type BoxProps = React.ComponentProps<typeof Box>;
 
 /**
  * Performance-Optimized Container Component
@@ -92,8 +93,8 @@ Container.displayName = 'Container';
  * Specialized Financial Container Component
  * Optimized for displaying financial data with proper number formatting
  */
-export const FinancialContainer: React.FC<Omit<ContainerProps, 'variant'>> = memo((props) => {
-  return <Container {...props} variant="financial" />;
+export const FinancialContainer: React.FC<Omit<ContainerProps, 'variant'>> = memo(({ children, ...rest }) => {
+  return <Container variant="financial" children={children} {...rest} />;
 });
 
 FinancialContainer.displayName = 'FinancialContainer';
