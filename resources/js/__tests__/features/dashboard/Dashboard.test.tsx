@@ -1,9 +1,11 @@
+/// <reference types="vitest/globals" />
 import React from 'react';
 import { render, screen } from '@testing-library/react';
 import { describe, it, expect, vi } from 'vitest';
 import { ChakraProvider } from '@chakra-ui/react';
 import Dashboard from '../../../features/dashboard/pages/Dashboard';
 import { extendTheme } from '@chakra-ui/react';
+import '@testing-library/jest-dom';
 
 // Create a basic theme for testing
 const theme = extendTheme({});

@@ -3,7 +3,7 @@
     "target": "ES2020",
     "useDefineForClassFields": true,
     "lib": ["ES2020", "DOM", "DOM.Iterable"],
-    "types": ["node", "vite/client"],
+    "types": ["node", "vite/client", "@testing-library/jest-dom", "vitest/globals"],
     "module": "ESNext",
     "skipLibCheck": true,
     "moduleResolution": "node",
@@ -38,7 +38,8 @@
     "resources/js/**/*.ts",
     "resources/js/**/*.tsx",
     "resources/js/**/*.d.ts",
-    "resources/js/shared/types/global.d.ts"
+    "resources/js/shared/types/global.d.ts",
+    "./node_modules/@testing-library/jest-dom/vitest.d.ts"
   ],
   "exclude": [
     "node_modules",

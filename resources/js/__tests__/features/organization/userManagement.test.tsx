@@ -2,6 +2,7 @@ import { describe, it, expect, vi } from 'vitest';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { ChakraProvider } from '@chakra-ui/react';
 import UserManagement, { User } from '@/features/organization/components/organisms/UserManagement';
+import '@testing-library/jest-dom';
 
 // Mock data
 const mockUsers: User[] = [

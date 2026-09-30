@@ -1,9 +1,6 @@
-import { expect, afterEach } from 'vitest';
+import '@testing-library/jest-dom/vitest';
+import { afterEach } from 'vitest';
 import { cleanup } from '@testing-library/react';
-import * as matchers from '@testing-library/jest-dom/matchers';
-
-// Extend Vitest's expect with jest-dom matchers
-expect.extend(matchers);
 
 // Cleanup after each test case
 afterEach(() => {
@@ -15,13 +12,13 @@ global.IntersectionObserver = class IntersectionObserver {
   root: Element | null = null;
   rootMargin: string = '';
   thresholds: ReadonlyArray<number> = [];
-  
+
   constructor(_callback: IntersectionObserverCallback, options?: IntersectionObserverInit) {
     this.root = (options?.root as Element) || null;
     this.rootMargin = options?.rootMargin || '';
     this.thresholds = options?.threshold ? (Array.isArray(options.threshold) ? options.threshold : [options.threshold]) : [0];
   }
-  
+
   disconnect() {}
   observe() {}
   unobserve() {}
