@@ -4,24 +4,8 @@
  */
 
 import React from 'react';
-import {
-  PencilIcon,
-  TrashIcon,
-  DocumentDuplicateIcon,
-  ShareIcon,
-  HeartIcon,
-  StarIcon,
-  HandThumbUpIcon,
-  HandThumbDownIcon,
-
-  PaperAirplaneIcon,
-  ArrowDownTrayIcon,
-  ArrowUpTrayIcon,
-  PrinterIcon,
-  Cog6ToothIcon
-} from '@heroicons/react/24/outline';
-import { createLiveIcon, type LiveIconProps } from './CreateLiveIcon';
-import { BookmarkIcon as HeroBookmarkIcon } from '@heroicons/react/24/outline';
+import { createLiveIcon } from './CreateLiveIcon';
+import type { IconProps } from './ICONSIZES';
 
 // Action-specific animations
 export const actionAnimations = {
@@ -71,21 +55,21 @@ export const actionAnimations = {
     { transform: 'translateY(-3px)' },
     { transform: 'translateY(0)' }
   ]
-} as const;
+};
 
 // Basic action icons
-export const ActionEditIcon = createLiveIcon(PencilIcon, 'bounce');
-export const ActionDeleteIcon = createLiveIcon(TrashIcon, 'shake');
-export const ActionCopyIcon = createLiveIcon(DocumentDuplicateIcon, 'pulse');
-export const ActionShareIcon = createLiveIcon(ShareIcon, 'bounce');
-export const ActionDownloadIcon = createLiveIcon(ArrowDownTrayIcon, 'bounce');
-export const ActionUploadIcon = createLiveIcon(ArrowUpTrayIcon, 'bounce');
-export const ActionPrintIcon = createLiveIcon(PrinterIcon, 'pulse');
-export const ActionSettingsIcon = createLiveIcon(Cog6ToothIcon, 'rotate');
+export const ActionEditIcon = createLiveIcon('action-edit', 'bounce');
+export const ActionDeleteIcon = createLiveIcon('action-delete', 'shake');
+export const ActionCopyIcon = createLiveIcon('action-copy', 'pulse');
+export const ActionShareIcon = createLiveIcon('action-share', 'bounce');
+export const ActionDownloadIcon = createLiveIcon('action-download', 'bounce');
+export const ActionUploadIcon = createLiveIcon('action-upload', 'bounce');
+export const ActionPrintIcon = createLiveIcon('action-print', 'pulse');
+export const ActionSettingsIcon = createLiveIcon('action-settings', 'rotate');
 
 // Additional action icons
-export const ActionAddIcon = createLiveIcon(PencilIcon, 'bounce'); // Placeholder - using PencilIcon for now
-export const ActionViewIcon = createLiveIcon(ShareIcon, 'bounce'); // Placeholder - using ShareIcon for now
+export const ActionAddIcon = createLiveIcon('action-add', 'bounce'); // Placeholder - using PencilIcon for now
+export const ActionViewIcon = createLiveIcon('action-view', 'bounce'); // Placeholder - using ShareIcon for now
 
 // Live icon aliases (for backward compatibility)
 export const LiveEditIcon = ActionEditIcon;
@@ -94,11 +78,11 @@ export const LiveShareIcon = ActionShareIcon;
 export const LiveCopyIcon = ActionCopyIcon;
 
 // Interactive action icons with state
-export const LikeIcon: React.FC<LiveIconProps & {
+export const LikeIcon = ({ isLiked, onToggle, count, size = 'md', className = '', ...props }: IconProps & {
   isLiked: boolean;
   onToggle: () => void;
   count?: number;
-}> = ({ isLiked, onToggle, count, size = 'md', className = '', ...props }) => {
+}): JSX.Element => {
   const iconRef = React.useRef<SVGSVGElement>(null);
 
   const handleClick = () => {
@@ -112,7 +96,7 @@ export const LikeIcon: React.FC<LiveIconProps & {
     onToggle();
   };
 
-  const LiveIcon = createLiveIcon(HeartIcon);
+  const LiveIcon = createLiveIcon('action-edit'); // Using edit icon as placeholder for like functionality
 
   return (
     <div className="flex items-center space-x-1">
@@ -134,10 +118,10 @@ export const LikeIcon: React.FC<LiveIconProps & {
 };
 
 // Bookmark toggle icon
-export const LocalBookmarkIcon: React.FC<LiveIconProps & {
+export const LocalBookmarkIcon = ({ isBookmarked, onToggle, size = 'md', className = '', ...props }: IconProps & {
   isBookmarked: boolean;
   onToggle: () => void;
-}> = ({ isBookmarked, onToggle, size = 'md', className = '', ...props }) => {
+}): JSX.Element => {
   const iconRef = React.useRef<SVGSVGElement>(null);
 
   const handleClick = () => {
@@ -151,7 +135,7 @@ export const LocalBookmarkIcon: React.FC<LiveIconProps & {
     onToggle();
   };
 
-  const LiveIcon = createLiveIcon(HeroBookmarkIcon);
+  const LiveIcon = createLiveIcon('bookmark');
 
   return (
     <LiveIcon
@@ -166,44 +150,53 @@ export const LocalBookmarkIcon: React.FC<LiveIconProps & {
 };
 
 // Star rating component
-export const StarRating: React.FC<LiveIconProps & {
+export const StarRating = ({
+  rating,
+  maxRating = 5,
+  onRate,
+  readonly = false,
+  size = 'md',
+  className = '',
+  ...props
+}: IconProps & {
   rating: number;
   maxRating?: number;
   onRate?: (rating: number) => void;
   readonly?: boolean;
-}> = ({ 
-  rating, 
-  maxRating = 5, 
-  onRate, 
-  readonly = false,
-  size = 'md',
-  className = '',
-  ...props 
-}) => {
+}): JSX.Element => {
   const [hoverRating, setHoverRating] = React.useState(0);
-  const LiveIcon = createLiveIcon(StarIcon);
+  const LiveIcon = createLiveIcon('star');
 
   return (
     <div className={`flex items-center space-x-1 ${className}`}>
       {Array.from({ length: maxRating }, (_, index) => {
         const starValue = index + 1;
         const isFilled = starValue <= (hoverRating || rating);
-        
+
         return (
-          <LiveIcon
-            key={index}
-            size={size}
-            color={isFilled ? 'warning' : 'gray'}
-            trigger="hover"
-            onClick={() => !readonly && onRate?.(starValue)}
+          <span
+            role="button"
+            tabIndex={readonly ? undefined : 0}
             onMouseEnter={() => !readonly && setHoverRating(starValue)}
             onMouseLeave={() => !readonly && setHoverRating(0)}
-            className={`
-              ${!readonly ? 'cursor-pointer' : ''}
-              ${isFilled ? 'fill-current' : ''}
-            `}
-            {...props}
-          />
+            onClick={() => !readonly && onRate?.(starValue)}
+            onKeyDown={(e) => {
+              if (!readonly && (e.key === 'Enter' || e.key === ' ')) {
+                e.preventDefault();
+                onRate?.(starValue);
+              }
+            }}
+            className={!readonly ? 'cursor-pointer' : ''}
+          >
+            <LiveIcon
+              key={index}
+              size={size}
+              color={isFilled ? 'warning' : 'gray'}
+              trigger="hover"
+              className={isFilled ? 'fill-current' : ''}
+              {...props}
+            />
+          </span>
         );
       })}
     </div>
@@ -211,14 +204,14 @@ export const StarRating: React.FC<LiveIconProps & {
 };
 
 // Thumbs up/down component
-export const ThumbsVote: React.FC<LiveIconProps & {
+export const ThumbsVote = ({ vote, onVote, upCount, downCount, size = 'md', className = '', ...props }: IconProps & {
   vote: 'up' | 'down' | null;
   onVote: (vote: 'up' | 'down') => void;
   upCount?: number;
   downCount?: number;
-}> = ({ vote, onVote, upCount, downCount, size = 'md', className = '', ...props }) => {
-  const LiveThumbUpIcon = createLiveIcon(HandThumbUpIcon);
-  const LiveThumbDownIcon = createLiveIcon(HandThumbDownIcon);
+}): JSX.Element => {
+  const LiveThumbUpIcon = createLiveIcon('hand-thumb-up');
+  const LiveThumbDownIcon = createLiveIcon('hand-thumb-down');
 
   return (
     <div className={`flex items-center space-x-4 ${className}`}>
@@ -237,7 +230,7 @@ export const ThumbsVote: React.FC<LiveIconProps & {
           </span>
         )}
       </div>
-      
+
       <div className="flex items-center space-x-1">
         <LiveThumbDownIcon
           size={size}
@@ -258,15 +251,15 @@ export const ThumbsVote: React.FC<LiveIconProps & {
 };
 
 // Send message icon with animation
-export const SendIcon: React.FC<LiveIconProps & {
+export const SendIcon = ({ onSend, disabled = false, size = 'md', className = '', ...props }: IconProps & {
   onSend: () => void;
   disabled?: boolean;
-}> = ({ onSend, disabled = false, size = 'md', className = '', ...props }) => {
+}): JSX.Element => {
   const iconRef = React.useRef<SVGSVGElement>(null);
 
   const handleSend = () => {
     if (disabled) return;
-    
+
     const icon = iconRef.current;
     if (icon) {
       icon.animate(actionAnimations.send, {
@@ -277,7 +270,7 @@ export const SendIcon: React.FC<LiveIconProps & {
     onSend();
   };
 
-  const LiveIcon = createLiveIcon(PaperAirplaneIcon);
+  const LiveIcon = createLiveIcon('paper-airplane');
 
   return (
     <LiveIcon
@@ -295,23 +288,23 @@ export const SendIcon: React.FC<LiveIconProps & {
 };
 
 // Action button with icon and label
-export const ActionButton: React.FC<LiveIconProps & {
-  icon: React.ComponentType<LiveIconProps>;
-  label: string;
-  onClick: () => void;
-  variant?: 'primary' | 'secondary' | 'danger' | 'success';
-  disabled?: boolean;
-}> = ({ 
-  icon: Icon, 
-  label, 
-  onClick, 
+export const ActionButton = ({
+  icon: Icon,
+  label,
+  onClick,
   variant = 'secondary',
   disabled = false,
   size = 'md',
   className = '',
-  ...props 
-}) => {
-  const variantStyles = {
+  ...props
+}: IconProps & {
+  icon: React.ComponentType<IconProps>;
+  label: string;
+  onClick: () => void;
+  variant: 'primary' | 'secondary' | 'danger' | 'success';
+  disabled?: boolean;
+}): JSX.Element => {
+  const variantStyles: Record<'primary' | 'secondary' | 'danger' | 'success', string> = {
     primary: 'bg-primary-500 hover:bg-primary-600 text-white',
     secondary: 'bg-gray-100 hover:bg-gray-200 text-gray-700',
     danger: 'bg-danger-500 hover:bg-danger-600 text-white',
