@@ -34,7 +34,6 @@ export {
 export * from './useAlovaAdvanced';
 export * from './useGraphQL';
 export * from './useRealTime';
-export * from './useRealTimeNotifications';
 export * from './useRematchStore';
 
 export {

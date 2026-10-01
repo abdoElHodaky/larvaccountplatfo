@@ -78,7 +78,7 @@ export function useGraphQLQuery<TData = any, TVariables extends OperationVariabl
 /**
  * Lazy GraphQL Query Hook
  */
-export function useGraphQLLazyQuery<TData = any, TVariables = any>(
+export function useGraphQLLazyQuery<TData = any, TVariables extends OperationVariables = {}>(
   query: DocumentNode,
   options: LazyQueryHookOptions<TData, TVariables> = {}
 ) {
@@ -99,7 +99,7 @@ export function useGraphQLLazyQuery<TData = any, TVariables = any>(
 /**
  * GraphQL Mutation Hook with optimistic updates
  */
-export function useGraphQLMutation<TData = any, TVariables = any>(
+export function useGraphQLMutation<TData = any, TVariables extends OperationVariables = OperationVariables>(
   mutation: DocumentNode,
   options: GraphQLMutationOptions<TData, TVariables> = {}
 ) {
@@ -140,7 +140,7 @@ export function useGraphQLMutation<TData = any, TVariables = any>(
 /**
  * GraphQL Subscription Hook
  */
-export function useGraphQLSubscription<TData = any, TVariables = any>(
+export function useGraphQLSubscription<TData = any, TVariables extends OperationVariables = OperationVariables>(
   subscription: DocumentNode,
   options: SubscriptionHookOptions<TData, TVariables> = {}
 ) {
@@ -157,12 +157,16 @@ export function useGraphQLSubscription<TData = any, TVariables = any>(
  * AlovaJS REST API Hook for non-GraphQL endpoints
  * DISABLED: useRequest hook not available in alova v3.3.4
  */
+/**
+ * AlovaJS REST API Hook for non-GraphQL endpoints
+ * DISABLED: useRequest hook not available in alova v3.3.4
+ */
 export function useAlovaRequest<_TData = any>(
   url: string,
-  _options: AlovaRequestOptions = {}
+  options: AlovaRequestOptions = {}
 ) {
-  // const method = alovaInstance.Get(url);
-  
+  void url;
+  void options;
   // Placeholder implementation
   const data = null;
   const loading = false;
@@ -189,12 +193,10 @@ export function useAlovaRequest<_TData = any>(
  * DISABLED: useWatcher hook not available in alova v3.3.4
  */
 export function useAlovaWatcher<_TData = any>(
-  url: string,
-  watchedStates: any[],
+  _url: string,
+  _watchedStates: any[],
   _options: AlovaRequestOptions = {}
 ) {
-  // const method = alovaInstance.Get(url);
-  
   // Placeholder implementation
   const data = null;
   const loading = false;
@@ -263,16 +265,16 @@ export function usePaginatedGraphQLQuery<TData = any, TVariables = any>(
   } = {}
 ) {
   const { pageSize = 20, initialPage = 1, ...queryOptions } = options;
-  
+
   const [currentPage, setCurrentPage] = useState(initialPage);
-  
+
   const result = useGraphQLQuery(query, {
     ...queryOptions,
     variables: {
       ...queryOptions.variables,
       first: pageSize,
       page: currentPage,
-    } as TVariables,
+    } as any,
   });
 
   const paginationInfo = useMemo(() => {

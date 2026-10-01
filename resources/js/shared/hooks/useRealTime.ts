@@ -9,15 +9,6 @@ import { useSocket } from '../providers/SocketProvider';
 import { useAuth, useAppActions } from './useRematchStore';
 
 // Types
-interface NotificationData {
-  id: string;
-  type: 'info' | 'success' | 'warning' | 'error';
-  title: string;
-  message: string;
-  userId: string;
-  createdAt: string;
-}
-
 interface TransactionData {
   id: string;
   description: string;
@@ -40,64 +31,6 @@ interface TypingIndicator {
   location: string;
   timestamp: string;
 }
-
-/**
- * Hook for real-time notifications
- */
-export const useRealTimeNotifications = () => {
-  const { user } = useAuth();
-  const { showNotification } = useAppActions();
-  const { isConnected } = useSocket();
-  const [notifications, setNotifications] = useState<NotificationData[]>([]);
-
-  useEffect(() => {
-    if (!isConnected || !user?.id) return;
-
-    const handleNewNotification = (data: NotificationData) => {
-      console.log('🔔 New notification:', data);
-      
-      // Add to notifications list
-      setNotifications(prev => [data, ...prev]);
-      
-      // Show toast notification
-      showNotification({
-        type: data.type,
-        title: data.title,
-        message: data.message,
-        duration: 5000,
-      });
-    };
-
-    const handleNotificationRead = (data: { notificationId: string; userId: string }) => {
-      console.log('👁️ Notification read:', data);
-      
-      // Remove from notifications list
-      setNotifications(prev => 
-        prev.filter(notification => notification.id !== data.notificationId)
-      );
-    };
-
-    // Subscribe to notification events
-    socketClient.on('notification.new', handleNewNotification);
-    socketClient.on('notification.read', handleNotificationRead);
-
-    return () => {
-      socketClient.off('notification.new', handleNewNotification);
-      socketClient.off('notification.read', handleNotificationRead);
-    };
-  }, [isConnected, user?.id, showNotification]);
-
-  const markAsRead = useCallback((notificationId: string) => {
-    // This would typically make an API call to mark as read
-    // The server would then broadcast the notification.read event
-    console.log('Marking notification as read:', notificationId);
-  }, []);
-
-  return {
-    notifications,
-    markAsRead,
-  };
-};
 
 /**
  * Hook for real-time transaction updates

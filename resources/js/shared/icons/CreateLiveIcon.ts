@@ -9,9 +9,6 @@ import { iconRegistry } from './IconRegistry';
 import type { IconProps } from './ICONSIZES';
 import { ICON_SIZES, ICON_COLORS, ICON_ANIMATIONS } from './ICONSIZES';
 
-// Re-export financial formatting utilities from Debounce utils for backward compatibility
-export { formatCurrency, formatDate, formatNumber } from '../utils/Debounce';
-
 // Enhanced LiveIcon component with parallel processing
 export const createLiveIcon = (
   iconName: string,
@@ -259,3 +256,7 @@ export const createIconPerformanceMonitor = () => {
 
 // Export constants from types for convenience
 export { ICON_SIZES, ICON_COLORS, ICON_ANIMATIONS } from './ICONSIZES';
+
+// Re-export financial formatting utilities from Debounce utils for backward compatibility
+import { FinancialPerformanceUtils } from '../utils/Debounce';
+export const { formatCurrency, formatDate, formatNumber } = FinancialPerformanceUtils;

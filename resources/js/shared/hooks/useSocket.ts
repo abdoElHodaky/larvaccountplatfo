@@ -1,4 +1,4 @@
-import { useEffect, useCallback, useRef, useState } from 'react';
+import { useEffect, useCallback, useState } from 'react';
 import { socketManager, SocketEventCallback } from '../services/socket/socketManager';
 import { getAuthToken, getCurrentOrganizationId } from '../services/alova/alova.config';
 
@@ -8,7 +8,6 @@ import { getAuthToken, getCurrentOrganizationId } from '../services/alova/alova.
 export function useSocket() {
   const [isConnected, setIsConnected] = useState(false);
   const [socketId, setSocketId] = useState<string | undefined>();
-  const _socketRef = useRef(socketManager);
 
   useEffect(() => {
     const token = getAuthToken();

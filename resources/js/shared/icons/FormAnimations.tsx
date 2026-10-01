@@ -19,7 +19,8 @@ import {
   UserIcon,
   EnvelopeIcon
 } from '@heroicons/react/24/outline';
-import { createLiveIcon, type LiveIconProps } from './CreateLiveIcon';
+import { createLiveIcon } from './CreateLiveIcon';
+import type { IconProps } from './ICONSIZES';
 
 // Form-specific animations
 export const formAnimations = {
@@ -59,7 +60,7 @@ export const LiveUserIcon = createLiveIcon(UserIcon, 'pulse');
 export const LiveMailIcon = createLiveIcon(MailIcon, 'pulse');
 
 // Validation state icon component
-export const ValidationIcon: React.FC<LiveIconProps & {
+export const ValidationIcon: React.FC<IconProps & {
   state: 'success' | 'error' | 'warning' | 'info' | 'idle';
   message?: string;
 }> = ({ state, message, size = 'sm', className = '', ...props }) => {

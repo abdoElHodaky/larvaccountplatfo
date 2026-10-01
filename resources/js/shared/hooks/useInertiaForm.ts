@@ -16,7 +16,7 @@ export interface InertiaFormOptions {
 export interface UseInertiaFormReturn<T> {
   data: T;
   setData: (key: keyof T | Partial<T>, value?: any) => void;
-  errors: Record<string, string>;
+  errors: Partial<Record<keyof T, string>>;
   hasErrors: boolean;
   processing: boolean;
   progress: { percentage: number } | null;
@@ -151,7 +151,9 @@ export function useInertiaForm<T extends Record<string, any>>(
     errors: form.errors,
     hasErrors,
     processing: form.processing,
-    progress: form.progress,
+    progress: form.progress
+        ? { percentage: form.progress.percentage ?? 0 }
+        : null,
     wasSuccessful: form.wasSuccessful,
     recentlySuccessful: form.recentlySuccessful,
     submit,

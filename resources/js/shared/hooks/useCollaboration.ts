@@ -426,9 +426,6 @@ export function useCollaborationSessions(organizationId?: number) {
   useEffect(() => {
     if (!isConnected || !orgId) return;
 
-    // Join organization collaboration room
-    const _room = `collab:org:${orgId}`;
-    
     // Request current sessions
     emit('collaboration:get_sessions', { organizationId: orgId });
 

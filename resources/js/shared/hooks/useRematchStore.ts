@@ -120,8 +120,7 @@ export const useBreadcrumbs = () => {
 // Accounting hooks (replacing financial)
 export const useAccounting = () => {
   const accounting = useAppSelector(state => state.accounting);
-  const _dispatch = useAppDispatch();
-  
+
   return {
     ...accounting,
     // Add accounting actions here when they're implemented
@@ -131,8 +130,7 @@ export const useAccounting = () => {
 // Inventory hooks
 export const useInventory = () => {
   const inventory = useAppSelector(state => state.inventory);
-  const _dispatch = useAppDispatch();
-  
+
   return {
     ...inventory,
     // Add inventory actions here when they're implemented
@@ -142,8 +140,7 @@ export const useInventory = () => {
 // Dashboard hooks
 export const useDashboard = () => {
   const dashboard = useAppSelector(state => state.dashboard);
-  const _dispatch = useAppDispatch();
-  
+
   return {
     ...dashboard,
     // Add dashboard actions here when they're implemented
@@ -199,24 +196,18 @@ export const useAppActions = () => {
 };
 
 export const useAccountingActions = () => {
-  const _dispatch = useAppDispatch();
-  
   return {
     // Add accounting actions here when they're implemented
   };
 };
 
 export const useInventoryActions = () => {
-  const _dispatch = useAppDispatch();
-  
   return {
     // Add inventory actions here when they're implemented
   };
 };
 
 export const useDashboardActions = () => {
-  const _dispatch = useAppDispatch();
-  
   return {
     // Add dashboard actions here when they're implemented
   };
