@@ -364,10 +364,10 @@ interface ThemeContextType {
 
 const ThemeContext = createContext<ThemeContextType | null>(null);
 
-export const useTheme = () => {
+export const useAppTheme = () => {
   const context = useContext(ThemeContext);
   if (!context) {
-    throw new Error('useTheme must be used within ThemeProvider');
+    throw new Error('useAppTheme must be used within ThemeProvider');
   }
   return context;
 };
@@ -419,7 +419,7 @@ export {
   Tabs,
   Toggle,
   ThemeProvider,
-  useTheme,
+  useAppTheme as useTheme,
 };
 
 // Example usage components for documentation

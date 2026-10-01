@@ -131,14 +131,14 @@ export const TouchOptimizedTable: React.FC<TouchOptimizedTableProps> = memo(({
   }, [columns, isMobile, compactMode]);
 
   // Touch handlers for swipe gestures
-  const handleTouchStart = useMemoizedCallback((e: React.TouchEvent, _rowId: string) => {
+  const handleTouchStart = useMemoizedCallback((e: React.TouchEvent<HTMLDivElement>, _rowId: string) => {
     if (!enableSwipeActions) return;
     
     const touch = e.touches[0];
     setTouchStart({ x: touch.clientX, y: touch.clientY });
   }, [enableSwipeActions]);
 
-  const handleTouchMove = useMemoizedCallback((e: React.TouchEvent, rowId: string) => {
+  const handleTouchMove = useMemoizedCallback((e: React.TouchEvent<HTMLDivElement>, rowId: string) => {
     if (!enableSwipeActions || !touchStart) return;
     
     const touch = e.touches[0];
@@ -253,7 +253,7 @@ export const TouchOptimizedTable: React.FC<TouchOptimizedTableProps> = memo(({
         borderBottomColor={borderColor}
         onTouchStart={(e: React.TouchEvent<HTMLDivElement>) => handleTouchStart(e, rowId)}
         onTouchMove={(e: React.TouchEvent<HTMLDivElement>) => handleTouchMove(e, rowId)}
-        onTouchEnd={(e: React.TouchEvent<HTMLDivElement>) => handleTouchEnd(e)}
+        onTouchEnd={() => handleTouchEnd()}
         onClick={() => onRowClick?.(item)}
         cursor={onRowClick ? 'pointer' : 'default'}
         _hover={onRowClick ? { bg: hoverBg } : undefined}
@@ -281,7 +281,7 @@ export const TouchOptimizedTable: React.FC<TouchOptimizedTableProps> = memo(({
                     colorScheme="white"
                     variant="ghost"
                     aria-label={action.label}
-                    onClick={(e) => {
+                    onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
                       e.stopPropagation();
                       action.action(item);
                       setSwipedRow(null);
@@ -308,7 +308,7 @@ export const TouchOptimizedTable: React.FC<TouchOptimizedTableProps> = memo(({
                 {column.label}:
               </Text>
               <Text fontSize="sm" textAlign="right" flex={1}>
-                {column.render ? column.render(item[column.key], item) : item[column.key]}
+                {column.render ? column.render(item[column.key], item, _colIndex) : item[column.key]}
               </Text>
             </HStack>
           ))}

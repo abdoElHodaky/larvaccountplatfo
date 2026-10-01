@@ -52,28 +52,32 @@ export const useIsAuthenticated = () => {
 export const useApp = () => {
   const app = useAppSelector(state => state.app);
   const dispatch = useAppDispatch();
-  
+
+  const appActions = {
+    setSidebarOpen: (dispatch.app as any).setSidebarOpen,
+    toggleSidebar: (dispatch.app as any).toggleSidebar,
+    setTheme: (dispatch.app as any).setTheme,
+    updateTheme: (dispatch.app as any).updateTheme,
+    showNotification: (dispatch.app as any).showNotification,
+    showSuccess: (dispatch.app as any).showSuccess,
+    showError: (dispatch.app as any).showError,
+    showWarning: (dispatch.app as any).showWarning,
+    showInfo: (dispatch.app as any).showInfo,
+    removeNotification: (dispatch.app as any).removeNotification,
+    clearNotifications: (dispatch.app as any).clearNotifications,
+    openModal: (dispatch.app as any).openModal,
+    closeModal: (dispatch.app as any).closeModal,
+    closeAllModals: (dispatch.app as any).closeAllModals,
+    setGlobalLoading: (dispatch.app as any).setGlobalLoading,
+    handleGlobalError: (dispatch.app as any).handleGlobalError,
+    updatePageContext: (dispatch.app as any).updatePageContext,
+    loadFeatureFlags: (dispatch.app as any).loadFeatureFlags,
+    initializeTheme: (dispatch.app as any).initializeTheme,
+  };
+
   return {
     ...app,
-    setSidebarOpen: dispatch.app.setSidebarOpen,
-    toggleSidebar: dispatch.app.toggleSidebar,
-    setTheme: dispatch.app.setTheme,
-    updateTheme: dispatch.app.updateTheme,
-    showNotification: dispatch.app.showNotification,
-    showSuccess: dispatch.app.showSuccess,
-    showError: dispatch.app.showError,
-    showWarning: dispatch.app.showWarning,
-    showInfo: dispatch.app.showInfo,
-    removeNotification: dispatch.app.removeNotification,
-    clearNotifications: dispatch.app.clearNotifications,
-    openModal: dispatch.app.openModal,
-    closeModal: dispatch.app.closeModal,
-    closeAllModals: dispatch.app.closeAllModals,
-    setGlobalLoading: dispatch.app.setGlobalLoading,
-    handleGlobalError: dispatch.app.handleGlobalError,
-    updatePageContext: dispatch.app.updatePageContext,
-    loadFeatureFlags: dispatch.app.loadFeatureFlags,
-    initializeTheme: dispatch.app.initializeTheme,
+    ...appActions,
   };
 };
 
@@ -81,27 +85,27 @@ export const useNotifications = () => {
   return useAppSelector(state => state.app.notifications);
 };
 
-export const useTheme = () => {
+export const useAppTheme = () => {
   const theme = useAppSelector(state => state.app.theme);
   const colorMode = useAppSelector(state => state.app.colorMode);
   const dispatch = useAppDispatch();
-  
+
   return {
     theme,
     colorMode,
-    updateTheme: dispatch.app.updateTheme,
+    updateTheme: (dispatch.app as any).updateTheme,
   };
 };
 
 export const useModals = () => {
   const modals = useAppSelector(state => state.app.modals);
   const dispatch = useAppDispatch();
-  
+
   return {
     modals,
-    openModal: dispatch.app.openModal,
-    closeModal: dispatch.app.closeModal,
-    closeAllModals: dispatch.app.closeAllModals,
+    openModal: (dispatch.app as any).openModal,
+    closeModal: (dispatch.app as any).closeModal,
+    closeAllModals: (dispatch.app as any).closeAllModals,
   };
 };
 
@@ -176,19 +180,21 @@ export const useAuthActions = () => {
 
 export const useAppActions = () => {
   const dispatch = useAppDispatch();
-  
+
   return {
-    showSuccess: dispatch.app.showSuccess,
-    showError: dispatch.app.showError,
-    showWarning: dispatch.app.showWarning,
-    showInfo: dispatch.app.showInfo,
-    removeNotification: dispatch.app.removeNotification,
-    openModal: dispatch.app.openModal,
-    closeModal: dispatch.app.closeModal,
-    setGlobalLoading: dispatch.app.setGlobalLoading,
-    handleGlobalError: dispatch.app.handleGlobalError,
-    loadFeatureFlags: dispatch.app.loadFeatureFlags,
-    initializeTheme: dispatch.app.initializeTheme,
+    showNotification: (dispatch.app as any).showNotification,
+    showSuccess: (dispatch.app as any).showSuccess,
+    showError: (dispatch.app as any).showError,
+    showWarning: (dispatch.app as any).showWarning,
+    showInfo: (dispatch.app as any).showInfo,
+    removeNotification: (dispatch.app as any).removeNotification,
+    clearNotifications: (dispatch.app as any).clearNotifications,
+    openModal: (dispatch.app as any).openModal,
+    closeModal: (dispatch.app as any).closeModal,
+    setGlobalLoading: (dispatch.app as any).setGlobalLoading,
+    handleGlobalError: (dispatch.app as any).handleGlobalError,
+    loadFeatureFlags: (dispatch.app as any).loadFeatureFlags,
+    initializeTheme: (dispatch.app as any).initializeTheme,
   };
 };
 

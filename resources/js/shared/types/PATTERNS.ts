@@ -205,7 +205,7 @@ export interface Notification {
 export interface NotificationAction {
   label: string;
   action: () => void;
-  style?: 'primary' | 'secondary' | 'danger';
+  variant?: 'solid' | 'outline' | 'ghost' | 'link';
 }
 
 // Theme interface

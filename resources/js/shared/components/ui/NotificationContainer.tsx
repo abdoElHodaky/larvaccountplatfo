@@ -18,14 +18,12 @@ import {
 
 } from '@chakra-ui/react';
 import { AnimatePresence, motion } from 'framer-motion';
-import { useSelector, useDispatch } from 'react-redux';
-import type { RootState, Dispatch } from '../../stores';
+import { useApp } from '@/shared/hooks/useRematchStore';
 
 const MotionBox = motion(Box);
 
 export const NotificationContainer: React.FC = () => {
-  const notifications = useSelector((state: RootState) => state.app.notifications);
-  const dispatch = useDispatch<Dispatch>();
+  const { notifications, removeNotification } = useApp();
 
   const bg = useColorModeValue('white', 'gray.800');
   const shadow = useColorModeValue('lg', 'dark-lg');
@@ -71,7 +69,7 @@ export const NotificationContainer: React.FC = () => {
                   <AlertDescription fontSize="sm" mt={1}>
                     {notification.message}
                   </AlertDescription>
-                  
+
                   {/* Action Buttons */}
                   {notification.actions && notification.actions.length > 0 && (
                     <HStack spacing={2} mt={3}>
@@ -83,7 +81,7 @@ export const NotificationContainer: React.FC = () => {
                           colorScheme={notification.type === 'error' ? 'red' : 'blue'}
                           onClick={() => {
                             action.action();
-                            dispatch.app.removeNotification(notification.id);
+                            removeNotification(notification.id);
                           }}
                         >
                           {action.label}
@@ -92,14 +90,14 @@ export const NotificationContainer: React.FC = () => {
                     </HStack>
                   )}
                 </Box>
-                
+
                 {/* Close Button */}
                 <CloseButton
                   position="absolute"
                   right={2}
                   top={2}
                   size="sm"
-                  onClick={() => dispatch.app.removeNotification(notification.id)}
+                  onClick={() => removeNotification(notification.id)}
                 />
               </Alert>
             </MotionBox>

@@ -55,7 +55,7 @@ export interface LiveDataSyncProps {
 }
 
 export const LiveDataSync = memo(
-  forwardRef<LiveDataSyncProps, { queueChange: (change: Omit<DataChange, 'id' | 'timestamp'>) => void } | null>(
+  forwardRef<{ queueChange: (change: Omit<DataChange, 'id' | 'timestamp'>) => void } | null, LiveDataSyncProps>(
     ({
       tenantId,
       entities = [],
@@ -452,7 +452,7 @@ LiveDataSync.displayName = 'LiveDataSync';
  */
 export function useLiveDataSync(options: Omit<LiveDataSyncProps, 'className'>) {
   const SyncComponent = useMemo(() => {
-    return React.forwardRef<LiveDataSyncProps, any>((props, ref) => {
+    return React.forwardRef<{ queueChange: (change: Omit<DataChange, 'id' | 'timestamp'>) => void } | null, Omit<LiveDataSyncProps, 'className'>>((props, ref) => {
       return (
         <LiveDataSync
           {...options}
