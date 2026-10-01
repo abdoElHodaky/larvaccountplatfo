@@ -1,6 +1,12 @@
-// Stub module for Accounts page to resolve TypeScript module resolution errors
-// This maintains existing functionality while satisfying TypeScript requirements
+import React from 'react';
 
-export default function AccountsPage() {
-  return null;
-}
+const Accounts: React.FC = () => {
+  return (
+    <div>
+      <h1>Accounts Page</h1>
+      <p>Accounts content will be loaded here</p>
+    </div>
+  );
+};
+
+export default Accounts;

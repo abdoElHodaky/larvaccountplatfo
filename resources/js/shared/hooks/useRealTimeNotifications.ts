@@ -46,7 +46,7 @@ export const useRealTimeNotifications = (options: UseRealTimeNotificationsOption
     autoMarkAsRead = false,
   } = options;
 
-  const { subscribe, unsubscribe, emit, isConnected } = useWebSocket();
+  const { subscribe, unsubscribe, sendMessage: emit, isConnected } = useWebSocket();
   const toast = useToast();
 
   const [notifications, setNotifications] = useState<Notification[]>([]);
@@ -116,7 +116,7 @@ export const useRealTimeNotifications = (options: UseRealTimeNotificationsOption
 
     // Emit to server
     if (isConnected) {
-      emit('notification:read', { notificationId, tenantId, userId });
+      emit({ type: 'notification:read', notificationId, tenantId, userId });
     }
   }, [emit, isConnected, tenantId, userId]);
 
@@ -136,7 +136,7 @@ export const useRealTimeNotifications = (options: UseRealTimeNotificationsOption
 
     // Emit to server
     if (isConnected) {
-      emit('notifications:mark-all-read', { tenantId, userId });
+      emit({ type: 'notifications:mark-all-read', tenantId, userId });
     }
   }, [notifications, emit, isConnected, tenantId, userId]);
 
@@ -152,7 +152,7 @@ export const useRealTimeNotifications = (options: UseRealTimeNotificationsOption
 
     // Emit to server
     if (isConnected) {
-      emit('notification:remove', { notificationId, tenantId, userId });
+      emit({ type: 'notification:remove', notificationId, tenantId, userId });
     }
   }, [emit, isConnected, tenantId, userId]);
 
@@ -163,7 +163,7 @@ export const useRealTimeNotifications = (options: UseRealTimeNotificationsOption
 
     // Emit to server
     if (isConnected) {
-      emit('notifications:clear-all', { tenantId, userId });
+      emit({ type: 'notifications:clear-all', tenantId, userId });
     }
   }, [emit, isConnected, tenantId, userId]);
 

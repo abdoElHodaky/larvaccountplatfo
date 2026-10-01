@@ -17,7 +17,7 @@ import {
   CalendarIcon,
   ClockIcon,
   UserIcon,
-  MailIcon
+  EnvelopeIcon
 } from '@heroicons/react/24/outline';
 import { createLiveIcon, type LiveIconProps } from './CreateLiveIcon';
 

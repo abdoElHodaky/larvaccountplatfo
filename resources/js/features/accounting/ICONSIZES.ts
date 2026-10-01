@@ -1,12 +1,11 @@
-// Stub module for accounting icons to resolve TypeScript module resolution errors
-// This maintains existing functionality while satisfying TypeScript requirements
+// Icon size constants for accounting module
+export const ICON_SIZES = {
+  SMALL: 16,
+  MEDIUM: 24,
+  LARGE: 32,
+  EXTRA_LARGE: 48,
+} as const;
 
-import { IconProps } from '@/shared/icons/ICONSIZES';
+export type IconSize = typeof ICON_SIZES[keyof typeof ICON_SIZES];
 
-// Re-export the IconProps type for compatibility
-export type { IconProps };
-
-// Export empty objects to maintain compatibility with existing code that might import specific values
-export const ICON_SIZES = {} as const;
-export const ICON_COLORS = {} as const;
-export const ICON_ANIMATIONS = {} as const;
+export default ICON_SIZES;

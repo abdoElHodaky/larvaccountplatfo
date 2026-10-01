@@ -3,7 +3,7 @@
  * Custom hooks for GraphQL operations with caching and state management
  */
 
-import { useQuery, useMutation, useSubscription, useLazyQuery } from '@apollo/client';
+import { useQuery, useMutation, useSubscription, useLazyQuery, type OperationVariables } from '@apollo/client';
 import { useRequest as _useRequest, useWatcher as _useWatcher } from 'alova';
 import { alovaInstance as _alovaInstance } from '../services/graphql/apolloClient';
 import { useCallback, useMemo, useState } from 'react';
@@ -46,7 +46,7 @@ export interface AlovaRequestOptions {
 /**
  * Enhanced GraphQL Query Hook with AlovaJS caching
  */
-export function useGraphQLQuery<TData = any, TVariables = any>(
+export function useGraphQLQuery<TData = any, TVariables extends OperationVariables = OperationVariables>(
   query: DocumentNode,
   options: GraphQLHookOptions<TData, TVariables> = {}
 ) {

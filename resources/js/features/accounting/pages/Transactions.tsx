@@ -1,6 +1,12 @@
-// Stub module for Transactions page to resolve TypeScript module resolution errors
-// This maintains existing functionality while satisfying TypeScript requirements
+import React from 'react';
 
-export default function TransactionsPage() {
-  return null;
-}
+const Transactions: React.FC = () => {
+  return (
+    <div>
+      <h1>Transactions Page</h1>
+      <p>Transactions content will be loaded here</p>
+    </div>
+  );
+};
+
+export default Transactions;

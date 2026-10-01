@@ -1,6 +1,12 @@
-// Stub module for JournalEntries page to resolve TypeScript module resolution errors
-// This maintains existing functionality while satisfying TypeScript requirements
+import React from 'react';
 
-export default function JournalEntriesPage() {
-  return null;
-}
+const JournalEntries: React.FC = () => {
+  return (
+    <div>
+      <h1>Journal Entries Page</h1>
+      <p>Journal entries content will be loaded here</p>
+    </div>
+  );
+};
+
+export default JournalEntries;
