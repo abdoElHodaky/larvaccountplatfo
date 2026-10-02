@@ -1,0 +1,1 @@
+- [Fixed Service Worker TypeScript Errors](serviceWorkerFix.md) — Fixed TypeScript syntax errors in resources/js/shared/utils/serviceWorker.ts related to cache name filtering and Uint8Array conversion for VAPID key.

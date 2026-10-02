@@ -337,7 +337,7 @@ export class PushNotificationManager {
 
     const registration = await navigator.serviceWorker.ready;
 
-    const defaultOptions: NotificationOptions = {
+    const defaultOptions = {
       icon: '/icon-192x192.png',
       badge: '/badge-72x72.png',
       vibrate: [100, 50, 100],
@@ -346,12 +346,12 @@ export class PushNotificationManager {
         { action: 'view', title: 'View', icon: '/icon-view.png' },
         { action: 'dismiss', title: 'Dismiss', icon: '/icon-dismiss.png' },
       ],
-    };
+    } as NotificationOptions;
 
     await registration.showNotification(title, { ...defaultOptions, ...options });
   }
 
-  private urlBase64ToUint8Array(base64String: string): Uint8Array {
+  private urlBase64ToUint8Array(base64String: string): ArrayBuffer {
     const padding = '='.repeat((4 - (base64String.length % 4)) % 4);
     const base64 = (base64String + padding).replace(/-/g, '+').replace(/_/g, '/');
     const rawData = window.atob(base64);
@@ -360,7 +360,7 @@ export class PushNotificationManager {
     for (let i = 0; i < rawData.length; ++i) {
       outputArray[i] = rawData.charCodeAt(i);
     }
-    return outputArray;
+    return outputArray.buffer;
   }
 
   private async sendSubscriptionToServer(subscription: PushSubscription): Promise<void> {

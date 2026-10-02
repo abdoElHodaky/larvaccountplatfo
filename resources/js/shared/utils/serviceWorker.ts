@@ -48,6 +48,72 @@ function getPublicUrl(): string {
 }
 
 // ---------------------------------------------------------------------------
+// Cache Management
+// ---------------------------------------------------------------------------
+
+const CACHE_NAMES = {
+  STATIC: 'accounting-app-static-v1',
+  DYNAMIC: 'accounting-app-dynamic-v1',
+  API: 'accounting-app-api-v1',
+} as const;
+
+type CacheName = typeof CACHE_NAMES[keyof typeof CACHE_NAMES];
+
+export class CacheManager {
+  private static readonly CACHE_NAMES = CACHE_NAMES;
+
+  /** Delete any caches not in the current version set (call from sw activate) */
+  static async clearOldCaches(): Promise<void> {
+    const cacheNames = await caches.keys();
+    const currentCaches = Object.values(CacheManager.CACHE_NAMES);
+
+    await Promise.all(
+      cacheNames
+        .filter((cacheName): boolean => !currentCaches.includes(cacheName as CacheName))
+        .map((cacheName) => caches.delete(cacheName))
+    );
+  }
+
+  /** Approximate per-cache storage usage in bytes */
+  static async getCacheSize(): Promise<Record<string, number>> {
+    const sizes: Record<string, number> = {};
+
+    for (const [name, cacheName] of Object.entries(CacheManager.CACHE_NAMES)) {
+      try {
+        const cache = await caches.open(cacheName);
+        const requests = await cache.keys();
+        let totalSize = 0;
+
+        for (const request of requests) {
+          const response = await cache.match(request);
+          if (response) {
+            totalSize += (await response.blob()).size;
+          }
+        }
+
+        sizes[name] = totalSize;
+      } catch (error) {
+        console.error(`Error calculating cache size for ${name}:`, error);
+        sizes[name] = 0;
+      }
+    }
+
+    return sizes;
+  }
+
+  /** Clear one named cache, or every cache when no name is given */
+  static async clearCache(cacheName?: string): Promise<void> {
+    if (cacheName) {
+      await caches.delete(cacheName);
+      return;
+    }
+
+    const cacheNames = await caches.keys();
+    await Promise.all(cacheNames.map((name) => caches.delete(name)));
+  }
+}
+
+// ---------------------------------------------------------------------------
 // Registration
 // ---------------------------------------------------------------------------
 
@@ -267,68 +333,6 @@ export class PWAInstallManager {
 export const pwaInstallManager = new PWAInstallManager();
 
 // ---------------------------------------------------------------------------
-// Cache Management
-// ---------------------------------------------------------------------------
-
-export class CacheManager {
-  private static readonly CACHE_NAMES = {
-    STATIC: 'accounting-app-static-v1',
-    DYNAMIC: 'accounting-app-dynamic-v1',
-    API: 'accounting-app-api-v1',
-  } as const;
-
-  /** Delete any caches not in the current version set (call from sw activate) */
-  static async clearOldCaches(): Promise<void> {
-    const cacheNames = await caches.keys();
-    const currentCaches = Object.values(this.CACHE_NAMES);
-
-    await Promise.all(
-      cacheNames
-        .filter((cacheName) => !currentCaches.includes(cacheName))
-        .map((cacheName) => caches.delete(cacheName))
-    );
-  }
-
-  /** Approximate per-cache storage usage in bytes */
-  static async getCacheSize(): Promise<Record<string, number>> {
-    const sizes: Record<string, number> = {};
-
-    for (const [name, cacheName] of Object.entries(this.CACHE_NAMES)) {
-      try {
-        const cache = await caches.open(cacheName);
-        const requests = await cache.keys();
-        let totalSize = 0;
-
-        for (const request of requests) {
-          const response = await cache.match(request);
-          if (response) {
-            totalSize += (await response.blob()).size;
-          }
-        }
-
-        sizes[name] = totalSize;
-      } catch (error) {
-        console.error(`Error calculating cache size for ${name}:`, error);
-        sizes[name] = 0;
-      }
-    }
-
-    return sizes;
-  }
-
-  /** Clear one named cache, or every cache when no name is given */
-  static async clearCache(cacheName?: string): Promise<void> {
-    if (cacheName) {
-      await caches.delete(cacheName);
-      return;
-    }
-
-    const cacheNames = await caches.keys();
-    await Promise.all(cacheNames.map((name) => caches.delete(name)));
-  }
-}
-
-// ---------------------------------------------------------------------------
 // Background Sync Manager
 // ---------------------------------------------------------------------------
 
@@ -534,16 +538,15 @@ export class PushNotificationManager {
     return subscription ? subscription.unsubscribe() : false;
   }
 
-  private urlBase64ToUint8Array(base64String: string): Uint8Array {
+  private urlBase64ToUint8Array(base64String: string): ArrayBuffer {
     const padding = '='.repeat((4 - (base64String.length % 4)) % 4);
     const base64 = (base64String + padding).replace(/-/g, '+').replace(/_/g, '/');
     const rawData = window.atob(base64);
-    const outputArray = new Uint8Array(rawData.length);
-
-    for (let i = 0; i < rawData.length; ++i) {
-      outputArray[i] = rawData.charCodeAt(i);
+    const uint8Array = new Uint8Array(rawData.length);
+    for (let i = 0; i < rawData.length; i++) {
+      uint8Array[i] = rawData.charCodeAt(i);
     }
-    return outputArray;
+    return uint8Array.buffer;
   }
 }
 
