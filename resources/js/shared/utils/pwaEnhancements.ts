@@ -1,10 +1,24 @@
 /**
  * Progressive Web App (PWA) Enhancements
  * Provides advanced PWA features including background sync, push notifications,
- * app shortcuts, and offline capabilities
+ * app shortcuts, and offline capabilities.
  */
 
-// PWA Installation and Management
+// ---------------------------------------------------------------------------
+// Global declarations
+// ---------------------------------------------------------------------------
+
+/** Google Analytics gtag global (loaded asynchronously by the analytics snippet). */
+declare function gtag(
+  command: 'event',
+  eventName: string,
+  params?: Record<string, unknown>
+): void;
+
+// ---------------------------------------------------------------------------
+// Types
+// ---------------------------------------------------------------------------
+
 export interface PWAInstallPrompt {
   prompt(): Promise<void>;
   userChoice: Promise<{ outcome: 'accepted' | 'dismissed' }>;
@@ -20,9 +34,26 @@ export interface PWACapabilities {
   supportsFileSystemAccess: boolean;
 }
 
-/**
- * PWA Installation Manager
- */
+interface OfflineSubmission {
+  url: string;
+  method: string;
+  headers: Record<string, string>;
+  body: BodyInit;
+}
+
+interface QueuedAction {
+  handler: string;
+  payload?: unknown;
+}
+
+interface SyncCapableRegistration extends ServiceWorkerRegistration {
+  sync?: { register(tag: string): Promise<void> };
+}
+
+// ---------------------------------------------------------------------------
+// PWA Installation Manager
+// ---------------------------------------------------------------------------
+
 export class PWAInstallManager {
   private static instance: PWAInstallManager;
   private installPrompt: PWAInstallPrompt | null = null;
@@ -42,7 +73,7 @@ export class PWAInstallManager {
   private setupInstallPromptListener(): void {
     window.addEventListener('beforeinstallprompt', (e) => {
       e.preventDefault();
-      this.installPrompt = e as any;
+      this.installPrompt = e as unknown as PWAInstallPrompt;
       this.notifyInstallListeners(true);
     });
 
@@ -53,48 +84,40 @@ export class PWAInstallManager {
     });
   }
 
-  /**
-   * Check if PWA can be installed
-   */
+  /** Check if PWA can be installed */
   canInstall(): boolean {
     return this.installPrompt !== null;
   }
 
-  /**
-   * Trigger PWA installation
-   */
+  /** Trigger PWA installation */
   async install(): Promise<boolean> {
     if (!this.installPrompt) {
       return false;
     }
 
+    const prompt = this.installPrompt;
+
     try {
-      await this.installPrompt.prompt();
-      const choiceResult = await this.installPrompt.userChoice;
-      
-      if (choiceResult.outcome === 'accepted') {
-        this.trackInstallationAttempt('accepted');
-        return true;
-      } else {
-        this.trackInstallationAttempt('dismissed');
-        return false;
-      }
+      await prompt.prompt();
+      const choiceResult = await prompt.userChoice;
+
+      // The native prompt can only be used once — discard it either way.
+      this.installPrompt = null;
+      this.notifyInstallListeners(false);
+
+      this.trackInstallationAttempt(choiceResult.outcome);
+      return choiceResult.outcome === 'accepted';
     } catch (error) {
       console.error('PWA installation failed:', error);
       return false;
     }
   }
 
-  /**
-   * Add listener for install availability changes
-   */
+  /** Add listener for install availability changes; returns an unsubscribe function */
   onInstallAvailable(callback: (canInstall: boolean) => void): () => void {
     this.installListeners.push(callback);
-    
-    // Immediately notify with current state
     callback(this.canInstall());
-    
-    // Return unsubscribe function
+
     return () => {
       const index = this.installListeners.indexOf(callback);
       if (index > -1) {
@@ -104,36 +127,35 @@ export class PWAInstallManager {
   }
 
   private notifyInstallListeners(canInstall: boolean): void {
-    this.installListeners.forEach(listener => listener(canInstall));
+    this.installListeners.forEach((listener) => listener(canInstall));
   }
 
   private trackInstallation(): void {
-    // Track successful installation
-    if (typeof window !== 'undefined' && (window as any).gtag) {
-      (window as any).gtag('event', 'pwa_installed', {
+    if (typeof gtag !== 'undefined') {
+      gtag('event', 'pwa_installed', {
         event_category: 'PWA',
-        event_label: 'installation_completed'
+        event_label: 'installation_completed',
       });
     }
   }
 
-  private trackInstallationAttempt(outcome: string): void {
-    // Track installation attempt
-    if (typeof window !== 'undefined' && (window as any).gtag) {
-      (window as any).gtag('event', 'pwa_install_prompt', {
+  private trackInstallationAttempt(outcome: 'accepted' | 'dismissed'): void {
+    if (typeof gtag !== 'undefined') {
+      gtag('event', 'pwa_install_prompt', {
         event_category: 'PWA',
-        event_label: outcome
+        event_label: outcome,
       });
     }
   }
 }
 
-/**
- * Background Sync Manager
- */
+// ---------------------------------------------------------------------------
+// Background Sync Manager
+// ---------------------------------------------------------------------------
+
 export class BackgroundSyncManager {
   private static instance: BackgroundSyncManager;
-  private syncTasks: Map<string, () => Promise<void>> = new Map();
+  private syncTasks = new Map<string, () => Promise<void>>();
 
   static getInstance(): BackgroundSyncManager {
     if (!BackgroundSyncManager.instance) {
@@ -142,49 +164,46 @@ export class BackgroundSyncManager {
     return BackgroundSyncManager.instance;
   }
 
-  /**
-   * Register a background sync task
-   */
+  /** Register a background sync task; falls back to immediate execution when unsupported */
   async registerSync(tag: string, task: () => Promise<void>): Promise<void> {
     this.syncTasks.set(tag, task);
 
-    if ('serviceWorker' in navigator && 'sync' in (window.ServiceWorkerRegistration.prototype as any)) {
+    const registration = (await navigator.serviceWorker?.ready) as
+      | SyncCapableRegistration
+      | undefined;
+
+    if (registration?.sync) {
       try {
-        const registration = await navigator.serviceWorker.ready;
-        await (registration as any).sync.register(tag);
+        await registration.sync.register(tag);
+        return;
       } catch (error) {
         console.error('Background sync registration failed:', error);
-        // Fallback: execute task immediately
-        await this.executeTask(tag);
       }
-    } else {
-      // Fallback: execute task immediately
-      await this.executeTask(tag);
     }
+
+    // Fallback (or recovery): run the task right away.
+    await this.executeTask(tag);
   }
 
-  /**
-   * Execute a sync task
-   */
+  /** Execute a registered sync task */
   async executeTask(tag: string): Promise<void> {
     const task = this.syncTasks.get(tag);
-    if (task) {
-      try {
-        await task();
-        this.syncTasks.delete(tag);
-      } catch (error) {
-        console.error(`Background sync task ${tag} failed:`, error);
-        throw error;
-      }
+    if (!task) {
+      return;
+    }
+
+    try {
+      await task();
+      this.syncTasks.delete(tag);
+    } catch (error) {
+      console.error(`Background sync task ${tag} failed:`, error);
+      throw error;
     }
   }
 
-  /**
-   * Register common sync tasks
-   */
+  /** Register common sync tasks (called when connectivity returns) */
   registerCommonTasks(): void {
-    // Sync offline form submissions
-    this.registerSync('form-submissions', async () => {
+    void this.registerSync('form-submissions', async () => {
       const submissions = this.getOfflineSubmissions();
       for (const submission of submissions) {
         await this.submitForm(submission);
@@ -192,24 +211,16 @@ export class BackgroundSyncManager {
       this.clearOfflineSubmissions();
     });
 
-    // Sync cached data
-    this.registerSync('data-sync', async () => {
-      await this.syncCachedData();
-    });
-
-    // Sync user preferences
-    this.registerSync('preferences-sync', async () => {
-      await this.syncUserPreferences();
-    });
+    void this.registerSync('data-sync', () => this.syncCachedData());
+    void this.registerSync('preferences-sync', () => this.syncUserPreferences());
   }
 
-  private getOfflineSubmissions(): any[] {
+  private getOfflineSubmissions(): OfflineSubmission[] {
     const stored = localStorage.getItem('offline_submissions');
-    return stored ? JSON.parse(stored) : [];
+    return stored ? (JSON.parse(stored) as OfflineSubmission[]) : [];
   }
 
-  private async submitForm(submission: any): Promise<void> {
-    // Implementation would depend on your API structure
+  private async submitForm(submission: OfflineSubmission): Promise<void> {
     const response = await fetch(submission.url, {
       method: submission.method,
       headers: submission.headers,
@@ -226,26 +237,29 @@ export class BackgroundSyncManager {
   }
 
   private async syncCachedData(): Promise<void> {
-    // Sync any cached data that needs to be uploaded
-    // Implementation would depend on your data structure
+    // Upload any locally cached data that needs to reach the server.
+    // Wire this to your data layer (e.g. outbox table / API sync endpoint).
+    await Promise.resolve();
   }
 
   private async syncUserPreferences(): Promise<void> {
-    // Sync user preferences to server
-    // Implementation would depend on your preferences system
+    // Push locally changed user preferences to the server.
+    // Wire this to your preferences API.
+    await Promise.resolve();
   }
 }
 
-/**
- * Push Notification Manager
- */
+// ---------------------------------------------------------------------------
+// Push Notification Manager
+// ---------------------------------------------------------------------------
+
 export class PushNotificationManager {
   private static instance: PushNotificationManager;
   private vapidPublicKey: string;
 
   static getInstance(vapidPublicKey?: string): PushNotificationManager {
     if (!PushNotificationManager.instance) {
-      PushNotificationManager.instance = new PushNotificationManager(vapidPublicKey || '');
+      PushNotificationManager.instance = new PushNotificationManager(vapidPublicKey ?? '');
     }
     return PushNotificationManager.instance;
   }
@@ -254,9 +268,7 @@ export class PushNotificationManager {
     this.vapidPublicKey = vapidPublicKey;
   }
 
-  /**
-   * Request notification permission
-   */
+  /** Request notification permission */
   async requestPermission(): Promise<NotificationPermission> {
     if (!('Notification' in window)) {
       throw new Error('This browser does not support notifications');
@@ -267,9 +279,7 @@ export class PushNotificationManager {
     return permission;
   }
 
-  /**
-   * Subscribe to push notifications
-   */
+  /** Subscribe to push notifications */
   async subscribe(): Promise<PushSubscription | null> {
     if (!('serviceWorker' in navigator) || !('PushManager' in window)) {
       throw new Error('Push notifications are not supported');
@@ -277,15 +287,12 @@ export class PushNotificationManager {
 
     try {
       const registration = await navigator.serviceWorker.ready;
-      
       const subscription = await registration.pushManager.subscribe({
         userVisibleOnly: true,
         applicationServerKey: this.urlBase64ToUint8Array(this.vapidPublicKey),
       });
 
-      // Send subscription to server
       await this.sendSubscriptionToServer(subscription);
-      
       return subscription;
     } catch (error) {
       console.error('Push subscription failed:', error);
@@ -293,20 +300,18 @@ export class PushNotificationManager {
     }
   }
 
-  /**
-   * Unsubscribe from push notifications
-   */
+  /** Unsubscribe from push notifications */
   async unsubscribe(): Promise<boolean> {
     try {
       const registration = await navigator.serviceWorker.ready;
       const subscription = await registration.pushManager.getSubscription();
-      
+
       if (subscription) {
         await subscription.unsubscribe();
         await this.removeSubscriptionFromServer(subscription);
         return true;
       }
-      
+
       return false;
     } catch (error) {
       console.error('Push unsubscription failed:', error);
@@ -314,47 +319,41 @@ export class PushNotificationManager {
     }
   }
 
-  /**
-   * Check if user is subscribed to push notifications
-   */
+  /** Check if the user is subscribed to push notifications */
   async isSubscribed(): Promise<boolean> {
     try {
       const registration = await navigator.serviceWorker.ready;
-      const subscription = await registration.pushManager.getSubscription();
-      return subscription !== null;
-    } catch (error) {
+      return (await registration.pushManager.getSubscription()) !== null;
+    } catch {
       return false;
     }
   }
 
-  /**
-   * Show local notification
-   */
-  async showNotification(
-    title: string,
-    options: NotificationOptions = {}
-  ): Promise<void> {
-    if (Notification.permission === 'granted') {
-      const registration = await navigator.serviceWorker.ready;
-      
-      const defaultOptions: NotificationOptions = {
-        icon: '/icon-192x192.png',
-        badge: '/badge-72x72.png',
-        data: {
-          dateOfArrival: Date.now(),
-        }
-      };
-
-      await registration.showNotification(title, { ...defaultOptions, ...options });
+  /** Show a local notification via the active service worker */
+  async showNotification(title: string, options: NotificationOptions = {}): Promise<void> {
+    if (!('serviceWorker' in navigator) || Notification.permission !== 'granted') {
+      return;
     }
+
+    const registration = await navigator.serviceWorker.ready;
+
+    const defaultOptions: NotificationOptions = {
+      icon: '/icon-192x192.png',
+      badge: '/badge-72x72.png',
+      vibrate: [100, 50, 100],
+      data: { dateOfArrival: Date.now() },
+      actions: [
+        { action: 'view', title: 'View', icon: '/icon-view.png' },
+        { action: 'dismiss', title: 'Dismiss', icon: '/icon-dismiss.png' },
+      ],
+    };
+
+    await registration.showNotification(title, { ...defaultOptions, ...options });
   }
 
-  private urlBase64ToUint8Array(base64String: string): BufferSource {
-    const padding = '='.repeat((4 - base64String.length % 4) % 4);
-    const base64 = (base64String + padding)
-      .replace(/-/g, '+')
-      .replace(/_/g, '/');
-
+  private urlBase64ToUint8Array(base64String: string): Uint8Array {
+    const padding = '='.repeat((4 - (base64String.length % 4)) % 4);
+    const base64 = (base64String + padding).replace(/-/g, '+').replace(/_/g, '/');
     const rawData = window.atob(base64);
     const outputArray = new Uint8Array(rawData.length);
 
@@ -365,136 +364,120 @@ export class PushNotificationManager {
   }
 
   private async sendSubscriptionToServer(subscription: PushSubscription): Promise<void> {
-    // Send subscription to your server
     await fetch('/api/push-subscriptions', {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(subscription),
     });
   }
 
   private async removeSubscriptionFromServer(subscription: PushSubscription): Promise<void> {
-    // Remove subscription from your server
     await fetch('/api/push-subscriptions', {
       method: 'DELETE',
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ endpoint: subscription.endpoint }),
     });
   }
 
   private trackPermissionRequest(permission: NotificationPermission): void {
-    if (typeof window !== 'undefined' && (window as any).gtag) {
-      (window as any).gtag('event', 'notification_permission', {
+    if (typeof gtag !== 'undefined') {
+      gtag('event', 'notification_permission', {
         event_category: 'PWA',
-        event_label: permission
+        event_label: permission,
       });
     }
   }
 }
 
-/**
- * App Shortcuts Manager
- */
-export class AppShortcutsManager {
-  /**
-   * Register app shortcuts
-   */
-  static registerShortcuts(): void {
-    if ('navigator' in window && 'setAppBadge' in navigator) {
-      // Register keyboard shortcuts
-      this.registerKeyboardShortcuts();
-    }
+// ---------------------------------------------------------------------------
+// App Shortcuts Manager
+// ---------------------------------------------------------------------------
 
-    // Register web app shortcuts (defined in manifest.json)
+export class AppShortcutsManager {
+  /** Register keyboard shortcuts and persist manifest-style shortcut metadata */
+  static registerShortcuts(): void {
+    this.registerKeyboardShortcuts();
     this.updateManifestShortcuts();
   }
 
   private static registerKeyboardShortcuts(): void {
     document.addEventListener('keydown', (event) => {
-      // Ctrl/Cmd + K for search
-      if ((event.ctrlKey || event.metaKey) && event.key === 'k') {
-        event.preventDefault();
-        this.triggerSearch();
+      if (!(event.ctrlKey || event.metaKey)) {
+        return;
       }
 
-      // Ctrl/Cmd + N for new item
-      if ((event.ctrlKey || event.metaKey) && event.key === 'n') {
-        event.preventDefault();
-        this.triggerNewItem();
-      }
-
-      // Ctrl/Cmd + D for dashboard
-      if ((event.ctrlKey || event.metaKey) && event.key === 'd') {
-        event.preventDefault();
-        this.navigateToDashboard();
+      switch (event.key.toLowerCase()) {
+        case 'k':
+          event.preventDefault();
+          this.triggerSearch();
+          break;
+        case 'n':
+          event.preventDefault();
+          this.triggerNewItem();
+          break;
+        case 'd':
+          event.preventDefault();
+          this.navigateToDashboard();
+          break;
       }
     });
   }
 
   private static updateManifestShortcuts(): void {
-    // This would typically be handled by the manifest.json file
-    // But we can dynamically update shortcuts if needed
+    // Canonical shortcuts live in manifest.json; this cached copy enables
+    // dynamic UI (e.g. a "quick actions" menu) without a manifest re-fetch.
     const shortcuts = [
       {
         name: 'Dashboard',
         short_name: 'Dashboard',
         description: 'View main dashboard',
         url: '/dashboard',
-        icons: [{ src: '/icon-dashboard.png', sizes: '96x96' }]
+        icons: [{ src: '/icon-dashboard.png', sizes: '96x96' }],
       },
       {
         name: 'New Transaction',
         short_name: 'New Transaction',
         description: 'Create new transaction',
         url: '/accounting/transactions/create',
-        icons: [{ src: '/icon-transaction.png', sizes: '96x96' }]
+        icons: [{ src: '/icon-transaction.png', sizes: '96x96' }],
       },
       {
         name: 'Reports',
         short_name: 'Reports',
         description: 'View financial reports',
         url: '/reporting',
-        icons: [{ src: '/icon-reports.png', sizes: '96x96' }]
-      }
+        icons: [{ src: '/icon-reports.png', sizes: '96x96' }],
+      },
     ];
 
-    // Store shortcuts for potential dynamic updates
     localStorage.setItem('app_shortcuts', JSON.stringify(shortcuts));
   }
 
   private static triggerSearch(): void {
-    // Trigger global search functionality
-    const searchInput = document.querySelector('[data-search-input]') as HTMLInputElement;
-    if (searchInput) {
-      searchInput.focus();
-    }
+    const searchInput = document.querySelector('[data-search-input]') as HTMLInputElement | null;
+    searchInput?.focus();
   }
 
   private static triggerNewItem(): void {
-    // Trigger new item creation
-    const newButton = document.querySelector('[data-new-item]') as HTMLButtonElement;
-    if (newButton) {
-      newButton.click();
-    }
+    const newButton = document.querySelector('[data-new-item]') as HTMLButtonElement | null;
+    newButton?.click();
   }
 
   private static navigateToDashboard(): void {
-    // Navigate to dashboard
     if (window.location.pathname !== '/dashboard') {
       window.location.href = '/dashboard';
     }
   }
 }
 
-/**
- * Offline Capabilities Manager
- */
+// ---------------------------------------------------------------------------
+// Offline Capabilities Manager
+// ---------------------------------------------------------------------------
+
 export class OfflineManager {
   private static instance: OfflineManager;
+  private static actionHandlers = new Map<string, (payload?: unknown) => Promise<void>>();
+
   private isOnline: boolean = navigator.onLine;
   private onlineListeners: Array<(isOnline: boolean) => void> = [];
 
@@ -523,23 +506,16 @@ export class OfflineManager {
     });
   }
 
-  /**
-   * Check if app is online
-   */
+  /** Check if the app is online */
   getOnlineStatus(): boolean {
     return this.isOnline;
   }
 
-  /**
-   * Add listener for online status changes
-   */
+  /** Add listener for online status changes; returns an unsubscribe function */
   onStatusChange(callback: (isOnline: boolean) => void): () => void {
     this.onlineListeners.push(callback);
-    
-    // Immediately notify with current state
     callback(this.isOnline);
-    
-    // Return unsubscribe function
+
     return () => {
       const index = this.onlineListeners.indexOf(callback);
       if (index > -1) {
@@ -548,144 +524,134 @@ export class OfflineManager {
     };
   }
 
-  /**
-   * Store data for offline use
-   */
-  storeOfflineData(key: string, data: any): void {
+  /** Store data for offline use */
+  storeOfflineData(key: string, data: unknown): void {
     try {
-      const offlineData = this.getOfflineData();
-      offlineData[key] = {
-        data,
-        timestamp: Date.now(),
-      };
-      localStorage.setItem('offline_data', JSON.stringify(offlineData));
+      const store = this.getOfflineStore();
+      store[key] = { data, timestamp: Date.now() };
+      localStorage.setItem('offline_data', JSON.stringify(store));
     } catch (error) {
       console.error('Failed to store offline data:', error);
     }
   }
 
-  /**
-   * Retrieve offline data
-   */
-  getOfflineData(key?: string): any {
+  /** Retrieve offline data (all entries, or a single key) */
+  getOfflineData(key?: string): unknown {
+    const store = this.getOfflineStore();
+    return key ? (store[key]?.data ?? null) : store;
+  }
+
+  private getOfflineStore(): Record<string, { data: unknown; timestamp: number }> {
     try {
       const stored = localStorage.getItem('offline_data');
-      const offlineData = stored ? JSON.parse(stored) : {};
-      
-      if (key) {
-        return offlineData[key]?.data || null;
-      }
-      
-      return offlineData;
+      return stored
+        ? (JSON.parse(stored) as Record<string, { data: unknown; timestamp: number }>)
+        : {};
     } catch (error) {
       console.error('Failed to retrieve offline data:', error);
-      return key ? null : {};
+      return {};
     }
   }
 
   /**
-   * Queue action for when online
+   * Register a named handler that queued offline actions can invoke.
+   * Handlers are stored in memory; only the name + payload are persisted.
    */
-  queueForOnline(action: () => Promise<void>): void {
+  static registerActionHandler(name: string, handler: (payload?: unknown) => Promise<void>): void {
+    OfflineManager.actionHandlers.set(name, handler);
+  }
+
+  /** Queue a named action (with optional serializable payload) for when connectivity returns */
+  queueForOnline(handler: string, payload?: unknown): void {
     if (this.isOnline) {
-      action();
-    } else {
-      const queuedActions = this.getQueuedActions();
-      queuedActions.push(action.toString());
-      localStorage.setItem('queued_actions', JSON.stringify(queuedActions));
+      void this.executeAction(handler, payload);
+      return;
     }
+
+    const queued = this.getQueuedActions();
+    queued.push({ handler, payload });
+    localStorage.setItem('queued_actions', JSON.stringify(queued));
   }
 
   private notifyListeners(isOnline: boolean): void {
-    this.onlineListeners.forEach(listener => listener(isOnline));
+    this.onlineListeners.forEach((listener) => listener(isOnline));
   }
 
   private handleOnlineStatus(): void {
-    // Execute queued actions
-    this.executeQueuedActions();
-    
-    // Sync background tasks
+    void this.executeQueuedActions();
     BackgroundSyncManager.getInstance().registerCommonTasks();
-    
-    // Update UI
+
     document.documentElement.classList.remove('offline');
     document.documentElement.classList.add('online');
   }
 
   private handleOfflineStatus(): void {
-    // Update UI
     document.documentElement.classList.remove('online');
     document.documentElement.classList.add('offline');
-    
-    // Show offline notification
     this.showOfflineNotification();
   }
 
-  private executeQueuedActions(): void {
-    const queuedActions = this.getQueuedActions();
-    queuedActions.forEach(actionString => {
-      try {
-        // Note: In a real implementation, you'd need a more sophisticated
-        // way to serialize and deserialize functions
-        const action = new Function('return ' + actionString)();
-        action();
-      } catch (error) {
-        console.error('Failed to execute queued action:', error);
-      }
-    });
-    
-    // Clear queued actions
-    localStorage.removeItem('queued_actions');
+  private async executeAction(handler: string, payload?: unknown): Promise<void> {
+    const fn = OfflineManager.actionHandlers.get(handler);
+    if (!fn) {
+      console.warn(`No handler registered for action "${handler}"`);
+      return;
+    }
+    await fn(payload);
   }
 
-  private getQueuedActions(): string[] {
+  private async executeQueuedActions(): Promise<void> {
+    const queued = this.getQueuedActions();
+    localStorage.removeItem('queued_actions');
+
+    for (const action of queued) {
+      try {
+        await this.executeAction(action.handler, action.payload);
+      } catch (error) {
+        console.error(`Failed to execute queued action "${action.handler}":`, error);
+      }
+    }
+  }
+
+  private getQueuedActions(): QueuedAction[] {
     const stored = localStorage.getItem('queued_actions');
-    return stored ? JSON.parse(stored) : [];
+    return stored ? (JSON.parse(stored) as QueuedAction[]) : [];
   }
 
   private showOfflineNotification(): void {
-    // Show a subtle notification that the app is offline
     const notification = document.createElement('div');
     notification.className = 'offline-notification';
     notification.textContent = 'You are currently offline. Some features may be limited.';
-    notification.style.cssText = `
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      background: #f59e0b;
-      color: white;
-      padding: 8px 16px;
-      text-align: center;
-      font-size: 14px;
-      z-index: 9999;
-    `;
-    
+    notification.style.cssText = [
+      'position: fixed',
+      'top: 0',
+      'left: 0',
+      'right: 0',
+      'background: #f59e0b',
+      'color: white',
+      'padding: 8px 16px',
+      'text-align: center',
+      'font-size: 14px',
+      'z-index: 9999',
+    ].join(';');
+
     document.body.appendChild(notification);
-    
-    // Remove notification when back online
-    const removeNotification = () => {
-      if (notification.parentNode) {
-        notification.parentNode.removeChild(notification);
-      }
-    };
-    
-    const unsubscribe = this.onStatusChange((isOnline) => {
-      if (isOnline) {
-        removeNotification();
+
+    const unsubscribe = this.onStatusChange((online) => {
+      if (online) {
+        notification.remove();
         unsubscribe();
       }
     });
   }
 }
 
-/**
- * PWA Capabilities Detector
- */
+// ---------------------------------------------------------------------------
+// PWA Capabilities Detector
+// ---------------------------------------------------------------------------
+
 export class PWACapabilitiesDetector {
-  /**
-   * Detect PWA capabilities
-   */
+  /** Detect PWA capabilities */
   static detectCapabilities(): PWACapabilities {
     return {
       isInstallable: PWAInstallManager.getInstance().canInstall(),
@@ -699,8 +665,10 @@ export class PWACapabilitiesDetector {
   }
 
   private static isInstalled(): boolean {
-    return window.matchMedia('(display-mode: standalone)').matches ||
-           (window.navigator as any).standalone === true;
+    return (
+      window.matchMedia('(display-mode: standalone)').matches ||
+      (window.navigator as { standalone?: boolean }).standalone === true
+    );
   }
 
   private static isStandalone(): boolean {
@@ -708,11 +676,15 @@ export class PWACapabilitiesDetector {
   }
 
   private static supportsBackgroundSync(): boolean {
-    return 'serviceWorker' in navigator && 'sync' in window.ServiceWorkerRegistration.prototype;
+    return (
+      'serviceWorker' in navigator && 'sync' in window.ServiceWorkerRegistration.prototype
+    );
   }
 
   private static supportsPushNotifications(): boolean {
-    return 'serviceWorker' in navigator && 'PushManager' in window && 'Notification' in window;
+    return (
+      'serviceWorker' in navigator && 'PushManager' in window && 'Notification' in window
+    );
   }
 
   private static supportsWebShare(): boolean {
@@ -724,55 +696,48 @@ export class PWACapabilitiesDetector {
   }
 }
 
-/**
- * Main PWA Enhancement Manager
- */
+// ---------------------------------------------------------------------------
+// Main PWA Enhancement Manager
+// ---------------------------------------------------------------------------
+
 export class PWAEnhancementManager {
   private static initialized = false;
 
-  /**
-   * Initialize all PWA enhancements
-   */
+  /** Initialize all PWA enhancements (idempotent) */
   static async initialize(vapidPublicKey?: string): Promise<void> {
-    if (this.initialized) return;
+    if (this.initialized) {
+      return;
+    }
 
-    // Initialize managers
     PWAInstallManager.getInstance();
     BackgroundSyncManager.getInstance().registerCommonTasks();
-    
+
     if (vapidPublicKey) {
       PushNotificationManager.getInstance(vapidPublicKey);
     }
-    
+
     OfflineManager.getInstance();
     AppShortcutsManager.registerShortcuts();
 
-    // Add PWA-specific CSS classes
-    const capabilities = PWACapabilitiesDetector.detectCapabilities();
-    this.addPWAClasses(capabilities);
-
+    this.addPWAClasses(PWACapabilitiesDetector.detectCapabilities());
     this.initialized = true;
   }
 
   private static addPWAClasses(capabilities: PWACapabilities): void {
-    const classes = [];
-    
+    const classes: string[] = [];
+
     if (capabilities.isInstalled) classes.push('pwa-installed');
     if (capabilities.isStandalone) classes.push('pwa-standalone');
     if (capabilities.supportsBackgroundSync) classes.push('supports-background-sync');
     if (capabilities.supportsPushNotifications) classes.push('supports-push-notifications');
     if (capabilities.supportsWebShare) classes.push('supports-web-share');
     if (capabilities.supportsFileSystemAccess) classes.push('supports-file-system-access');
-    
+
     document.documentElement.classList.add(...classes);
   }
 
-  /**
-   * Get PWA capabilities
-   */
+  /** Get current PWA capabilities */
   static getCapabilities(): PWACapabilities {
     return PWACapabilitiesDetector.detectCapabilities();
   }
 }
-
-// Classes are already exported individually above
