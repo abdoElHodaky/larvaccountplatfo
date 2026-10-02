@@ -1,16 +1,17 @@
 /**
  * Service Worker Registration and Management
- * PWA features, offline support, and caching strategies
+ * PWA features, offline support, and caching strategies.
  */
 
-// Check if service workers are supported
-const isLocalhost = Boolean(
-  window.location.hostname === 'localhost' ||
-  window.location.hostname === '[::1]' ||
-  window.location.hostname.match(
-    /^127(?:\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)){3}$/
-  )
-);
+// ---------------------------------------------------------------------------
+// Types & environment helpers
+// ---------------------------------------------------------------------------
+
+/**
+ * `process.env.PUBLIC_URL` is a CRA convention; in Vite/plain browser builds
+ * `process` does not exist, so it is declared optional and read defensively.
+ */
+declare const process: { env: { PUBLIC_URL?: string } } | undefined;
 
 type Config = {
   onSuccess?: (registration: ServiceWorkerRegistration) => void;
@@ -19,31 +20,62 @@ type Config = {
   onOnline?: () => void;
 };
 
-// Register service worker
-export function register(config?: Config) {
-  if ('serviceWorker' in navigator) {
-    const publicUrl = new URL(process.env.PUBLIC_URL || '', window.location.href);
-    if (publicUrl.origin !== window.location.origin) {
-      return;
-    }
+interface BeforeInstallPromptEvent extends Event {
+  prompt(): Promise<void>;
+  userChoice: Promise<{ outcome: 'accepted' | 'dismissed' }>;
+}
 
-    window.addEventListener('load', () => {
-      const swUrl = `${process.env.PUBLIC_URL}/sw.js`;
+interface SyncCapableRegistration extends ServiceWorkerRegistration {
+  sync?: { register(tag: string): Promise<void> };
+}
 
-      if (isLocalhost) {
-        checkValidServiceWorker(swUrl, config);
-        navigator.serviceWorker.ready.then(() => {
-          console.log(
-            'This web app is being served cache-first by a service worker.'
-          );
-        });
-      } else {
-        registerValidSW(swUrl, config);
-      }
-    });
+interface PendingRequest {
+  url: string;
+  method: string;
+  body?: unknown;
+  headers?: Record<string, string>;
+  timestamp: number;
+}
+
+const isLocalhost = Boolean(
+  window.location.hostname === 'localhost' ||
+    window.location.hostname === '[::1]' ||
+    window.location.hostname.match(/^127(?:\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)){3}$/)
+);
+
+function getPublicUrl(): string {
+  return typeof process !== 'undefined' ? (process.env.PUBLIC_URL ?? '') : '';
+}
+
+// ---------------------------------------------------------------------------
+// Registration
+// ---------------------------------------------------------------------------
+
+/** Register the service worker and wire lifecycle callbacks */
+export function register(config?: Config): void {
+  if (!('serviceWorker' in navigator)) {
+    return;
   }
 
-  // Listen for online/offline events
+  const publicUrl = new URL(getPublicUrl(), window.location.href);
+  if (publicUrl.origin !== window.location.origin) {
+    // Service worker cannot be served from a different origin.
+    return;
+  }
+
+  window.addEventListener('load', () => {
+    const swUrl = `${getPublicUrl()}/sw.js`;
+
+    if (isLocalhost) {
+      checkValidServiceWorker(swUrl, config);
+      void navigator.serviceWorker.ready.then(() => {
+        console.log('This web app is being served cache-first by a service worker.');
+      });
+    } else {
+      void registerValidSW(swUrl, config);
+    }
+  });
+
   window.addEventListener('online', () => {
     console.log('App is online');
     config?.onOnline?.();
@@ -55,118 +87,128 @@ export function register(config?: Config) {
   });
 }
 
-function registerValidSW(swUrl: string, config?: Config) {
-  navigator.serviceWorker
-    .register(swUrl)
-    .then((registration) => {
-      registration.onupdatefound = () => {
-        const installingWorker = registration.installing;
-        if (installingWorker == null) {
+async function registerValidSW(swUrl: string, config?: Config): Promise<void> {
+  try {
+    const registration = await navigator.serviceWorker.register(swUrl);
+
+    registration.onupdatefound = () => {
+      const installingWorker = registration.installing;
+      if (installingWorker == null) {
+        return;
+      }
+
+      installingWorker.onstatechange = () => {
+        if (installingWorker.state !== 'installed') {
           return;
         }
-        installingWorker.onstatechange = () => {
-          if (installingWorker.state === 'installed') {
-            if (navigator.serviceWorker.controller) {
-              console.log(
-                'New content is available and will be used when all tabs for this page are closed.'
-              );
-              config?.onUpdate?.(registration);
-            } else {
-              console.log('Content is cached for offline use.');
-              config?.onSuccess?.(registration);
-            }
-          }
-        };
+
+        if (navigator.serviceWorker.controller) {
+          console.log(
+            'New content is available and will be used when all tabs for this page are closed.'
+          );
+          config?.onUpdate?.(registration);
+        } else {
+          console.log('Content is cached for offline use.');
+          config?.onSuccess?.(registration);
+        }
       };
+    };
+  } catch (error) {
+    console.error('Error during service worker registration:', error);
+  }
+}
+
+async function checkValidServiceWorker(swUrl: string, config?: Config): Promise<void> {
+  try {
+    const response = await fetch(swUrl, {
+      headers: { 'Service-Worker': 'script' },
+    });
+    const contentType = response.headers.get('content-type');
+
+    if (
+      response.status === 404 ||
+      (contentType != null && !contentType.includes('javascript'))
+    ) {
+      // Stale/invalid worker from a previous deploy — drop it and reload.
+      const registration = await navigator.serviceWorker.ready;
+      await registration.unregister();
+      window.location.reload();
+    } else {
+      await registerValidSW(swUrl, config);
+    }
+  } catch {
+    console.log('No internet connection found. App is running in offline mode.');
+  }
+}
+
+/** Unregister the active service worker */
+export function unregister(): void {
+  if (!('serviceWorker' in navigator)) {
+    return;
+  }
+
+  void navigator.serviceWorker.ready
+    .then((registration) => registration.unregister())
+    .catch((error: unknown) => console.error('Service worker unregister failed:', error));
+}
+
+/** Check for a newer service worker version */
+export function updateServiceWorker(): void {
+  if (!('serviceWorker' in navigator)) {
+    return;
+  }
+
+  void navigator.serviceWorker.ready
+    .then((registration) => registration.update())
+    .catch((error: unknown) => console.error('Service worker update failed:', error));
+}
+
+/** Tell a waiting service worker to activate immediately */
+export function skipWaiting(): void {
+  if (!('serviceWorker' in navigator)) {
+    return;
+  }
+
+  void navigator.serviceWorker.ready
+    .then((registration) => {
+      registration.waiting?.postMessage({ type: 'SKIP_WAITING' });
     })
-    .catch((error) => {
-      console.error('Error during service worker registration:', error);
-    });
+    .catch((error: unknown) => console.error('Skip-waiting message failed:', error));
 }
 
-function checkValidServiceWorker(swUrl: string, config?: Config) {
-  fetch(swUrl, {
-    headers: { 'Service-Worker': 'script' },
-  })
-    .then((response) => {
-      const contentType = response.headers.get('content-type');
-      if (
-        response.status === 404 ||
-        (contentType != null && contentType.indexOf('javascript') === -1)
-      ) {
-        navigator.serviceWorker.ready.then((registration) => {
-          registration.unregister().then(() => {
-            window.location.reload();
-          });
-        });
-      } else {
-        registerValidSW(swUrl, config);
-      }
-    })
-    .catch(() => {
-      console.log('No internet connection found. App is running in offline mode.');
-    });
-}
+// ---------------------------------------------------------------------------
+// Standalone / installability checks
+// ---------------------------------------------------------------------------
 
-// Unregister service worker
-export function unregister() {
-  if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.ready
-      .then((registration) => {
-        registration.unregister();
-      })
-      .catch((error) => {
-        console.error(error.message);
-      });
-  }
-}
-
-// Update service worker
-export function updateServiceWorker() {
-  if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.ready.then((registration) => {
-      registration.update();
-    });
-  }
-}
-
-// Skip waiting and activate new service worker
-export function skipWaiting() {
-  if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.ready.then((registration) => {
-      if (registration.waiting) {
-        registration.waiting.postMessage({ type: 'SKIP_WAITING' });
-      }
-    });
-  }
-}
-
-// Check if app is running in standalone mode (PWA)
+/** Check if the app is running in standalone mode (installed PWA) */
 export function isStandalone(): boolean {
   return (
     window.matchMedia('(display-mode: standalone)').matches ||
-    (window.navigator as any).standalone === true
+    (window.navigator as { standalone?: boolean }).standalone === true
   );
 }
 
-// Check if app can be installed (PWA)
+/** Check if the browser fires beforeinstallprompt (i.e. supports install prompts) */
 export function canInstall(): boolean {
   return 'beforeinstallprompt' in window;
 }
 
+// ---------------------------------------------------------------------------
 // PWA Install Manager
-class PWAInstallManager {
-  private deferredPrompt: any = null;
+// ---------------------------------------------------------------------------
+
+export class PWAInstallManager {
+  private deferredPrompt: BeforeInstallPromptEvent | null = null;
   private installCallbacks: Array<(canInstall: boolean) => void> = [];
 
   constructor() {
     this.setupInstallPrompt();
   }
 
-  private setupInstallPrompt() {
+  private setupInstallPrompt(): void {
     window.addEventListener('beforeinstallprompt', (e) => {
       e.preventDefault();
-      this.deferredPrompt = e;
+      this.deferredPrompt = e as BeforeInstallPromptEvent;
       this.notifyCallbacks(true);
     });
 
@@ -177,149 +219,161 @@ class PWAInstallManager {
     });
   }
 
-  private notifyCallbacks(canInstall: boolean) {
-    this.installCallbacks.forEach(callback => callback(canInstall));
-  }
-
-  public onInstallAvailable(callback: (canInstall: boolean) => void) {
-    this.installCallbacks.push(callback);
-    // Immediately call with current state
-    callback(this.deferredPrompt !== null);
-  }
-
-  public async promptInstall(): Promise<boolean> {
-    if (!this.deferredPrompt) {
-      return false;
-    }
-
-    this.deferredPrompt.prompt();
-    const { outcome } = await this.deferredPrompt.userChoice;
-    
-    if (outcome === 'accepted') {
-      console.log('User accepted the install prompt');
-      this.deferredPrompt = null;
-      return true;
-    } else {
-      console.log('User dismissed the install prompt');
-      return false;
-    }
-  }
-
   public canInstall(): boolean {
     return this.deferredPrompt !== null;
+  }
+
+  /** Subscribe to install-availability changes; returns an unsubscribe function */
+  public onInstallAvailable(callback: (canInstall: boolean) => void): () => void {
+    this.installCallbacks.push(callback);
+    callback(this.canInstall());
+
+    return () => {
+      const index = this.installCallbacks.indexOf(callback);
+      if (index > -1) {
+        this.installCallbacks.splice(index, 1);
+      }
+    };
+  }
+
+  /** Show the native install prompt; resolves to true when accepted */
+  public async promptInstall(): Promise<boolean> {
+    const prompt = this.deferredPrompt;
+    if (!prompt) {
+      return false;
+    }
+
+    try {
+      await prompt.prompt();
+      const { outcome } = await prompt.userChoice;
+      console.log(
+        outcome === 'accepted'
+          ? 'User accepted the install prompt'
+          : 'User dismissed the install prompt'
+      );
+      return outcome === 'accepted';
+    } finally {
+      // The native prompt is single-use regardless of the outcome.
+      this.deferredPrompt = null;
+      this.notifyCallbacks(false);
+    }
+  }
+
+  private notifyCallbacks(canInstall: boolean): void {
+    this.installCallbacks.forEach((callback) => callback(canInstall));
   }
 }
 
 export const pwaInstallManager = new PWAInstallManager();
 
+// ---------------------------------------------------------------------------
 // Cache Management
+// ---------------------------------------------------------------------------
+
 export class CacheManager {
   private static readonly CACHE_NAMES = {
     STATIC: 'accounting-app-static-v1',
     DYNAMIC: 'accounting-app-dynamic-v1',
     API: 'accounting-app-api-v1',
-  };
+  } as const;
 
-  static async clearOldCaches() {
+  /** Delete any caches not in the current version set (call from sw activate) */
+  static async clearOldCaches(): Promise<void> {
     const cacheNames = await caches.keys();
     const currentCaches = Object.values(this.CACHE_NAMES);
-    
-    const deletePromises = cacheNames
-      .filter(cacheName => !currentCaches.includes(cacheName))
-      .map(cacheName => caches.delete(cacheName));
-    
-    await Promise.all(deletePromises);
+
+    await Promise.all(
+      cacheNames
+        .filter((cacheName) => !currentCaches.includes(cacheName))
+        .map((cacheName) => caches.delete(cacheName))
+    );
   }
 
-  static async getCacheSize(): Promise<{ [key: string]: number }> {
-    const sizes: { [key: string]: number } = {};
-    
+  /** Approximate per-cache storage usage in bytes */
+  static async getCacheSize(): Promise<Record<string, number>> {
+    const sizes: Record<string, number> = {};
+
     for (const [name, cacheName] of Object.entries(this.CACHE_NAMES)) {
       try {
         const cache = await caches.open(cacheName);
         const requests = await cache.keys();
         let totalSize = 0;
-        
+
         for (const request of requests) {
           const response = await cache.match(request);
           if (response) {
-            const blob = await response.blob();
-            totalSize += blob.size;
+            totalSize += (await response.blob()).size;
           }
         }
-        
+
         sizes[name] = totalSize;
       } catch (error) {
         console.error(`Error calculating cache size for ${name}:`, error);
         sizes[name] = 0;
       }
     }
-    
+
     return sizes;
   }
 
-  static async clearCache(cacheName?: string) {
+  /** Clear one named cache, or every cache when no name is given */
+  static async clearCache(cacheName?: string): Promise<void> {
     if (cacheName) {
       await caches.delete(cacheName);
-    } else {
-      const cacheNames = await caches.keys();
-      await Promise.all(cacheNames.map(name => caches.delete(name)));
+      return;
     }
+
+    const cacheNames = await caches.keys();
+    await Promise.all(cacheNames.map((name) => caches.delete(name)));
   }
 }
 
+// ---------------------------------------------------------------------------
 // Background Sync Manager
+// ---------------------------------------------------------------------------
+
 export class BackgroundSyncManager {
   private static readonly SYNC_TAG = 'accounting-background-sync';
-  private pendingRequests: Array<{
-    url: string;
-    method: string;
-    body?: any;
-    headers?: any;
-    timestamp: number;
-  }> = [];
+  private static readonly STORAGE_KEY = 'pendingRequests';
+  private pendingRequests: PendingRequest[] = [];
 
   constructor() {
     this.loadPendingRequests();
   }
 
-  private loadPendingRequests() {
-    const stored = localStorage.getItem('pendingRequests');
-    if (stored) {
-      try {
-        this.pendingRequests = JSON.parse(stored);
-      } catch (error) {
-        console.error('Error loading pending requests:', error);
-        this.pendingRequests = [];
-      }
-    }
-  }
-
-  private savePendingRequests() {
-    localStorage.setItem('pendingRequests', JSON.stringify(this.pendingRequests));
-  }
-
-  public addRequest(url: string, method: string, body?: any, headers?: any) {
-    this.pendingRequests.push({
-      url,
-      method,
-      body,
-      headers,
-      timestamp: Date.now(),
-    });
+  /** Queue a request for replay when connectivity returns */
+  public addRequest(
+    url: string,
+    method: string,
+    body?: unknown,
+    headers?: Record<string, string>
+  ): void {
+    this.pendingRequests.push({ url, method, body, headers, timestamp: Date.now() });
     this.savePendingRequests();
 
-    // Register background sync if supported
-    if ('serviceWorker' in navigator && 'sync' in window.ServiceWorkerRegistration.prototype) {
-      navigator.serviceWorker.ready.then((registration) => {
-        return registration.sync.register(BackgroundSyncManager.SYNC_TAG);
-      });
+    const syncSupported =
+      'serviceWorker' in navigator &&
+      'sync' in window.ServiceWorkerRegistration.prototype;
+
+    if (syncSupported) {
+      void navigator.serviceWorker.ready
+        .then((registration) =>
+          (registration as SyncCapableRegistration).sync?.register(
+            BackgroundSyncManager.SYNC_TAG
+          )
+        )
+        .catch((error: unknown) =>
+          console.error('Background sync registration failed:', error)
+        );
     } else {
-      // Fallback: try to sync immediately
-      this.syncPendingRequests();
+      // Fallback: try to flush the queue immediately.
+      void this.syncPendingRequests().catch((error: unknown) =>
+        console.error('Immediate sync failed:', error)
+      );
     }
   }
 
+  /** Replay queued requests; failures stay queued for the next attempt */
   public async syncPendingRequests(): Promise<void> {
     const requests = [...this.pendingRequests];
     this.pendingRequests = [];
@@ -329,7 +383,7 @@ export class BackgroundSyncManager {
       try {
         const response = await fetch(request.url, {
           method: request.method,
-          body: request.body ? JSON.stringify(request.body) : undefined,
+          body: request.body != null ? JSON.stringify(request.body) : undefined,
           headers: {
             'Content-Type': 'application/json',
             ...request.headers,
@@ -337,12 +391,10 @@ export class BackgroundSyncManager {
         });
 
         if (!response.ok) {
-          // Re-add failed request
           this.pendingRequests.push(request);
         }
       } catch (error) {
         console.error('Error syncing request:', error);
-        // Re-add failed request
         this.pendingRequests.push(request);
       }
     }
@@ -354,15 +406,39 @@ export class BackgroundSyncManager {
     return this.pendingRequests.length;
   }
 
-  public clearPendingRequests() {
+  public clearPendingRequests(): void {
     this.pendingRequests = [];
     this.savePendingRequests();
+  }
+
+  private loadPendingRequests(): void {
+    const stored = localStorage.getItem(BackgroundSyncManager.STORAGE_KEY);
+    if (!stored) {
+      return;
+    }
+
+    try {
+      this.pendingRequests = JSON.parse(stored) as PendingRequest[];
+    } catch (error) {
+      console.error('Error loading pending requests:', error);
+      this.pendingRequests = [];
+    }
+  }
+
+  private savePendingRequests(): void {
+    localStorage.setItem(
+      BackgroundSyncManager.STORAGE_KEY,
+      JSON.stringify(this.pendingRequests)
+    );
   }
 }
 
 export const backgroundSyncManager = new BackgroundSyncManager();
 
+// ---------------------------------------------------------------------------
 // Network Status Manager
+// ---------------------------------------------------------------------------
+
 export class NetworkStatusManager {
   private isOnline: boolean = navigator.onLine;
   private callbacks: Array<(isOnline: boolean) => void> = [];
@@ -371,8 +447,10 @@ export class NetworkStatusManager {
     window.addEventListener('online', () => {
       this.isOnline = true;
       this.notifyCallbacks();
-      // Trigger background sync when coming online
-      backgroundSyncManager.syncPendingRequests();
+      // Flush the offline queue when connectivity returns.
+      void backgroundSyncManager.syncPendingRequests().catch((error: unknown) =>
+        console.error('Background sync on reconnect failed:', error)
+      );
     });
 
     window.addEventListener('offline', () => {
@@ -381,30 +459,46 @@ export class NetworkStatusManager {
     });
   }
 
-  private notifyCallbacks() {
-    this.callbacks.forEach(callback => callback(this.isOnline));
-  }
-
-  public onStatusChange(callback: (isOnline: boolean) => void) {
+  /** Subscribe to connectivity changes; returns an unsubscribe function */
+  public onStatusChange(callback: (isOnline: boolean) => void): () => void {
     this.callbacks.push(callback);
-    // Immediately call with current status
     callback(this.isOnline);
+
+    return () => {
+      const index = this.callbacks.indexOf(callback);
+      if (index > -1) {
+        this.callbacks.splice(index, 1);
+      }
+    };
   }
 
   public getStatus(): boolean {
     return this.isOnline;
   }
+
+  private notifyCallbacks(): void {
+    this.callbacks.forEach((callback) => callback(this.isOnline));
+  }
 }
 
 export const networkStatusManager = new NetworkStatusManager();
 
+// ---------------------------------------------------------------------------
 // Push Notification Manager
+// ---------------------------------------------------------------------------
+
 export class PushNotificationManager {
   private registration: ServiceWorkerRegistration | null = null;
 
-  public async initialize() {
-    if ('serviceWorker' in navigator) {
+  public async initialize(): Promise<void> {
+    if (!('serviceWorker' in navigator)) {
+      return;
+    }
+
+    try {
       this.registration = await navigator.serviceWorker.ready;
+    } catch (error) {
+      console.error('Service worker registration not available:', error);
     }
   }
 
@@ -413,10 +507,10 @@ export class PushNotificationManager {
       throw new Error('This browser does not support notifications');
     }
 
-    return await Notification.requestPermission();
+    return Notification.requestPermission();
   }
 
-  public async subscribe(vapidPublicKey: string): Promise<PushSubscription | null> {
+  public async subscribe(vapidPublicKey: string): Promise<PushSubscription> {
     if (!this.registration) {
       await this.initialize();
     }
@@ -425,12 +519,10 @@ export class PushNotificationManager {
       throw new Error('Service worker not available');
     }
 
-    const subscription = await this.registration.pushManager.subscribe({
+    return this.registration.pushManager.subscribe({
       userVisibleOnly: true,
       applicationServerKey: this.urlBase64ToUint8Array(vapidPublicKey),
     });
-
-    return subscription;
   }
 
   public async unsubscribe(): Promise<boolean> {
@@ -439,19 +531,12 @@ export class PushNotificationManager {
     }
 
     const subscription = await this.registration.pushManager.getSubscription();
-    if (subscription) {
-      return await subscription.unsubscribe();
-    }
-
-    return false;
+    return subscription ? subscription.unsubscribe() : false;
   }
 
   private urlBase64ToUint8Array(base64String: string): Uint8Array {
-    const padding = '='.repeat((4 - base64String.length % 4) % 4);
-    const base64 = (base64String + padding)
-      .replace(/-/g, '+')
-      .replace(/_/g, '/');
-
+    const padding = '='.repeat((4 - (base64String.length % 4)) % 4);
+    const base64 = (base64String + padding).replace(/-/g, '+').replace(/_/g, '/');
     const rawData = window.atob(base64);
     const outputArray = new Uint8Array(rawData.length);
 
@@ -463,6 +548,10 @@ export class PushNotificationManager {
 }
 
 export const pushNotificationManager = new PushNotificationManager();
+
+// ---------------------------------------------------------------------------
+// Default export (convenience aggregate)
+// ---------------------------------------------------------------------------
 
 export default {
   register,
@@ -477,4 +566,3 @@ export default {
   networkStatusManager,
   pushNotificationManager,
 };
-
