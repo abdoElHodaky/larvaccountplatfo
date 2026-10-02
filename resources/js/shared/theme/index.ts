@@ -1,4 +1,5 @@
-import { extendTheme, type ThemeConfig } from '@chakra-ui/react';
+import { extendTheme } from '@chakra-ui/react';
+import type { ThemeConfig } from '@chakra-ui/theme';
 import { accountingColors } from './colors';
 import { components } from './Button';
 

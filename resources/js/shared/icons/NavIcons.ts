@@ -127,6 +127,19 @@ export const ErrorIcon = StatusErrorIcon;
 // Live icon aliases for LiveIcons integration
 export const LiveChevronDownIcon = NavChevronDownIcon;
 
+// Backward compatibility for Live* icons
+export const LiveCheckIcon = StatusSuccessIcon;
+export const LiveXMarkIcon = StatusErrorIcon;
+export const LiveExclamationIcon = StatusWarningIcon;
+export const LiveInfoIcon = StatusInfoIcon;
+export const LiveSuccessIcon = StatusSuccessIcon;
+export const LiveErrorIcon = StatusErrorIcon;
+export const LiveWarningIcon = StatusWarningIcon;
+export const LiveEditIcon = ActionEditIcon;
+export const LiveDeleteIcon = ActionDeleteIcon;
+export const LiveCopyIcon = ActionCopyIcon;
+export const LiveShareIcon = ActionShareIcon;
+
 // Dynamic icon component export
 export { DynamicIcon };
 

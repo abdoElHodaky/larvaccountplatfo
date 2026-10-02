@@ -9,6 +9,12 @@ import { iconRegistry } from './IconRegistry';
 import type { IconProps } from './ICONSIZES';
 import { ICON_SIZES, ICON_COLORS, ICON_ANIMATIONS } from './ICONSIZES';
 
+// Re-export iconRegistry for external use
+export { iconRegistry };
+
+// Re-export IconProps as LiveIconProps for compatibility
+export type LiveIconProps = IconProps;
+
 // Enhanced LiveIcon component with parallel processing
 export const createLiveIcon = (
   iconName: string,
@@ -163,27 +169,27 @@ export const createLiveIcon = (
 };
 
 // Dynamic icon component for runtime icon selection
-export const DynamicIcon: React.FC<IconProps & { name: string }> = ({ name, ...props }) => {
+export const DynamicIcon = React.forwardRef<SVGSVGElement, IconProps & { name: string }>(({ name, ...props }, ref) => {
   const IconComponent = React.useMemo(() => createLiveIcon(name), [name]);
-  
+
   const fallbackClasses = [
-    ICON_SIZES[props.size || 'md'], 
-    ICON_COLORS[props.color || 'gray'], 
-    'animate-pulse', 
-    'bg-current', 
-    'opacity-20', 
+    ICON_SIZES[props.size || 'md'],
+    ICON_COLORS[props.color || 'gray'],
+    'animate-pulse',
+    'bg-current',
+    'opacity-20',
     'rounded'
   ].join(' ');
-  
+
   const fallbackElement = React.createElement('div', {
     className: fallbackClasses,
     style: { aspectRatio: '1' }
   });
-  
+
   return React.createElement(Suspense, {
     fallback: fallbackElement
-  }, React.createElement(IconComponent, props));
-};
+  }, React.createElement(IconComponent, { ...props, ref }));
+});
 
 // Batch icon preloader for performance optimization
 export const preloadIcons = async (iconNames: string[]): Promise<void> => {

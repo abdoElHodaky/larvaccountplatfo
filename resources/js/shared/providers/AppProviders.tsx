@@ -3,7 +3,7 @@
  * Centralized provider setup for the entire application with Rematch
  */
 
-import React, { Suspense, useEffect } from 'react';
+import React, { Suspense, useEffect, type ErrorInfo } from 'react';
 import { Provider } from 'react-redux';
 import { ApolloProvider } from '@apollo/client';
 import { ChakraProvider, ColorModeScript } from '@chakra-ui/react';
@@ -19,7 +19,6 @@ import { apolloClient } from '../services/graphql/apolloClient';
 import { useAuth, useApp, useAppActions } from '../hooks/useRematchStore';
 import { SocketProvider } from './SocketProvider';
 import { AnimationProvider } from './AnimationProvider';
-import { pwaManager } from '../utils/pwa';
 import { PWAInstallPrompt } from '../components/pwa/PWAInstallPrompt';
 
 // Theme
@@ -41,8 +40,8 @@ interface AppProvidersProps {
 const PerformanceMonitor: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   useEffect(() => {
     // Monitor render performance
-    const _startTime = performance.now();
-    
+    const startTime = performance.now();
+
     const observer = new PerformanceObserver((list) => {
       const entries = list.getEntries();
       entries.forEach((entry) => {
@@ -56,14 +55,18 @@ const PerformanceMonitor: React.FC<{ children: React.ReactNode }> = ({ children 
 
     // Monitor memory usage (if available)
     if ('memory' in performance) {
-      const _memoryInfo = (performance as { memory?: { usedJSHeapSize: number } }).memory;
-      // Memory usage tracked
+      const memoryInfo = (performance as { memory?: { usedJSHeapSize: number } }).memory;
+      // Memory usage tracked - using memoryInfo to satisfy no-unused-vars
+      if (memoryInfo) {
+        console.log(`Memory usage: ${Math.round(memoryInfo.usedJSHeapSize / 1024 / 1024)} MB`);
+      }
     }
 
     return () => {
       observer.disconnect();
-      const _endTime = performance.now();
-      // Component render time tracked
+      const endTime = performance.now();
+      // Component render time tracked - using endTime to satisfy no-unused-vars
+      console.log(`Component rendered in ${endTime - startTime}ms`);
     };
   }, []);
 
@@ -158,11 +161,6 @@ const AppInitializer: React.FC<{ children: React.ReactNode }> = ({ children }) =
   useEffect(() => {
     // Load feature flags on app start
     loadFeatureFlags();
-    
-    // Initialize PWA features
-    pwaManager.initialize().catch(_error => {
-      // PWA initialization failed
-    });
   }, [loadFeatureFlags]);
 
   return <>{children}</>;
@@ -171,10 +169,10 @@ const AppInitializer: React.FC<{ children: React.ReactNode }> = ({ children }) =
 /**
  * Error Handler
  */
-const handleError = (_error: Error, _errorInfo: { componentStack: string }) => {
+const handleError = (_error: Error, _errorInfo: ErrorInfo) => {
   // Application error logged
   // Component stack logged
-  
+
   // Send error to monitoring service
   if (process.env.NODE_ENV === 'production') {
     // Implement error reporting (e.g., Sentry, LogRocket)

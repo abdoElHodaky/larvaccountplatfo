@@ -7,7 +7,6 @@
 
 import { init } from '@rematch/core';
 import type { RematchDispatch, RematchRootState } from '@rematch/core';
-import { PATTERNS } from '@/shared/types/PATTERNS';
 import persistPlugin from '@rematch/persist';
 import loadingPlugin, { ExtraModelsFromLoading } from '@rematch/loading';
 import { appModel, type AppModel } from './models/appModel';

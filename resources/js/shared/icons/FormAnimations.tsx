@@ -19,8 +19,43 @@ import {
   UserIcon,
   EnvelopeIcon
 } from '@heroicons/react/24/outline';
-import { createLiveIcon } from './CreateLiveIcon';
+import { createLiveIcon, DynamicIcon } from './CreateLiveIcon';
 import type { IconProps } from './ICONSIZES';
+import { ICON_ANIMATIONS } from './ICONSIZES';
+
+// Icon components
+const iconComponents = {
+  CheckIcon,
+  XMarkIcon,
+  ExclamationTriangleIcon,
+  InformationCircleIcon,
+  EyeIcon,
+  EyeSlashIcon,
+  MagnifyingGlassIcon,
+  PlusIcon,
+  MinusIcon,
+  CalendarIcon,
+  ClockIcon,
+  UserIcon,
+  EnvelopeIcon
+};
+
+// Mapping from icon component to registry key
+const iconMap: Record<keyof typeof iconComponents, string> = {
+  CheckIcon: 'status-success',
+  XMarkIcon: 'nav-close',
+  ExclamationTriangleIcon: 'status-warning',
+  InformationCircleIcon: 'status-info',
+  EyeIcon: 'action-view',
+  EyeSlashIcon: 'action-eye-slash',
+  MagnifyingGlassIcon: 'form-search',
+  PlusIcon: 'action-add',
+  MinusIcon: 'action-minus',
+  CalendarIcon: 'form-calendar',
+  ClockIcon: 'form-clock',
+  UserIcon: 'form-user',
+  EnvelopeIcon: 'form-email'
+};
 
 // Form-specific animations
 export const formAnimations = {
@@ -43,21 +78,21 @@ export const formAnimations = {
   toggle: [
     { transform: 'rotateY(0deg)' },
     { transform: 'rotateY(180deg)' }
-  ]
-} as const;
+  ] as Keyframe[]
+};
 
-// Basic form icons
-export const LiveCheckIcon = createLiveIcon(CheckIcon, 'success');
-export const LiveXMarkIcon = createLiveIcon(XMarkIcon, 'error');
-export const LiveExclamationIcon = createLiveIcon(ExclamationTriangleIcon, 'shake');
-export const LiveInfoIcon = createLiveIcon(InformationCircleIcon, 'pulse');
-export const LiveSearchIcon = createLiveIcon(MagnifyingGlassIcon, 'pulse');
-export const LivePlusIcon = createLiveIcon(PlusIcon, 'bounce');
-export const LiveMinusIcon = createLiveIcon(MinusIcon, 'bounce');
-export const LiveCalendarIcon = createLiveIcon(CalendarIcon, 'pulse');
-export const LiveClockIcon = createLiveIcon(ClockIcon, 'pulse');
-export const LiveUserIcon = createLiveIcon(UserIcon, 'pulse');
-export const LiveMailIcon = createLiveIcon(MailIcon, 'pulse');
+// Basic form icons - using iconRegistry for dynamic loading
+export const LiveCheckIcon = createLiveIcon(iconMap.CheckIcon, 'success');
+export const LiveXMarkIcon = createLiveIcon(iconMap.XMarkIcon, 'error');
+export const LiveExclamationIcon = createLiveIcon(iconMap.ExclamationTriangleIcon, 'shake');
+export const LiveInfoIcon = createLiveIcon(iconMap.InformationCircleIcon, 'pulse');
+export const LiveSearchIcon = createLiveIcon(iconMap.MagnifyingGlassIcon, 'pulse');
+export const LivePlusIcon = createLiveIcon(iconMap.PlusIcon, 'bounce');
+export const LiveMinusIcon = createLiveIcon(iconMap.MinusIcon, 'bounce');
+export const LiveCalendarIcon = createLiveIcon(iconMap.CalendarIcon, 'pulse');
+export const LiveClockIcon = createLiveIcon(iconMap.ClockIcon, 'pulse');
+export const LiveUserIcon = createLiveIcon(iconMap.UserIcon, 'pulse');
+export const LiveMailIcon = createLiveIcon(iconMap.EnvelopeIcon, 'pulse');
 
 // Validation state icon component
 export const ValidationIcon: React.FC<IconProps & {
@@ -73,7 +108,7 @@ export const ValidationIcon: React.FC<IconProps & {
   };
 
   const config = iconConfig[state];
-  
+
   if (!config.Icon) return null;
 
   return (
@@ -101,7 +136,7 @@ export const ValidationIcon: React.FC<IconProps & {
 };
 
 // Password visibility toggle
-export const PasswordToggleIcon: React.FC<LiveIconProps & {
+export const PasswordToggleIcon: React.FC<IconProps & {
   isVisible: boolean;
   onToggle: () => void;
 }> = ({ isVisible, onToggle, size = 'md', ...props }) => {
@@ -119,12 +154,10 @@ export const PasswordToggleIcon: React.FC<LiveIconProps & {
     onToggle();
   };
 
-  const IconComponent = isVisible ? EyeSlashIcon : EyeIcon;
-  const LiveIcon = createLiveIcon(IconComponent);
-
   return (
-    <LiveIcon
+    <DynamicIcon
       ref={iconRef}
+      name={isVisible ? 'action-eye-slash' : 'action-view'}
       size={size}
       color="secondary"
       trigger="hover"
@@ -136,7 +169,7 @@ export const PasswordToggleIcon: React.FC<LiveIconProps & {
 };
 
 // Search input icon with loading state
-export const SearchInputIcon: React.FC<LiveIconProps & {
+export const SearchInputIcon: React.FC<IconProps & {
   isSearching?: boolean;
 }> = ({ isSearching = false, size = 'md', className = '', ...props }) => {
   const iconRef = React.useRef<SVGSVGElement>(null);
@@ -145,7 +178,7 @@ export const SearchInputIcon: React.FC<LiveIconProps & {
     const icon = iconRef.current;
     if (!icon || !isSearching) return;
 
-    const animation = icon.animate(iconAnimations.loading, {
+    const animation = icon.animate(ICON_ANIMATIONS.loading, {
       duration: 1000,
       easing: 'linear',
       iterations: Infinity
@@ -155,8 +188,9 @@ export const SearchInputIcon: React.FC<LiveIconProps & {
   }, [isSearching]);
 
   return (
-    <LiveSearchIcon
+    <DynamicIcon
       ref={iconRef}
+      name="magnifying-glass"
       size={size}
       color={isSearching ? 'primary' : 'secondary'}
       animated={!isSearching}
@@ -168,22 +202,20 @@ export const SearchInputIcon: React.FC<LiveIconProps & {
 };
 
 // Add/Remove button icons
-export const AddRemoveIcon: React.FC<LiveIconProps & {
+export const AddRemoveIcon: React.FC<IconProps & {
   mode: 'add' | 'remove';
   onClick: () => void;
 }> = ({ mode, onClick, size = 'sm', ...props }) => {
-  const IconComponent = mode === 'add' ? LivePlusIcon : LiveMinusIcon;
-  const color = mode === 'add' ? 'success' : 'danger';
-
   return (
     <div className={`
       inline-flex items-center justify-center rounded-full p-1
       ${mode === 'add' ? 'bg-success-50 hover:bg-success-100' : 'bg-danger-50 hover:bg-danger-100'}
       transition-colors cursor-pointer
     `}>
-      <IconComponent
+      <DynamicIcon
+        name={mode === 'add' ? 'action-add' : 'action-minus'}
         size={size}
-        color={color}
+        color={mode === 'add' ? 'success' : 'danger'}
         trigger="click"
         onClick={onClick}
         {...props}
@@ -199,8 +231,8 @@ export const FormFieldIcon: React.FC<{
     state: 'success' | 'error' | 'warning' | 'info' | 'idle';
     message?: string;
   };
-  icon?: React.ComponentType<LiveIconProps>;
-  iconProps?: LiveIconProps;
+  icon?: React.ComponentType<IconProps>;
+  iconProps?: IconProps;
 }> = ({ children, validation, icon: Icon, iconProps = {} }) => {
   return (
     <div className="relative">
@@ -232,4 +264,3 @@ export const FormCalendarIcon = LiveCalendarIcon;
 export const FormClockIcon = LiveClockIcon;
 export const FormUserIcon = LiveUserIcon;
 export const FormEmailIcon = LiveMailIcon;
-

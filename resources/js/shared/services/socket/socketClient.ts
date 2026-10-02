@@ -5,10 +5,18 @@
 
 export interface SocketConfig {
   url?: string;
+  host?: string;
   autoConnect?: boolean;
   reconnection?: boolean;
   reconnectionAttempts?: number;
   reconnectionDelay?: number;
+  transports?: string[];
+  auth?: {
+    headers?: {
+      Authorization?: string;
+      'X-Tenant-ID'?: string | undefined;
+    };
+  };
 }
 
 export interface SocketClient {

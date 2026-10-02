@@ -1,9 +1,9 @@
-import { ComponentStyleConfig } from '@chakra-ui/react';
 
 /**
  * Custom component styles for accounting application
  * Extends Chakra UI components with accounting-specific variants
  */
+import type { ComponentStyleConfig } from '@chakra-ui/theme';
 
 // Button component customization
 export const Button: ComponentStyleConfig = {
@@ -97,6 +97,7 @@ export const Button: ComponentStyleConfig = {
 
 // Card component for financial data display
 export const Card: ComponentStyleConfig = {
+  parts: ['container', 'header', 'body', 'footer'],
   baseStyle: {
     container: {
       bg: 'white',

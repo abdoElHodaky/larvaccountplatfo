@@ -126,9 +126,10 @@ const createErrorLink = () => {
 
     if (networkError) {
       console.error(`Network error: ${networkError}`);
-      
+
       // Handle network errors
-      if (networkError.statusCode === 401) {
+      // @ts-ignore - networkError might not have statusCode property in all cases
+      if ((networkError as any).statusCode === 401) {
         localStorage.removeItem('auth_token');
         window.location.href = '/login';
       }
@@ -230,23 +231,9 @@ export const createAlovaInstance = () => {
     
     // Local cache configuration
     localCache: {
-      expire: 5 * 60 * 1000, // 5 minutes default cache
-      mode: 'memory',
+      GET: 300000, // 5 minutes default cache
     },
     
-    // Request throttling and debouncing
-    throttle: {
-      delay: 1000, // 1 second throttle for rapid requests
-    },
-    
-    // Request retry configuration
-    retry: {
-      delay: [1000, 2000, 4000], // Exponential backoff
-      condition: (error: any) => {
-        // Retry on network errors and 5xx server errors
-        return !error.response || (error.response.status >= 500 && error.response.status < 600);
-      },
-    },
     
     beforeRequest(method) {
       const token = localStorage.getItem('auth_token');

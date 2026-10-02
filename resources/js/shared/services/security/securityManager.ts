@@ -3,7 +3,6 @@
  * Comprehensive security features for the Laravel Accounting Platform
  */
 
-import { performanceMonitor } from '../analytics';
 import { socketManager } from '../socket/socketManager';
 
 // Security event types

@@ -355,11 +355,14 @@ export class PerformanceAnalyticsDashboard {
     window.addEventListener('load', () => {
       setTimeout(() => {
         const navigation = performance.getEntriesByType('navigation')[0] as PerformanceNavigationTiming;
-        
+
+        // Use startTime (available on PerformanceNavigationTiming) or fall back to 0
+        const navigationStart = navigation.startTime ?? 0;
+
         this.addMetric({
           name: 'pageLoadTime',
-          value: navigation.loadEventEnd - navigation.navigationStart,
-          rating: this.getRating(navigation.loadEventEnd - navigation.navigationStart, PERFORMANCE_THRESHOLDS.pageLoadTime),
+          value: navigation.loadEventEnd - navigationStart,
+          rating: this.getRating(navigation.loadEventEnd - navigationStart, PERFORMANCE_THRESHOLDS.pageLoadTime),
           timestamp: Date.now(),
           url: window.location.href,
         });

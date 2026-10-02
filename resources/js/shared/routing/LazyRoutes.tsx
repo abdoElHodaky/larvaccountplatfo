@@ -53,15 +53,15 @@ export const LazyRoutes: React.FC = () => {
   return (
     <Routes>
       {/* Public Routes */}
-      <Route 
-        path="/login" 
+      <Route
+        path="/login"
         element={
           <PublicRoute>
             <Suspense fallback={<RouteLoadingFallback routeName="Login" />}>
-              <LoginPage />
+              <LoginPage canResetPassword={false} />
             </Suspense>
           </PublicRoute>
-        } 
+        }
       />
       
       <Route 
@@ -76,15 +76,41 @@ export const LazyRoutes: React.FC = () => {
       />
 
       {/* Protected Routes */}
-      <Route 
-        path="/dashboard" 
+      <Route
+        path="/dashboard"
         element={
           <ProtectedRoute>
             <Suspense fallback={<RouteLoadingFallback routeName="Dashboard" />}>
-              <DashboardPage />
+              <DashboardPage
+                tenant={{
+                  id: 1,
+                  name: 'Default Tenant',
+                  subdomain: 'default',
+                  plan: 'free',
+                  enabled_modules: ['accounting', 'invoicing'],
+                  settings: {}
+                }}
+                user={{
+                  id: 1,
+                  name: 'Default User',
+                  email: 'user@example.com',
+                  role: 'admin',
+                  permissions: ['view_accounts', 'view_transactions', 'view_journal_entries']
+                }}
+                stats={{
+                  organization: {
+                    total_users: 1,
+                    enabled_modules: 2,
+                    plan: 'free',
+                    created_at: new Date().toISOString()
+                  }
+                }}
+                recentActivity={[]}
+                quickActions={[]}
+              />
             </Suspense>
           </ProtectedRoute>
-        } 
+        }
       />
 
       {/* Accounting Routes */}
@@ -158,19 +184,19 @@ export const preloadRoutes = {
 };
 
 // Preload routes based on user role/permissions
-export const preloadByUserRole = (userRole: string, permissions: string[]) => {
+export const preloadByUserRole = (_userRole: string, permissions: string[]) => {
   // Always preload dashboard for authenticated users
   preloadRoutes.dashboard();
-  
+
   // Preload accounting routes if user has accounting permissions
   if (permissions.includes('view_accounts')) {
     preloadRoutes.accounts();
   }
-  
+
   if (permissions.includes('view_transactions')) {
     preloadRoutes.transactions();
   }
-  
+
   if (permissions.includes('view_journal_entries')) {
     preloadRoutes.journalEntries();
   }

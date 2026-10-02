@@ -35,7 +35,7 @@ export type JournalEntryStatus = 'draft' | 'posted' | 'reversed' | 'closed';
 export type PaymentMethod = 'cash' | 'check' | 'credit_card' | 'bank_transfer' | 'other';
 
 // Base Account interface - replaces all scattered Account interfaces
-export interface Account extends BaseEntity, OrganizationScoped, Auditable, Hierarchical {
+export interface Account extends BaseEntity, OrganizationScoped, Auditable, Hierarchical<Account> {
   name: string;
   code: string;
   type: AccountType;
@@ -77,7 +77,7 @@ export interface ChartOfAccounts {
 
 // Account hierarchy for tree display
 export interface AccountHierarchy extends Account {
-  children: AccountHierarchy[];
+  children?: AccountHierarchy[];
   depth: number;
   hasChildren: boolean;
   isExpanded?: boolean;

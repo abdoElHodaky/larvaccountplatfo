@@ -109,8 +109,8 @@ export class PWAInstallManager {
 
   private trackInstallation(): void {
     // Track successful installation
-    if (typeof gtag !== 'undefined') {
-      gtag('event', 'pwa_installed', {
+    if (typeof window !== 'undefined' && (window as any).gtag) {
+      (window as any).gtag('event', 'pwa_installed', {
         event_category: 'PWA',
         event_label: 'installation_completed'
       });
@@ -119,8 +119,8 @@ export class PWAInstallManager {
 
   private trackInstallationAttempt(outcome: string): void {
     // Track installation attempt
-    if (typeof gtag !== 'undefined') {
-      gtag('event', 'pwa_install_prompt', {
+    if (typeof window !== 'undefined' && (window as any).gtag) {
+      (window as any).gtag('event', 'pwa_install_prompt', {
         event_category: 'PWA',
         event_label: outcome
       });
@@ -148,10 +148,10 @@ export class BackgroundSyncManager {
   async registerSync(tag: string, task: () => Promise<void>): Promise<void> {
     this.syncTasks.set(tag, task);
 
-    if ('serviceWorker' in navigator && 'sync' in window.ServiceWorkerRegistration.prototype) {
+    if ('serviceWorker' in navigator && 'sync' in (window.ServiceWorkerRegistration.prototype as any)) {
       try {
         const registration = await navigator.serviceWorker.ready;
-        await registration.sync.register(tag);
+        await (registration as any).sync.register(tag);
       } catch (error) {
         console.error('Background sync registration failed:', error);
         // Fallback: execute task immediately
@@ -340,29 +340,16 @@ export class PushNotificationManager {
       const defaultOptions: NotificationOptions = {
         icon: '/icon-192x192.png',
         badge: '/badge-72x72.png',
-        vibrate: [100, 50, 100],
         data: {
           dateOfArrival: Date.now(),
-        },
-        actions: [
-          {
-            action: 'view',
-            title: 'View',
-            icon: '/icon-view.png'
-          },
-          {
-            action: 'dismiss',
-            title: 'Dismiss',
-            icon: '/icon-dismiss.png'
-          }
-        ]
+        }
       };
 
       await registration.showNotification(title, { ...defaultOptions, ...options });
     }
   }
 
-  private urlBase64ToUint8Array(base64String: string): Uint8Array {
+  private urlBase64ToUint8Array(base64String: string): BufferSource {
     const padding = '='.repeat((4 - base64String.length % 4) % 4);
     const base64 = (base64String + padding)
       .replace(/-/g, '+')
@@ -400,8 +387,8 @@ export class PushNotificationManager {
   }
 
   private trackPermissionRequest(permission: NotificationPermission): void {
-    if (typeof gtag !== 'undefined') {
-      gtag('event', 'notification_permission', {
+    if (typeof window !== 'undefined' && (window as any).gtag) {
+      (window as any).gtag('event', 'notification_permission', {
         event_category: 'PWA',
         event_label: permission
       });

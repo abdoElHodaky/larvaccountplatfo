@@ -114,7 +114,7 @@ export const LazyLoadErrorFallback: React.FC<{ error: Error; retry: () => void }
 export function createLazyComponent<T extends ComponentType<any>>(
   importFn: () => Promise<{ default: T }>,
   options: LazyLoadOptions = {}
-): LazyExoticComponent<T> {
+) {
   const {
     fallback = LoadingSkeleton,
     errorFallback = LazyLoadErrorFallback,
@@ -125,7 +125,7 @@ export function createLazyComponent<T extends ComponentType<any>>(
   // Create the lazy component
   const LazyComponent = React.lazy(() => {
     const importPromise = importFn();
-    
+
     // Add timeout handling
     const timeoutPromise = new Promise<never>((_, reject) => {
       setTimeout(() => {
@@ -143,37 +143,32 @@ export function createLazyComponent<T extends ComponentType<any>>(
     });
   }
 
-  // Return wrapped component with error boundary
-  const WrappedComponent = React.forwardRef<any, any>((props, ref) => {
+  // Return wrapped component with error handling
+  const WrappedComponent = (props: any) => {
     const [error, setError] = React.useState<Error | null>(null);
-    const [retryKey, setRetryKey] = React.useState(0);
 
     const retry = React.useCallback(() => {
       setError(null);
-      setRetryKey(prev => prev + 1);
     }, []);
 
     if (error) {
-      const ErrorComponent = errorFallback;
-      return <ErrorComponent error={error} retry={retry} />;
+      return React.createElement(errorFallback, { error, retry });
     }
 
     return (
-      <React.ErrorBoundary
-        fallback={<errorFallback error={new Error('Component error')} retry={retry} />}
-        onError={setError}
-        key={retryKey}
-      >
+      <>
         <Suspense fallback={React.createElement(fallback)}>
-          <LazyComponent {...props} ref={ref} />
+          <LazyComponent {...props} />
         </Suspense>
-      </React.ErrorBoundary>
+      </>
     );
-  });
+  };
 
-  WrappedComponent.displayName = `LazyLoaded(${LazyComponent.displayName || 'Component'})`;
+  // Attach displayName for debugging purposes
+  // @ts-ignore - displayName is not in LazyExoticComponent type but we can add it
+  (WrappedComponent as any).displayName = `LazyLoaded(${LazyComponent.displayName || 'Component'})`;
 
-  return WrappedComponent as LazyExoticComponent<T>;
+  return WrappedComponent as unknown as LazyExoticComponent<T>;
 }
 
 /**

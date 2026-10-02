@@ -778,18 +778,6 @@ class PerformanceMonitor {
 // Export singleton instance
 export const performanceMonitor = new PerformanceMonitor();
 
-// Export types
-export type {
-  PerformanceMetric,
-  ApiPerformanceMetric,
-  UIPerformanceMetric,
-  NetworkMetric,
-  MemoryMetric,
-  CacheMetric,
-  UserInteraction,
-  ErrorEvent,
-  AnalyticsConfig,
-};
 
 // Cleanup on page unload
 if (typeof window !== 'undefined') {

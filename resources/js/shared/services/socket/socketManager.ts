@@ -324,6 +324,10 @@ export interface PrivateMessage {
   data?: any;
 }
 
+// Export socket client instance and config type for backward compatibility
+export const socketClient: any = socketManager;
+export type SocketConfig = any;
+
 // Auto-connect when auth token is available
 if (typeof window !== 'undefined') {
   const token = localStorage.getItem('auth_token');

@@ -227,8 +227,10 @@ export const getCurrentOrganizationId = (): number | null => {
  * Clear all Alova caches
  */
 export const clearAllCaches = (): void => {
-  alovaInstance.invalidateCache();
-  graphqlClient.invalidateCache();
+  // Import invalidateCache function
+  const { invalidateCache } = require('alova');
+  invalidateCache(alovaInstance);
+  invalidateCache(graphqlClient);
   console.log('🧹 All Alova caches cleared');
 };
 

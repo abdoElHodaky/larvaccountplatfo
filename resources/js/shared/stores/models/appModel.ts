@@ -4,7 +4,7 @@
  */
 
 import { createModel } from '@rematch/core';
-import { PATTERNS, Notification, NotificationAction } from '@/shared/types/PATTERNS';
+import { Notification } from '@/shared/types/PATTERNS';
 
 // Types
 export interface AppState {
@@ -17,6 +17,7 @@ export interface AppState {
   modals: any[];
   features: Record<string, boolean>;
   breadcrumbs: any[];
+  [key: string]: any;
   // ... other global state properties
 }
 
@@ -26,6 +27,9 @@ const initialState: AppState = {
   colorMode: 'light',
   sidebarCollapsed: false,
   notifications: [],
+  modals: [],
+  features: {},
+  breadcrumbs: [],
   // ... other initial state values
 };
 
@@ -86,7 +90,7 @@ export const appModel = createModel<AppState>()({
   // Add effects if needed
   effects: (dispatch) => ({
     // Notification effects
-    showSuccess: (_, payload: { title: string; message?: string; actions?: any[] }) => {
+    showSuccess: (payload: { title: string; message?: string; actions?: any[] }, _rootState: any) => {
       const notification: Notification = {
         id: Math.random().toString(36).substr(2, 9),
         type: 'success',
@@ -98,7 +102,7 @@ export const appModel = createModel<AppState>()({
       dispatch.app.showNotification(notification);
     },
 
-    showError: (_, payload: { title: string; message?: string; actions?: any[] }) => {
+    showError: (payload: { title: string; message?: string; actions?: any[] }, _rootState: any) => {
       const notification: Notification = {
         id: Math.random().toString(36).substr(2, 9),
         type: 'error',
@@ -110,29 +114,31 @@ export const appModel = createModel<AppState>()({
       dispatch.app.showNotification(notification);
     },
 
-    showWarning: (_, payload: { title: string; message?: string; actions?: any[] }) => {
+    showWarning: (payload: { title: string; message?: string; actions?: any[] }, _rootState: any) => {
       const notification: Notification = {
         id: Math.random().toString(36).substr(2, 9),
         type: 'warning',
         title: payload.title,
         message: payload.message || '',
         actions: payload.actions || [],
+        createdAt: new Date().toISOString(),
       };
       dispatch.app.showNotification(notification);
     },
 
-    showInfo: (_, payload: { title: string; message?: string; actions?: any[] }) => {
+    showInfo: (payload: { title: string; message?: string; actions?: any[] }, _rootState: any) => {
       const notification: Notification = {
         id: Math.random().toString(36).substr(2, 9),
         type: 'info',
         title: payload.title,
         message: payload.message || '',
         actions: payload.actions || [],
+        createdAt: new Date().toISOString(),
       };
       dispatch.app.showNotification(notification);
     },
 
-    initializeTheme: (state) => {
+    initializeTheme: () => {
       // Initialize theme based on system preference or saved preference
       // This would typically check localStorage or system preferences
       // For now, we'll just set initialized flag

@@ -223,7 +223,7 @@ const STATUS_ICONS: Record<string, Omit<IconRegistryEntry, 'component'> & { impo
     category: 'status',
     defaultAnimation: 'loading',
     description: 'Loading/spinner icon',
-    import: () => import('@heroicons/react/24/outline').then(m => ({ default: m.ArrowPathIcon }))
+    import: () => import('@heroicons/react/24/outline').then(m => ({ default: m.ClockIcon }))
   },
   'status-chart': {
     name: 'status-chart',
@@ -258,14 +258,14 @@ const STATUS_ICONS: Record<string, Omit<IconRegistryEntry, 'component'> & { impo
     category: 'status',
     defaultAnimation: 'bounce',
     description: 'Trending up icon',
-    import: () => import('@heroicons/react/24/outline').then(m => ({ default: m.TrendingUpIcon }))
+    import: () => import('@heroicons/react/24/outline').then(m => ({ default: m.ArrowTrendingUpIcon }))
   },
   'status-trend-down': {
     name: 'status-trend-down',
     category: 'status',
     defaultAnimation: 'bounce',
     description: 'Trending down icon',
-    import: () => import('@heroicons/react/24/outline').then(m => ({ default: m.TrendingDownIcon }))
+    import: () => import('@heroicons/react/24/outline').then(m => ({ default: m.ArrowTrendingDownIcon }))
   },
   'status-trend-right': {
     name: 'status-trend-right',
@@ -295,13 +295,34 @@ const STATUS_ICONS: Record<string, Omit<IconRegistryEntry, 'component'> & { impo
     description: 'Enterprise/building icon',
     import: () => import('@heroicons/react/24/outline').then(m => ({ default: m.BuildingOfficeIcon }))
   },
-  'status-wave': {
-    name: 'status-wave',
+  'status-active': {
+    name: 'status-active',
     category: 'status',
-    defaultAnimation: 'wave',
-    description: 'Wave/greeting icon',
-    import: () => import('@heroicons/react/24/outline').then(m => ({ default: m.HandRaisedIcon }))
-  }
+    defaultAnimation: 'pulse',
+    description: 'Active icon',
+    import: () => import('@heroicons/react/24/outline').then(m => ({ default: m.BoltIcon }))
+  },
+  'status-secure': {
+    name: 'status-secure',
+    category: 'status',
+    defaultAnimation: 'success',
+    description: 'Secure icon',
+    import: () => import('@heroicons/react/24/outline').then(m => ({ default: m.ShieldCheckIcon }))
+  },
+  'status-wifi': {
+    name: 'status-wifi',
+    category: 'status',
+    defaultAnimation: 'pulse',
+    description: 'Wifi icon',
+    import: () => import('@heroicons/react/24/outline').then(m => ({ default: m.WifiIcon }))
+  },
+  'status-signal': {
+    name: 'status-signal',
+    category: 'status',
+    defaultAnimation: 'pulse',
+    description: 'Signal icon',
+    import: () => import('@heroicons/react/24/outline').then(m => ({ default: m.SignalIcon }))
+  },
 };
 
 // Combined registry
@@ -343,7 +364,7 @@ export class IconRegistryManager {
   getIconMetadata(iconName: string): Omit<IconRegistryEntry, 'component'> | null {
     const entry = ICON_REGISTRY_DATA[iconName];
     if (!entry) return null;
-    
+
     return {
       name: entry.name,
       category: entry.category,

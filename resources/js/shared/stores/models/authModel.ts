@@ -156,7 +156,7 @@ export const authModel = createModel()({
   
   effects: (dispatch) => ({
     // Login effect
-    async login(payload: { email: string; password: string; remember?: boolean }, rootState: any) {
+    async login(payload: { email: string; password: string; remember?: boolean }, _rootState: any) {
       dispatch.setLoading(true);
       dispatch.clearError();
 
@@ -255,7 +255,7 @@ export const authModel = createModel()({
     },
     
     // Switch tenant effect
-    async switchTenant(tenantId: string, rootState: any) {
+    async switchTenant(tenantId: string, _rootState: any) {
       dispatch.setLoading(true);
       dispatch.clearError();
 
@@ -272,7 +272,7 @@ export const authModel = createModel()({
           dispatch.setCurrentTenant(tenant);
 
           // Update user permissions for current tenant
-          if (rootState.auth?.user) {
+          if (_rootState.auth?.user) {
             dispatch.updateUser({ permissions });
           }
 
@@ -322,20 +322,19 @@ export const authModel = createModel()({
     },
     
     // Update user preferences
-    async updatePreferences(preferences: Partial<User['preferences']>) {
-      const state = this.getState() as AuthState;
-      if (!state.user) return;
-      
+    async updatePreferences(preferences: Partial<User['preferences']>, _rootState: any) {
+      if (!_rootState.auth.user) return;
+
       try {
         // Optimistically update UI
         dispatch.updateUserPreferences(preferences);
-        
+
         // TODO: Add API call to update preferences on server
         // const { data } = await apolloClient.mutate({
         //   mutation: UPDATE_USER_PREFERENCES,
         //   variables: { preferences },
         // });
-        
+
         return { success: true };
       } catch (error: any) {
         // Revert optimistic update on error
@@ -365,7 +364,7 @@ export const authModel = createModel()({
             if (tenantData) {
               try {
                 const storedTenant = JSON.parse(tenantData);
-                const matchingTenant = tenants.find(t => t.tenant.id === storedTenant.id);
+                const matchingTenant = tenants.find((t: UserTenant) => t.tenant.id === storedTenant.id);
                 if (matchingTenant) {
                   currentTenant = matchingTenant.tenant;
                 }

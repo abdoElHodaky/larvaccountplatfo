@@ -140,6 +140,7 @@ export class PWAManager {
       hasNotificationPermission: Notification.permission === 'granted',
       hasLocationPermission: false, // Would need to check geolocation permission
       supportsPushNotifications: 'PushManager' in window,
+      // @ts-ignore - Background Sync API may not be in TypeScript lib definitions
       supportsBackgroundSync: 'serviceWorker' in navigator && 'sync' in window.ServiceWorkerRegistration.prototype,
       supportsOfflineStorage: 'caches' in window && 'indexedDB' in window,
     };
@@ -304,7 +305,7 @@ export class PWAManager {
   /**
    * Convert VAPID key to Uint8Array
    */
-  private urlBase64ToUint8Array(base64String: string): Uint8Array {
+  private urlBase64ToUint8Array(base64String: string): BufferSource {
     const padding = '='.repeat((4 - base64String.length % 4) % 4);
     const base64 = (base64String + padding)
       .replace(/-/g, '+')

@@ -4,7 +4,8 @@
  */
 
 import React, { createContext, useContext, useEffect, useState, useCallback } from 'react';
-import { socketClient, SocketConfig } from '../services/socket/socketManager';
+import { socketClient } from '../services/socket/socketManager';
+import type { SocketConfig } from '../services/socket/socketClient';
 import { useAuth, useAppActions } from '../hooks/useRematchStore';
 
 // Types
@@ -84,7 +85,7 @@ export const SocketProvider: React.FC<SocketProviderProps> = ({
     socketClient.initialize(socketConfig);
 
     // Setup event listeners
-    socketClient.on('socket.connected', (data) => {
+    socketClient.on('socket.connected', (data: any) => {
       console.log('✅ Socket connected:', data.socketId);
       setIsConnected(true);
       setIsConnecting(false);
@@ -95,7 +96,7 @@ export const SocketProvider: React.FC<SocketProviderProps> = ({
       showSuccess('Real-time connection established', 'Connected');
     });
 
-    socketClient.on('socket.disconnected', (data) => {
+    socketClient.on('socket.disconnected', (data: any) => {
       console.log('❌ Socket disconnected:', data.reason);
       setIsConnected(false);
       setSocketId(undefined);
@@ -105,7 +106,7 @@ export const SocketProvider: React.FC<SocketProviderProps> = ({
       }
     });
 
-    socketClient.on('socket.reconnecting', (data) => {
+    socketClient.on('socket.reconnecting', (data: any) => {
       console.log('🔄 Socket reconnecting, attempt:', data.attempt);
       setIsConnecting(true);
       setReconnectAttempts(data.attempt);
@@ -115,7 +116,7 @@ export const SocketProvider: React.FC<SocketProviderProps> = ({
       }
     });
 
-    socketClient.on('socket.reconnected', (data) => {
+    socketClient.on('socket.reconnected', (data: any) => {
       console.log('✅ Socket reconnected after', data.attempts, 'attempts');
       setIsConnected(true);
       setIsConnecting(false);
@@ -127,7 +128,7 @@ export const SocketProvider: React.FC<SocketProviderProps> = ({
       rejoinChannels();
     });
 
-    socketClient.on('socket.error', (data) => {
+    socketClient.on('socket.error', (data: any) => {
       console.error('🔥 Socket error:', data.error);
       setIsConnecting(false);
       setConnectionError(data.error);
@@ -135,7 +136,7 @@ export const SocketProvider: React.FC<SocketProviderProps> = ({
       showError(data.error, 'Connection Error');
     });
 
-    socketClient.on('socket.authenticated', (data) => {
+    socketClient.on('socket.authenticated', (data: any) => {
       console.log('🔐 Socket authenticated:', data);
       
       // Auto-join user and tenant channels after authentication
@@ -155,7 +156,7 @@ export const SocketProvider: React.FC<SocketProviderProps> = ({
       socketClient.subscribeToSystemEvents();
     });
 
-    socketClient.on('socket.unauthorized', (data) => {
+    socketClient.on('socket.unauthorized', (data: any) => {
       console.error('🚫 Socket unauthorized:', data.error);
       setConnectionError('Authentication failed');
       

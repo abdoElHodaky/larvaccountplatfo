@@ -40,9 +40,9 @@ export interface Auditable extends Timestamped {
 }
 
 // Hierarchical entities (parent-child relationships)
-export interface Hierarchical {
+export interface Hierarchical<T> {
   parentId?: number;
-  children?: this[];
+  children?: T[];
   level?: number;
   path?: string;
 }
@@ -300,7 +300,7 @@ export type ChangeCallback<T = any> = (value: T) => void;
 
 // Utility types
 export type Optional<T, K extends keyof T> = Omit<T, K> & Partial<Pick<T, K>>;
-export type Required<T, K extends keyof T> = T & Required<Pick<T, K>>;
+export type Required<T, K extends keyof T> = T & { [P in K]-?: T[P] };
 export type DeepPartial<T> = {
   [P in keyof T]?: T[P] extends object ? DeepPartial<T[P]> : T[P];
 };

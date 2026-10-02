@@ -293,8 +293,9 @@ class PerformanceMonitor {
       warnings.push(`Average lazy load time is high: ${stats.lazyLoad.averageTime.toFixed(2)}ms`);
     }
 
-    if (stats.lazyLoad.retryRate > 10) {
-      warnings.push(`High retry rate for lazy loading: ${stats.lazyLoad.retryRate.toFixed(2)}%`);
+    const retryRate = stats.lazyLoad.retryRate ?? 0;
+    if (retryRate > 10) {
+      warnings.push(`High retry rate for lazy loading: ${retryRate.toFixed(2)}%`);
     }
 
     // Check route performance

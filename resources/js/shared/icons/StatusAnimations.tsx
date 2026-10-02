@@ -4,18 +4,7 @@
  */
 
 import React from 'react';
-import {
-  CheckCircleIcon,
-  XCircleIcon,
-  ExclamationTriangleIcon,
-  InformationCircleIcon,
-  ClockIcon,
-  BoltIcon,
-  ShieldCheckIcon,
-  SignalIcon,
-  WifiIcon
-} from '@heroicons/react/24/outline';
-import { createLiveIcon, type LiveIconProps } from './CreateLiveIcon';
+import { createLiveIcon, DynamicIcon, type LiveIconProps } from './CreateLiveIcon';
 
 // Status-specific animations
 export const statusAnimations = {
@@ -52,13 +41,13 @@ export const statusAnimations = {
 } as const;
 
 // Basic status icons
-export const LiveSuccessIcon = createLiveIcon(CheckCircleIcon, 'success');
-export const LiveErrorIcon = createLiveIcon(XCircleIcon, 'error');
-export const LiveWarningIcon = createLiveIcon(ExclamationTriangleIcon, 'shake');
-export const LiveInfoIcon = createLiveIcon(InformationCircleIcon, 'pulse');
-export const LiveLoadingIcon = createLiveIcon(ClockIcon, 'loading');
-export const LiveActiveIcon = createLiveIcon(BoltIcon, 'pulse');
-export const LiveSecureIcon = createLiveIcon(ShieldCheckIcon, 'success');
+export const LiveSuccessIcon = createLiveIcon('status-success', 'success');
+export const LiveErrorIcon = createLiveIcon('status-error', 'error');
+export const LiveWarningIcon = createLiveIcon('status-warning', 'shake');
+export const LiveInfoIcon = createLiveIcon('status-info', 'pulse');
+export const LiveLoadingIcon = createLiveIcon('status-loading', 'loading');
+export const LiveActiveIcon = createLiveIcon('status-active', 'pulse');
+export const LiveSecureIcon = createLiveIcon('status-secure', 'success');
 
 // Status icon exports for shared/icons/index.ts
 export const StatusSuccessIcon = LiveSuccessIcon;
@@ -77,6 +66,11 @@ export const StatusFreeIcon = LiveInfoIcon; // Placeholder
 export const StatusBusinessIcon = LiveInfoIcon; // Placeholder
 export const StatusEnterpriseIcon = LiveInfoIcon; // Placeholder
 export const StatusWaveIcon = LiveInfoIcon; // Placeholder
+
+// Backward compatibility exports
+export const SuccessIcon = LiveSuccessIcon;
+export const ErrorIcon = LiveErrorIcon;
+export const LoadingIcon = LiveLoadingIcon;
 
 // Status indicator component
 export const StatusIndicator: React.FC<LiveIconProps & {
@@ -169,16 +163,16 @@ export const ConnectionStatus: React.FC<LiveIconProps & {
   isConnected: boolean;
   strength?: 'weak' | 'medium' | 'strong';
   type?: 'wifi' | 'signal';
-}> = ({ 
-  isConnected, 
-  strength = 'strong', 
+}> = ({
+  isConnected,
+  strength = 'strong',
   type = 'wifi',
   size = 'md',
   className = '',
-  ...props 
+  ...props
 }) => {
-  const IconComponent = type === 'wifi' ? WifiIcon : SignalIcon;
-  const LiveIcon = createLiveIcon(IconComponent);
+  const iconName = type === 'wifi' ? 'status-wifi' : 'status-signal';
+  const LiveIcon = createLiveIcon(iconName);
 
   const strengthColors = {
     weak: 'text-danger-500',
@@ -209,15 +203,15 @@ export const ConnectionStatus: React.FC<LiveIconProps & {
 export const BatteryStatus: React.FC<LiveIconProps & {
   level: number; // 0-100
   isCharging?: boolean;
-}> = ({ 
-  level, 
+}> = ({
+  level,
   isCharging = false,
   size = 'md',
   className = '',
-  ...props 
+  ...props
 }) => {
-  const LiveBatteryIcon = createLiveIcon(BoltIcon);
-  
+  const LiveBatteryIcon = createLiveIcon('status-active');
+
   const getBatteryColor = (level: number) => {
     if (level > 50) return 'success';
     if (level > 20) return 'warning';
@@ -241,7 +235,12 @@ export const BatteryStatus: React.FC<LiveIconProps & {
         </span>
       </div>
       {isCharging && (
-        <BoltIcon className="absolute -top-1 -right-1 w-3 h-3 text-warning-500" />
+        <DynamicIcon
+          name="status-active"
+          size="xs"
+          color="warning"
+          className="absolute -top-1 -right-1"
+        />
       )}
     </div>
   );
@@ -252,13 +251,12 @@ export const ProgressStatus: React.FC<LiveIconProps & {
   progress: number; // 0-100
   status?: 'active' | 'paused' | 'completed' | 'error';
   label?: string;
-}> = ({ 
-  progress, 
+}> = ({
+  progress,
   status = 'active',
   label,
   size = 'md',
-  className = '',
-  ..._props 
+  className = ''
 }) => {
   const getStatusIcon = () => {
     switch (status) {
@@ -282,7 +280,7 @@ export const ProgressStatus: React.FC<LiveIconProps & {
           <span className="text-sm text-gray-500">{progress}%</span>
         </div>
         <div className="w-full bg-gray-200 rounded-full h-2">
-          <div 
+          <div
             className={`h-2 rounded-full transition-all duration-300 ${
               status === 'completed' ? 'bg-success-500' :
               status === 'error' ? 'bg-danger-500' :

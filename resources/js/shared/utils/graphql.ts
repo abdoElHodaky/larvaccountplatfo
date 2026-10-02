@@ -59,7 +59,6 @@ export class GraphQLClient {
   private cache: Map<string, CacheEntry> = new Map();
   private batchQueue: BatchRequest[] = [];
   private batchTimer: NodeJS.Timeout | null = null;
-  private requestId = 0;
 
   constructor(options: GraphQLClientOptions) {
     this.options = {
